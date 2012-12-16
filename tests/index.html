@@ -1,0 +1,97 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Parsleyjs Mocha Tests</title>
+    <link rel="stylesheet" href="mocha.css" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-XXXXXXXXX-X']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    <script type="text/javascript">
+        function jsAppend ( js_file, fn ) {
+          if ( 'string' === typeof js_file ) {
+              js_file = [ js_file ];
+          }
+
+          for ( var i in js_file ) {
+              var js_script = document.createElement( 'script' );
+              js_script.type = "text/javascript";
+              js_script.src = js_file[ i ];
+              document.getElementsByTagName( 'head' )[ 0 ].appendChild( js_script );
+          }
+        }
+    </script>
+</head>
+<body>
+    <div id="info"></div>
+    <div id="mocha"></div>
+
+    <div style="display: none;">
+        <form data-validate="parsley">
+            <input type="text" id="input1" />
+            <textarea id="textarea1"></textarea>
+        </form>
+        <form>
+            <input type="text" id="input2" data-validate="parsley"/>
+            <textarea id="textarea2"></textarea>
+        </form>
+        <form >
+    </div>
+
+    <script type="text/javascript">
+        var jquery = '../resources/jquery-1.8.2.min.js'
+          , zepto = '../resources/zepto-1.0rc1[zepto.event.data].min.js';
+
+        switch ( location.hash ) {
+            case '#zepto':
+                jsAppend( zepto );
+                jsAppend( '../parsley.js' );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, unminified version';
+                break;
+            case '#zepto-min':
+                jsAppend( zepto );
+                jsAppend( '../dist/parsley.min.js' );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, minified version';
+                break;
+            case '#jquery-min':
+                jsAppend( jquery );
+                jsAppend( '../dist/parsley.min.js' );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
+                break;
+            case '#standalone':
+                jsAppend( '../dist/parsley-standalone.min.js' );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Standalone minified version';
+                break;
+            default:
+                jsAppend( jquery );
+                jsAppend( '../parsley.js' );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
+                break;
+        }
+
+        jsAppend( [ 'mocha.js', 'expect.js', 'tests.js' ] );
+
+        window.onload = function() {
+
+            mocha.setup('bdd');
+            mocha.reporter('html');
+            testSuite();
+
+            if ( window.mochaPhantomJS ) {
+                mochaPhantomJS.run();
+            } else {
+                mocha.run();
+            }
+        };
+    </script>
+</body>
+</html>
