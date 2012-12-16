@@ -35,16 +35,24 @@
     <div id="info"></div>
     <div id="mocha"></div>
 
-    <div style="display: none;">
+    <div style="display: block;">
         <form data-validate="parsley">
-            <input type="text" id="input1" />
+            <input type="text" id="input1" data-minlength="3" />
             <textarea id="textarea1"></textarea>
         </form>
         <form>
-            <input type="text" id="input2" data-validate="parsley"/>
+            <input type="text" id="input2" data-validate="parsley" data-type="email" />
             <textarea id="textarea2"></textarea>
         </form>
-        <form >
+        <form data-validate="parsley">
+            <input type="text" id="notnull" data-notnull="true" />
+            <input type="text" id="notblank" data-notblank="true" />
+            <input type="text" id="required" data-required="true" />
+            <input type="text" id="minlength" data-minlength="6" />
+            <input type="text" id="maxlength" data-maxlength="6" />
+            <input type="text" id="rangelength" data-rangelength="[6,10]" />
+            <input type="submit" />
+        </form>
     </div>
 
     <script type="text/javascript">
