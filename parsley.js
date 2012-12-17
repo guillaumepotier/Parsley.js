@@ -129,9 +129,16 @@
     }
 
     , onSubmitValidate: function ( event ) {
-      if ( false === this.validate( true ) && 'undefined' !== typeof event && 'undefined' !== typeof event.preventDefault()) {
+      var isValid = true;
+
+      if ( false === this.validate( true ) && 'undefined' !== typeof event) {
         event.preventDefault();
+        isValid = false;
       }
+
+      this.options.onSubmit( isValid, event );
+
+      return isValid;
     }
 
     , validate: function ( onSubmit ) {
@@ -214,9 +221,10 @@
   $.fn.parsley.Constructor = Parsley;
 
   $.fn.parsley.defaults = {
-    inputs: 'input, textarea, select'                                                 // Default supported inputs.
-    , events: [ 'change', 'keyup', 'paste' ]                                       // Events list that trigger a validation
-    , minChars: 4                                                                     // Trigger validators if value >= minChars
+    inputs: 'input, textarea, select'               // Default supported inputs.
+    , events: [ 'change', 'keyup', 'paste' ]        // Events list that trigger a validation
+    , minChars: 4                                   // Trigger validators if value >= minChars
+    , onSubmit: function ( isFormValid, event ) {}  // Executed once on form validation
   }
 
   /* PARSLEY DATA-API

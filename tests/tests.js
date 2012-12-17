@@ -7,6 +7,12 @@ var triggerValidation = function ( idOrClass, value ) {
 
 var testSuite = function () {
   describe ( 'Parsley.js test suite', function () {
+    $( "#validate-form" ).parsley( {
+      onSubmit: function ( isFormValid, event ) {
+        $( "#validate-form" ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
+        event.preventDefault();
+      }
+    } );
 
     /***************************************
             Fields validators binding
@@ -133,6 +139,22 @@ var testSuite = function () {
       it ( 'dateIso' )
       it ( 'number' )
       it ( 'alphanum' )
+    } )
+
+    /***************************************
+              test form validation
+    ***************************************/
+    describe ( 'Test form validation', function () {
+      it ( 'if a filed is not valid, form is not submitted', function () {
+        $( "#validate2" ).val( "1234567" );
+        $( "#validate-form-submit" ).click();
+        expect( $( "#validate-form" ).hasClass( 'form-invalid' ) ).to.be( true );
+      } )
+      it ( 'if all fields are valid, form is submitted', function () {
+        $( "#validate1" ).val( "foo" );
+        $( "#validate-form-submit" ).click();
+        expect( $( "#validate-form" ).hasClass( 'form-valid' ) ).to.be( true );
+      } )
     } )
   } )
 }
