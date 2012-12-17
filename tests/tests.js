@@ -101,9 +101,32 @@ var testSuite = function () {
         triggerValidation( '#rangelength', '1234567' );
         expect( $( '#rangelength' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
-      it ( 'min' )
-      it ( 'max' )
-      it ( 'range' )
+      it ( 'min', function () {
+        it ( 'min', function () {
+          triggerValidation( '#min', '8' );
+          expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerValidation( '#min', '12' );
+          expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
+        } )
+      } )
+      it ( 'max', function () {
+        it ( 'max', function () {
+          triggerValidation( '#max', '12' );
+          expect( $( '#max' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerValidation( '#max', '10' );
+          expect( $( '#max' ).hasClass( 'parsley-success' ) ).to.be( true );
+        } )
+      } )
+      it ( 'range', function () {
+        it ( 'range', function () {
+          triggerValidation( '#range', '12' );
+          expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerValidation( '#range', '2' );
+          expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerValidation( '#range', '8' );
+          expect( $( '#range' ).hasClass( 'parsley-success' ) ).to.be( true );
+        } )
+      } )
       it ( 'url' )
       it ( 'email' )
       it ( 'digits' )

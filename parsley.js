@@ -129,7 +129,7 @@
     }
 
     , onSubmitValidate: function ( event ) {
-      if ( false === this.validate( true ) && 'undefined' !== typeof event) {
+      if ( false === this.validate( true ) && 'undefined' !== typeof event && 'undefined' !== typeof event.preventDefault()) {
         event.preventDefault();
       }
     }
