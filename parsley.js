@@ -84,25 +84,25 @@
     }
   }
 
- /* PARSLEY PUBLIC CLASS DEFINITION
-  * =============================== */
-  var Parsley = function ( element, validatorsFn, options ) {
-    this.init( 'parsley', element, validatorsFn, options );
+ /* PARSLEYITEMS PUBLIC CLASS DEFINITION
+  * =================================== */
+  var ParsleyItem = function ( element, options ) {
+    this.init( 'parsleyItem', element, new ValidatorsFn(), options );
   }
 
-  Parsley.prototype = {
+  ParsleyItem.prototype = {
 
-    constructor: Parsley
+    constructor: ParsleyItem
 
     /* init data, bind jQuery on() actions */
     , init: function ( type, element, validatorsFn, options ) {
       this.type = type;
+      this.isValid = false;
+      this.$element = $( element );
       this.validatorsFn = validatorsFn;
       this.registeredValidators = new Array();
-      this.$element = $( element );
       this.options = this.getOptions( options );
       this.parentForm = this.$element.closest( 'form' );
-      this.isValid = false;
 
       // bind parsley validators functions for item
       for ( var method in this.options ) {
@@ -120,25 +120,19 @@
       if ( this.registeredValidators.length ) {
         this.$element.addClass( 'parsley-validated' );
         this.$element.on( this.options.events.join( '.' + this.type + ' ') , false, $.proxy( this.validate, this ) );
-        $( this.parentForm ).on( 'submit' , false, $.proxy( this.onSubmitValidate, this ) );
       }
     }
 
     , getOptions: function ( options ) {
-      return $.extend( {}, $.fn[this.type].defaults, options, this.$element.data() );
+      return $.extend( {}, $.fn['parsley'].defaults, options, this.$element.data() );
     }
 
-    , onSubmitValidate: function ( event ) {
-      var isValid = true;
-
-      if ( false === this.validate( true ) && 'undefined' !== typeof event) {
-        event.preventDefault();
-        isValid = false;
+    , onSubmitValidate: function () {
+      if ( false === this.validate( true ) ) {
+        return false;
       }
 
-      this.options.onSubmit( isValid, event );
-
-      return isValid;
+      return true;
     }
 
     , validate: function ( onSubmit ) {
@@ -175,21 +169,76 @@
     }
   }
 
+  /* PARSLEYFORM PUBLIC CLASS DEFINITION
+   * ================================== */
+  var ParsleyForm = function ( element, options ) {
+    this.init( 'parsleyForm', element, options );
+  }
+
+  ParsleyForm.prototype = {
+
+    constructor: ParsleyForm
+
+    , init: function ( type, element, options ) {
+      this.type = type;
+      this.items = new Array();
+      this.$element = $( element );
+      this.options = this.getOptions( options );
+      var self = this;
+
+      this.$element.find( options.inputs ).each( function () {
+        $( this ).parsley();
+        self.items.push( $( this) );
+      });
+
+      this.$element.on( 'submit' , false, $.proxy( this.onSubmitValidate, this ) );
+    }
+
+    , getOptions: function ( options ) {
+      return $.extend( {}, $.fn['parsley'].defaults, options, this.$element.data() );
+    }
+
+    , onSubmitValidate: function ( event ) {
+      var isValid = true;
+
+      for ( var item in this.items ) {
+        if ( !this.items[item].parsley( 'onSubmitValidate' ) ) {
+          isValid = false;
+          break;
+        }
+      }
+
+      this.options.onSubmit( isValid, event );
+
+      return isValid;
+    }
+  }
+
   /* PARSLEY PLUGIN DEFINITION
   * ========================= */
   $.fn.parsley = function ( option, fn ) {
     var options = $.extend(true, {}, $.fn.parsley.defaults, option, this.data() )
-      , validatorsFn = new ValidatorsFn()
       , returnValue = false;
 
-    function bind ( self ) {
+    function bind ( self, type ) {
       var $this = $( self )
-        , data = $this.data( 'parsley' )
+        , data = $this.data( type )
         , fieldOptions = $.extend( {}, options, $this.data() );
 
       // if data never binded, bind it right now!
       if ( !data ) {
-        $this.data( 'parsley', ( data = new Parsley( self, validatorsFn, fieldOptions ) ) );
+        switch ( type ) {
+          case 'parsleyForm':
+            data = new ParsleyForm( self, fieldOptions );
+            break;
+          case 'parsleyField':
+            data = new ParsleyItem( self, fieldOptions );
+            break;
+          default:
+            return;
+        }
+
+        $this.data( type, data );
       }
 
       // here is our parsley public function accessor, currently does not support args
@@ -202,14 +251,12 @@
     this.each(function () {
       // if a form elem is given, bind all its input children
       if ( $( this ).is( 'form' ) ) {
-        $( this ).find( options.inputs ).each( function () {
-          returnValue = bind( $( this ) );
-        });
+        returnValue = bind ( $( this ), 'parsleyForm' );
 
       // if it is a Parsley supported single element, bind it too
       // add here a return instance, cuz' we could call public methods on single elems with data[option]() above
       } else if ( $( this ).is( options.inputs ) ) {
-        returnValue = bind( $( this ) );
+        returnValue = bind( $( this ), 'parsleyField' );
       }
     });
 
@@ -218,7 +265,7 @@
 
   /* PARSLEY CONFIGS & OPTIONS
   * ========================= */
-  $.fn.parsley.Constructor = Parsley;
+  $.fn.parsley.Constructor = ParsleyForm;
 
   $.fn.parsley.defaults = {
     inputs: 'input, textarea, select'               // Default supported inputs.
