@@ -35,7 +35,7 @@
     <div id="info"></div>
     <div id="mocha"></div>
 
-    <div style="display: none;">
+    <div style="display: block;">
         <form data-validate="parsley">
             <input type="text" id="input1" data-minlength="3" />
             <textarea id="textarea1"></textarea>
@@ -44,7 +44,7 @@
             <input type="text" id="input2" data-validate="parsley" data-type="email" />
             <textarea id="textarea2"></textarea>
         </form>
-        <form data-validate="parsley">
+        <form id="validator-tests">
             <input type="text" id="notnull" data-notnull="true" />
             <input type="text" id="notblank" data-notblank="true" />
             <input type="text" id="required" data-required="true" />
@@ -54,12 +54,17 @@
             <input type="text" id="min" data-min="10" />
             <input type="text" id="max" data-max="10" />
             <input type="text" id="range" data-min="[6,10]" />
+            <input type="text" id="regexp" data-regexp="\d+" />
+
             <input type="text" id="typeemail" data-type="email" />
             <input type="text" id="typeurl" data-type="url" />
             <input type="text" id="typedigits" data-type="digits" />
             <input type="text" id="typenumber" data-type="number" />
             <input type="text" id="typedateIso" data-type="dateIso" />
             <input type="text" id="typealphanum" data-type="alphanum" />
+
+            <input type="text" id="customvalidator" data-multiple="9" />
+
             <input type="submit" />
         </form>
         <form id="validate-form" >

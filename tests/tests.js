@@ -14,6 +14,14 @@ var testSuite = function () {
       }
     } );
 
+    $( "#validator-tests" ).parsley( {
+      customValidators: {
+        multiple: function ( val, multiple ) {
+          return val % multiple === 0;
+        }
+      }
+    } );
+
     /***************************************
             Fields validators binding
     ***************************************/
@@ -127,6 +135,12 @@ var testSuite = function () {
         triggerValidation( '#range', '8' );
         expect( $( '#range' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'regexp', function () {
+        triggerValidation( '#regexp', 'foo' );
+        expect( $( '#regexp' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#regexp', '42' );
+        expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'url', function () {
         triggerValidation( '#typeurl', 'foo' );
         expect( $( '#typeurl' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -176,6 +190,14 @@ var testSuite = function () {
         expect( $( '#typealphanum' ).hasClass( 'parsley-success' ) ).to.be( true );
         triggerValidation( '#typealphanum', 'foo' );
         expect( $( '#typealphanum' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'customvalidator', function () {
+        triggerValidation( '#customvalidator', 'foo' );
+        expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#customvalidator', '10' );
+        expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#customvalidator', '18' );
+        expect( $( '#customvalidator' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
     } )
 

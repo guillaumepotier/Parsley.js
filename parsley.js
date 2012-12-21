@@ -10,12 +10,21 @@
 
   /* VALIDATORS FUNCTIONS DEFINITION
   * ========================= */
-  var ValidatorsFn = function ( options ) {
+  var ValidatorsFn = function ( customValidators ) {
+    this.init( customValidators );
   }
 
   ValidatorsFn.prototype = {
 
     constructor: ValidatorsFn
+
+    , init: function ( customValidators ) {
+      // console.log( 'customValidators', customValidators );
+      for ( var i in customValidators ) {
+        // console.log(i, customValidators );
+        this[i] = customValidators[i];
+      }
+    }
 
     , notnull: function ( val ) {
       return val.length > 0;
@@ -59,6 +68,10 @@
       return regExp.test( val );
     }
 
+    , regexp: function ( val, regExp ) {
+      return new RegExp( regExp, 'i' ).test( val );
+    }
+
     , minlength: function ( val, min ) {
       return val.length >= min;
     }
@@ -87,7 +100,7 @@
  /* PARSLEYITEMS PUBLIC CLASS DEFINITION
   * =================================== */
   var ParsleyItem = function ( element, options ) {
-    this.init( 'parsleyItem', element, new ValidatorsFn(), options );
+    this.init( 'parsleyItem', element, new ValidatorsFn( options.customValidators ), options );
   }
 
   ParsleyItem.prototype = {
@@ -127,6 +140,10 @@
       return $.extend( {}, $.fn['parsley'].defaults, options, this.$element.data() );
     }
 
+    /*
+    * Called by ParsleyForm.onSubmitValidate when form is validated
+    * Not affected by minChars
+    */
     , onSubmitValidate: function () {
       if ( false === this.validate( true ) ) {
         return false;
@@ -135,6 +152,9 @@
       return true;
     }
 
+    /*
+    * Fired on every field change evenement
+    */
     , validate: function ( onSubmit ) {
       var val = this.$element.val();
 
@@ -179,6 +199,7 @@
 
     constructor: ParsleyForm
 
+    /* init data, bind jQuery on() actions */
     , init: function ( type, element, options ) {
       this.type = type;
       this.items = new Array();
@@ -187,7 +208,7 @@
       var self = this;
 
       this.$element.find( options.inputs ).each( function () {
-        $( this ).parsley();
+        $( this ).parsley( options );
         self.items.push( $( this) );
       });
 
@@ -198,6 +219,9 @@
       return $.extend( {}, $.fn['parsley'].defaults, options, this.$element.data() );
     }
 
+    /*
+    * Fired once when form is submited
+    */
     , onSubmitValidate: function ( event ) {
       var isValid = true;
 
@@ -272,6 +296,7 @@
     , events: [ 'change', 'keyup', 'paste' ]        // Events list that trigger a validation
     , minChars: 4                                   // Trigger validators if value >= minChars
     , onSubmit: function ( isFormValid, event ) {}  // Executed once on form validation
+    , customValidators: {}                          // Add here your custom validators functions
   }
 
   /* PARSLEY DATA-API
