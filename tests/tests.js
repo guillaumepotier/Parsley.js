@@ -108,37 +108,75 @@ var testSuite = function () {
         expect( $( '#rangelength' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'min', function () {
-        it ( 'min', function () {
-          triggerValidation( '#min', '8' );
-          expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
-          triggerValidation( '#min', '12' );
-          expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
-        } )
+        triggerValidation( '#min', '8' );
+        expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#min', '12' );
+        expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'max', function () {
-        it ( 'max', function () {
-          triggerValidation( '#max', '12' );
-          expect( $( '#max' ).hasClass( 'parsley-error' ) ).to.be( true );
-          triggerValidation( '#max', '10' );
-          expect( $( '#max' ).hasClass( 'parsley-success' ) ).to.be( true );
-        } )
+        triggerValidation( '#max', '12' );
+        expect( $( '#max' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#max', '10' );
+        expect( $( '#max' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'range', function () {
-        it ( 'range', function () {
-          triggerValidation( '#range', '12' );
-          expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
-          triggerValidation( '#range', '2' );
-          expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
-          triggerValidation( '#range', '8' );
-          expect( $( '#range' ).hasClass( 'parsley-success' ) ).to.be( true );
-        } )
+        triggerValidation( '#range', '12' );
+        expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#range', '2' );
+        expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#range', '8' );
+        expect( $( '#range' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
-      it ( 'url' )
-      it ( 'email' )
-      it ( 'digits' )
-      it ( 'dateIso' )
-      it ( 'number' )
-      it ( 'alphanum' )
+      it ( 'url', function () {
+        triggerValidation( '#typeurl', 'foo' );
+        expect( $( '#typeurl' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typeurl', 'http://google.com' );
+        expect( $( '#typeurl' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'email', function () {
+        triggerValidation( '#typeemail', 'foo' );
+        expect( $( '#typeemail' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typeemail', 'foo@bar' );
+        expect( $( '#typeemail' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typeemail', 'foo@bar.com' );
+        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerValidation( '#typeemail', 'foo+baz@bar.com' );
+        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerValidation( '#typeemail', 'foo.bar@bar.com.ext' );
+        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'digits', function () {
+        triggerValidation( '#typedigits', 'foo' );
+        expect( $( '#typedigits' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typedigits', '42.2' );
+        expect( $( '#typedigits' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typedigits', '42' );
+        expect( $( '#typedigits' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'dateIso', function () {
+        triggerValidation( '#typedateIso', 'foo' );
+        expect( $( '#typedateIso' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typedateIso', '2012-12-12' );
+        expect( $( '#typedateIso' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'number', function () {
+        triggerValidation( '#typenumber', 'foo' );
+        expect( $( '#typenumber' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typenumber', '007' );
+        expect( $( '#typenumber' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerValidation( '#typenumber', '42.5' );
+        expect( $( '#typenumber' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'aphanum', function () {
+        triggerValidation( '#typealphanum', '@&' );
+        expect( $( '#typealphanum' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typealphanum', 'parsley.js' );
+        expect( $( '#typealphanum' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerValidation( '#typealphanum', 'parsley12' );
+        expect( $( '#typealphanum' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerValidation( '#typealphanum', 'foo' );
+        expect( $( '#typealphanum' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
     } )
 
     /***************************************
