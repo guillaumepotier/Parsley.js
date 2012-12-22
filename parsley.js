@@ -154,14 +154,19 @@
       this.type = type;
       this.hash = this.generateHash();
       this.$element = $( element );
+      this.isRequired = false;
       this.validatorsFn = validatorsFn;
       this.registeredValidators = this.errors = new Array();
-      this.options = this.getOptions( options );
+      this.options = $.extend( {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
       this.parentForm = this.$element.closest( 'form' );
+
+      if ( 'undefined' !== typeof this.options[ 'required' ] ) {
+        this.isRequired = true;
+      }
 
       // bind parsley validators functions for item
       for ( var method in this.options ) {
-        method = method.toLowerCase();
+        method.toLowerCase();
 
         if ( 'function' === typeof validatorsFn[ method ] ) {
           this.registeredValidators.push( {
@@ -174,12 +179,8 @@
       // if there are validators for this field, bind verification events
       if ( this.registeredValidators.length ) {
         this.$element.addClass( 'parsley-validated' );
-        this.$element.on( this.options.events.join( '.' + this.type + ' ') , false, $.proxy( this.validate, this ) );
+        this.$element.on( this.options.triggers.join( '.' + this.type + ' ') , false, $.proxy( this.validate, this ) );
       }
-    }
-
-    , getOptions: function ( options ) {
-      return $.extend( {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
     }
 
     /*
@@ -206,7 +207,7 @@
 
     /*
     * Called by ParsleyForm.onSubmitValidate when form is validated
-    * Not affected by minChars
+    * Not affected by charstovalidate
     */
     , onSubmitValidate: function () {
       if ( false === this.validate( true ) ) {
@@ -223,17 +224,29 @@
       var isValid = true
         , val = this.$element.val();
 
-      // do validation process if field has enough chars and not previously checked
-      if ( 'undefined' === typeof onSubmit && val.length < this.options.minChars ) {
-        return true;
+      // do not validate if a specific trigger event is specified and this is not this one here
+      if ( false !== this.options.validationTrigger && 'undefined' !== typeof onSubmit.type && onSubmit.type !== this.options.validationTrigger ) {
+        return;
       }
 
-      // some binded events are redundant (change & paste for example), validate only once by field change
-      if ( this.val === val ) {
-        return isValid;
+      // do validation process if field has enough chars and was not previously validated
+      if ( true !== onSubmit && val.length < this.options.charstovalidate && !this.$element.hasClass( 'parsley-error' ) ) {
+          return;
+      }
+
+      // if some binded events are redundant (keyup & keypress for example) and except for onSubmit, validate only once by field value change
+      if ( true !== onSubmit && this.val === val ) {
+        return this.isValid;
       }
 
       this.val = val;
+
+      // if field is emptied and not required, remove all errors
+      if ( !this.isRequired && '' === val ) {
+        this.removeErrors();
+        this.$element.removeClass( 'parsley-error' ).addClass( 'parsley-success' );
+        return this.isValid = true;
+      }
 
       // apply all field's validations rules
       for ( var i in this.registeredValidators ) {
@@ -249,7 +262,7 @@
 
       isValid ? this.$element.removeClass( 'parsley-error' ).addClass( 'parsley-success' ) : this.$element.removeClass( 'parsley-success' ).addClass( 'parsley-error' );
 
-      return isValid;
+      return this.isValid = isValid;
     }
 
     /*
@@ -279,6 +292,12 @@
       }
     }
 
+    /*
+    * Remove all ul error
+    */
+    , removeErrors: function () {
+      $( 'ul#' + this.hash ).remove();
+    }
     /*
     * Add li / ul error
     */
@@ -314,7 +333,7 @@
       this.type = type;
       this.items = new Array();
       this.$element = $( element );
-      this.options = this.getOptions( options );
+      this.options = $.extend( {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
       var self = this;
 
       this.$element.find( options.inputs ).each( function () {
@@ -323,10 +342,6 @@
       });
 
       this.$element.on( 'submit' , false, $.proxy( this.onSubmitValidate, this ) );
-    }
-
-    , getOptions: function ( options ) {
-      return $.extend( {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
     }
 
     /*
@@ -338,7 +353,6 @@
       for ( var item in this.items ) {
         if ( !this.items[ item ].parsley( 'onSubmitValidate' ) ) {
           isValid = false;
-          break;
         }
       }
 
@@ -403,8 +417,9 @@
 
   $.fn.parsley.defaults = {
     inputs: 'input, textarea, select'                                             // Default supported inputs.
-    , events: [ 'change', 'keyup', 'paste' ]                                      // Events list that trigger a validation
-    , minChars: 4                                                                 // Trigger validators if value >= minChars
+    , triggers: [ 'change', 'keyup', 'paste' ]                                    // Events list that trigger a validation
+    , validationTrigger: false                                                    // Limit to one specific trigger event from above list
+    , charstovalidate: 4                                                          // Trigger validators if value >= charstovalidate
     , onSubmit: function ( isFormValid, event ) {}                                // Executed once on form validation
     , addError: function ( elem, validator, requirements ) { return true; }       // Override custom error function by returning false
     , customValidators: {}                                                        // Add here your custom validators functions

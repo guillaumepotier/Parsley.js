@@ -37,7 +37,7 @@
 
     <div style="display: none;">
         <form data-validate="parsley">
-            <input type="text" id="input1" data-minlength="3" />
+            <input type="text" id="input1" data-minlength="6" />
             <textarea id="textarea1"></textarea>
         </form>
         <form>
@@ -47,7 +47,7 @@
         <form data-validate="parsley">
             <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum"/>
         </form>
-        <form id="validator-tests">
+        <form id="validator-tests" data-validate="parsley">
             <input type="text" id="notnull" data-notnull="true" />
             <input type="text" id="notblank" data-notblank="true" />
             <input type="text" id="required" data-required="true" />
@@ -70,10 +70,17 @@
 
             <input type="submit" />
         </form>
-        <form id="validate-form" >
+        <form id="validate-form" data-validate="parsley">
             <input type="text" id="validate1" data-required="true" />
             <input type="text" id="validate2" data-minlength="6" />
             <input type="submit" id="validate-form-submit" />
+        </form>
+        <form id="change-validation" data-validate="parsley">
+            <input type="text" id="minchar-change" data-type="email" data-charstovalidate="7" />
+            <input type="text" id="event-change" data-type="email" data-validation-trigger="change" />
+        </form>
+        <form id="validation-scenarios" data-validate="parsley">
+            <input type="text" id="scenario-not-required" data-minlength="6" />
         </form>
     </div>
 
