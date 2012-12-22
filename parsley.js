@@ -19,24 +19,25 @@
     constructor: ValidatorsFn
 
     , messages: {
-        default:        "This field seems to be invalid."
+        defaultMessage: "This value seems to be invalid."
       , type: {
-            email:      "This field must be a valid email."
-          , url:        "This field must be a valid url."
-          , number:     "This field must be a valid number."
-          , digits:     "This field must be digits."
-          , dateIso:    "This field must be a valid date (YYYY-MM-DD)."
-          , alphanum:   "This field must be alphanumeric."
+            email:      "This value should be a valid email."
+          , url:        "This value should be a valid url."
+          , number:     "This value should be a valid number."
+          , digits:     "This value should be digits."
+          , dateIso:    "This value should be a valid date (YYYY-MM-DD)."
+          , alphanum:   "This value should be alphanumeric."
         }
-      , notnull:      "This field cannot be null."
-      , notblank:     "This field cannot be blank."
-      , required:     "This field is required."
-      , regexp:       "This value seems to be invalid."
-      , min:          "This value must be greater than %s."
-      , max:          "This value must be lower than %s."
-      , minlength:    "This field must have at least %s characters."
-      , maxlength:    "This field must have no more than %s characters."
-      , rangelength:  "This field length must be between %s and %s characters long."
+      , notnull:        "This value should not be null."
+      , notblank:       "This value should not be blank."
+      , required:       "This value is required."
+      , regexp:         "This value seems to be invalid."
+      , min:            "This value should be greater than %s."
+      , max:            "This value should be lower than %s."
+      , range:          "This value should be between %s and %s."
+      , minlength:      "This value is too short. It should have %s characters or more."
+      , maxlength:      "This value is too long. It should have %s characters or less."
+      , rangelength:    "This value length is invalid. It should be between %s and %s characters long."
     }
 
     , init: function ( options ) {
@@ -146,11 +147,12 @@
 
     constructor: ParsleyItem
 
-    /* init data, bind jQuery on() actions */
+    /*
+    * init data, bind jQuery on() actions
+    */
     , init: function ( type, element, validatorsFn, options ) {
       this.type = type;
       this.hash = this.generateHash();
-      this.isValid = false;
       this.$element = $( element );
       this.validatorsFn = validatorsFn;
       this.registeredValidators = this.errors = new Array();
@@ -180,15 +182,26 @@
       return $.extend( {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
     }
 
+    /*
+    * Hash management. Used for ul error
+    * Generate a 5 digits hash
+    */
     , generateHash: function () {
         var text = ''
-          , possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          , possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
         for ( var i = 0; i < 5; i++ ) {
           text += possible.charAt( Math.floor( Math.random() * possible.length ) );
         }
 
         return text;
+    }
+
+    /*
+    * Get hash
+    */
+    , getHash: function() {
+      return this.hash;
     }
 
     /*
@@ -207,65 +220,77 @@
     * Fired on every field change evenement
     */
     , validate: function ( onSubmit ) {
-      var val = this.$element.val();
+      var isValid = true
+        , val = this.$element.val();
 
       // do validation process if field has enough chars and not previously checked
-      if ( 'undefined' === typeof onSubmit && val.length < this.options.minChars && !( this.$element.hasClass( 'parsley-error' ) || this.$element.hasClass( 'parsley-success' ) ) ) {
+      if ( 'undefined' === typeof onSubmit && val.length < this.options.minChars ) {
         return true;
       }
 
       // some binded events are redundant (change & paste for example), validate only once by field change
-      if ( this.val === this.$element.val() ) {
-        return this.isValid;
+      if ( this.val === val ) {
+        return isValid;
       }
 
-      this.val = this.$element.val();
+      this.val = val;
 
       // apply all field's validations rules
       for ( var i in this.registeredValidators ) {
         var method = this.registeredValidators[ i ].method
-          , requirement = this.registeredValidators[ i ].params;
+          , requirements = this.registeredValidators[ i ].params;
 
-        if ( !this.validatorsFn[ method ]( val, requirement ) ) {
-          return this.manageErrors( method, requirement );
+        if ( !this.validatorsFn[ method ]( val, requirements ) ) {
+          isValid = this.manageErrors( method, requirements );
+        } else {
+          this.removeError( method );
         }
       }
 
-      this.$element.removeClass( 'parsley-error' ).addClass( 'parsley-success' );
-      this.removeError( method );
+      isValid ? this.$element.removeClass( 'parsley-error' ).addClass( 'parsley-success' ) : this.$element.removeClass( 'parsley-success' ).addClass( 'parsley-error' );
 
-      return this.isValid = true;
+      return isValid;
     }
 
     /*
     * Called on every field error
     */
     , manageErrors: function ( method, requirements ) {
-      this.isValid = false;
 
       if ( false === this.options.addError( this.$element, method, requirements ) ) {
-         return this.isValid;
+         return false;
        }
 
       this.addError( method, requirements );
-      this.$element.removeClass( 'parsley-success' ).addClass( 'parsley-error' );
 
-      return this.isValid;
+      return false;
     }
 
+    /*
+    * Remove li / ul error
+    */
     , removeError: function ( method ) {
-      $( 'ul#' + this.hash + ' li.' + method ).remove();
+      var ulError = 'ul#' + this.hash
+        , liError = ulError + ' li.' + method;
+
+      // remove li error, and ul error if no more li inside
+      if ( $( liError ).remove() && $( ulError + ' li' ).length === 0 ) {
+        $( ulError ).remove();
+      }
     }
 
+    /*
+    * Add li / ul error
+    */
     , addError: function ( method, requirements ) {
       var ulError = 'ul#' + this.hash
         , liError = ulError + ' li.' + method
         , message = method === 'type' ?
             this.validatorsFn.messages[ method ][ requirements ] : ( 'undefined' === typeof this.validatorsFn.messages[ method ] ?
-              this.validatorsFn.messages.default : this.validatorsFn.formatMesssage( this.validatorsFn.messages[ method ], requirements ) );
+              this.validatorsFn.messages.defaultMessage : this.validatorsFn.formatMesssage( this.validatorsFn.messages[ method ], requirements ) );
 
       if ( $( ulError ).length === 0 ) {
-        this.$element.after( '<ul id="' + this. hash + '"></ul>' );
+        this.$element.after( '<ul id="' + this.hash + '"></ul>' );
       }
 
       if ( $( liError ).length === 0 ) {
@@ -352,7 +377,7 @@
 
       // here is our parsley public function accessor, currently does not support args
       if ( 'string' === typeof option && 'function' === typeof data[ option ] ) {
-        return data[ option ]();
+        return data[ option ]( fn );
       }
     }
 

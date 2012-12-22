@@ -5,6 +5,10 @@ var triggerValidation = function ( idOrClass, value ) {
   $( idOrClass ).parsley( 'onSubmitValidate' );
 }
 
+var getErrorMessage = function ( idOrClass, method ) {
+  return $( 'ul#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
+}
+
 var testSuite = function () {
   describe ( 'Parsley.js test suite', function () {
     $( "#validate-form" ).parsley( {
@@ -21,7 +25,7 @@ var testSuite = function () {
         }
       }
       , messages: {
-        multiple: "This field must be a multiple of %s"
+        multiple: "This field should be a multiple of %s"
       }
     } );
 
@@ -37,6 +41,21 @@ var testSuite = function () {
         expect( $( '#input2' ).hasClass( 'parsley-validated' ) ).to.be( true );
         expect( $( '#textarea2' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
+    } )
+
+    /***************************************
+                trigger events
+    ***************************************/
+    describe ( 'Test inputs events', function () {
+      var events = [ 'change', 'keyup', 'paste' ];
+        it ( 'Validators are triggered on these events: ' + events.join( ', ' ) , function () {
+          for ( var event in events ) {
+            var value = ( ( parseInt( event ) + 1 ) % 2 ) * 1000;
+            $( '#input1' ).val( value );
+            $( '#input1' ).trigger( $.Event( events[event] ) );
+            expect( $( '#input1' ).hasClass( 'parsley-error' ) ).to.be( value === 0 );
+          }
+        } )
     } )
 
     /***************************************
@@ -62,18 +81,26 @@ var testSuite = function () {
     } )
 
     /***************************************
-                trigger events
+          Error messages management
     ***************************************/
-    describe ( 'Test inputs events', function () {
-      var events = [ 'change', 'keyup', 'paste' ];
-        it ( 'Validators are triggered on these events: ' + events.join( ', ' ) , function () {
-          for ( var event in events ) {
-            var value = ( ( event + 1 ) % 2 ) * 1000;
-            $( '#input1' ).val( value );
-            $( '#input1' ).trigger( $.Event( events[event] ) );  
-            expect( $( '#input1' ).hasClass( 'parsley-error' ) ).to.be( value === 0 );
-          }
-        } )
+    describe ( 'Test Parsley error messages management', function () {
+      var fieldHash = $( '#errormanagement' ).parsley( 'getHash' );
+
+      it ( 'Test two errors on the same field', function () {
+        triggerValidation( '#errormanagement', 'foo@' );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );
+        expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
+      } )
+      it ( 'If one error is fixed, show the remaining one', function () {
+        triggerValidation( '#errormanagement', 'foo' );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
+      } )
+      it ( 'If there are no more errors, full validation ok', function () {
+        triggerValidation( '#errormanagement', 'foobar' );
+        expect( $( 'ul#' + fieldHash ).length ).to.be( 0 );
+        expect( $( '#errormanagement' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
     } )
 
     /***************************************
@@ -83,18 +110,21 @@ var testSuite = function () {
       it ( 'notnull', function () {
         triggerValidation( '#notnull', '' );
         expect( $( '#notnull' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#notnull', 'notnull') ).to.be( 'This value should not be null.' );
         triggerValidation( '#notnull', 'foo' );
         expect( $( '#notnull' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'notblank', function () {
         triggerValidation( '#notblank', '   ' );
         expect( $( '#notblank' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#notblank', 'notblank') ).to.be( 'This value should not be blank.' );
         triggerValidation( '#notnull', 'foo' );
         expect( $( '#notnull' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'required', function () {
         triggerValidation( '#required', '' );
         expect( $( '#required' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#required', 'required') ).to.be( 'This value is required.' );
         triggerValidation( '#required', '  ' );
         expect( $( '#required' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerValidation( '#required', '  foo' );
@@ -103,36 +133,42 @@ var testSuite = function () {
       it ( 'minlength', function () {
         triggerValidation( '#minlength', '12345' );
         expect( $( '#minlength' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#minlength', 'minlength') ).to.be( 'This value is too short. It should have 6 characters or more.' );
         triggerValidation( '#minlength', '123456' );
         expect( $( '#minlength' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'maxlength', function () {
         triggerValidation( '#maxlength', '12345678' );
         expect( $( '#maxlength' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#maxlength', 'maxlength') ).to.be( 'This value is too long. It should have 6 characters or less.' );
         triggerValidation( '#maxlength', '12345' );
         expect( $( '#maxlength' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'rangelength', function () {
         triggerValidation( '#rangelength', '12345678910' );
         expect( $( '#rangelength' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#rangelength', 'rangelength') ).to.be( 'This value length is invalid. It should be between 6 and 10 characters long.' );
         triggerValidation( '#rangelength', '1234567' );
         expect( $( '#rangelength' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'min', function () {
         triggerValidation( '#min', '8' );
         expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than 10.' );
         triggerValidation( '#min', '12' );
         expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'max', function () {
         triggerValidation( '#max', '12' );
         expect( $( '#max' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#max', 'max') ).to.be( 'This value should be lower than 10.' );
         triggerValidation( '#max', '10' );
         expect( $( '#max' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'range', function () {
         triggerValidation( '#range', '12' );
         expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#range', 'range') ).to.be( 'This value should be between 6 and 10.' );
         triggerValidation( '#range', '2' );
         expect( $( '#range' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerValidation( '#range', '8' );
@@ -141,18 +177,21 @@ var testSuite = function () {
       it ( 'regexp', function () {
         triggerValidation( '#regexp', 'foo' );
         expect( $( '#regexp' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#regexp', 'regexp') ).to.be( 'This value seems to be invalid.' );
         triggerValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'url', function () {
         triggerValidation( '#typeurl', 'foo' );
         expect( $( '#typeurl' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typeurl', 'type') ).to.be( 'This value should be a valid url.' );
         triggerValidation( '#typeurl', 'http://google.com' );
         expect( $( '#typeurl' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'email', function () {
         triggerValidation( '#typeemail', 'foo' );
         expect( $( '#typeemail' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typeemail', 'type') ).to.be( 'This value should be a valid email.' );
         triggerValidation( '#typeemail', 'foo@bar' );
         expect( $( '#typeemail' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerValidation( '#typeemail', 'foo@bar.com' );
@@ -165,6 +204,7 @@ var testSuite = function () {
       it ( 'digits', function () {
         triggerValidation( '#typedigits', 'foo' );
         expect( $( '#typedigits' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typedigits', 'type') ).to.be( 'This value should be digits.' );
         triggerValidation( '#typedigits', '42.2' );
         expect( $( '#typedigits' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerValidation( '#typedigits', '42' );
@@ -173,12 +213,14 @@ var testSuite = function () {
       it ( 'dateIso', function () {
         triggerValidation( '#typedateIso', 'foo' );
         expect( $( '#typedateIso' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typedateIso', 'type') ).to.be( 'This value should be a valid date (YYYY-MM-DD).' );
         triggerValidation( '#typedateIso', '2012-12-12' );
         expect( $( '#typedateIso' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'number', function () {
         triggerValidation( '#typenumber', 'foo' );
         expect( $( '#typenumber' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typenumber', 'type') ).to.be( 'This value should be a valid number.' );
         triggerValidation( '#typenumber', '007' );
         expect( $( '#typenumber' ).hasClass( 'parsley-success' ) ).to.be( true );
         triggerValidation( '#typenumber', '42.5' );
@@ -187,6 +229,7 @@ var testSuite = function () {
       it ( 'aphanum', function () {
         triggerValidation( '#typealphanum', '@&' );
         expect( $( '#typealphanum' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typealphanum', 'type') ).to.be( 'This value should be alphanumeric.' );
         triggerValidation( '#typealphanum', 'parsley.js' );
         expect( $( '#typealphanum' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerValidation( '#typealphanum', 'parsley12' );
@@ -197,6 +240,7 @@ var testSuite = function () {
       it ( 'customvalidator', function () {
         triggerValidation( '#customvalidator', 'foo' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#customvalidator', 'multiple') ).to.be( 'This field should be a multiple of 9' );
         triggerValidation( '#customvalidator', '10' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerValidation( '#customvalidator', '18' );

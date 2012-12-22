@@ -44,6 +44,9 @@
             <input type="text" id="input2" data-validate="parsley" data-type="email" />
             <textarea id="textarea2"></textarea>
         </form>
+        <form data-validate="parsley">
+            <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum"/>
+        </form>
         <form id="validator-tests">
             <input type="text" id="notnull" data-notnull="true" />
             <input type="text" id="notblank" data-notblank="true" />
@@ -53,7 +56,7 @@
             <input type="text" id="rangelength" data-rangelength="[6,10]" />
             <input type="text" id="min" data-min="10" />
             <input type="text" id="max" data-max="10" />
-            <input type="text" id="range" data-min="[6,10]" />
+            <input type="text" id="range" data-range="[6,10]" />
             <input type="text" id="regexp" data-regexp="\d+" />
 
             <input type="text" id="typeemail" data-type="email" />
