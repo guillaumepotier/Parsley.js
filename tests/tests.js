@@ -20,6 +20,9 @@ var testSuite = function () {
           return val % multiple === 0;
         }
       }
+      , messages: {
+        multiple: "This field must be a multiple of %s"
+      }
     } );
 
     /***************************************
