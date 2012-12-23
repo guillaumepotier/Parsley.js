@@ -7,7 +7,7 @@
 <form data-validate="parsley">
     <div class="field">
         <legend>This field should be an email, validation occurs once focus leave this field:</legend>
-        <input type="text" data-type="email" data-validation-trigger="change" />
+        <input type="text" data-type="email" data-validation-trigger="change" class="required" />
     </div>
     <div class="field">
         <legend>This field should be an url, validation starts after 8 characters:</legend>
@@ -15,7 +15,7 @@
     </div>
     <div class="field">
         <legend>This field should be an integer between 10 and 100, validation starts:</legend>
-        <input type="text" data-range="[10,100]" />
+        <input type="text" data-range="[10,100]" data-validation-minlength="2" data-validation-trigger="change" />
     </div>
     <div class="field">
         <legend>This field is required:</legend>

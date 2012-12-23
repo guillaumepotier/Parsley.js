@@ -9,7 +9,7 @@
   "use strict";
 
   /* VALIDATORS FUNCTIONS DEFINITION
-  * ========================= */
+  * ============================= */
   var ValidatorsFn = function ( options ) {
     this.init( options );
   }
@@ -135,10 +135,10 @@
     , range: function ( val, arrayRange ) {
       return val >= arrayRange[ 0 ] && val <= arrayRange[ 1 ];
     }
-}
+  }
 
- /* PARSLEYITEMS PUBLIC CLASS DEFINITION
-  * =================================== */
+  /* PARSLEYITEMS PUBLIC CLASS DEFINITION
+  * ================================== */
   var ParsleyItem = function ( element, options ) {
     this.init( 'parsleyItem', element, new ValidatorsFn( options ), options );
   }
@@ -157,38 +157,51 @@
       this.isRequired = false;
       this.validatorsFn = validatorsFn;
       this.registeredValidators = this.errors = new Array();
-      this.options = $.extend( {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
-      this.parentForm = this.$element.closest( 'form' );
+      this.options = $.extend(true, {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
 
-      if ( 'undefined' !== typeof this.options[ 'required' ] ) {
-        this.isRequired = true;
+      // a field is required if data-required="true" or class="required"
+      if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) ) {
+        this.isRequired = this.options[ 'required' ] = true;
       }
 
-      // bind parsley validators functions for item
-      for ( var method in this.options ) {
-        method.toLowerCase();
+      // register validators
+      this.registerValidators();
 
-        if ( 'function' === typeof validatorsFn[ method ] ) {
+      // bind parsley events if validators have been registered
+      if ( this.registeredValidators.length ) {
+        this.bindValidationEvents();
+      }
+    }
+
+    /*
+    * Attach validators functions to elem
+    */
+    , registerValidators: function () {
+      for ( var method in this.options ) {
+        if ( 'function' === typeof this.validatorsFn[  method.toLowerCase() ] ) {
           this.registeredValidators.push( {
               method: method
             , params: this.options[ method ]
           } );
         }
       }
+    }
 
-      // if there are validators for this field, bind verification events
-      if ( this.registeredValidators.length ) {
-        this.$element.addClass( 'parsley-validated' );
+    /*
+    * Bind validation events
+    */
+    , bindValidationEvents: function () {
+      this.$element.addClass( 'parsley-validated' );
 
-        // default (overridable) validation events
-        if ( !this.options.validationTrigger ) {
-          this.$element.on( this.options.triggers.join( '.' + this.type + ' ') , false, $.proxy( this.validate, this ) );
+      // default (overridable) validation events
+      if ( !this.options.validationTrigger ) {
+        this.$element.on( this.options.triggers.join( '.' + this.type + ' ') , false, $.proxy( this.validateField, this ) );
 
-        // specific custom validation event
-        } else {
-          this.$element.on( this.options.validationTrigger , false, $.proxy( this.validate, this ) );
-        }
+      // specific custom validation event
+      } else {
+        this.$element.on( this.options.validationTrigger , false, $.proxy( this.validateField, this ) );
       }
+
     }
 
     /*
@@ -207,7 +220,7 @@
     }
 
     /*
-    * Get hash
+    * Public getHash accessor
     */
     , getHash: function() {
       return this.hash;
@@ -215,29 +228,25 @@
 
     /*
     * Called by ParsleyForm.onSubmitValidate when form is validated
-    * Not affected by charstovalidate
+    * Not affected by validationMinlength
     */
     , onSubmitValidate: function () {
-      if ( false === this.validate( true ) ) {
-        return false;
-      }
-
-      return true;
+      return this.validateField( true );
     }
 
     /*
-    * Fired on every field change evenement
+    * Validate a field & manage errors displayed
+    * Returns true or false
     */
-    , validate: function ( onSubmit ) {
-      var isValid = true
-        , val = this.$element.val();
+    , validateField: function ( onSubmit ) {
+      var val = this.$element.val();
 
       // these tests are not meant for a submit event validation
-      if ( true !== onSubmit ) {
+      if ( true !== onSubmit || 'undefined' === typeof onSubmit ) {
 
         // do validation process if field has enough chars and was not previously validated
-        if ( val.length < this.options.charstovalidate && !this.$element.hasClass( 'parsley-error' ) ) {
-            return;
+        if ( val.length < this.options.validationMinlength && !this.$element.hasClass( 'parsley-error' ) ) {
+            return true;
         }
 
         // if some binded events are redundant (keyup & keypress for example) and except for onSubmit, validate only once by field value change
@@ -254,18 +263,17 @@
 
       // apply all field's validations rules
       } else {
-        this.isValid = this.processFieldsValidation();
+        this.isValid = this.processFieldValidators();
       }
 
-      this.manageErrors();
-
-      return this.isValid;
+      return this.manageValidationResult();
     }
 
     /*
-    * Loop through every field validation
+    * Loop through every field validator attached to the field
+    * Adds errors after fields
     */
-    , processFieldsValidation: function () {
+    , processFieldValidators: function () {
       var isValid = true;
 
       for ( var i in this.registeredValidators ) {
@@ -273,9 +281,9 @@
           , requirements = this.registeredValidators[ i ].params;
 
         if ( !this.validatorsFn[ method ]( this.val, requirements ) ) {
-          isValid = this.manageError( method, requirements );
+          isValid = this.manageError( 'add', method, requirements );
         } else {
-          this.removeError( method );
+          this.manageError( 'remove', method );
         }
       }
 
@@ -284,28 +292,42 @@
 
     /*
     * Fired when all validators have be executed
+    * Returns true or false if field is valid or not
+    * Adds parsley-success or parsley-error class
     */
-    , manageErrors: function () {
+    , manageValidationResult: function () {
       if ( this.isValid ) {
         this.removeErrors();
         this.$element.removeClass( 'parsley-error' ).addClass( 'parsley-success' );
       } else {
         this.$element.removeClass( 'parsley-success' ).addClass( 'parsley-error' );
       }
+
+      return this.isValid;
     }
 
     /*
-    * Called on every field error
+    * Called when field fails or pass a validator constraint
+    * type: add|remove
+    * returns boolean if constraint fails or pass
     */
-    , manageError: function ( method, requirements ) {
+    , manageError: function ( type, method, requirements ) {
+      switch ( type ) {
+        case 'add' :
+          if ( false === this.options.addError( this.$element, method, requirements ) ) {
+             return false;
+           }
 
-      if ( false === this.options.addError( this.$element, method, requirements ) ) {
-         return false;
-       }
+          this.addError( method, requirements );
 
-      this.addError( method, requirements );
+          return false;
+        case 'remove':
+          this.removeError( method );
 
-      return false;
+          return true;
+        default:
+          return false;
+      }
     }
 
     /*
@@ -327,6 +349,7 @@
     , removeErrors: function () {
       $( 'ul#' + this.hash ).remove();
     }
+
     /*
     * Add li / ul error
     */
@@ -348,7 +371,7 @@
   }
 
   /* PARSLEYFORM PUBLIC CLASS DEFINITION
-   * ================================== */
+  * ================================= */
   var ParsleyForm = function ( element, options ) {
     this.init( 'parsleyForm', element, options );
   }
@@ -362,7 +385,7 @@
       this.type = type;
       this.items = new Array();
       this.$element = $( element );
-      this.options = $.extend( {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
+      this.options = options;
       var self = this;
 
       this.$element.find( options.inputs ).each( function () {
@@ -392,30 +415,28 @@
   }
 
   /* PARSLEY PLUGIN DEFINITION
-  * ========================= */
+  * ======================= */
   $.fn.parsley = function ( option, fn ) {
     var options = $.extend(true, {}, $.fn.parsley.defaults, option, this.data() )
       , returnValue = false;
 
     function bind ( self, type ) {
-      var $this = $( self )
-        , data = $this.data( type )
-        , fieldOptions = $.extend( {}, options, $this.data() );
+      var data = $( self ).data( type );
 
       // if data never binded, bind it right now!
       if ( !data ) {
         switch ( type ) {
           case 'parsleyForm':
-            data = new ParsleyForm( self, fieldOptions );
+            data = new ParsleyForm( self, options );
             break;
           case 'parsleyField':
-            data = new ParsleyItem( self, fieldOptions );
+            data = new ParsleyItem( self, options );
             break;
           default:
             return;
         }
 
-        $this.data( type, data );
+        $( self ).data( type, data );
       }
 
       // here is our parsley public function accessor, currently does not support args
@@ -425,7 +446,7 @@
     }
 
     // loop through every elemt we want to parsley
-    this.each(function () {
+    this.each( function () {
       // if a form elem is given, bind all its input children
       if ( $( this ).is( 'form' ) ) {
         returnValue = bind ( $( this ), 'parsleyForm' );
@@ -435,20 +456,20 @@
       } else if ( $( this ).is( options.inputs ) ) {
         returnValue = bind( $( this ), 'parsleyField' );
       }
-    });
+    } );
 
     return 'function' === typeof fn ? fn() : returnValue;
   }
 
   /* PARSLEY CONFIGS & OPTIONS
-  * ========================= */
+  * ======================= */
   $.fn.parsley.Constructor = ParsleyForm;
 
   $.fn.parsley.defaults = {
     inputs: 'input, textarea, select'                                             // Default supported inputs.
-    , triggers: [ 'change', 'keyup', 'paste' ]                                    // Events list that trigger a validation
+    , triggers: [ 'change', 'keyup' ]                                             // Events list that trigger a validation
     , validationTrigger: false                                                    // Limit to one specific trigger event from above list
-    , charstovalidate: 4                                                          // Trigger validators if value >= charstovalidate
+    , validationMinlength: 3                                                      // Trigger validators if value.length > validationMinlength
     , onSubmit: function ( isFormValid, event ) {}                                // Executed once on form validation
     , addError: function ( elem, validator, requirements ) { return true; }       // Override custom error function by returning false
     , customValidators: {}                                                        // Add here your custom validators functions
@@ -456,10 +477,10 @@
   }
 
   /* PARSLEY DATA-API
-  * =============== */
+  * ============== */
   $( window ).on( 'load', function () {
     $( '[data-validate="parsley"]' ).each( function () {
-      $(this).parsley();
+      $( this ).parsley();
     })
   });
 

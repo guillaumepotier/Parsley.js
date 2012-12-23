@@ -7,7 +7,7 @@ var triggerSubmitValidation = function ( idOrClass, value ) {
 
 var triggerEventChangeValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
-  $( idOrClass ).parsley( 'validate' );
+  $( idOrClass ).parsley( 'validateField' );
 }
 
 var getErrorMessage = function ( idOrClass, method ) {
@@ -52,13 +52,13 @@ var testSuite = function () {
                 trigger events
     ***************************************/
     describe ( 'Test inputs events', function () {
-      var events = [ 'change', 'keyup', 'paste' ];
+      var events = [ 'change', 'keyup' ];
         it ( 'Validators are triggered on these events: ' + events.join( ', ' ) , function () {
           for ( var event in events ) {
-            var value = ( ( parseInt( event ) + 1 ) % 2 ) * 100000 + 1000;
+            var value = ( ( parseInt( event ) + 1 ) % 2 ) * 100000 + 100;
             $( '#input1' ).val( value );
             $( '#input1' ).trigger( $.Event( events[event] ) );
-            expect( $( '#input1' ).hasClass( 'parsley-error' ) ).to.be( value === 1000 );
+            expect( $( '#input1' ).hasClass( 'parsley-error' ) ).to.be( value == 100 );
           }
         } )
     } )
@@ -119,7 +119,7 @@ var testSuite = function () {
         triggerSubmitValidation( '#notnull', 'foo' );
         expect( $( '#notnull' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
-      it ( 'required', function () {
+      it ( 'required - data-api', function () {
         triggerSubmitValidation( '#required', '' );
         expect( $( '#required' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( getErrorMessage( '#required', 'required') ).to.be( 'This value is required.' );
@@ -127,6 +127,15 @@ var testSuite = function () {
         expect( $( '#required' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerSubmitValidation( '#required', '  foo' );
         expect( $( '#required' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'required - class-api', function () {
+        triggerSubmitValidation( '#required-class', '' );
+        expect( $( '#required-class' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#required-class', 'required') ).to.be( 'This value is required.' );
+        triggerSubmitValidation( '#required-class', '  ' );
+        expect( $( '#required-class' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#required-class', '  foo' );
+        expect( $( '#required-class' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'minlength', function () {
         triggerSubmitValidation( '#minlength', '12345' );
@@ -289,30 +298,30 @@ var testSuite = function () {
     ***************************************/
     describe ( 'Test field validation scenarios', function () {
       it ( 'Test scenario for non-required field', function () {
-        // do not pass the 4 chars min trigger
-        $( '#scenario-not-required' ).val( 'foo' );
-        $( '#scenario-not-required' ).parsley( 'validate' );
+        // do not pass the 3 chars min trigger
+        $( '#scenario-not-required' ).val( 'fo' );
+        $( '#scenario-not-required' ).parsley( 'validateField' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-success' ) ).to.be( false );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-error' ) ).to.be( false );
 
         // val.length >= 4, validation is done
         $( '#scenario-not-required' ).val( 'foob' );
-        $( '#scenario-not-required' ).parsley( 'validate' );
+        $( '#scenario-not-required' ).parsley( 'validateField' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-error' ) ).to.be( true );
 
         // pass validation
         $( '#scenario-not-required' ).val( 'foobar' );
-        $( '#scenario-not-required' ).parsley( 'validate' );
+        $( '#scenario-not-required' ).parsley( 'validateField' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-success' ) ).to.be( true );
 
         // re-fail validation
         $( '#scenario-not-required' ).val( 'fooba' );
-        $( '#scenario-not-required' ).parsley( 'validate' );
+        $( '#scenario-not-required' ).parsley( 'validateField' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-error' ) ).to.be( true );
 
         // then, delete field value. Field is not required. Remove errors
         $( '#scenario-not-required' ).val( '' );
-        $( '#scenario-not-required' ).parsley( 'validate' );
+        $( '#scenario-not-required' ).parsley( 'validateField' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
     } )

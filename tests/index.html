@@ -50,7 +50,10 @@
         <form id="validator-tests" data-validate="parsley">
             <input type="text" id="notnull" data-notnull="true" />
             <input type="text" id="notblank" data-notblank="true" />
+
             <input type="text" id="required" data-required="true" />
+            <input type="text" id="required-class" class="required" />
+
             <input type="text" id="minlength" data-minlength="6" />
             <input type="text" id="maxlength" data-maxlength="6" />
             <input type="text" id="rangelength" data-rangelength="[6,10]" />
@@ -76,7 +79,7 @@
             <input type="submit" id="validate-form-submit" />
         </form>
         <form id="change-validation" data-validate="parsley">
-            <input type="text" id="minchar-change" data-type="email" data-charstovalidate="7" />
+            <input type="text" id="minchar-change" data-type="email" data-validation-minlength="7" />
             <input type="text" id="event-change" data-type="email" data-validation-trigger="change" />
         </form>
         <form id="validation-scenarios" data-validate="parsley">
