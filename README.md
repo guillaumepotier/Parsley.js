@@ -4,6 +4,10 @@
 
 Javascript form validation, without actually writing a single line of javascript!
 
+#TODOs
+
+See TODO.md
+
 #Version
 
 0.1.0
