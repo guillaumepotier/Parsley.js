@@ -12,6 +12,15 @@ See TODO.md
 
 0.1.0
 
+#Install dependencies for documentation and tests
+
+`bower install`
+
+#Run tests
+
+* In your browser: go to `tests/index.html`
+* Headless tests: install mocha-phantomjs with npm: `npm install -g mocha-phantomjs` and then run `./bin/test-suite.sh`
+
 #Licence
 
 See LICENCE.md
