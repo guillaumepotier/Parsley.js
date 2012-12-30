@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>parsley.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0pr2&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0pr2&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/Parsley.html">Parsley</a></li>
+            
+                <li><a href="..&#x2F;classes/ParsleyField.html">ParsleyField</a></li>
+            
+                <li><a href="..&#x2F;classes/ParsleyForm.html">ParsleyForm</a></li>
+            
+                <li><a href="..&#x2F;classes/Validator.html">Validator</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: parsley.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*
+ * Parsley.js allows you to verify your form inputs frontend side, without writing a line of javascript. Or so..
+ *
+ * Author: Guillaume Potier - @guillaumepotier
+*&#x2F;
+
+!function ($) {
+
+  &quot;use strict&quot;;
+
+  &#x2F;**
+  * Validator class stores all constraints functions and associated messages.
+  * Provides public interface to add, remove or modify them
+  *
+  * @class Validator
+  * @constructor
+  *&#x2F;
+  var Validator = function ( options ) {
+    this.init( options );
+  }
+
+  Validator.prototype = {
+
+    constructor: Validator
+
+    &#x2F;**
+    * Error messages
+    * 
+    * @property messages
+    * @type {Object}
+    *&#x2F;
+    , messages: {
+        defaultMessage: &quot;This value seems to be invalid.&quot;
+      , type: {
+            email:      &quot;This value should be a valid email.&quot;
+          , url:        &quot;This value should be a valid url.&quot;
+          , number:     &quot;This value should be a valid number.&quot;
+          , digits:     &quot;This value should be digits.&quot;
+          , dateIso:    &quot;This value should be a valid date (YYYY-MM-DD).&quot;
+          , alphanum:   &quot;This value should be alphanumeric.&quot;
+        }
+      , notnull:        &quot;This value should not be null.&quot;
+      , notblank:       &quot;This value should not be blank.&quot;
+      , required:       &quot;This value is required.&quot;
+      , regexp:         &quot;This value seems to be invalid.&quot;
+      , min:            &quot;This value should be greater than %s.&quot;
+      , max:            &quot;This value should be lower than %s.&quot;
+      , range:          &quot;This value should be between %s and %s.&quot;
+      , minlength:      &quot;This value is too short. It should have %s characters or more.&quot;
+      , maxlength:      &quot;This value is too long. It should have %s characters or less.&quot;
+      , rangelength:    &quot;This value length is invalid. It should be between %s and %s characters long.&quot;
+      , equalto:        &quot;This value should be the same.&quot;
+    }
+
+    &#x2F;**
+    * Validator list. Built-in validators functions
+    * 
+    * @property validators
+    * @type {Object}
+    *&#x2F;
+    , validators: {
+        notnull: function ( val ) {
+        return val.length &gt; 0;
+      }
+
+      , notblank: function ( val ) {
+        return &#x27;&#x27; !== val.replace( &#x2F;^\s+&#x2F;g, &#x27;&#x27; ).replace( &#x2F;\s+$&#x2F;g, &#x27;&#x27; );
+      }
+
+      , required: function ( val ) {
+        return this.notnull( val ) &amp;&amp; this.notblank( val );
+      }
+
+      , type: function ( val, type ) {
+        var regExp;
+
+        switch ( type ) {
+          case &quot;number&quot;:
+            regExp = &#x2F;^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$&#x2F;;
+            break;
+          case &quot;digits&quot;:
+            regExp = &#x2F;^\d+$&#x2F;;
+            break;
+          case &quot;alphanum&quot;:
+            regExp = &#x2F;^\w+$&#x2F;;
+            break;
+          case &quot;email&quot;:
+            regExp = &#x2F;^((([a-z]|\d|[!#\$%&amp;&#x27;\*\+\-\&#x2F;=\?\^_&#x60;{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&amp;&#x27;\*\+\-\&#x2F;=\?\^_&#x60;{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$&#x2F;i;
+            break;
+          case &quot;url&quot;:
+            regExp = &#x2F;^(https?|s?ftp):\&#x2F;\&#x2F;(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\&#x2F;((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)+(\&#x2F;(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\&#x2F;|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|\&#x2F;|\?)*)?$&#x2F;i;
+            break;
+          case &quot;dateIso&quot;:
+            regExp = &#x2F;^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$&#x2F;;
+            break;
+          default:
+            return false;
+            break;
+        }
+
+        &#x2F;&#x2F; test regExp if not null
+        return &#x27;&#x27; !== val ? regExp.test( val ) : false;
+      }
+
+      , regexp: function ( val, regExp ) {
+        return new RegExp( regExp, &#x27;i&#x27; ).test( val );
+      }
+
+      , minlength: function ( val, min ) {
+        return val.length &gt;= min;
+      }
+
+      , maxlength: function ( val, max ) {
+        return val.length &lt;= max;
+      }
+
+      , rangelength: function ( val, arrayRange ) {
+        return this.minlength( val, arrayRange[ 0 ] ) &amp;&amp; this.maxlength( val, arrayRange[ 1 ] );
+      }
+
+      , min: function ( val, min ) {
+        return val &gt;= min;
+      }
+
+      , max: function ( val, max ) {
+        return val &lt;= max;
+      }
+
+      , range: function ( val, arrayRange ) {
+        return val &gt;= arrayRange[ 0 ] &amp;&amp; val &lt;= arrayRange[ 1 ];
+      }
+
+      , equalto: function ( val, elem ) {
+        return val === $( elem ).val();
+      }
+    }
+
+    &#x2F;*
+    * Register custom validators and messages
+    *&#x2F;
+    , init: function ( options ) {
+      var customValidators = options.customValidators
+        , customMessages = options.messages;
+
+      for ( var i in customValidators ) {
+        this.addValidator(i, customValidators[ i ]);
+      }
+
+      for ( var i in customMessages ) {
+        this.addMessage(i, customMessages[ i ]);
+      }
+    }
+
+    &#x2F;**
+    * Replace %s placeholders by values
+    *
+    * @method formatMesssage
+    * @param {String} message Message key
+    * @param {Mixed} args Args passed by validators functions. Could be string, number or object
+    * @return {String} Formatted string
+    *&#x2F;
+    , formatMesssage: function ( message, args ) {
+
+      if ( &#x27;object&#x27; === typeof args ) {
+        for ( var i in args ) {
+          message = this.formatMesssage( message, args[ i ] );
+        }
+
+        return message;
+      }
+
+      return message.replace(new RegExp(&quot;%s&quot;, &quot;i&quot;), args);
+    }
+
+    &#x2F;**
+    * Add &#x2F; override a validator in validators list
+    *
+    * @method addValidator
+    * @param {String} name Validator name. Will automatically bindable through data-name=&quot;&quot;
+    * @param {Function} fn Validator function. Must return {Boolean}
+    *&#x2F;
+    , addValidator: function ( name, fn ) {
+      this.validators[ name ] = fn;
+    }
+
+    &#x2F;**
+    * Add &#x2F; override error message
+    *
+    * @method addMessage
+    * @param {String} name Message name. Will automatically be binded to validator with same name
+    * @param {String} message Message
+    *&#x2F;
+    , addMessage: function ( key, message ) {
+      if ( &#x27;type&#x27; === key ) {
+        this.messages[ &#x27;type&#x27; ][ key ] = message;
+        return;
+      }
+
+      this.messages[ key ] = message;
+    }
+  }
+
+  &#x2F;**
+  * ParsleyField class manage each form field inside a validated Parsley form.
+  * Returns if field valid or not depending on its value and constraints
+  * Manage field error display and behavior, event triggers and more
+  *
+  * @class ParsleyField
+  * @constructor
+  *&#x2F;
+  var ParsleyField = function ( element, options ) {
+    this.init( &#x27;ParsleyField&#x27;, element, new Validator( options ), options );
+  }
+
+  ParsleyField.prototype = {
+
+    constructor: ParsleyField
+
+    &#x2F;*
+    * init data, bind jQuery on() actions
+    *&#x2F;
+    , init: function ( type, element, Validator, options ) {
+      this.type = type;
+      this.hash = this.generateHash();
+      this.$element = $( element );
+      this.isRequired = false;
+      this.Validator = Validator;
+      this.registeredValidators = this.errors = new Array();
+      this.options = $.extend(true, {}, $.fn[ &#x27;parsley&#x27; ].defaults, options, this.$element.data() );
+
+      &#x2F;&#x2F; a field is required if data-required=&quot;true&quot; or class=&quot;required&quot;
+      if ( &#x27;undefined&#x27; !== typeof this.options[ &#x27;required&#x27; ] || this.$element.hasClass( &#x27;required&#x27; ) ) {
+        this.isRequired = this.options[ &#x27;required&#x27; ] = true;
+      }
+
+      &#x2F;&#x2F; register validators
+      this.registerValidators();
+
+      &#x2F;&#x2F; bind parsley events if validators have been registered
+      if ( this.registeredValidators.length ) {
+        this.bindValidationEvents();
+      }
+    }
+
+    &#x2F;**
+    * Attach field validators functions passed through data-api
+    *
+    * @method registerValidators
+    *&#x2F;
+    , registerValidators: function () {
+      for ( var method in this.options ) {
+        if ( &#x27;function&#x27; === typeof this.Validator.validators[  method.toLowerCase() ] ) {
+          this.registeredValidators.push( {
+              method: method
+            , params: this.options[ method ]
+          } );
+        }
+      }
+    }
+
+    &#x2F;**
+    * Bind validation events on a field
+    *
+    * @method bindValidationEvents
+    *&#x2F;
+    , bindValidationEvents: function () {
+      this.$element.addClass( &#x27;parsley-validated&#x27; );
+
+      &#x2F;&#x2F; if a validation trigger is defined
+      if ( this.options.trigger ) {
+        this.$element.on( this.options.trigger.split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27;), false, $.proxy( this.triggerValidation, this ) );
+      }
+    }
+
+    &#x2F;**
+    * Hash management. Used for ul error
+    *
+    * @method generateHash
+    * @returns {String} 5 letters hash
+    *&#x2F;
+    , generateHash: function () {
+        var text = &#x27;&#x27;
+          , possible = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&quot;;
+
+        for ( var i = 0; i &lt; 5; i++ ) {
+          text += possible.charAt( Math.floor( Math.random() * possible.length ) );
+        }
+
+        return text;
+    }
+
+    &#x2F;**
+    * Public getHash accessor
+    *
+    * @method generateHash
+    * @returns {String} hash
+    *&#x2F;
+    , getHash: function() {
+      return this.hash;
+    }
+
+    &#x2F;**
+    * Called when validation is triggered by an event
+    * Do nothing if val.length &lt; this.options.validationMinlength
+    *
+    * @method triggerValidation
+    *&#x2F;
+    , triggerValidation: function() {
+      &#x2F;&#x2F; if some binded events are redundant (keyup &amp; keypress for example) and except for onSubmit, validate only once by field value change
+      var val = this.$element.val();
+
+      if ( this.val === val) {
+        return this.isValid;
+      }
+
+      this.val = val;
+
+      &#x2F;&#x2F; do validation process if field has enough chars and was not previously validated
+      if ( val.length &lt; this.options.validationMinlength &amp;&amp; !this.$element.hasClass( &#x27;parsley-error&#x27; ) ) {
+          return true;
+      }
+
+      this.validate();
+    }
+
+    &#x2F;**
+    * Called by ParsleyForm for fields batch validation
+    *
+    * @method submitValidation
+    * @return {Mixed} {Boolean} if field is validated, {null} if empty non required field
+    *&#x2F;
+    , submitValidation: function() {
+      if ( this.isRequired || &#x27;&#x27; !== this.$element.val() ) {
+        return this.validate();
+      }
+
+      return null;
+    }
+
+    &#x2F;**
+    * Validate a field &amp; display errors
+    *
+    * @method validate
+    * @return {Boolean} Is field valid or not
+    *&#x2F;
+    , validate: function () {
+      this.isValid = this.processFieldValidators( this.$element.val() );
+      return this.manageValidationResult();
+    }
+
+    &#x2F;**
+    * Loop through every fields validators
+    * Adds errors after unvalid fields
+    *
+    * @method processFieldValidators
+    * @param {String} val Field value
+    * @return {Boolean} Is field valid or not
+    *&#x2F;
+    , processFieldValidators: function ( val ) {
+      var isValid = true;
+
+      for ( var i in this.registeredValidators ) {
+        var method = this.registeredValidators[ i ].method
+          , requirements = this.registeredValidators[ i ].params;
+
+        if ( !this.Validator.validators[ method ]( val, requirements ) ) {
+          isValid = this.manageError( &#x27;add&#x27;, method, requirements );
+        } else {
+          this.manageError( &#x27;remove&#x27;, method );
+        }
+      }
+
+      return isValid;
+    }
+
+    &#x2F;**
+    * Fired when all validators have be executed
+    * Returns true or false if field is valid or not
+    * Adds parsley-success or parsley-error class on field
+    *
+    * @method manageValidationResult
+    * @return {Boolean} Is field valid or not
+    *&#x2F;
+    , manageValidationResult: function () {
+      if ( true === this.isValid ) {
+        this.removeErrors();
+        this.$element.removeClass( &#x27;parsley-error&#x27; ).addClass( &#x27;parsley-success&#x27; );
+      } else if ( false === this.isValid ) {
+        this.$element.removeClass( &#x27;parsley-success&#x27; ).addClass( &#x27;parsley-error&#x27; );
+      } else {
+        this.removeErrors();
+        this.$element.removeClass( &#x27;parsley-success&#x27; ).removeClass( &#x27;parsley-error&#x27; );
+      }
+
+      return this.isValid;
+    }
+
+    &#x2F;**
+    * Called when field fails or pass a validator constraint
+    * type: add|remove
+    * returns boolean if constraint fails or pass
+    *
+    * @method manageError
+    * @param {String} type &#x27;add&#x27; or &#x27;remove&#x27; error
+    * @param {String} methodName Method name
+    * @param {Mixed} requirements Method requirements if adding an error
+    * @return {Boolean} Is field valid or not
+    *&#x2F;
+    , manageError: function ( type, methodName, requirements ) {
+      switch ( type ) {
+        case &#x27;add&#x27; :
+          if ( false === this.options.addError( this.$element, methodName, requirements ) ) {
+             return false;
+           }
+
+          this.addError( methodName, requirements );
+
+          return false;
+        case &#x27;remove&#x27;:
+          this.removeError( methodName );
+
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    &#x2F;**
+    * Remove li &#x2F; ul error
+    *
+    * @method removeError
+    * @param {String} methodName Method Name
+    *&#x2F;
+    , removeError: function ( methodName ) {
+      var ulError = &#x27;ul#&#x27; + this.hash
+        , liError = ulError + &#x27; li.&#x27; + methodName;
+
+      &#x2F;&#x2F; remove li error, and ul error if no more li inside
+      if ( $( liError ).remove() &amp;&amp; $( ulError + &#x27; li&#x27; ).length === 0 ) {
+        $( ulError ).remove();
+      }
+    }
+
+    &#x2F;**
+    * Remove ul error
+    *
+    * @method removeErrors
+    *&#x2F;
+    , removeErrors: function () {
+      $( &#x27;ul#&#x27; + this.hash ).remove();
+    }
+
+    &#x2F;**
+    * Add li &#x2F; ul error
+    *
+    * @method addError
+    * @param {String} methodName Method name
+    * @param {Mixed} requirements Method requirements if adding an error
+    *&#x2F;
+    , addError: function ( methodName, requirements ) {
+      var ulError = &#x27;ul#&#x27; + this.hash
+        , liError = ulError + &#x27; li.&#x27; + methodName
+        , message = methodName === &#x27;type&#x27; ?
+            this.Validator.messages[ methodName ][ requirements ] : ( &#x27;undefined&#x27; === typeof this.Validator.messages[ methodName ] ?
+              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ methodName ], requirements ) );
+
+      if ( $( ulError ).length === 0 ) {
+        this.$element.after( &#x27;&lt;ul class=&quot;parsley-error-list&quot; id=&quot;&#x27; + this.hash + &#x27;&quot;&gt;&lt;&#x2F;ul&gt;&#x27; );
+      }
+
+      if ( $( liError ).length === 0 ) {
+        $( ulError ).append( &#x27;&lt;li class=&quot;parsley-error &#x27; + methodName + &#x27;&quot;&gt;&#x27; + message + &#x27;&lt;&#x2F;li&gt;&#x27;);
+      }
+    }
+  }
+
+  &#x2F;**
+  * ParsleyForm class manage Parsley validated form.
+  * Manage its fields and global validation
+  *
+  * @class ParsleyForm
+  * @constructor
+  *&#x2F;
+  var ParsleyForm = function ( element, options ) {
+    this.init( &#x27;parsleyForm&#x27;, element, options );
+  }
+
+  ParsleyForm.prototype = {
+
+    constructor: ParsleyForm
+
+    &#x2F;* init data, bind jQuery on() actions *&#x2F;
+    , init: function ( type, element, options ) {
+      this.type = type;
+      this.items = new Array();
+      this.$element = $( element );
+      this.options = options;
+      var self = this;
+
+      this.$element.find( options.inputs ).each( function () {
+        $( this ).parsley( options );
+        self.items.push( $( this) );
+      });
+
+      this.$element.on( &#x27;submit&#x27; , false, $.proxy( this.validate, this ) );
+    }
+
+    &#x2F;**
+    * Process each form field validation
+    * Display errors, call custom onSubmit() function
+    *
+    * @method validate
+    * @param {Object} event jQuery Event
+    * @return {Boolean} Is form valid or not
+    *&#x2F;
+    , validate: function ( event ) {
+      var isValid = true;
+
+      for ( var item in this.items ) {
+        if ( false === this.items[ item ].parsley( &#x27;submitValidation&#x27; ) ) {
+          isValid = false;
+        }
+      }
+
+      this.options.onSubmit( isValid, event );
+
+      return isValid;
+    }
+  }
+
+  &#x2F;**
+  * Parsley plugin definition
+  * Provides an interface to access public Validator, ParsleyForm and ParsleyItem functions
+  *
+  * @class Parsley
+  * @constructor
+  * @param {Mixed} Options. {Object} to configure Parsley or {String} method name to call a public class method
+  * @param {Function} Callback function
+  * @return {Mixed} public class method return
+  *&#x2F;
+  $.fn.parsley = function ( option, fn ) {
+    var options = $.extend(true, {}, $.fn.parsley.defaults, option, this.data() )
+      , returnValue = false;
+
+    function bind ( self, type ) {
+      var data = $( self ).data( type );
+
+      &#x2F;&#x2F; if data never binded, bind it right now!
+      if ( !data ) {
+        switch ( type ) {
+          case &#x27;parsleyForm&#x27;:
+            data = new ParsleyForm( self, options );
+            break;
+          case &#x27;parsleyField&#x27;:
+            data = new ParsleyField( self, options );
+            break;
+          default:
+            return;
+        }
+
+        $( self ).data( type, data );
+      }
+
+      &#x2F;&#x2F; here is our parsley public function accessor, currently does not support args
+      if ( &#x27;string&#x27; === typeof option &amp;&amp; &#x27;function&#x27; === typeof data[ option ] ) {
+        return data[ option ]( fn );
+      }
+    }
+
+    &#x2F;&#x2F; loop through every elemt we want to parsley
+    this.each( function () {
+      &#x2F;&#x2F; if a form elem is given, bind all its input children
+      if ( $( this ).is( &#x27;form&#x27; ) ) {
+        returnValue = bind ( $( this ), &#x27;parsleyForm&#x27; );
+
+      &#x2F;&#x2F; if it is a Parsley supported single element, bind it too
+      &#x2F;&#x2F; add here a return instance, cuz&#x27; we could call public methods on single elems with data[ option ]() above
+      } else if ( $( this ).is( options.inputs ) ) {
+        returnValue = bind( $( this ), &#x27;parsleyField&#x27; );
+      }
+    } );
+
+    return &#x27;function&#x27; === typeof fn ? fn() : returnValue;
+  }
+
+  $.fn.parsley.Constructor = ParsleyForm;
+
+  &#x2F;**
+  * Parsley plugin configuration
+  * 
+  * @property $.fn.parsley.defaults
+  * @type {Object}
+  *&#x2F;
+  $.fn.parsley.defaults = {
+    inputs: &#x27;input, textarea, select&#x27;                               &#x2F;&#x2F; Default supported inputs.
+    , trigger: false                                                &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
+    , validationMinlength: 3                                        &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
+    , onSubmit: function ( isFormValid, event ) {}                  &#x2F;&#x2F; Executed once on form validation
+    , addError: function ( elem, validator, requirements ) {         &#x2F;&#x2F; Override custom error function by returning false
+      return true;
+    }
+    , customValidators: {}                                          &#x2F;&#x2F; Add your custom validators functions
+    , messages: {}                                                  &#x2F;&#x2F; Add your own error messages here
+  }
+
+  &#x2F;* PARSLEY auto-bind DATA-API
+  * ======================== *&#x2F;
+  $( window ).on( &#x27;load&#x27;, function () {
+    $( &#x27;[data-validate=&quot;parsley&quot;]&#x27; ).each( function () {
+      $( this ).parsley();
+    })
+  });
+
+&#x2F;&#x2F; This plugin works with jQuery or Zepto (with data extension builded for Zepto.)
+}(window.jQuery || window.Zepto);
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>
