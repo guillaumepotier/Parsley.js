@@ -8,268 +8,120 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="http://twitter.github.com/bootstrap/assets/css/docs.css" rel="stylesheet">
-    <link href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="components/bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 20px;
+        padding-bottom: 40px;
+      }
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 770px;
+      }
+      .container-narrow > hr {
+        margin: 15px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 20px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 20px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+    </style>
+    <link href="components/bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <style>
-        body {
-            display: block;
-            padding: 10px 10%;
-            padding-top: 0;
-            margin: auto;
-        }
+  </head>
 
-        h1.affix {
-            display: block;
-        }
+  <body>
 
-        #head-download {
-            float: right;
-        }
+    <div class="container-narrow">
 
-        .download a, .download a:hover {
-            text-decoration:none;
-        }
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="index.html">Home</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="#about.html">About</a></li>
+        </ul>
+        <h3 class="muted">Parsley.js</h3>
+      </div>
 
-        .container {
-            margin-top: 0;
-        }
+      <hr>
 
-        pre {
-            margin: 10px 0 15px 0;
-        }
+      <div class="jumbotron">
+        <h1>Javascript forms validation.<br/>Powerful & Dead simple.</h1>
+        <p class="lead">Never write anymore a single javascript line to validate your forms frontend. Parsley will do that for you, thanks to its powerful DOM-API</p>
+        <a class="btn btn-large btn-success" href="documentation.html">See documentation</a>
+      </div>
 
-        .affix {
-            position: fixed;
-            clear: both;
-        }
+      <hr>
 
-        .bs-docs-sidenav.affix {
-            top: 200px;
-        }
+      <div class="row-fluid marketing">
+        <div class="span6">
+          <h4>Super light</h4>
+          <p>Less than <strong>600</strong> lines. Less than <strong>12k</strong> minified.<br/>Works with <strong>jQuery</strong> and <strong>Zepto</strong>.</p>
+          <p>Get <a href="https://github.com/guillaumepotier/Parsley.js/tree/master/dist">Latest version</a>.</p>
 
-        #demonstration {
-            padding-top: 0;
-        }
+          <h4>Super free</h4>
+          <p>Parsley is <strong>open source</strong>, <strong>MIT</strong> licenced, and developped to help everyone. It will <strong>stay that way</strong>.</p>
+          <p>See <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/LICENCE.md">Licence</a>.</p>
 
-        .parsley-alert {
-            /* twitter bootstrap alert */
-            padding: 6px 35px 6px 14px;
-            margin-bottom: 20px;
-            color: #C09853;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-            background-color: #FCF8E3;
-            border: 1px solid #FBEED5;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            border-radius: 4px;
-
-            /* twitter bootstrap alert-info */
-            color: #3A87AD;
-            background-color: #D9EDF7;
-            border-color: #BCE8F1;
-
-            /* Parsley custo */
-            cursor: pointer;
-            margin-left: 5px;
-            padding: 4px 6px;
-            height: 20px;
-        }
-    </style>
-</head>
-<body data-spy="scroll" data-target=".navbar" data-offset="100">
-
-    <a href="http://parsleyjs.org"><img style="position: fixed; top: 0; right: 0; border: 0; z-index:9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-    <a name="top"></top>
-    <div class="container">
-        <h1 class="">
-            Parsley.js
-            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://parsleyjs.org" data-text="Parsley.js: frontend javascript form validation, without writing a single javascript line !" data-size="large"></a>
-            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-            <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=parsley.js&type=watch&count=true"
-              allowtransparency="true" frameborder="0" scrolling="0" width="90" height="25"></iframe>
-            <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=parsley.js&type=fork&count=true"
-            allowtransparency="true" frameborder="0" scrolling="0" width="90" height="25"></iframe>
-
-            <img src="https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master" />
-        </h1>
-
-        <div class="row well intro">
-            <div id="head-download" class="download">
-                <a href="https://github.com/guillaumepotier/Parsley.js/archive/0.1.0.zip">
-                    <img width="90" border="0" src="http://github.com/images/modules/download/zip.png" onclick="onclick=”var that=this;_gaq.push(['_trackEvent','Download','ZIP',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”">
-                </a>
-                <a href="https://github.com/guillaumepotier/Parsley.js/archive/0.1.0.tar.gz">
-                    <img width="90" border="0" src="http://github.com/images/modules/download/tar.png" onclick="onclick=”var that=this;_gaq.push(['_trackEvent','Download','TAR',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”">
-                </a>
-            </div>
-
-            <p>
-                Parsley.js allows you to automatically validate your forms frontend, without writting actually a single line of javascript, thanks to its ultra simple API.
-            </p>
-            <p>
-               It strives to have a javascript agnostic interface for UI/UX developers that might want to use it. Just add some <code>data-validate="parsley"</code> in your form tags, some <code>data-type="email"</code>, <code>data-type="digits"</code> to validate your fields, and you're good to go!
-            </p>
         </div>
 
-        <div class="row row-content">
-            <div class="span3 bs-docs-sidenav">
-                <ul class="nav nav-list bs-docs-sidenav affix">
-                    <li><a href="#demonstration"><i class="icon-chevron-right"></i> Demonstration</a></li>
-                    <li><a href="#requirements"><i class="icon-chevron-right"></i> Requirements / Compatibiliy</a></li>
-                    <li><a href="#download"><i class="icon-chevron-right"></i> Download</a></li>
-                    <li><a href="#usage"><i class="icon-chevron-right"></i> Usage</a></li>
-                    <li><a href="#documentation"><i class="icon-chevron-right"></i> Documentation</a></li>
-                    <li><a href="#they-use"><i class="icon-chevron-right"></i> They use Parsley.js !</a></li>
-                    <li><a href="#licence"><i class="icon-chevron-right"></i> Version / Licence</a></li>
-                </ul>
-            </div>
+        <div class="span6">
+            <h4>Super simple</h4>
+              <p>Want to validate a field? Just <strong>write it in English</strong> with awesome Parsley <strong>DOM-API</strong> using jQuery data API.</p>
+              <p>See <a href="documentation.html">documentation</a>.</p>
 
-            <div class="span9 doc-content">
-                <section id="demonstration">
-                    <div class="page-header">
-                        <h1>Demonstration <small>some magic..</small></h1>
-                    </div>
+          <h4>Super reliable</h4>
+          <p>Form validation is important. Parsley is shipped <i>almost</i> bugs free.</p>
+          <p>See Parsley <a href="tests/index.html">Test Suite</a>.</p>
 
-                    <a name="demo"></a>
-                    <form data-validate="parsley">
-                        <div class="field">
-                            <legend>This field should be an email, validation occurs once focus leave this field:</legend>
-                            <input type="text" data-type="email" data-validation-trigger="change" class="required" />
-                        </div>
-                        <div class="field">
-                            <legend>This field should be an url, validation starts after 8 characters:</legend>
-                            <input type="text" data-type="url" data-charsToValidate="8" />
-                        </div>
-                        <div class="field">
-                            <legend>This field should be an integer between 10 and 100, validation starts:</legend>
-                            <input type="text" data-range="[10,100]" data-validation-minlength="2" data-validation-trigger="change" />
-                        </div>
-                        <div class="field">
-                            <legend>This field is required:</legend>
-                            <input type="text" data-required="true" />
-                        </div>
-                        <div class="field">
-                            <legend>This field should be alphanumeric, and 10 characters long max:</legend>
-                            <input type="text" data-type="alphanum" data-maxlength="10" />
-                        </div>
-                        <input type="submit" />
-                    </form>
-                    
-                    <a href="#top" class="pull-right">Top</a>
-                </section>
-
-                <section id="requirements">
-                    <div class="page-header">
-                        <h1>Requirements / Compatibiliy</h1>
-                    </div>
-                    Parsley is delivred to you in different builds (in the Github dist/ directory), here they are:<br/><br/>
-                    <ul>
-                        <li>
-                            <strong><a href="https://github.com/guillaumepotier/Parsley.js/tree/master/dist">Parsley.min.js: ~8K</a></strong>, requires jQuery or Zepto (with data module builded for Zepto
-                        </li><br/>
-                        <li>
-                            <strong><a href="https://github.com/guillaumepotier/Parsley.js/tree/master/dist">Parsley-standalone.min.js: ~25K</a></strong>, with minimum Zepto config builded inside. Requires nothing more. <strong>Only use that one if you don't already have jQuery or Zepto on your website, could make conflicts</strong></a>
-                        </li><br/>
-                        <li>
-                            Tested on only recent browsers at the moment<br/>
-                            <strong>Use it that way with Parsley:</strong>
-                            <pre>
-&lt;script src="http://code.jquery.com/jquery-1.8.2.min.js">&lt;/script>
-&lt;script src="parsley.js">&lt;/script></pre>
-                        </li>
-                    </ul>
-                    <a href="#top" class="pull-right">Top</a>
-                </section>
-
-                <section id="download">
-                    <div class="page-header">
-                        <h1>Download</h1>
-                    </div>
-                    <div id="download" class="download">
-                        <a href="https://github.com/guillaumepotier/Parsley.js/archive/0.1.0.zip" onclick="onclick=”var that=this;_gaq.push(['_trackEvent','Download','ZIP',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”" >
-                            <img width="90" border="0" src="http://github.com/images/modules/download/zip.png">
-                        </a>
-                        <a href="https://github.com/guillaumepotier/Parsley.js/archive/0.1.0.tar.gz" onclick="onclick=”var that=this;_gaq.push(['_trackEvent','Download','TAR',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”">
-                            <img width="90" border="0" src="http://github.com/images/modules/download/tar.png">
-                        </a>
-                    </div>
-                </section>
-
-                <section id="usage">
-                    <div class="page-header">
-                        <h1>Usage</h1>
-                    </div>
-                    <ul>
-                        <li>
-                            <strong>Include jQuery or Zepto (if not already here) and parsley.js</strong><br/>
-                            <pre>
-&lt;script src="jquery.js"></script>
-&lt;script src="parsley.js"></script></pre>
-                        </li>
-                        <li>
-                            <strong>Add </strong><code>data-validate="parsley"</code><strong> to the forms you want to auto-validate</strong><br/>
-                            <pre>
-&lt;form data-validate="persist" method="POST">
-    &lt;input type="text" data-type="email" />
-&lt;/form></script></pre>
-                        </li>
-                    </ul>
-                    <h3>That's all! ;)</h3>
-                    <a href="#top" class="pull-right">Top</a>
-                </section>
-
-                <section id="documentation">
-                    <div class="page-header">
-                        <h1>Documentation</h1>
-                    </div>
-                    More to come..
-                    <a href="#top" class="pull-right">Top</a>
-                </section>
-
-                <section id="they-use">
-                    <div class="page-header">
-                        <h1>They use Parsley.js !</h1>
-                    </div>
-                    More to come..
-                </section>
-
-                <section id="licence">
-                    <div class="page-header">
-                        <h1>Version / Licence</h1>
-                    </div>
-                    <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/README.md">0.1.0 - MIT</a> - <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/CHANGELOG.md">See changelog</a>
-                    <a href="#top" class="pull-right">Top</a>
-                </section>
-            </div>
         </div>
-    </div>
+      </div>
 
-    <br/>
-    <p>&copy; <a href="http://twitter.com/guillaumepotier" target="_blank">@guillaumepotier</a> 2012 <a href="http://wisembly.com/en/#parsley">@wisembly</a></p>
+      <hr>
 
-<script src="resources/jquery-1.8.2.min.js"></script>
-<script src="parsley.js"></script>
-<script type="text/javascript">
+      <div class="footer">
+        <p>&copy; <a href="http://twitter.com/guillaumepotier">@guillaumepotier</a> @<a href="http://wisembly.com/en/">Wisembly</a> 2012</p>
+      </div>
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-37229467-1']);
-  _gaq.push(['_trackPageview']);
+    </div> <!-- /container -->
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+    <script type="text/javascript">
 
-</script>
-</body>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-37229467-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </body>
 </html>

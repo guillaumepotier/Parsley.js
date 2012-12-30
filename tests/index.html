@@ -37,7 +37,7 @@
 
     <div style="display: none;">
         <form data-validate="parsley">
-            <input type="text" id="input1" data-minlength="6" />
+            <input type="text" id="input1" data-minlength="6" data-trigger="change keyup" />
             <textarea id="textarea1"></textarea>
         </form>
         <form>
@@ -80,7 +80,6 @@
         </form>
         <form id="change-validation" data-validate="parsley">
             <input type="text" id="minchar-change" data-type="email" data-validation-minlength="7" />
-            <input type="text" id="event-change" data-type="email" data-validation-trigger="change" />
         </form>
         <form id="validation-scenarios" data-validate="parsley">
             <input type="text" id="scenario-not-required" data-minlength="6" />
@@ -88,8 +87,8 @@
     </div>
 
     <script type="text/javascript">
-        var jquery = '../resources/jquery-1.8.2.min.js'
-          , zepto = '../resources/zepto-1.0rc1[zepto.event.data].min.js';
+        var jquery = 'resources/jquery.min.js'
+          , zepto = 'resources/zepto-1.0rc1[zepto.event.data].min.js';
 
         switch ( location.hash ) {
             case '#zepto':
