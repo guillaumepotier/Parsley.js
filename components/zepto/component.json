@@ -1,0 +1,14 @@
+{
+  "name": "zepto",
+  "version": "0.0.0",
+  "main": "./zepto.js",
+  "dependencies": {},
+  "_id": "zepto@1.0.0rc1",
+  "readme": "ERROR: No README.md file found!",
+  "description": "ERROR: No README.md file found!",
+  "commit": "2379350b4d45e577176825ee2d6893a9918a1805",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/components/zepto.git"
+  }
+}
