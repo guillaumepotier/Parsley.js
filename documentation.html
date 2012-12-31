@@ -79,14 +79,15 @@
 
       <div class="container-narrow">
 
-        <div class="masthead">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="index.html">Home</a></li>
-            <li class="active"><a href="documentation.html">Documentation</a></li>
-            <li><a href="#about.html">About</a></li>
-          </ul>
-          <h3 class="muted">Parsley.js</h3>
-        </div>
+          <div class="masthead">
+            <ul class="nav nav-pills pull-right">
+              <li class="active"><a href="index.html">Home</a></li>
+              <li><a href="documentation.html">Documentation</a></li>
+              <li><a href="doc/api/index.html" target="_blank">API</a></li>
+              <li><a href="#about.html">About</a></li>
+            </ul>
+            <h3 class="muted">Parsley.js</h3>
+          </div>
 
         <hr>
 
@@ -444,6 +445,32 @@
                                     </td>
                                     <td>
                                         <span class="btn btn-small" onclick="javascript:$('#data-regexp').parsley('validate');">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- EqualTo -->
+                    <tr>
+                        <td>Equal To</td>
+                        <td>
+                            <code>data-equalTo="#elem"</code>
+                        </td>
+                        <td>Validates that a value is identical to #elem value. Useful for password repeat validation.</td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <form data-validate="parsley">
+                                            <input type="text" id="eqalToModel" data-equalTo="#eqalToModel" disabled="disabled" value="foo" />
+                                            <input type="text" id="data-equalto" data-equalTo="#eqalToModel" placeholder="equal to foo" />
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#data-equalto').parsley('validate');">
                                             <i class="icon-ok"></i>
                                         </span>
                                     </td>
