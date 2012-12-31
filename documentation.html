@@ -8,7 +8,8 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="components/bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="components/bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="http://yandex.st/highlightjs/7.3/styles/github.min.css" rel="stylesheet" />
     <style type="text/css">
       body {
         padding-top: 20px;
@@ -43,12 +44,12 @@
       form {
           margin: 0;
       }
-      input.parsley-success {
+      input.parsley-success, textarea.parsley-success {
         color: #468847 !important;
         background-color: #DFF0D8 !important;
         border: 1px solid #D6E9C6 !important;
       }
-      input.parsley-error {
+      input.parsley-error, textarea.parsley-error {
         color: #B94A48 !important;
         background-color: #F2DEDE !important;
         border: 1px solid #EED3D7 !important;
@@ -72,7 +73,6 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
   </head>
 
   <body>
@@ -91,6 +91,12 @@
 
         <hr>
 
+        <h2>Summary</h2>
+        <h3> Demonstration</h3>
+        <ol>
+            <li><a href="#parsleydemoform"><strong>Parsley Demonstration Form</strong>: a very very classy form, 30 sec just needed to add proper validation !</a></li>
+        </ol>
+        <h3> Documentation</h3>
         <ol>
             <li><a href="#parsleyform"><strong>Parsley Form</strong>: add some Parsley validation to your forms!</a></li>
             <li><a href="#parsleyfield"><strong>Parsley Field</strong>: customize each validated field validation behavior </a></li>
@@ -114,17 +120,65 @@
         <hr>
 
         <div class="row-fluid marketing">
+            <h2>Demonstration</h2>
+
+                <a name="parsleydemoform"></a>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="300px">Classy demo</th>
+                            <th>HTML Code (yes, no JS !)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <form id="demo-form" data-validate="parsley">
+                                    <label for="fullname">Full Name * :</label>
+                                    <input type="text" id="fullname" name="fullname" data-required="true" />
+
+                                    <label for="email">Email * :</label>
+                                    <input type="text" id="email" name="email" data-trigger="change" data-required="true" data-type="email" />
+
+                                    <label for="website">Website :</label>
+                                    <input type="text" id="website" name="website" data-trigger="change" data-type="url" />
+
+                                    <label for="message">Message (20 chars min, 200 max) :</label>
+                                    <textarea id="message" name="message" data-trigger="keyup" data-rangelength="[20,200]"></textarea>
+
+                                    <br/><span class="btn btn" onclick="javascript:$('#demo-form').parsley( 'validate' );"><i class="icon-ok"></i></span>
+                                </form>
+                            </td>
+                            <td>
+<pre><code>&lt;form id="demo-form" data-validate="parsley">
+    &lt;label for="fullname">Full Name * :&lt;/label>
+    &lt;input type="text" id="fullname" name="fullname" data-required="true" />
+
+    &lt;label for="email">Email * :&lt;/label>
+    &lt;input type="text" id="email" name="email" data-trigger="change" data-required="true" data-type="email" />
+
+    &lt;label for="website">Website :&lt;/label>
+    &lt;input type="text" id="website" name="website" data-trigger="change" data-type="url" />
+
+    &lt;label for="message">Message (20 chars min, 200 max) :&lt;/label>
+    &lt;textarea id="message" name="message" data-trigger="keyup" data-rangelength="[20,200]">&lt;/textarea>
+&lt;/form></code></pre>
+                            </td>
+                        </tr>
+                </table>
+
+                <hr>
+
+            <h2>Documentation</h2>
+            <a href="#top" class="top pull-right">Top</a>
 
             <!-- //////////////////////////////////////////////////////////////////////////////////////////////////// -->
             <section>
-                <a name="parsleyfield"></a>
-                <div class="page-header">
-                    <h2>Parsley Form</h2>
-                </div>
+                <a name="parsleyform"></a>
+                <h3>Parsley Form</h3>
                 <p>This is the main Parsely form validation factory. Where you decide if a form is validated, and some extra options.</p>
-                <pre>
-    &lt;form data-validate="parsley">&lt;/form></pre>
-                <h3>Properties</h3>
+                <pre><code>&lt;form data-validate="parsley">&lt;/form></code></pre>
+                <h4>Properties</h4>
                 <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
@@ -149,15 +203,12 @@
             <!-- //////////////////////////////////////////////////////////////////////////////////////////////////// -->
             <section>
                 <a name="parsleyfield"></a>
-                <div class="page-header">
-                    <h2>Parsley Field</h2>
-                </div>
+                <h3>Parsley Field</h3>
                 <p>Once your form is validated by Parsley, add validation constraints and various other options.</p>
-                <pre>
-    &lt;form data-validate="parsley">
-        &lt;input type="text" name="email" data-type="email" />
-    &lt;/form></pre>
-                <h3>Properties</h3>
+<pre><code>&lt;form data-validate="parsley">
+    &lt;input type="text" name="email" data-type="email" />
+&lt;/form></code></pre>
+                <h4>Properties</h4>
                 <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
@@ -207,7 +258,7 @@
             <section>
                 <a name="validators"></a>
                 <div class="page-header">
-                    <h2>Built-in validators</h2>
+                    <h4>Built-in validators</h4>
                 </div>
                 <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -223,7 +274,7 @@
                     <tr>
                         <td colspan="4">
                             <a name="basic-constraints"></a>
-                            <h3>Basic constraints</h3>
+                            <h4>Basic constraints</h4>
                         </td>
                     </tr>
 
@@ -482,7 +533,7 @@
                     <tr>
                         <td colspan="4">
                             <a name="type-constraints"></a>
-                            <h3>Type constraints</h3>
+                            <h4>Type constraints</h4>
                         </td>
                     </tr>
 
@@ -645,7 +696,7 @@
             <section>
                 <a name="javascript"></a>
                 <div class="page-header">
-                    <h2>Javascript</h2>
+                    <h3>Javascript</h3>
                     <p>Parsley DOM-API is great. But not so great for complex forms, or dynamically generated forms. Learn here how to masterise Parsley javascript style!</p>
                 </div>
                 <table class="table table-striped table-bordered table-hover">
@@ -653,34 +704,79 @@
                     <tr>
                         <th>Method</th>
                         <th>Returns</th>
-                        <th>Description</th>
-                        <th>Code</th>
+                        <th width="350">Description</th>
+                        <th width="320">Code</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <a name="javascript-general"></a>
-                        <td colspan="4"><h3>General</h3></td>
+                        <td colspan="4"><h4>General</h4></td>
                     </tr>
                     <tr>
+                        <td>Override default plugin configs</td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>Parsley uses a set of default overridable configs that you can override passing an object as parameter when calling Parsley on a form or a field.<br/>Default is:
+<pre><code>{
+    inputs: 'input, textarea, select'
+  , trigger: false
+  , validationMinlength: 3
+  , onSubmit: function ( isFormValid, event ) {}
+  , addError: function ( elem, validator, requirements ) {
+      return true;
+    }
+  , customValidators: {}
+  , messages: {}
+}</code></pre>
+                        </td>
+                        <td><p>Add a custom validator that checks if number is a multiple of another:</p>
+<pre><code>$( '#form' ).parsley( {
+    customValidators: {
+      multiple: function ( val, multiple ) {
+        return val % multiple === 0;
+      }
+    }
+  , messages: {
+      multiple: "This value should be a multiple of %s"
+    }
+} );
+&lt;input type="text" data-multiple="3" /></code></pre>
+                            <form id="parsley-multiple">
+                                <input type="text" id="data-multiple" data-validation-minlength="0" data-trigger="keyup" data-multiple="3" placeholder="multiple of 3" />
+                            </form>
+                        </td>
                     </tr>
                     <tr>
                         <a name="javascript-form"></a>
-                        <td colspan="4"><h3>Form</h3></td>
+                        <td colspan="4"><h4>Form</h4></td>
+                    </tr>
+                    <tr>
+                        <td>Bind Parsley to a form</td>
+                        <td></td>
+                        <td>Useful if your form is dynamically rendered.</td>
+                        <td>
+<pre><code>$( '#form' ).parsley();</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Validate a form</td>
+                        <td>Boolean</td>
+                        <td>Useful if your want to integrate validation process inside custom functions.</td>
+                        <td>
+<pre><code>$( '#form' ).parsley( 'validate' );</code></pre>
+                        </td>
                     </tr>
                     <tr>
                         <a name="javascript-item"></a>
-                        <td colspan="4"><h3>Item</h3></td>
+                        <td colspan="4"><h4>Item</h4></td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>Validate a field</td>
+                        <td>Boolean</td>
+                        <td>Useful if your want to integrate field validation process inside custom functions.</td>
+                        <td>
+<pre><code>$( '#field' ).parsley( 'validate' );</code></pre>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -696,6 +792,22 @@
 
     </div> <!-- /container -->
     <script type="text/javascript" src="dist/parsley-standalone.min.js"></script>
+    <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+
+        $( '#parsley-multiple' ).parsley( {
+          customValidators: {
+            multiple: function ( val, multiple ) {
+              return val % multiple === 0;
+            }
+          }
+          , messages: {
+              multiple: "This value should be a multiple of %s"
+            }
+        } );
+    </script>
+
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
