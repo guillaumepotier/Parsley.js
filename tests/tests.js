@@ -244,6 +244,13 @@ var testSuite = function () {
         triggerSubmitValidation( '#typealphanum', 'foo' );
         expect( $( '#typealphanum' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'equalTo', function () {
+        triggerSubmitValidation( '#equalTo', 'foo' );
+        expect( $( '#equalTo' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#equalTo', 'equalTo') ).to.be( 'This value should be the same.' );
+        triggerSubmitValidation( '#equalTo', 'foobar' );
+        expect( $( '#equalTo' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'customvalidator', function () {
         triggerSubmitValidation( '#customvalidator', 'foo' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
