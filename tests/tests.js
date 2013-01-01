@@ -2,37 +2,43 @@
 
 var triggerSubmitValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
-  $( idOrClass ).parsley( 'validate' );
+  $( idOrClass ).parsley( 'validate', true );
 }
 
 var triggerEventChangeValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
-  $( idOrClass ).parsley( 'triggerValidation' );
+  triggerEventValidation( idOrClass );
+}
+
+var triggerEventValidation = function ( idOrClass ) {
+  // eventValidation expects a jQuery Event object, with type like 'keyup', 'change'. Emulate a neutral one
+  $( idOrClass ).parsley( 'eventValidation', { type: null } );
 }
 
 var getErrorMessage = function ( idOrClass, method ) {
   return $( 'ul#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
 }
 
+$( '#validate-form' ).parsley( {
+  onSubmit: function ( isFormValid, event ) {
+    $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
+    event.preventDefault();
+  }
+} );
+
+$( '#validator-tests' ).parsley( {
+  customValidators: {
+    multiple: function ( val, multiple ) {
+      return val % multiple === 0;
+    }
+  }
+  , messages: {
+    multiple: 'This field should be a multiple of %s'
+  }
+} );
+
 var testSuite = function () {
   describe ( 'Parsley.js test suite', function () {
-    $( '#validate-form' ).parsley( {
-      onSubmit: function ( isFormValid, event ) {
-        $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
-        event.preventDefault();
-      }
-    } );
-
-    $( '#validator-tests' ).parsley( {
-      customValidators: {
-        multiple: function ( val, multiple ) {
-          return val % multiple === 0;
-        }
-      }
-      , messages: {
-        multiple: 'This field should be a multiple of %s'
-      }
-    } );
 
     /***************************************
             Fields validators binding
@@ -45,6 +51,9 @@ var testSuite = function () {
       it ( 'Items with validation methods can be validated as stand-alone too', function () {
         expect( $( '#input2' ).hasClass( 'parsley-validated' ) ).to.be( true );
         expect( $( '#textarea2' ).hasClass( 'parsley-validated' ) ).to.be( false );
+      } )
+      it ( 'Do not bind an input that type is hidden', function () {
+        expect( $( '#hidden' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
     } )
 
@@ -94,11 +103,14 @@ var testSuite = function () {
       it ( 'Test two errors on the same field', function () {
         triggerSubmitValidation( '#errormanagement', 'foo@' );
         expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );
+        expect( $( 'ul#' + fieldHash + ' li.type' ).length ).to.be( 1 );
+        expect( $( 'ul#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'If one error is fixed, show the remaining one', function () {
         triggerSubmitValidation( '#errormanagement', 'foo' );
         expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( 'ul#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'If there are no more errors, full validation ok', function () {
@@ -267,7 +279,7 @@ var testSuite = function () {
     ***************************************/
     describe ( 'Test in field options validation changes', function () {
       it ( 'Change min char validation tresshold', function () {
-        // default min char validation is set to 4. here we expect an email value
+        // default min char validation is set to 3. here we expect an email value
         // it should normally throw an error, but not here, since custom tresshlod is set to 7
         triggerEventChangeValidation( '#minchar-change', 'foobar' );
         expect( $( '#minchar-change' ).hasClass( 'parsley-success' ) ).to.be( false );
@@ -283,33 +295,54 @@ var testSuite = function () {
          test field validation scenarios
     ***************************************/
     describe ( 'Test field validation scenarios', function () {
-      it ( 'Test scenario for non-required field', function () {
+      it ( 'Test keyup scenario for non-required field', function () {
         // do not pass the 3 chars min trigger
         $( '#scenario-not-required' ).val( 'fo' );
-        $( '#scenario-not-required' ).parsley( 'triggerValidation' );
+        triggerEventValidation( '#scenario-not-required' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-success' ) ).to.be( false );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-error' ) ).to.be( false );
 
-        // val.length >= 4, validation is done
+        // val.length >= 3, validation is done
         $( '#scenario-not-required' ).val( 'foob' );
-        $( '#scenario-not-required' ).parsley( 'triggerValidation' );
+        triggerEventValidation( '#scenario-not-required' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-error' ) ).to.be( true );
 
         // pass validation
         $( '#scenario-not-required' ).val( 'foobar' );
-        $( '#scenario-not-required' ).parsley( 'triggerValidation' );
+        triggerEventValidation( '#scenario-not-required' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-success' ) ).to.be( true );
 
         // re-fail validation
         $( '#scenario-not-required' ).val( 'fooba' );
-        $( '#scenario-not-required' ).parsley( 'triggerValidation' );
+        triggerEventValidation( '#scenario-not-required' );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-error' ) ).to.be( true );
 
         // then, delete field value. Field is not required. Remove errors, remove parsley classes
         $( '#scenario-not-required' ).val( '' );
-        $( '#scenario-not-required' ).parsley( 'triggerValidation' );
-        expect( $( '#scenario-not-required' ).hasClass( 'parsley-errors' ) ).to.be( false );
+        triggerEventValidation( '#scenario-not-required' );
+        expect( $( '#scenario-not-required' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#scenario-not-required' ).hasClass( 'parsley-success' ) ).to.be( false );
+      } )
+      it ( 'Test auto-keyup binding when field has errors', function () {
+        // keyup do not trigger validation since validation is explicitely triggered on change
+        $( '#scenario-keyup-when-notvalid' ).val( 'foobar' );
+        $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
+        expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
+
+        // then, if we trigger change event, field is checked and considered invalid
+        $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'change' ) );
+        expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+        // then, for better UX, keypress is activated to remove asap this error status
+        $( '#scenario-keyup-when-notvalid' ).val( 'foo@bar.baz' );
+        $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
+        expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        // than keypress event is no more listened, cuz' field passed previously validation, wait next change event..
+        $( '#scenario-keyup-when-notvalid' ).val( 'foo@bar' );
+        $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
+        expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
     } )
 

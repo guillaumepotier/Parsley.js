@@ -16,7 +16,7 @@
         padding-bottom: 40px;
       }
       h3.muted {
-          color: #FB4006;
+          color: #08C;
       }
       /* Custom container */
       .container-narrow {
@@ -158,6 +158,16 @@
                             </td>
                         </tr>
                 </table>
+
+                <span class="label label-important">Heads up!</span> <strong>Le #UX touch:</strong>
+                <ul>
+                    <li>
+                        <strong>Min char validation</strong>: Parsley by default do not proceed field validation under 3 char length. Do not assault your users with to soon error messages! (this 3 chars tresshold is configurable).
+                    </li>
+                    <li>
+                        <strong>Quick error removal</strong>: when a field is detected and shown as invalid, next checks are done on each keypress to try to quickly remove error(s) message(s) once field is ok.
+                    </li>
+                </ul>
 
                 <hr>
 

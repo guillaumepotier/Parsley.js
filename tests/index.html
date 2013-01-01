@@ -38,6 +38,7 @@
     <div style="display: none;">
         <form data-validate="parsley">
             <input type="text" id="input1" data-minlength="6" data-trigger="change keyup" />
+            <input type="hidden" id="hidden" />
             <textarea id="textarea1"></textarea>
         </form>
         <form>
@@ -45,7 +46,7 @@
             <textarea id="textarea2"></textarea>
         </form>
         <form data-validate="parsley">
-            <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum"/>
+            <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum" />
         </form>
         <form id="validator-tests" data-validate="parsley">
             <input type="text" id="notnull" data-notnull="true" />
@@ -82,10 +83,11 @@
             <input type="submit" id="validate-form-submit" />
         </form>
         <form id="change-validation" data-validate="parsley">
-            <input type="text" id="minchar-change" data-type="email" data-validation-minlength="7" />
+            <input type="text" id="minchar-change" data-type="email" data-trigger="keyup" data-validation-minlength="7" />
         </form>
         <form id="validation-scenarios" data-validate="parsley">
-            <input type="text" id="scenario-not-required" data-minlength="6" />
+            <input type="text" id="scenario-not-required" data-trigger="keyup" data-minlength="6" />
+            <input type="text" id="scenario-keyup-when-notvalid" data-trigger="change" data-type="email" />
         </form>
     </div>
 
