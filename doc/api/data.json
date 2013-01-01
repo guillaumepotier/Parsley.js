@@ -51,7 +51,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 477,
+            "line": 475,
             "description": "ParsleyForm class manage Parsley validated form.\nManage its fields and global validation",
             "is_constructor": 1
         },
@@ -64,7 +64,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 531,
+            "line": 540,
             "description": "Parsley plugin definition\nProvides an interface to access public Validator, ParsleyForm and ParsleyItem functions",
             "is_constructor": 1,
             "params": [
@@ -170,7 +170,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 245,
+            "line": 248,
             "description": "Attach field validators functions passed through data-api",
             "itemtype": "method",
             "name": "registerValidators",
@@ -178,7 +178,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 261,
+            "line": 264,
             "description": "Bind validation events on a field",
             "itemtype": "method",
             "name": "bindValidationEvents",
@@ -186,7 +186,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 275,
+            "line": 281,
             "description": "Hash management. Used for ul error",
             "itemtype": "method",
             "name": "generateHash",
@@ -198,7 +198,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 292,
+            "line": 298,
             "description": "Public getHash accessor",
             "itemtype": "method",
             "name": "generateHash",
@@ -210,47 +210,30 @@
         },
         {
             "file": "parsley.js",
-            "line": 302,
+            "line": 308,
             "description": "Called when validation is triggered by an event\nDo nothing if val.length < this.options.validationMinlength",
             "itemtype": "method",
-            "name": "triggerValidation",
+            "name": "eventValidation",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "jQuery event",
+                    "type": "Object"
+                }
+            ],
             "class": "ParsleyField"
         },
         {
             "file": "parsley.js",
-            "line": 326,
-            "description": "Called by ParsleyForm for fields batch validation",
-            "itemtype": "method",
-            "name": "submitValidation",
-            "return": {
-                "description": "{Boolean} if field is validated, {null} if empty non required field",
-                "type": "Mixed"
-            },
-            "class": "ParsleyField"
-        },
-        {
-            "file": "parsley.js",
-            "line": 340,
+            "line": 336,
             "description": "Validate a field & display errors",
             "itemtype": "method",
             "name": "validate",
-            "return": {
-                "description": "Is field valid or not",
-                "type": "Boolean"
-            },
-            "class": "ParsleyField"
-        },
-        {
-            "file": "parsley.js",
-            "line": 351,
-            "description": "Loop through every fields validators\nAdds errors after unvalid fields",
-            "itemtype": "method",
-            "name": "processFieldValidators",
             "params": [
                 {
-                    "name": "val",
-                    "description": "Field value",
-                    "type": "String"
+                    "name": "Show",
+                    "description": "field errors",
+                    "type": "Boolean"
                 }
             ],
             "return": {
@@ -261,8 +244,20 @@
         },
         {
             "file": "parsley.js",
-            "line": 376,
-            "description": "Fired when all validators have be executed\nReturns true or false if field is valid or not\nAdds parsley-success or parsley-error class on field",
+            "line": 360,
+            "description": "Loop through every fields validators\nAdds errors after unvalid fields",
+            "itemtype": "method",
+            "name": "applyValidators",
+            "return": {
+                "description": "Is field valid or not",
+                "type": "Boolean"
+            },
+            "class": "ParsleyField"
+        },
+        {
+            "file": "parsley.js",
+            "line": 385,
+            "description": "Fired when all validators have be executed\nReturns true or false if field is valid or not\nDisplay errors messages below faild fields\nAdds parsley-success or parsley-error class on fields",
             "itemtype": "method",
             "name": "manageValidationResult",
             "return": {
@@ -273,36 +268,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 398,
-            "description": "Called when field fails or pass a validator constraint\ntype: add|remove\nreturns boolean if constraint fails or pass",
-            "itemtype": "method",
-            "name": "manageError",
-            "params": [
-                {
-                    "name": "type",
-                    "description": "'add' or 'remove' error",
-                    "type": "String"
-                },
-                {
-                    "name": "methodName",
-                    "description": "Method name",
-                    "type": "String"
-                },
-                {
-                    "name": "requirements",
-                    "description": "Method requirements if adding an error",
-                    "type": "Mixed"
-                }
-            ],
-            "return": {
-                "description": "Is field valid or not",
-                "type": "Boolean"
-            },
-            "class": "ParsleyField"
-        },
-        {
-            "file": "parsley.js",
-            "line": 428,
+            "line": 413,
             "description": "Remove li / ul error",
             "itemtype": "method",
             "name": "removeError",
@@ -317,16 +283,24 @@
         },
         {
             "file": "parsley.js",
-            "line": 444,
-            "description": "Remove ul error",
+            "line": 429,
+            "description": "Remove all ul / li errors",
             "itemtype": "method",
             "name": "removeErrors",
             "class": "ParsleyField"
         },
         {
             "file": "parsley.js",
-            "line": 453,
-            "description": "Add li / ul error",
+            "line": 439,
+            "description": "Remove ul errors and parsley error or success classes",
+            "itemtype": "method",
+            "name": "reset",
+            "class": "ParsleyField"
+        },
+        {
+            "file": "parsley.js",
+            "line": 450,
+            "description": "Add li / ul errors messages",
             "itemtype": "method",
             "name": "addError",
             "params": [
@@ -345,7 +319,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 508,
+            "line": 506,
             "description": "Process each form field validation\nDisplay errors, call custom onSubmit() function",
             "itemtype": "method",
             "name": "validate",
@@ -364,7 +338,15 @@
         },
         {
             "file": "parsley.js",
-            "line": 588,
+            "line": 528,
+            "description": "Remove all errors ul under invalid fields",
+            "itemtype": "method",
+            "name": "removeErrors",
+            "class": "ParsleyForm"
+        },
+        {
+            "file": "parsley.js",
+            "line": 597,
             "description": "Parsley plugin configuration",
             "itemtype": "property",
             "name": "$.fn.parsley.defaults",
@@ -375,11 +357,11 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:275"
+            "line": " parsley.js:281"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:292"
+            "line": " parsley.js:298"
         }
     ]
 }

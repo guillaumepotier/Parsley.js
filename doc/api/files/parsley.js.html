@@ -315,12 +315,15 @@
     *&#x2F;
     , init: function ( type, element, Validator, options ) {
       this.type = type;
-      this.hash = this.generateHash();
-      this.$element = $( element );
-      this.isRequired = false;
+      this.isValid = true;
       this.Validator = Validator;
-      this.registeredValidators = this.errors = new Array();
+      this.$element = $( element );
+      this.val = this.$element.val();
+      this.hash = this.generateHash();
       this.options = $.extend(true, {}, $.fn[ &#x27;parsley&#x27; ].defaults, options, this.$element.data() );
+
+      this.isRequired = false;
+      this.registeredValidators = new Array();
 
       &#x2F;&#x2F; a field is required if data-required=&quot;true&quot; or class=&quot;required&quot;
       if ( &#x27;undefined&#x27; !== typeof this.options[ &#x27;required&#x27; ] || this.$element.hasClass( &#x27;required&#x27; ) ) {
@@ -346,7 +349,7 @@
         if ( &#x27;function&#x27; === typeof this.Validator.validators[  method.toLowerCase() ] ) {
           this.registeredValidators.push( {
               method: method
-            , params: this.options[ method ]
+            , requirements: this.options[ method ]
           } );
         }
       }
@@ -360,9 +363,12 @@
     , bindValidationEvents: function () {
       this.$element.addClass( &#x27;parsley-validated&#x27; );
 
+      &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
+      var triggers = this.options.trigger + &#x27; keyup&#x27;;
+
       &#x2F;&#x2F; if a validation trigger is defined
-      if ( this.options.trigger ) {
-        this.$element.on( this.options.trigger.split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27;), false, $.proxy( this.triggerValidation, this ) );
+      if ( triggers ) {
+        this.$element.on( triggers.split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27; ), false, $.proxy( this.eventValidation, this ) );
       }
     }
 
@@ -397,70 +403,73 @@
     * Called when validation is triggered by an event
     * Do nothing if val.length &lt; this.options.validationMinlength
     *
-    * @method triggerValidation
+    * @method eventValidation
+    * @param {Object} event jQuery event
     *&#x2F;
-    , triggerValidation: function() {
-      &#x2F;&#x2F; if some binded events are redundant (keyup &amp; keypress for example) and except for onSubmit, validate only once by field value change
+    , eventValidation: function( event ) {
       var val = this.$element.val();
 
+      &#x2F;&#x2F; do nothing on keypress event if not explicitely passed as data-trigger and if field has no errors
+      if ( event.type === &#x27;keyup&#x27; &amp;&amp; !&#x2F;keyup&#x2F;i.test( this.options.trigger ) &amp;&amp; this.isValid ) {
+        return true;
+      }
+
+      &#x2F;&#x2F; do validation process if field has enough chars and was not previously validated
+      if ( val.length &lt; this.options.validationMinlength &amp;&amp; this.isValid ) {
+        return true;
+      }
+
+      &#x2F;&#x2F; if some binded events are redundant (keyup &amp; paste for example), validate only once by field value change
       if ( this.val === val) {
         return this.isValid;
       }
 
-      this.val = val;
-
-      &#x2F;&#x2F; do validation process if field has enough chars and was not previously validated
-      if ( val.length &lt; this.options.validationMinlength &amp;&amp; !this.$element.hasClass( &#x27;parsley-error&#x27; ) ) {
-          return true;
-      }
-
-      this.validate();
-    }
-
-    &#x2F;**
-    * Called by ParsleyForm for fields batch validation
-    *
-    * @method submitValidation
-    * @return {Mixed} {Boolean} if field is validated, {null} if empty non required field
-    *&#x2F;
-    , submitValidation: function() {
-      if ( this.isRequired || &#x27;&#x27; !== this.$element.val() ) {
-        return this.validate();
-      }
-
-      return null;
+      this.validate( true );
     }
 
     &#x2F;**
     * Validate a field &amp; display errors
     *
     * @method validate
+    * @param {Boolean} Show field errors
     * @return {Boolean} Is field valid or not
     *&#x2F;
-    , validate: function () {
-      this.isValid = this.processFieldValidators( this.$element.val() );
-      return this.manageValidationResult();
+    , validate: function ( displayErrors ) {
+      this.val = this.$element.val();
+
+      if ( &#x27;&#x27; === this.val &amp;&amp; !this.isRequired ) {
+        this.reset();
+        return true;
+      }
+
+      this.isValid = this.applyValidators();
+
+      if ( displayErrors ) {
+        this.manageValidationResult();
+      }
+
+      return this.isValid;
     }
 
     &#x2F;**
     * Loop through every fields validators
     * Adds errors after unvalid fields
     *
-    * @method processFieldValidators
-    * @param {String} val Field value
+    * @method applyValidators
     * @return {Boolean} Is field valid or not
     *&#x2F;
-    , processFieldValidators: function ( val ) {
+    , applyValidators: function () {
       var isValid = true;
 
       for ( var i in this.registeredValidators ) {
         var method = this.registeredValidators[ i ].method
-          , requirements = this.registeredValidators[ i ].params;
+          , requirements = this.registeredValidators[ i ].requirements;
 
-        if ( !this.Validator.validators[ method ]( val, requirements ) ) {
-          isValid = this.manageError( &#x27;add&#x27;, method, requirements );
+        if ( !this.Validator.validators[ method ]( this.val, requirements ) ) {
+          isValid = false;
+          this.registeredValidators[ i ].isValid = false;
         } else {
-          this.manageError( &#x27;remove&#x27;, method );
+          this.registeredValidators[ i ].isValid = true;
         }
       }
 
@@ -470,53 +479,29 @@
     &#x2F;**
     * Fired when all validators have be executed
     * Returns true or false if field is valid or not
-    * Adds parsley-success or parsley-error class on field
+    * Display errors messages below faild fields
+    * Adds parsley-success or parsley-error class on fields
     *
     * @method manageValidationResult
     * @return {Boolean} Is field valid or not
     *&#x2F;
     , manageValidationResult: function () {
-      if ( true === this.isValid ) {
+      if ( this.isValid ) {
         this.removeErrors();
         this.$element.removeClass( &#x27;parsley-error&#x27; ).addClass( &#x27;parsley-success&#x27; );
-      } else if ( false === this.isValid ) {
-        this.$element.removeClass( &#x27;parsley-success&#x27; ).addClass( &#x27;parsley-error&#x27; );
-      } else {
-        this.removeErrors();
-        this.$element.removeClass( &#x27;parsley-success&#x27; ).removeClass( &#x27;parsley-error&#x27; );
+        return true;
       }
 
-      return this.isValid;
-    }
-
-    &#x2F;**
-    * Called when field fails or pass a validator constraint
-    * type: add|remove
-    * returns boolean if constraint fails or pass
-    *
-    * @method manageError
-    * @param {String} type &#x27;add&#x27; or &#x27;remove&#x27; error
-    * @param {String} methodName Method name
-    * @param {Mixed} requirements Method requirements if adding an error
-    * @return {Boolean} Is field valid or not
-    *&#x2F;
-    , manageError: function ( type, methodName, requirements ) {
-      switch ( type ) {
-        case &#x27;add&#x27; :
-          if ( false === this.options.addError( this.$element, methodName, requirements ) ) {
-             return false;
-           }
-
-          this.addError( methodName, requirements );
-
-          return false;
-        case &#x27;remove&#x27;:
-          this.removeError( methodName );
-
-          return true;
-        default:
-          return false;
+      for ( var i in this.registeredValidators ) {
+        if ( !this.registeredValidators[ i ].isValid ) {
+          this.addError( this.registeredValidators[ i ].method,  this.registeredValidators[ i ].requirements );
+        } else {
+          this.removeError( this.registeredValidators[ i ].method );
+        }
       }
+
+      this.$element.removeClass( &#x27;parsley-success&#x27; ).addClass( &#x27;parsley-error&#x27; );
+      return false;
     }
 
     &#x2F;**
@@ -536,16 +521,28 @@
     }
 
     &#x2F;**
-    * Remove ul error
+    * Remove all ul &#x2F; li errors
     *
     * @method removeErrors
     *&#x2F;
     , removeErrors: function () {
+      this.errors = new Array();
       $( &#x27;ul#&#x27; + this.hash ).remove();
     }
 
     &#x2F;**
-    * Add li &#x2F; ul error
+    * Remove ul errors and parsley error or success classes
+    *
+    * @method reset
+    *&#x2F;
+    , reset: function() {
+      this.isValid = true;
+      this.removeErrors();
+      this.$element.removeClass( &#x27;parsley-success&#x27; ).removeClass( &#x27;parsley-error&#x27; );
+    }
+
+    &#x2F;**
+    * Add li &#x2F; ul errors messages
     *
     * @method addError
     * @param {String} methodName Method name
@@ -559,6 +556,7 @@
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ methodName ], requirements ) );
 
       if ( $( ulError ).length === 0 ) {
+        this.$element.attr( &#x27;parsley-hash&#x27;, this.hash );
         this.$element.after( &#x27;&lt;ul class=&quot;parsley-error-list&quot; id=&quot;&#x27; + this.hash + &#x27;&quot;&gt;&lt;&#x2F;ul&gt;&#x27; );
       }
 
@@ -611,7 +609,7 @@
       var isValid = true;
 
       for ( var item in this.items ) {
-        if ( false === this.items[ item ].parsley( &#x27;submitValidation&#x27; ) ) {
+        if ( false === this.items[ item ].parsley( &#x27;validate&#x27;, true ) ) {
           isValid = false;
         }
       }
@@ -619,6 +617,17 @@
       this.options.onSubmit( isValid, event );
 
       return isValid;
+    }
+
+    &#x2F;**
+    * Remove all errors ul under invalid fields
+    *
+    * @method removeErrors
+    *&#x2F;
+    , removeErrors: function () {
+      for ( var item in this.items ) {
+        this.items[ item ].parsley( &#x27;reset&#x27; );
+      }
     }
   }
 
@@ -667,9 +676,9 @@
       if ( $( this ).is( &#x27;form&#x27; ) ) {
         returnValue = bind ( $( this ), &#x27;parsleyForm&#x27; );
 
-      &#x2F;&#x2F; if it is a Parsley supported single element, bind it too
+      &#x2F;&#x2F; if it is a Parsley supported single element, bind it too, except inputs type hidden
       &#x2F;&#x2F; add here a return instance, cuz&#x27; we could call public methods on single elems with data[ option ]() above
-      } else if ( $( this ).is( options.inputs ) ) {
+      } else if ( $( this ).is( options.inputs ) &amp;&amp; !$( this ).is( &#x27;input[type=hidden]&#x27; ) ) {
         returnValue = bind( $( this ), &#x27;parsleyField&#x27; );
       }
     } );
@@ -690,9 +699,6 @@
     , trigger: false                                                &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
     , validationMinlength: 3                                        &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
     , onSubmit: function ( isFormValid, event ) {}                  &#x2F;&#x2F; Executed once on form validation
-    , addError: function ( elem, validator, requirements ) {         &#x2F;&#x2F; Override custom error function by returning false
-      return true;
-    }
     , customValidators: {}                                          &#x2F;&#x2F; Add your custom validators functions
     , messages: {}                                                  &#x2F;&#x2F; Add your own error messages here
   }
