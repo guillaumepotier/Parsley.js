@@ -75,6 +75,10 @@
           color: #FB4006;
       }
 
+      .container-narrow > hr {
+        margin:15px 0 0 0;
+      }
+
       @media only screen 
       and (min-device-width : 320px) 
       and (max-device-width : 480px) {
@@ -126,8 +130,8 @@
                 <table id="demonstration-form" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="25%">Classy demo</th>
-                            <th width="75%" class="not-for-mobile">HTML Code (yes, no JS !)</th>
+                            <th width="27%">Classy demo</th>
+                            <th width="73%" class="not-for-mobile">HTML Code (yes, no JS !)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -146,7 +150,7 @@
                                     <label for="message">Message (20 chars min, 200 max) :</label>
                                     <textarea id="message" name="message" data-trigger="keyup" data-rangelength="[20,200]"></textarea>
 
-                                    <br/><span class="btn btn" onclick="javascript:$('#demo-form').parsley( 'validate' );"><i class="icon-ok"></i></span>
+                                    <br/><span class="btn btn" id="demo-form-valid" onclick="javascript:$('#demo-form').parsley( 'validate' );"><i class="icon-ok"></i></span>
                                 </form>
                             </td>
                             <td class="not-for-mobile">
@@ -167,7 +171,7 @@
                         </tr>
                 </table>
 
-                <span class="label label-important">Heads up!</span> <strong>Le #UX touch:</strong>
+                <span class="label label-important">Heads up!</span> <strong>Le #UX touch</strong>:
                 <ul>
                     <li>
                         <strong>Min char validation</strong>: Parsley by default do not proceed field validation under 3 char length. Do not assault your users with to soon error messages! <i>(this behavior configurable)</i>.
@@ -202,6 +206,9 @@
                           <li><a href="#javascript-form">Form</a></li>
                           <li><a href="#javascript-fields">Fields</a></li>
                       </ol>
+                </li>
+                <li>
+                    <a href="#parsleyclasses"><strong>Parsley CSS</strong>: last but not least, Parsley CSS used classes</a>
                 </li>
             </ol>
 
@@ -269,7 +276,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <code>data-error-focus</code>
+                            <code>data-focus</code>
                         </td>
                         <td>
                             first
@@ -784,10 +791,8 @@
     inputs: 'input, textarea, select'
   , trigger: false
   , validationMinlength: 3
-  , onSubmit: function ( isFormValid, event ) {}
-  , addError: function ( elem, validator, requirements ) {
-      return true;
-    }
+  , onSubmit: function ( isFormValid, event, focusedField ) {}
+  , onError: function ( elem, constraint ) {}
   , customValidators: {}
   , messages: {}
 }</code></pre>
@@ -847,10 +852,49 @@
           </div>
           <a href="#top" class="top pull-right">Top</a>
 
+          <section>
+              <a name="parsleyclasses"></a>
+              <div class="page-header">
+                  <h3>Parsley CSS</h3>
+                  <p>A good #UX goes with a good #UI. Parsley has some classes you could use to customize a bit ;)</p>
+              </div>
+              <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>.parsley-validated</code></td>
+                        <td>Auto added on each form item that have Parsley validation.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.parsley-success</code></td>
+                        <td>Auto added on each form item that have passed validation with success.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.parsley-error</code></td>
+                        <td>Auto added on each form item that did not passed Parsley validation.</td>
+                    </tr>
+                    <tr>
+                        <td><code>ul.parsley-error-list</code></td>
+                        <td>Auto added after each form item that did not passed Parsley validation. Container for errors <code>&lt;li></code>.</td>
+                    </tr>
+                    <tr>
+                        <td><code>li.parsley-error</code></td>
+                        <td>Message for constraint failed on validation.</td>
+                    </tr>
+                </tbody>
+              </table>
+          </section>
+          <a href="#top" class="top pull-right">Top</a>
+
       <hr>
 
       <div class="footer">
-        <p>&copy; <a href="http://twitter.com/guillaumepotier">@guillaumepotier</a> @<a href="http://wisembly.com/en/">Wisembly</a> 2012</p>
+        <p>&copy; <a href="http://twitter.com/guillaumepotier">@guillaumepotier</a> @<a href="http://wisembly.com/en/#parsley">Wisembly</a> 2012</p>
       </div>
 
     </div> <!-- /container -->
@@ -858,6 +902,19 @@
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
     <script type="text/javascript">
         hljs.initHighlightingOnLoad();
+
+        $( '#demo-form' ).parsley( { 
+            onSubmit: function ( isFormValid, event ) {
+                if ( isFormValid && !$( '#good-to-go').length ) {
+                    $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Good to go!</span>' );
+                    $( '#demo-form-valid' ).hide();
+                }
+            },
+            onError: function ( field, constraint ) {
+                $( '#demo-form-valid' ).show();
+                $( '#good-to-go' ).remove();
+            }
+        } );
 
         $( '#parsley-multiple' ).parsley( {
           customValidators: {
