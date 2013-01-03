@@ -512,15 +512,25 @@
     * @return {Boolean} Is form valid or not
     */
     , validate: function ( event ) {
-      var isValid = true;
+      var isValid = true
+        , focusedField = false;
 
       for ( var item in this.items ) {
         if ( false === this.items[ item ].parsley( 'validate', true ) ) {
           isValid = false;
+
+          if ( !focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
+            focusedField = this.items[ item ];
+          }
         }
       }
 
-      this.options.onSubmit( isValid, event );
+      // form is invalid, focus an error field depending on focus policy
+      if ( !isValid ) {
+        focusedField.focus();
+      }
+
+      this.options.onSubmit( isValid, event, focusedField );
 
       return isValid;
     }
@@ -601,12 +611,13 @@
   * @type {Object}
   */
   $.fn.parsley.defaults = {
-    inputs: 'input, textarea, select'                               // Default supported inputs.
-    , trigger: false                                                // $.Event() that will trigger validation. eg: keyup, change..
-    , validationMinlength: 3                                        // If trigger validation specified, only if value.length > validationMinlength
-    , onSubmit: function ( isFormValid, event ) {}                  // Executed once on form validation
-    , customValidators: {}                                          // Add your custom validators functions
-    , messages: {}                                                  // Add your own error messages here
+    inputs: 'input, textarea, select'                             // Default supported inputs.
+    , trigger: false                                              // $.Event() that will trigger validation. eg: keyup, change..
+    , focus: 'first'                                              // 'fist'|'last'|'none' which error field would have focus first on form validation
+    , validationMinlength: 3                                      // If trigger validation specified, only if value.length > validationMinlength
+    , onSubmit: function ( isFormValid, event, focusedField ) {}  // Executed once on form validation
+    , customValidators: {}                                        // Add your custom validators functions
+    , messages: {}                                                // Add your own error messages here
   }
 
   /* PARSLEY auto-bind DATA-API
