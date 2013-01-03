@@ -64,7 +64,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 540,
+            "line": 550,
             "description": "Parsley plugin definition\nProvides an interface to access public Validator, ParsleyForm and ParsleyItem functions",
             "is_constructor": 1,
             "params": [
@@ -338,7 +338,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 528,
+            "line": 538,
             "description": "Remove all errors ul under invalid fields",
             "itemtype": "method",
             "name": "removeErrors",
@@ -346,7 +346,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 597,
+            "line": 607,
             "description": "Parsley plugin configuration",
             "itemtype": "property",
             "name": "$.fn.parsley.defaults",

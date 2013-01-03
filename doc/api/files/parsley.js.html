@@ -606,15 +606,25 @@
     * @return {Boolean} Is form valid or not
     *&#x2F;
     , validate: function ( event ) {
-      var isValid = true;
+      var isValid = true
+        , focusedField = false;
 
       for ( var item in this.items ) {
         if ( false === this.items[ item ].parsley( &#x27;validate&#x27;, true ) ) {
           isValid = false;
+
+          if ( !focusedField &amp;&amp; &#x27;first&#x27; === this.options.focus || &#x27;last&#x27; === this.options.focus ) {
+            focusedField = this.items[ item ];
+          }
         }
       }
 
-      this.options.onSubmit( isValid, event );
+      &#x2F;&#x2F; form is invalid, focus an error field depending on focus policy
+      if ( !isValid ) {
+        focusedField.focus();
+      }
+
+      this.options.onSubmit( isValid, event, focusedField );
 
       return isValid;
     }
@@ -695,12 +705,13 @@
   * @type {Object}
   *&#x2F;
   $.fn.parsley.defaults = {
-    inputs: &#x27;input, textarea, select&#x27;                               &#x2F;&#x2F; Default supported inputs.
-    , trigger: false                                                &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
-    , validationMinlength: 3                                        &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
-    , onSubmit: function ( isFormValid, event ) {}                  &#x2F;&#x2F; Executed once on form validation
-    , customValidators: {}                                          &#x2F;&#x2F; Add your custom validators functions
-    , messages: {}                                                  &#x2F;&#x2F; Add your own error messages here
+    inputs: &#x27;input, textarea, select&#x27;                             &#x2F;&#x2F; Default supported inputs.
+    , trigger: false                                              &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
+    , focus: &#x27;first&#x27;                                              &#x2F;&#x2F; &#x27;fist&#x27;|&#x27;last&#x27;|&#x27;none&#x27; which error field would have focus first on form validation
+    , validationMinlength: 3                                      &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
+    , onSubmit: function ( isFormValid, event, focusedField ) {}  &#x2F;&#x2F; Executed once on form validation
+    , customValidators: {}                                        &#x2F;&#x2F; Add your custom validators functions
+    , messages: {}                                                &#x2F;&#x2F; Add your own error messages here
   }
 
   &#x2F;* PARSLEY auto-bind DATA-API
