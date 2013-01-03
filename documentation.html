@@ -170,10 +170,13 @@
                 <span class="label label-important">Heads up!</span> <strong>Le #UX touch:</strong>
                 <ul>
                     <li>
-                        <strong>Min char validation</strong>: Parsley by default do not proceed field validation under 3 char length. Do not assault your users with to soon error messages! (this 3 chars tresshold is configurable).
+                        <strong>Min char validation</strong>: Parsley by default do not proceed field validation under 3 char length. Do not assault your users with to soon error messages! <i>(this behavior configurable)</i>.
                     </li>
                     <li>
                         <strong>Quick error removal</strong>: when a field is detected and shown as invalid, next checks are done on each keypress to try to quickly remove error(s) message(s) once field is ok.
+                    </li>
+                    <li>
+                        <strong>Error focusing</strong>: on form submission, first error field is focused to allow user easily start its fixing process. <i>(this behavior configurable)</i>
                     </li>
                 </ul>
 
@@ -262,6 +265,34 @@
                                 <p><input type="text" data-type="email" data-trigger="keyup" data-validation-minlength="0" placeholder="keyup validation trigger" /><p>
                                 <p><input type="text" data-type="email" data-trigger="change" data-validation-minlength="0" placeholder="change validation trigger" /></p>
                             </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <code>data-error-focus</code>
+                        </td>
+                        <td>
+                            first
+                        </td>
+                        <td>
+                            Specify which error field would be focused first on form validation. <code>first</code>, <code>last</code> and <code>none</code> allowed
+                        </td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <form data-validate="parsley" id="focus-form" data-focus="last">
+                                            <p><input type="text" data-type="email" data-required="true" placeholder="won't have focus" /><p>
+                                            <p><input type="text" data-type="email" data-required="true" placeholder="will have focus" /></p>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#focus-form').parsley('validate');">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                     <tr>

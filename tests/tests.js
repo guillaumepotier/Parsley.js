@@ -26,6 +26,12 @@ $( '#validate-form' ).parsley( {
   }
 } );
 
+$( '#focus-form' ).parsley( {
+  onSubmit: function ( isFormValid, event, focusField ) {
+    $( focusField ).addClass( 'on-focus' );
+  }
+} );
+
 $( '#validator-tests' ).parsley( {
   customValidators: {
     multiple: function ( val, multiple ) {
@@ -359,6 +365,12 @@ var testSuite = function () {
         $( '#validate1' ).val( 'foo' );
         $( '#validate-form-submit' ).click();
         expect( $( '#validate-form' ).hasClass( 'form-valid' ) ).to.be( true );
+      } )
+      it ( 'test error focus', function () {
+        $( '#focus-form' ).parsley( 'validate' );
+        expect( $( '#focus1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( $( '#focus2' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( $( '#focus2' ).hasClass( 'on-focus' ) ).to.be( true );
       } )
     } )
   } )
