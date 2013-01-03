@@ -229,18 +229,18 @@
       this.options = $.extend(true, {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
 
       this.isRequired = false;
-      this.registeredValidators = new Array();
+      this.constraints = new Array();
 
       // a field is required if data-required="true" or class="required"
       if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) ) {
         this.isRequired = this.options[ 'required' ] = true;
       }
 
-      // register validators
-      this.registerValidators();
+      // bind validators to field
+      this.addConstraints();
 
       // bind parsley events if validators have been registered
-      if ( this.registeredValidators.length ) {
+      if ( this.constraints.length ) {
         this.bindValidationEvents();
       }
     }
@@ -248,12 +248,12 @@
     /**
     * Attach field validators functions passed through data-api
     *
-    * @method registerValidators
+    * @method addConstraints
     */
-    , registerValidators: function () {
+    , addConstraints: function () {
       for ( var method in this.options ) {
         if ( 'function' === typeof this.Validator.validators[  method.toLowerCase() ] ) {
-          this.registeredValidators.push( {
+          this.constraints.push( {
               method: method
             , requirements: this.options[ method ]
           } );
@@ -367,15 +367,15 @@
     , applyValidators: function () {
       var isValid = true;
 
-      for ( var i in this.registeredValidators ) {
-        var method = this.registeredValidators[ i ].method
-          , requirements = this.registeredValidators[ i ].requirements;
+      for ( var i in this.constraints ) {
+        var method = this.constraints[ i ].method
+          , requirements = this.constraints[ i ].requirements;
 
         if ( !this.Validator.validators[ method ]( this.val, requirements ) ) {
           isValid = false;
-          this.registeredValidators[ i ].isValid = false;
+          this.constraints[ i ].isValid = false;
         } else {
-          this.registeredValidators[ i ].isValid = true;
+          this.constraints[ i ].isValid = true;
         }
       }
 
@@ -398,11 +398,12 @@
         return true;
       }
 
-      for ( var i in this.registeredValidators ) {
-        if ( !this.registeredValidators[ i ].isValid ) {
-          this.addError( this.registeredValidators[ i ].method,  this.registeredValidators[ i ].requirements );
+      for ( var i in this.constraints ) {
+        if ( !this.constraints[ i ].isValid ) {
+          this.addError( this.constraints[ i ].method,  this.constraints[ i ].requirements );
+          this.options.onError( this.$element, this.constraints[ i ] );
         } else {
-          this.removeError( this.registeredValidators[ i ].method );
+          this.removeError( this.constraints[ i ].method );
         }
       }
 
@@ -616,6 +617,7 @@
     , focus: 'first'                                              // 'fist'|'last'|'none' which error field would have focus first on form validation
     , validationMinlength: 3                                      // If trigger validation specified, only if value.length > validationMinlength
     , onSubmit: function ( isFormValid, event, focusedField ) {}  // Executed once on form validation
+    , onError: function ( field, constraint ) {}                  // Executed when a field is detected as invalid
     , customValidators: {}                                        // Add your custom validators functions
     , messages: {}                                                // Add your own error messages here
   }
