@@ -343,7 +343,7 @@
     , validate: function ( displayErrors ) {
       this.val = this.$element.val();
 
-      if ( '' === this.val && !this.isRequired ) {
+      if ( this.options.onFieldValidate( this.$element ) || '' === this.val && !this.isRequired ) {
         this.reset();
         return true;
       }
@@ -401,7 +401,7 @@
       for ( var i in this.constraints ) {
         if ( !this.constraints[ i ].isValid ) {
           this.addError( this.constraints[ i ].method,  this.constraints[ i ].requirements );
-          this.options.onError( this.$element, this.constraints[ i ] );
+          this.options.onFieldError( this.$element, this.constraints[ i ] );
         } else {
           this.removeError( this.constraints[ i ].method );
         }
@@ -505,8 +505,19 @@
     }
 
     /**
+    * Add custom listeners
+    *
+    * @param {Object} { listener: function() {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
+    */
+    , addListener: function ( object ) {
+      for ( var listener in object ) {
+        this.options[ listener ] = object[ listener ];
+      }
+    }
+
+    /**
     * Process each form field validation
-    * Display errors, call custom onSubmit() function
+    * Display errors, call custom onFormSubmit() function
     *
     * @method validate
     * @param {Object} event jQuery Event
@@ -531,7 +542,7 @@
         focusedField.focus();
       }
 
-      this.options.onSubmit( isValid, event, focusedField );
+      this.options.onFormSubmit( isValid, event, focusedField );
 
       return isValid;
     }
@@ -616,8 +627,9 @@
     , trigger: false                                              // $.Event() that will trigger validation. eg: keyup, change..
     , focus: 'first'                                              // 'fist'|'last'|'none' which error field would have focus first on form validation
     , validationMinlength: 3                                      // If trigger validation specified, only if value.length > validationMinlength
-    , onSubmit: function ( isFormValid, event, focusedField ) {}  // Executed once on form validation
-    , onError: function ( field, constraint ) {}                  // Executed when a field is detected as invalid
+    , onFieldValidate: function ( elem ) { return false; }              // Return true to force field to be valid, false otherwise
+    , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
+    , onFieldError: function ( field, constraint ) {}                   // Executed when a field is detected as invalid
     , customValidators: {}                                        // Add your custom validators functions
     , messages: {}                                                // Add your own error messages here
   }
