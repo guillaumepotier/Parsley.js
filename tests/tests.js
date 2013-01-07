@@ -20,14 +20,14 @@ var getErrorMessage = function ( idOrClass, method ) {
 }
 
 $( '#validate-form' ).parsley( {
-  onSubmit: function ( isFormValid, event ) {
+  onFormSubmit: function ( isFormValid, event ) {
     $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
     event.preventDefault();
   }
 } );
 
 $( '#focus-form' ).parsley( {
-  onSubmit: function ( isFormValid, event, focusField ) {
+  onFormSubmit: function ( isFormValid, event, focusField ) {
     $( focusField ).addClass( 'on-focus' );
   }
 } );
@@ -40,6 +40,28 @@ $( '#validator-tests' ).parsley( {
   }
   , messages: {
     multiple: 'This field should be a multiple of %s'
+  }
+} );
+
+$( '#onFieldValidate-form' ).parsley( {
+  onFieldValidate: function ( elem ) {
+    if ( $( elem ).val() === "foo" || $( elem ).val() === "bar" ) {
+      return true;
+    }
+
+    return false;
+  },
+  onFieldError: function ( field, constraint ) {
+    $( field ).addClass( 'error-' + constraint.method + '_' + constraint.requirements );
+  },
+  onFormSubmit: function ( isFormValid, event, focusField ) {
+    $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
+  }
+} );
+
+$( '#listeners-form' ).parsley( 'addListener', { 
+  onFormSubmit: function ( isFormValid, event, focusField ) {
+    $( '#listeners-form' ).addClass( 'onFormSubmit-ok' );
   }
 } );
 
@@ -371,6 +393,34 @@ var testSuite = function () {
         expect( $( '#focus1' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'on-focus' ) ).to.be( true );
+      } )
+    } )
+
+    /***************************************
+              test custom functions
+    ***************************************/
+    describe ( 'Test custom functions', function () {
+      it ( 'test onFieldValidate()', function () {
+        $( '#onFieldValidate1' ).val( 'baz' );
+        $( '#onFieldValidate-form' ).parsley( 'validate' );
+        expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+        $( '#onFieldValidate1' ).val( 'foo' );
+        $( '#onFieldValidate-form' ).parsley( 'validate' );
+        expect( $( '#onFieldValidate1' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( false );
+      } )
+      it ( 'test onFormSubmit()' , function () {
+        expect( $( '#onFieldValidate-form' ).hasClass( 'this-form-is-invalid' ) ).to.be( true );
+      } )
+      it ( 'test onFieldError()', function () {
+        expect( $( '#onFieldValidate2' ).hasClass( 'error-type_email' ) ).to.be( true );
+      } )
+      it ( 'test addListener onFormSubmit', function () {
+        $( '#listeners1' ).val( 'foo' );
+        expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( false );
+        $( '#listeners-form' ).parsley( 'validate' );
+        expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( true );
       } )
     } )
   } )

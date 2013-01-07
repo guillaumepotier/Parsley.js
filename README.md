@@ -10,11 +10,12 @@ See TODO.md
 
 #Version
 
-0.1.0
+0.1.2
 
 #Install dependencies for documentation and tests
 
-`bower install`
+`bower install jquery`
+`bower install bootstrap`
 
 #Run tests
 

@@ -774,8 +774,8 @@
                     <tr>
                         <th>Method</th>
                         <th>Returns</th>
-                        <th>Description</th>
-                        <th class="not-for-mobile">Code</th>
+                        <th width="40%">Description</th>
+                        <th width="40%" class="not-for-mobile">Code</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -791,8 +791,9 @@
     inputs: 'input, textarea, select'
   , trigger: false
   , validationMinlength: 3
-  , onSubmit: function ( isFormValid, event, focusedField ) {}
-  , onError: function ( elem, constraint ) {}
+  , onFieldValidate: function ( elem ) { return false; }
+  , onFormSubmit: function ( isFormValid, event, focusedField ) {}
+  , onFieldError: function ( elem, constraint ) {}
   , customValidators: {}
   , messages: {}
 }</code></pre>
@@ -812,6 +813,24 @@
                             <form id="parsley-multiple">
                                 <input type="text" id="data-multiple" data-validation-minlength="0" data-trigger="keyup" data-multiple="3" placeholder="multiple of 3" />
                             </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Add a listener</td>
+                        <td></td>
+                        <td>Allow you, even after Parsley initial form binding to add a custom listener. Available listeners curently are: <code>onFieldValidate</code>, <code>onFieldError</code> and <code>onFormSubmit</code> and their passed arguments are listed above in Default Plugin config.</td>
+                        <td>
+<pre><code>$( '#form' ).parsley( 'addListener', {
+    onFieldValidate: function ( elem ) {
+
+        // if field is not visible, do not apply Parsley validation !
+        if ( !$( elem ).is( ':visible' ) ) {
+            return true;
+        }
+
+        return false;
+    }
+} );</code></pre>
                         </td>
                     </tr>
                     <tr>
@@ -904,13 +923,13 @@
         hljs.initHighlightingOnLoad();
 
         $( '#demo-form' ).parsley( { 
-            onSubmit: function ( isFormValid, event ) {
+            onFormSubmit: function ( isFormValid, event ) {
                 if ( isFormValid && !$( '#good-to-go').length ) {
                     $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Good to go!</span>' );
                     $( '#demo-form-valid' ).hide();
                 }
             },
-            onError: function ( field, constraint ) {
+            onFieldError: function ( field, constraint ) {
                 $( '#demo-form-valid' ).show();
                 $( '#good-to-go' ).remove();
             }
