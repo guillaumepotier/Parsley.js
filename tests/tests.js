@@ -399,28 +399,44 @@ var testSuite = function () {
     /***************************************
               test custom functions
     ***************************************/
-    describe ( 'Test custom functions', function () {
-      it ( 'test onFieldValidate()', function () {
-        $( '#onFieldValidate1' ).val( 'baz' );
-        $( '#onFieldValidate-form' ).parsley( 'validate' );
-        expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( true );
+    describe ( 'Test custom listeners', function () {
+      describe ( 'Test overriding listeners in config', function () {
+        it ( 'test onFieldValidate()', function () {
+          $( '#onFieldValidate1' ).val( 'baz' );
+          $( '#onFieldValidate-form' ).parsley( 'validate' );
+          expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( true );
 
-        $( '#onFieldValidate1' ).val( 'foo' );
-        $( '#onFieldValidate-form' ).parsley( 'validate' );
-        expect( $( '#onFieldValidate1' ).hasClass( 'parsley-success' ) ).to.be( false );
-        expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( false );
+          $( '#onFieldValidate1' ).val( 'foo' );
+          $( '#onFieldValidate-form' ).parsley( 'validate' );
+          expect( $( '#onFieldValidate1' ).hasClass( 'parsley-success' ) ).to.be( false );
+          expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( false );
+        } )
+        it ( 'test onFormSubmit()' , function () {
+          expect( $( '#onFieldValidate-form' ).hasClass( 'this-form-is-invalid' ) ).to.be( true );
+        } )
+        it ( 'test onFieldError()', function () {
+          expect( $( '#onFieldValidate2' ).hasClass( 'error-type_email' ) ).to.be( true );
+        } )
+        it ( 'test addListener onFormSubmit', function () {
+          $( '#listeners1' ).val( 'foo' );
+          expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( false );
+          $( '#listeners-form' ).parsley( 'validate' );
+          expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( true );
+        } )
       } )
-      it ( 'test onFormSubmit()' , function () {
-        expect( $( '#onFieldValidate-form' ).hasClass( 'this-form-is-invalid' ) ).to.be( true );
-      } )
-      it ( 'test onFieldError()', function () {
-        expect( $( '#onFieldValidate2' ).hasClass( 'error-type_email' ) ).to.be( true );
-      } )
-      it ( 'test addListener onFormSubmit', function () {
-        $( '#listeners1' ).val( 'foo' );
-        expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( false );
-        $( '#listeners-form' ).parsley( 'validate' );
-        expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( true );
+      describe ( 'Test adding listeners with addListener interface', function () {
+        it ( 'addListener', function () {
+          $( '#addListenerFieldValidate' ).parsley( 'addListener', {
+            onFieldValidate: function ( elem ) {
+              $( elem ).addClass( 'listener-ok' );
+              return false;
+            }
+          } );
+          $( '#addListenerFieldValidate-field' ).val();
+          $( '#addListenerFieldValidate' ).parsley( 'validate', function () {
+            expect( $( '#addListenerFieldValidate-field' ).hasClass( 'listener-ok' ) ).to.be( true );
+          } )
+        } )
       } )
     } )
   } )
