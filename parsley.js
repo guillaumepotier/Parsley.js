@@ -471,6 +471,17 @@
         $( ulError ).append( '<li class="parsley-error ' + methodName + '">' + message + '</li>');
       }
     }
+
+    /**
+    * Add custom listeners
+    *
+    * @param {Object} { listener: function() {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
+    */
+    , addListener: function ( object ) {
+      for ( var listener in object ) {
+        this.options[ listener ] = object[ listener ];
+      }
+    }
   }
 
   /**
@@ -511,7 +522,13 @@
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
-        this.options[ listener ] = object[ listener ];
+        if ( new RegExp( 'Field' ).test( listener ) ) {
+          for ( var item in this.items ) {
+            this.items[ item ].parsley( 'addListener', object );
+          }
+        } else {
+          this.options[ listener ] = object[ listener ];
+        }
       }
     }
 
