@@ -3,6 +3,7 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "Parsley",
         "ParsleyField",
+        "ParsleyFieldMultiple",
         "ParsleyForm",
         "Validator"
     ],
