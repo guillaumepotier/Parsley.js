@@ -195,6 +195,13 @@ Manage field error display and behavior, event triggers and more</p>
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
+                                <a href="#method_addConstraints">addConstraints</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_addError">addError</a>
 
                                 
@@ -223,6 +230,13 @@ Manage field error display and behavior, event triggers and more</p>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_extraRadioCheckboxes">extraRadioCheckboxes</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_generateHash">generateHash</a>
 
                                 
@@ -231,6 +245,13 @@ Manage field error display and behavior, event triggers and more</p>
                         
                             <li class="index-item method">
                                 <a href="#method_generateHash">generateHash</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getVal">getVal</a>
 
                                 
                                 
@@ -238,13 +259,6 @@ Manage field error display and behavior, event triggers and more</p>
                         
                             <li class="index-item method">
                                 <a href="#method_manageValidationResult">manageValidationResult</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_registerValidators">registerValidators</a>
 
                                 
                                 
@@ -292,6 +306,60 @@ Manage field error display and behavior, event triggers and more</p>
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_addConstraints" class="method item">
+    <h3 class="name"><code>addConstraints</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l277"><code>parsley.js:277</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attach field validators functions passed through data-api</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method_addError" class="method item">
@@ -342,7 +410,7 @@ Manage field error display and behavior, event triggers and more</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l450"><code>parsley.js:450</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l498"><code>parsley.js:498</code></a>
         
         </p>
 
@@ -438,7 +506,7 @@ Manage field error display and behavior, event triggers and more</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l360"><code>parsley.js:360</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l407"><code>parsley.js:407</code></a>
         
         </p>
 
@@ -506,7 +574,7 @@ Adds errors after unvalid fields</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l264"><code>parsley.js:264</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l293"><code>parsley.js:293</code></a>
         
         </p>
 
@@ -570,7 +638,7 @@ Adds errors after unvalid fields</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l308"><code>parsley.js:308</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l355"><code>parsley.js:355</code></a>
         
         </p>
 
@@ -616,8 +684,8 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
 </div>
 
                 
-                    <div id="method_generateHash" class="method item">
-    <h3 class="name"><code>generateHash</code></h3>
+                    <div id="method_extraRadioCheckboxes" class="method item">
+    <h3 class="name"><code>extraRadioCheckboxes</code></h3>
 
     
         <span class="paren">()</span>
@@ -625,7 +693,7 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
 
     
         <span class="returns-inline">
-            <span class="type">String</span>
+            <span class="type">Boolean</span>
         </span>
     
 
@@ -652,7 +720,7 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l281"><code>parsley.js:281</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l254"><code>parsley.js:254</code></a>
         
         </p>
 
@@ -663,7 +731,7 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
     </div>
 
     <div class="description">
-        <p>Hash management. Used for ul error</p>
+        <p>Override some properties to nicely behave on checkboxes and radio inputs</p>
     </div>
 
     
@@ -675,9 +743,8 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">String</span>:
+                        <span class="type">Boolean</span>:
                     
-                    5 letters hash
                 
             </div>
         </div>
@@ -723,7 +790,7 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l298"><code>parsley.js:298</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l327"><code>parsley.js:327</code></a>
         
         </p>
 
@@ -749,6 +816,149 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
                         <span class="type">String</span>:
                     
                     hash
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_generateHash" class="method item">
+    <h3 class="name"><code>generateHash</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">String</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l310"><code>parsley.js:310</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Hash management. Used for ul error</p>
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">String</span>:
+                    
+                    5 letters unique hash
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getVal" class="method item">
+    <h3 class="name"><code>getVal</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">String</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l337"><code>parsley.js:337</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Returns field val needed for validation
+Special treatment for radio &amp; checkboxes</p>
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">String</span>:
+                    
+                    val
                 
             </div>
         </div>
@@ -794,7 +1004,7 @@ Do nothing if val.length &lt; this.options.validationMinlength</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l385"><code>parsley.js:385</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l432"><code>parsley.js:432</code></a>
         
         </p>
 
@@ -826,60 +1036,6 @@ Adds parsley-success or parsley-error class on fields</p>
                 
             </div>
         </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_registerValidators" class="method item">
-    <h3 class="name"><code>registerValidators</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l248"><code>parsley.js:248</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Attach field validators functions passed through data-api</p>
-    </div>
-
-    
-
     
 
     
@@ -928,7 +1084,7 @@ Adds parsley-success or parsley-error class on fields</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l413"><code>parsley.js:413</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l461"><code>parsley.js:461</code></a>
         
         </p>
 
@@ -1005,7 +1161,7 @@ Adds parsley-success or parsley-error class on fields</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l429"><code>parsley.js:429</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l477"><code>parsley.js:477</code></a>
         
         </p>
 
@@ -1059,7 +1215,7 @@ Adds parsley-success or parsley-error class on fields</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l439"><code>parsley.js:439</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l487"><code>parsley.js:487</code></a>
         
         </p>
 
@@ -1127,7 +1283,7 @@ Adds parsley-success or parsley-error class on fields</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;parsley.js.html#l336"><code>parsley.js:336</code></a>
+        <a href="..&#x2F;files&#x2F;parsley.js.html#l383"><code>parsley.js:383</code></a>
         
         </p>
 

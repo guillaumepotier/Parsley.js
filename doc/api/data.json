@@ -51,7 +51,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 475,
+            "line": 534,
             "description": "ParsleyForm class manage Parsley validated form.\nManage its fields and global validation",
             "is_constructor": 1
         },
@@ -64,7 +64,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 550,
+            "line": 626,
             "description": "Parsley plugin definition\nProvides an interface to access public Validator, ParsleyForm and ParsleyItem functions",
             "is_constructor": 1,
             "params": [
@@ -170,15 +170,27 @@
         },
         {
             "file": "parsley.js",
-            "line": 248,
-            "description": "Attach field validators functions passed through data-api",
+            "line": 254,
+            "description": "Override some properties to nicely behave on checkboxes and radio inputs",
             "itemtype": "method",
-            "name": "registerValidators",
+            "name": "extraRadioCheckboxes",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
             "class": "ParsleyField"
         },
         {
             "file": "parsley.js",
-            "line": 264,
+            "line": 277,
+            "description": "Attach field validators functions passed through data-api",
+            "itemtype": "method",
+            "name": "addConstraints",
+            "class": "ParsleyField"
+        },
+        {
+            "file": "parsley.js",
+            "line": 293,
             "description": "Bind validation events on a field",
             "itemtype": "method",
             "name": "bindValidationEvents",
@@ -186,19 +198,19 @@
         },
         {
             "file": "parsley.js",
-            "line": 281,
+            "line": 310,
             "description": "Hash management. Used for ul error",
             "itemtype": "method",
             "name": "generateHash",
             "return": {
-                "description": "5 letters hash",
+                "description": "5 letters unique hash",
                 "type": "String"
             },
             "class": "ParsleyField"
         },
         {
             "file": "parsley.js",
-            "line": 298,
+            "line": 327,
             "description": "Public getHash accessor",
             "itemtype": "method",
             "name": "generateHash",
@@ -210,7 +222,19 @@
         },
         {
             "file": "parsley.js",
-            "line": 308,
+            "line": 337,
+            "description": "Returns field val needed for validation\nSpecial treatment for radio & checkboxes",
+            "itemtype": "method",
+            "name": "getVal",
+            "return": {
+                "description": "val",
+                "type": "String"
+            },
+            "class": "ParsleyField"
+        },
+        {
+            "file": "parsley.js",
+            "line": 355,
             "description": "Called when validation is triggered by an event\nDo nothing if val.length < this.options.validationMinlength",
             "itemtype": "method",
             "name": "eventValidation",
@@ -225,7 +249,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 336,
+            "line": 383,
             "description": "Validate a field & display errors",
             "itemtype": "method",
             "name": "validate",
@@ -244,7 +268,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 360,
+            "line": 407,
             "description": "Loop through every fields validators\nAdds errors after unvalid fields",
             "itemtype": "method",
             "name": "applyValidators",
@@ -256,7 +280,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 385,
+            "line": 432,
             "description": "Fired when all validators have be executed\nReturns true or false if field is valid or not\nDisplay errors messages below faild fields\nAdds parsley-success or parsley-error class on fields",
             "itemtype": "method",
             "name": "manageValidationResult",
@@ -268,7 +292,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 413,
+            "line": 461,
             "description": "Remove li / ul error",
             "itemtype": "method",
             "name": "removeError",
@@ -283,7 +307,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 429,
+            "line": 477,
             "description": "Remove all ul / li errors",
             "itemtype": "method",
             "name": "removeErrors",
@@ -291,7 +315,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 439,
+            "line": 487,
             "description": "Remove ul errors and parsley error or success classes",
             "itemtype": "method",
             "name": "reset",
@@ -299,7 +323,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 450,
+            "line": 498,
             "description": "Add li / ul errors messages",
             "itemtype": "method",
             "name": "addError",
@@ -319,8 +343,34 @@
         },
         {
             "file": "parsley.js",
-            "line": 506,
-            "description": "Process each form field validation\nDisplay errors, call custom onSubmit() function",
+            "line": 522,
+            "description": "Add custom listeners",
+            "params": [
+                {
+                    "name": "{",
+                    "description": "listener: function () {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }",
+                    "type": "Object"
+                }
+            ],
+            "class": "ParsleyField"
+        },
+        {
+            "file": "parsley.js",
+            "line": 565,
+            "description": "Add custom listeners",
+            "params": [
+                {
+                    "name": "{",
+                    "description": "listener: function () {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }",
+                    "type": "Object"
+                }
+            ],
+            "class": "ParsleyForm"
+        },
+        {
+            "file": "parsley.js",
+            "line": 582,
+            "description": "Process each form field validation\nDisplay errors, call custom onFormSubmit() function",
             "itemtype": "method",
             "name": "validate",
             "params": [
@@ -338,7 +388,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 538,
+            "line": 614,
             "description": "Remove all errors ul under invalid fields",
             "itemtype": "method",
             "name": "removeErrors",
@@ -346,7 +396,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 607,
+            "line": 680,
             "description": "Parsley plugin configuration",
             "itemtype": "property",
             "name": "$.fn.parsley.defaults",
@@ -357,11 +407,27 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:281"
+            "line": " parsley.js:254"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:298"
+            "line": " parsley.js:310"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " parsley.js:327"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " parsley.js:337"
+        },
+        {
+            "message": "Missing item type\nAdd custom listeners",
+            "line": " parsley.js:522"
+        },
+        {
+            "message": "Missing item type\nAdd custom listeners",
+            "line": " parsley.js:565"
         }
     ]
 }
