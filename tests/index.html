@@ -54,6 +54,7 @@
 
             <input type="text" id="required" data-required="true" />
             <input type="text" id="required-class" class="required" />
+            <input type="text" id="required-html5" required="required" />
 
             <input type="text" id="minlength" data-minlength="6" />
             <input type="text" id="maxlength" data-maxlength="6" />
@@ -102,6 +103,16 @@
         </form>
         <form data-validate="parsley" id="addListenerFieldValidate">
             <input type="text" id="addListenerFieldValidate-field" data-type="email" data-required="true" />
+        </form>
+        <form data-validate="parsley" id="radiocheckboxes">
+            <div id="radio-parent">
+                <input type="radio" id="radio1" name="radio" value="radio1" />
+                <input type="radio" id="radio2" name="radio" value="radio2" data-required="true" />
+            </div>
+            <div id="check_parent">
+                <input type="checkbox" id="check1" name="check[]" value="check1" data-required="true" />
+                <input type="checkbox" id="check2" name="check[]" value="check2" data-required="true" />
+            </div>
         </form>
     </div>
 
