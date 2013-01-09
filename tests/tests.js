@@ -33,7 +33,7 @@ $( '#focus-form' ).parsley( {
 } );
 
 $( '#validator-tests' ).parsley( {
-  customValidators: {
+  validators: {
     multiple: function ( val, multiple ) {
       return val % multiple === 0;
     }
@@ -309,6 +309,35 @@ var testSuite = function () {
         triggerSubmitValidation( '#customvalidator', '18' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      describe ( 'Test radio / checkboxes specific validators', function () {
+        it ( 'mincheck', function () {
+          $( '#checkbox-mincheck1' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-mincheck1' ).parsley( 'validate' ) ).to.be( false );
+          expect( getErrorMessage( '#checkbox-mincheck1', 'mincheck') ).to.be( 'You must select at least 2 choices.' );
+          $( '#checkbox-mincheck2' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-mincheck1' ).parsley( 'validate' ) ).to.be( true );
+        } )
+        it ( 'maxcheck', function () {
+          $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-maxcheck1' ).parsley( 'validate' ) ).to.be( true );
+          $( '#checkbox-maxcheck2' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-maxcheck1' ).parsley( 'validate' ) ).to.be( true );
+          $( '#checkbox-maxcheck3' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-maxcheck1' ).parsley( 'validate' ) ).to.be( false );
+          expect( getErrorMessage( '#checkbox-maxcheck1', 'maxcheck') ).to.be( 'You must select 2 choices or less.' );
+        } )
+        it ( 'rangecheck', function () {
+          $( '#checkbox-rangecheck1' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-rangecheck1' ).parsley( 'validate' ) ).to.be( false );
+          $( '#checkbox-rangecheck2' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-rangecheck1' ).parsley( 'validate' ) ).to.be( true );
+          $( '#checkbox-rangecheck3' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-rangecheck1' ).parsley( 'validate' ) ).to.be( true );
+          $( '#checkbox-rangecheck4' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-rangecheck1' ).parsley( 'validate' ) ).to.be( false );
+          expect( getErrorMessage( '#checkbox-rangecheck1', 'rangecheck') ).to.be( 'You must select between 2 and 3 choices.' );
+        } )
+      } )
     } )
 
     /***************************************
@@ -449,22 +478,22 @@ var testSuite = function () {
       } )
     } )
 
-     /***************************************
-           test radio & checkboxes inputs
-      ***************************************/
-      describe ( 'Test radio & checkboxes inputs', function () {
-        it ( 'Test that radio or checkbox isRequired constraint apply once one radio / checkbox button or more is required', function () {
-          expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( false );
-        } )
-        it ( 'Test that error message goes only once and after last radio / checkboxe of the group', function () {
-          expect( $( '#check2' ).parsley( 'getHash' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
-          expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
-        } )
-        it ( 'Test that if a checkbox or radio is selected, isRequired validation pass', function () {
-          $( '#radio1' ).attr( 'checked', 'checked' );
-          $( '#check1' ).attr( 'checked', 'checked' );
-          expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( true );
-        } )
+   /***************************************
+    test radio & checkboxes inputs behavior
+    ***************************************/
+    describe ( 'Test radio & checkboxes inputs', function () {
+      it ( 'Test that radio or checkbox isRequired constraint apply once one radio / checkbox button or more is required', function () {
+        expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( false );
       } )
+      it ( 'Test that error message goes only once and after last radio / checkboxe of the group', function () {
+        expect( $( '#check2' ).parsley( 'getHash' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
+        expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
+      } )
+      it ( 'Test that if a checkbox or radio is selected, isRequired validation pass', function () {
+        $( '#radio1' ).attr( 'checked', 'checked' );
+        $( '#check1' ).attr( 'checked', 'checked' );
+        expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( true );
+      } )
+    } )
   } )
 }

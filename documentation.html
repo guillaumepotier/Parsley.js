@@ -603,6 +603,90 @@
                         </td>
                     </tr>
 
+                    <!-- minChecked -->
+                    <tr>
+                        <td>Min check</td>
+                        <td>
+                            <code>data-mincheck="2"</code>
+                        </td>
+                        <td>Validates that a certain checkboxes number is at least checked.</td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <small>Check at least 2 checkboxes:</small>
+                                        <form data-validate="parsley">
+                                            <input type="checkbox" id="mincheck" name="mincheck[]" data-mincheck="2" value="foo" />
+                                            <input type="checkbox" name="mincheck[]" value="bar" />
+                                            <input type="checkbox" name="mincheck[]" value="baz" />
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#mincheck').parsley( 'validate' );">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- maxChecked -->
+                    <tr>
+                        <td>Max check</td>
+                        <td>
+                            <code>data-maxcheck="2"</code>
+                        </td>
+                        <td>Validates that a certain checkboxes number is checked at maximum.</td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <small>Check 2 checkboxes maximum:</small>
+                                        <form data-validate="parsley">
+                                            <input type="checkbox" id="maxcheck" name="maxcheck[]" data-maxcheck="2" value="foo" />
+                                            <input type="checkbox" name="maxcheck[]" value="bar" />
+                                            <input type="checkbox" name="maxcheck[]" value="baz" />
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#maxcheck').parsley( 'validate' );">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- rangeChecked -->
+                    <tr>
+                        <td>Range check</td>
+                        <td>
+                            <code>data-rangecheck="[1,2]"</code>
+                        </td>
+                        <td>Validates that a certain checkboxes number is checked at maximum.</td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <small>Check b/w 1&2 checkboxes:</small>
+                                        <form data-validate="parsley">
+                                            <input type="checkbox" id="rangecheck" name="rangecheck[]" data-rangecheck="[1,2]" value="foo" />
+                                            <input type="checkbox" name="rangecheck[]" value="bar" />
+                                            <input type="checkbox" name="rangecheck[]" value="baz" />
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#rangecheck').parsley( 'validate' );">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
                     <tr>
                         <td colspan="4">
                             <a name="type-constraints"></a>
@@ -797,13 +881,13 @@
   , onFieldValidate: function ( elem ) { return false; }
   , onFormSubmit: function ( isFormValid, event, focusedField ) {}
   , onFieldError: function ( elem, constraint ) {}
-  , customValidators: {}
+  , validators: {}
   , messages: {}
 }</code></pre>
                         </td>
                         <td  class="not-for-mobile"><p>Add a custom validator that checks if number is a multiple of another:</p>
 <pre><code>$( '#form' ).parsley( {
-    customValidators: {
+    validators: {
       multiple: function ( val, multiple ) {
         return val % multiple === 0;
       }
@@ -939,7 +1023,7 @@
         } );
 
         $( '#parsley-multiple' ).parsley( {
-          customValidators: {
+          validators: {
             multiple: function ( val, multiple ) {
               return val % multiple === 0;
             }
