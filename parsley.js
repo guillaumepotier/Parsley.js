@@ -209,7 +209,11 @@
   * @constructor
   */
   var ParsleyField = function ( element, options ) {
-    this.init( 'ParsleyField', element, new Validator( options ), options );
+    this.options = options;
+    this.type = 'ParsleyField';
+    this.Validator = new Validator( options );
+
+    this.init( element );
   }
 
   ParsleyField.prototype = {
@@ -219,20 +223,22 @@
     /*
     * init data, bind jQuery on() actions
     */
-    , init: function ( type, element, Validator, options ) {
-      this.type = type;
+    , init: function ( element ) {
       this.isValid = true;
-      this.Validator = Validator;
       this.$element = $( element );
       this.val = this.$element.val();
+
+      // overrided if radio or checkbox input
       this.hash = this.generateHash();
-      this.options = $.extend(true, {}, $.fn[ 'parsley' ].defaults, options, this.$element.data() );
+      this.errorClassHandler = this.$element;
+      this.valHandler = this.$element;
 
       this.isRequired = false;
       this.constraints = new Array();
+      this.isRadioCheckbox = this.extraRadioCheckboxes();
 
-      // a field is required if data-required="true" or class="required"
-      if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) ) {
+      // a field is required if data-required="true" or class="required" or required="required"
+      if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) === 'required' ) {
         this.isRequired = this.options[ 'required' ] = true;
       }
 
@@ -243,6 +249,29 @@
       if ( this.constraints.length ) {
         this.bindValidationEvents();
       }
+    }
+
+    /**
+    * Override some properties to nicely behave on checkboxes and radio inputs
+    *
+    * @method extraRadioCheckboxes
+    * @returns {Boolean}
+    */
+    , extraRadioCheckboxes: function () {
+
+      if ( !this.$element.is( 'input[type=radio], input[type=checkbox]' ) ) {
+        return false;
+      }
+
+      // check that all radio or checkbox inputs share the unique same parent
+      if ( $( 'input[name="' + this.$element.attr( 'name' ) + '"]').length !== this.$element.parent().children().length ) {
+        throw Error( "[Parsley] All radio or checkbox inputs must be exclusively wrapped in a same parent. That is not the case for '" + this.$element.attr( 'name' ) + "' input !" );
+      }
+
+      // display ul errors after parent elem
+      this.errorClassHandler = this.$element.parent();
+      this.hash = this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
+      return true;
     }
 
     /**
@@ -282,17 +311,17 @@
     * Hash management. Used for ul error
     *
     * @method generateHash
-    * @returns {String} 5 letters hash
+    * @returns {String} 5 letters unique hash
     */
     , generateHash: function () {
-        var text = ''
-          , possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      var text = ''
+        , possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-        for ( var i = 0; i < 5; i++ ) {
-          text += possible.charAt( Math.floor( Math.random() * possible.length ) );
-        }
+      for ( var i = 0; i < 5; i++ ) {
+        text += possible.charAt( Math.floor( Math.random() * possible.length ) );
+      }
 
-        return text;
+      return text;
     }
 
     /**
@@ -301,8 +330,26 @@
     * @method generateHash
     * @returns {String} hash
     */
-    , getHash: function() {
+    , getHash: function () {
       return this.hash;
+    }
+
+    /**
+    * Returns field val needed for validation
+    * Special treatment for radio & checkboxes
+    *
+    * @method getVal
+    * @returns {String} val
+    */
+    , getVal: function () {
+      var val = this.valHandler.val();
+
+      // specail treatment for radio & checkboxes buttons. Get the checked one or consider val is empty
+      if ( this.isRadioCheckbox ) {
+        val = $( 'input[name="' + this.$element.attr( 'name' ) + '"]:checked' ).val() || '';
+      }
+
+      return val;
     }
 
     /**
@@ -312,8 +359,8 @@
     * @method eventValidation
     * @param {Object} event jQuery event
     */
-    , eventValidation: function( event ) {
-      var val = this.$element.val();
+    , eventValidation: function ( event ) {
+      var val = this.getVal();
 
       // do nothing on keypress event if not explicitely passed as data-trigger and if field has no errors
       if ( event.type === 'keyup' && !/keyup/i.test( this.options.trigger ) && this.isValid ) {
@@ -341,7 +388,7 @@
     * @return {Boolean} Is field valid or not
     */
     , validate: function ( displayErrors ) {
-      this.val = this.$element.val();
+      this.val = this.getVal();
 
       if ( this.options.onFieldValidate( this.$element ) || '' === this.val && !this.isRequired ) {
         this.reset();
@@ -407,7 +454,7 @@
         }
       }
 
-      this.$element.removeClass( 'parsley-success' ).addClass( 'parsley-error' );
+      this.errorClassHandler.removeClass( 'parsley-success' ).addClass( 'parsley-error' );
       return false;
     }
 
@@ -442,7 +489,7 @@
     *
     * @method reset
     */
-    , reset: function() {
+    , reset: function () {
       this.isValid = true;
       this.removeErrors();
       this.$element.removeClass( 'parsley-success' ).removeClass( 'parsley-error' );
@@ -462,12 +509,12 @@
             this.Validator.messages[ methodName ][ requirements ] : ( 'undefined' === typeof this.Validator.messages[ methodName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ methodName ], requirements ) );
 
-      if ( $( ulError ).length === 0 ) {
+      if ( !$( ulError ).length ) {
         this.$element.attr( 'parsley-hash', this.hash );
-        this.$element.after( '<ul class="parsley-error-list" id="' + this.hash + '"></ul>' );
+        this.errorClassHandler.after( '<ul class="parsley-error-list" id="' + this.hash + '"></ul>' );
       }
 
-      if ( $( liError ).length === 0 ) {
+      if ( !$( liError ).length ) {
         $( ulError ).append( '<li class="parsley-error ' + methodName + '">' + message + '</li>');
       }
     }
@@ -475,7 +522,7 @@
     /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function() {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -518,7 +565,7 @@
     /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function() {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -593,7 +640,7 @@
     function bind ( self, type ) {
       var data = $( self ).data( type );
 
-      // if data never binded, bind it right now!
+      // if data never binded or we want to clone a build (for radio & checkboxes), bind it right now!
       if ( !data ) {
         switch ( type ) {
           case 'parsleyForm':
@@ -609,24 +656,21 @@
         $( self ).data( type, data );
       }
 
-      // here is our parsley public function accessor, currently does not support args
+      // here is our parsley public function accessor
       if ( 'string' === typeof option && 'function' === typeof data[ option ] ) {
         return data[ option ]( fn );
       }
     }
 
-    // loop through every elemt we want to parsley
-    this.each( function () {
-      // if a form elem is given, bind all its input children
-      if ( $( this ).is( 'form' ) ) {
-        returnValue = bind ( $( this ), 'parsleyForm' );
+    // if a form elem is given, bind all its input children
+    if ( $( this ).is( 'form' ) ) {
+      returnValue = bind ( $( this ), 'parsleyForm' );
 
-      // if it is a Parsley supported single element, bind it too, except inputs type hidden
-      // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
-      } else if ( $( this ).is( options.inputs ) && !$( this ).is( 'input[type=hidden]' ) ) {
-        returnValue = bind( $( this ), 'parsleyField' );
-      }
-    } );
+    // if it is a Parsley supported single element, bind it too, except inputs type hidden
+    // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
+    } else if ( $( this ).is( options.inputs ) && !$( this ).is( options.excluded ) ) {
+      returnValue = bind( $( this ), 'parsleyField' );
+    }
 
     return 'function' === typeof fn ? fn() : returnValue;
   }
@@ -641,6 +685,7 @@
   */
   $.fn.parsley.defaults = {
     inputs: 'input, textarea, select'                             // Default supported inputs.
+    , excluded: 'input[type=hidden]'                              // Do not validate input[type=hidded].
     , trigger: false                                              // $.Event() that will trigger validation. eg: keyup, change..
     , focus: 'first'                                              // 'fist'|'last'|'none' which error field would have focus first on form validation
     , validationMinlength: 3                                      // If trigger validation specified, only if value.length > validationMinlength

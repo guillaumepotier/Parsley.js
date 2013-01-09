@@ -177,6 +177,15 @@ var testSuite = function () {
         triggerSubmitValidation( '#required-class', '  foo' );
         expect( $( '#required-class' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'required - html5-api', function () {
+        triggerSubmitValidation( '#required-html5', '' );
+        expect( $( '#required-html5' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#required-html5', 'required') ).to.be( 'This value is required.' );
+        triggerSubmitValidation( '#required-html5', '  ' );
+        expect( $( '#required-html5' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#required-html5', '  foo' );
+        expect( $( '#required-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'minlength', function () {
         triggerSubmitValidation( '#minlength', '12345' );
         expect( $( '#minlength' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -439,5 +448,23 @@ var testSuite = function () {
         } )
       } )
     } )
+
+     /***************************************
+           test radio & checkboxes inputs
+      ***************************************/
+      describe ( 'Test radio & checkboxes inputs', function () {
+        it ( 'Test that radio or checkbox isRequired constraint apply once one radio / checkbox button or more is required', function () {
+          expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( false );
+        } )
+        it ( 'Test that error message goes only once and after last radio / checkboxe of the group', function () {
+          expect( $( '#check2' ).parsley( 'getHash' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
+          expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
+        } )
+        it ( 'Test that if a checkbox or radio is selected, isRequired validation pass', function () {
+          $( '#radio1' ).attr( 'checked', 'checked' );
+          $( '#check1' ).attr( 'checked', 'checked' );
+          expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( true );
+        } )
+      } )
   } )
 }
