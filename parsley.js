@@ -377,17 +377,17 @@
         return this.isValid;
       }
 
-      this.validate( true );
+      this.validate();
     }
 
     /**
     * Validate a field & display errors
     *
     * @method validate
-    * @param {Boolean} Show field errors
+    * @param {Boolean} doNotShowErrors set to true if you just want isValid boolean without error bubbling next to fields
     * @return {Boolean} Is field valid or not
     */
-    , validate: function ( displayErrors ) {
+    , validate: function ( doNotShowErrors ) {
       this.val = this.getVal();
 
       if ( this.options.onFieldValidate( this.$element ) || '' === this.val && !this.isRequired ) {
@@ -397,7 +397,7 @@
 
       this.isValid = this.applyValidators();
 
-      if ( displayErrors ) {
+      if ( !doNotShowErrors ) {
         this.manageValidationResult();
       }
 
@@ -592,7 +592,7 @@
         , focusedField = false;
 
       for ( var item in this.items ) {
-        if ( false === this.items[ item ].parsley( 'validate', true ) ) {
+        if ( false === this.items[ item ].parsley( 'validate' ) ) {
           isValid = false;
 
           if ( !focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {

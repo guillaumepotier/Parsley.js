@@ -389,7 +389,7 @@
                                 <tr>
                                     <td>
                                         <form data-validate="parsley">
-                                            <input type="text" id="data-notblank" data-notblank="true" placeholder="not blank field" />
+                                            <input type="text" id="data-notblank" data-notblank="true" data-required="true" placeholder="not blank field" />
                                         </form>
                                     </td>
                                     <td>
@@ -844,7 +844,7 @@
                         <td>Bind Parsley to a form</td>
                         <td></td>
                         <td>Useful if your form is dynamically rendered.</td>
-                        <td  class="not-for-mobile">
+                        <td class="not-for-mobile">
 <pre><code>$( '#form' ).parsley();</code></pre>
                         </td>
                     </tr>
