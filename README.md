@@ -10,7 +10,7 @@ See TODO.md
 
 #Version
 
-0.1.2
+0.2.0
 
 #Install dependencies for documentation and tests
 

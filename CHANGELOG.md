@@ -1,5 +1,10 @@
 #Changelog
 
+** 0.2.0 **
+
+    - heavy radio / checkbox refacto. Now dedicated class `ParsleyFieldMultiple`
+    - added 3 custom checkbox validators: mincheck, maxcheck and rangecheck
+
 ** 0.1.4 **
 
     - added html5 api required="required" support

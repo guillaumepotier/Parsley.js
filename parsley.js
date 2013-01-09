@@ -67,7 +67,16 @@
         return '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
       }
 
+      /**
+      * Works on all inputs. val is object for checkboxes
+      */
       , required: function ( val ) {
+
+        // check here that at least a checkbox is checked here
+        if ( 'object' === typeof val ) {
+          return val.length > 0;
+        }
+
         return this.notnull( val ) && this.notblank( val );
       }
 
@@ -133,13 +142,28 @@
       , equalto: function ( val, elem ) {
         return val === $( elem ).val();
       }
+
+      /**
+      * Aliases for checkboxes constraints
+      */
+      , mincheck: function ( obj, val ) {
+        return this.minlength( obj, val );
+      }
+
+      , maxcheck: function ( obj, val ) {
+        return this.maxlength( obj, val);
+      }
+
+      , rangecheck: function ( obj, arrayRange ) {
+        return this.rangelength( obj, arrayRange );
+      }
     }
 
     /*
     * Register custom validators and messages
     */
     , init: function ( options ) {
-      var customValidators = options.customValidators
+      var customValidators = options.validators
         , customMessages = options.messages;
 
       for ( var i in customValidators ) {
@@ -208,34 +232,38 @@
   * @class ParsleyField
   * @constructor
   */
-  var ParsleyField = function ( element, options ) {
+  var ParsleyField = function ( element, options, type ) {
     this.options = options;
-    this.type = 'ParsleyField';
     this.Validator = new Validator( options );
 
-    this.init( element );
+    this.init( element, type || 'ParsleyField' );
+
+    return this;
   }
 
   ParsleyField.prototype = {
 
     constructor: ParsleyField
 
-    /*
-    * init data, bind jQuery on() actions
+    /**
+    * Set some properties, bind constraint validators and validation events
+    *
+    * @method init
+    * @param {Object} element
+    * @param {Object} options
     */
-    , init: function ( element ) {
+    , init: function ( element, type ) {
+      this.type = type;
       this.isValid = true;
       this.$element = $( element );
       this.val = this.$element.val();
-
-      // overrided if radio or checkbox input
-      this.hash = this.generateHash();
-      this.errorClassHandler = this.$element;
-      this.valHandler = this.$element;
-
       this.isRequired = false;
       this.constraints = new Array();
-      this.isRadioCheckbox = this.extraRadioCheckboxes();
+      this.isRadioOrCheckbox = false;
+
+      // overrided by ParsleyItemMultiple if radio or checkbox input
+      this.hash = this.generateHash();
+      this.errorClassHandler = this.$element;
 
       // a field is required if data-required="true" or class="required" or required="required"
       if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) === 'required' ) {
@@ -249,29 +277,6 @@
       if ( this.constraints.length ) {
         this.bindValidationEvents();
       }
-    }
-
-    /**
-    * Override some properties to nicely behave on checkboxes and radio inputs
-    *
-    * @method extraRadioCheckboxes
-    * @returns {Boolean}
-    */
-    , extraRadioCheckboxes: function () {
-
-      if ( !this.$element.is( 'input[type=radio], input[type=checkbox]' ) ) {
-        return false;
-      }
-
-      // check that all radio or checkbox inputs share the unique same parent
-      if ( $( 'input[name="' + this.$element.attr( 'name' ) + '"]').length !== this.$element.parent().children().length ) {
-        throw Error( "[Parsley] All radio or checkbox inputs must be exclusively wrapped in a same parent. That is not the case for '" + this.$element.attr( 'name' ) + "' input !" );
-      }
-
-      // display ul errors after parent elem
-      this.errorClassHandler = this.$element.parent();
-      this.hash = this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
-      return true;
     }
 
     /**
@@ -342,14 +347,7 @@
     * @returns {String} val
     */
     , getVal: function () {
-      var val = this.valHandler.val();
-
-      // specail treatment for radio & checkboxes buttons. Get the checked one or consider val is empty
-      if ( this.isRadioCheckbox ) {
-        val = $( 'input[name="' + this.$element.attr( 'name' ) + '"]:checked' ).val() || '';
-      }
-
-      return val;
+      return this.$element.val();
     }
 
     /**
@@ -532,6 +530,102 @@
   }
 
   /**
+  * ParsleyFieldMultiple override ParsleyField for checkbox and radio inputs
+  * Pseudo-heritance to manage divergent behavior from ParsleyItem in dedicated methods
+  *
+  * @class ParsleyFieldMultiple
+  * @constructor
+  */
+  var ParsleyFieldMultiple = function ( element, options ) {
+    this.initMultiple( element, options );
+    this.inherit( element, options );
+  }
+
+  ParsleyFieldMultiple.prototype = {
+
+    constructor: ParsleyFieldMultiple
+
+    /**
+    * Set some specific properties, call some extra methods to manage radio / checkbox
+    *
+    * @method init
+    * @param {Object} element
+    * @param {Object} options
+    */
+    , initMultiple: function ( element, options ) {
+      this.$element = $( element );
+      this.hash = this.getHash();
+      this.isRadioOrCheckbox = true;
+      this.isRadio = this.$element.is( 'input[type=radio]' );
+      this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
+      this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
+      this.$siblings = $( this.siblings );
+      this.errorClassHandler = this.$element.parent();
+
+      // check that all radio or checkbox inputs share the direct same parent
+      // if not, fallback on last radio or checkbox button
+      if ( this.$siblings.length !== this.$element.parent().children().length ) {
+        this.errorClassHandler = this.$siblings.last();
+      }
+    }
+
+    /**
+    * Set specific constraints messages, do pseudo-heritance
+    *
+    * @method inherit
+    * @param {Object} element
+    * @param {Object} options
+    */
+    , inherit: function ( element, options ) {
+      var messages = {
+          mincheck:     "You must select at least %s choices."
+        , maxcheck:     "You must select %s choices or less."
+        , rangecheck:   "You must select between %s and %s choices."
+      }
+      , options = $.extend(true, {}, { messages: messages }, options )
+      , clone = new ParsleyField( element, options );
+
+      for ( var property in clone ) {
+        if ( 'undefined' === typeof this[ property ] ) {
+          this[ property ] = clone [ property ];
+        }
+      }
+    }
+
+    /**
+    * Set specific constraints messages, do pseudo-heritance
+    *
+    * @method getHash
+    * @returns {String} hash radio / checkbox hash is cleaned "name" property
+    */
+   , getHash: function () {
+     return this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
+   }
+
+   /**
+   * Special treatment for radio & checkboxes
+   * Returns checked radio or checkboxes values
+   *
+   * @method getVal
+   * @returns {String} val
+   */
+   , getVal: function () {
+      if ( this.isRadio ) {
+        return $( this.siblings + ':checked' ).val() || '';
+      }
+
+      if ( this.isCheckbox ) {
+        var values = new Array();
+        $( this.siblings + ':checked' ).each( function () {
+          values.push( $( this ).val() );
+        } )
+
+        return values;
+      }
+   }
+  }
+
+  /**
   * ParsleyForm class manage Parsley validated form.
   * Manage its fields and global validation
   *
@@ -625,7 +719,7 @@
 
   /**
   * Parsley plugin definition
-  * Provides an interface to access public Validator, ParsleyForm and ParsleyItem functions
+  * Provides an interface to access public Validator, ParsleyForm and ParsleyField functions
   *
   * @class Parsley
   * @constructor
@@ -649,6 +743,9 @@
           case 'parsleyField':
             data = new ParsleyField( self, options );
             break;
+          case 'parsleyFieldMultiple':
+            data = new ParsleyFieldMultiple( self, options );
+            break;
           default:
             return;
         }
@@ -669,7 +766,7 @@
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
     // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
     } else if ( $( this ).is( options.inputs ) && !$( this ).is( options.excluded ) ) {
-      returnValue = bind( $( this ), 'parsleyField' );
+      returnValue = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
     }
 
     return 'function' === typeof fn ? fn() : returnValue;
@@ -692,7 +789,7 @@
     , onFieldValidate: function ( elem ) { return false; }              // Return true to force field to be valid, false otherwise
     , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
     , onFieldError: function ( field, constraint ) {}                   // Executed when a field is detected as invalid
-    , customValidators: {}                                        // Add your custom validators functions
+    , validators: {}                                              // Add your custom validators functions
     , messages: {}                                                // Add your own error messages here
   }
 
