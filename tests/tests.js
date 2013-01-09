@@ -2,7 +2,7 @@
 
 var triggerSubmitValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
-  $( idOrClass ).parsley( 'validate', true );
+  $( idOrClass ).parsley( 'validate' );
 }
 
 var triggerEventChangeValidation = function ( idOrClass, value ) {

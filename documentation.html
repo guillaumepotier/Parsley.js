@@ -389,7 +389,7 @@
                                 <tr>
                                     <td>
                                         <form data-validate="parsley">
-                                            <input type="text" id="data-notblank" data-notblank="true" placeholder="not blank field" />
+                                            <input type="text" id="data-notblank" data-notblank="true" data-required="true" placeholder="not blank field" />
                                         </form>
                                     </td>
                                     <td>
@@ -822,7 +822,7 @@
                         <td>Add a listener</td>
                         <td></td>
                         <td>Allow you, even after Parsley initial form binding to add a custom listener. Available listeners curently are: <code>onFieldValidate</code>, <code>onFieldError</code> and <code>onFormSubmit</code> and their passed arguments are listed above in Default Plugin config.</td>
-                        <td>
+                        <td class="not-for-mobile">
 <pre><code>$( '#form' ).parsley( 'addListener', {
     onFieldValidate: function ( elem ) {
 
@@ -844,7 +844,7 @@
                         <td>Bind Parsley to a form</td>
                         <td></td>
                         <td>Useful if your form is dynamically rendered.</td>
-                        <td  class="not-for-mobile">
+                        <td class="not-for-mobile">
 <pre><code>$( '#form' ).parsley();</code></pre>
                         </td>
                     </tr>
