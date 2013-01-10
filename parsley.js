@@ -255,15 +255,16 @@
     , init: function ( element, type ) {
       this.type = type;
       this.isValid = true;
+      this.element = element;
       this.$element = $( element );
       this.val = this.$element.val();
       this.isRequired = false;
-      this.constraints = new Array();
+      this.constraints = [];
       this.isRadioOrCheckbox = false;
 
       // overrided by ParsleyItemMultiple if radio or checkbox input
       this.hash = this.generateHash();
-      this.errorClassHandler = this.$element;
+      this.errorClassHandler = this.options.error.classHandler( element, this.isRadioOrCheckbox );
 
       // a field is required if data-required="true" or class="required" or required="required"
       if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) === 'required' ) {
@@ -388,7 +389,7 @@
     , validate: function ( doNotShowErrors ) {
       this.val = this.getVal();
 
-      if ( this.options.onFieldValidate( this.$element ) || '' === this.val && !this.isRequired ) {
+      if ( this.options.listeners.onFieldValidate( this.$element ) || '' === this.val && !this.isRequired ) {
         this.reset();
         return true;
       }
@@ -439,20 +440,20 @@
     , manageValidationResult: function () {
       if ( this.isValid ) {
         this.removeErrors();
-        this.$element.removeClass( 'parsley-error' ).addClass( 'parsley-success' );
+        this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
         return true;
       }
 
       for ( var i in this.constraints ) {
         if ( !this.constraints[ i ].isValid ) {
           this.addError( this.constraints[ i ].method,  this.constraints[ i ].requirements );
-          this.options.onFieldError( this.$element, this.constraints[ i ] );
+          this.options.listeners.onFieldError( this.$element, this.constraints[ i ] );
         } else {
           this.removeError( this.constraints[ i ].method );
         }
       }
 
-      this.errorClassHandler.removeClass( 'parsley-success' ).addClass( 'parsley-error' );
+      this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
       return false;
     }
 
@@ -478,7 +479,6 @@
     * @method removeErrors
     */
     , removeErrors: function () {
-      this.errors = new Array();
       $( 'ul#' + this.hash ).remove();
     }
 
@@ -490,7 +490,7 @@
     , reset: function () {
       this.isValid = true;
       this.removeErrors();
-      this.$element.removeClass( 'parsley-success' ).removeClass( 'parsley-error' );
+      this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
     }
 
     /**
@@ -509,7 +509,7 @@
 
       if ( !$( ulError ).length ) {
         this.$element.attr( 'parsley-hash', this.hash );
-        this.errorClassHandler.after( '<ul class="parsley-error-list" id="' + this.hash + '"></ul>' );
+        this.options.error.container( this.element, '<ul class="parsley-error-list" id="' + this.hash + '"></ul>', this.isRadioOrCheckbox );
       }
 
       if ( !$( liError ).length ) {
@@ -524,7 +524,7 @@
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
-        this.options[ listener ] = object[ listener ];
+        this.options.listeners[ listener ] = object[ listener ];
       }
     }
   }
@@ -553,20 +553,14 @@
     * @param {Object} options
     */
     , initMultiple: function ( element, options ) {
+      this.element = element;
       this.$element = $( element );
-      this.hash = this.getHash();
+      this.hash = this.getName();
       this.isRadioOrCheckbox = true;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
       this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.$siblings = $( this.siblings );
-      this.errorClassHandler = this.$element.parent();
-
-      // check that all radio or checkbox inputs share the direct same parent
-      // if not, fallback on last radio or checkbox button
-      if ( this.$siblings.length !== this.$element.parent().children().length ) {
-        this.errorClassHandler = this.$siblings.last();
-      }
     }
 
     /**
@@ -595,10 +589,10 @@
     /**
     * Set specific constraints messages, do pseudo-heritance
     *
-    * @method getHash
-    * @returns {String} hash radio / checkbox hash is cleaned "name" property
+    * @method getName
+    * @returns {String} radio / checkbox hash is cleaned "name" property
     */
-   , getHash: function () {
+   , getName: function () {
      return this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
    }
 
@@ -615,7 +609,7 @@
       }
 
       if ( this.isCheckbox ) {
-        var values = new Array();
+        var values = [];
         $( this.siblings + ':checked' ).each( function () {
           values.push( $( this ).val() );
         } )
@@ -643,7 +637,7 @@
     /* init data, bind jQuery on() actions */
     , init: function ( type, element, options ) {
       this.type = type;
-      this.items = new Array();
+      this.items = [];
       this.$element = $( element );
       this.options = options;
       var self = this;
@@ -700,7 +694,7 @@
         focusedField.focus();
       }
 
-      this.options.onFormSubmit( isValid, event, focusedField );
+      this.options.listeners.onFormSubmit( isValid, event, focusedField );
 
       return isValid;
     }
@@ -781,16 +775,31 @@
   * @type {Object}
   */
   $.fn.parsley.defaults = {
-    inputs: 'input, textarea, select'                             // Default supported inputs.
-    , excluded: 'input[type=hidden]'                              // Do not validate input[type=hidded].
-    , trigger: false                                              // $.Event() that will trigger validation. eg: keyup, change..
-    , focus: 'first'                                              // 'fist'|'last'|'none' which error field would have focus first on form validation
-    , validationMinlength: 3                                      // If trigger validation specified, only if value.length > validationMinlength
-    , onFieldValidate: function ( elem ) { return false; }              // Return true to force field to be valid, false otherwise
-    , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
-    , onFieldError: function ( field, constraint ) {}                   // Executed when a field is detected as invalid
-    , validators: {}                                              // Add your custom validators functions
-    , messages: {}                                                // Add your own error messages here
+    // basic data-api overridable properties here..
+    inputs: 'input, textarea, select'   // Default supported inputs.
+    , excluded: 'input[type=hidden]'    // Do not validate input[type=hidded].
+    , trigger: false                    // $.Event() that will trigger validation. eg: keyup, change..
+    , focus: 'first'                    // 'fist'|'last'|'none' which error field would have focus first on form validation
+    , validationMinlength: 3            // If trigger validation specified, only if value.length > validationMinlength
+    , successClass: 'parsley-success'   // Class name on each valid input
+    , errorClass: 'parsley-error'       // Class name on each invalid input
+    , validators: {}                    // Add your custom validators functions
+    , messages: {}                      // Add your own error messages here
+
+    //some quite advanced configuration here..
+    , error: {
+        classHandler: function ( elem, isRadioOrCheckbox ) {             // class is directly set on elem, parent for radio/checkboxes
+          return !isRadioOrCheckbox ? $( elem ) : $( elem ).parent();
+        }
+      , container: function ( elem, template, isRadioOrCheckbox ) {    // error ul is inserted after elem, parent for radio/checkboxes
+          return !isRadioOrCheckbox ? $( elem ).after( template ) : $( elem ).parent().after( template );
+        }
+      }
+    , listeners: {
+        onFieldValidate: function ( elem ) { return false; }              // Return true to force field to be valid, false otherwise
+      , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
+      , onFieldError: function ( field, constraint ) {}                   // Executed when a field is detected as invalid
+    }
   }
 
   /* PARSLEY auto-bind DATA-API

@@ -878,9 +878,11 @@
     inputs: 'input, textarea, select'
   , trigger: false
   , validationMinlength: 3
-  , onFieldValidate: function ( elem ) { return false; }
-  , onFormSubmit: function ( isFormValid, event, focusedField ) {}
-  , onFieldError: function ( elem, constraint ) {}
+  , listeners: {
+      onFieldValidate: function ( elem ) { return false; }
+    , onFormSubmit: function ( isFormValid, event, focusedField ) {}
+    , onFieldError: function ( elem, constraint ) {}
+  }
   , validators: {}
   , messages: {}
 }</code></pre>
@@ -1009,7 +1011,7 @@
     <script type="text/javascript">
         hljs.initHighlightingOnLoad();
 
-        $( '#demo-form' ).parsley( { 
+        $( '#demo-form' ).parsley( { listeners: {
             onFormSubmit: function ( isFormValid, event ) {
                 if ( isFormValid && !$( '#good-to-go').length ) {
                     $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Good to go!</span>' );
@@ -1020,7 +1022,7 @@
                 $( '#demo-form-valid' ).show();
                 $( '#good-to-go' ).remove();
             }
-        } );
+        } } );
 
         $( '#parsley-multiple' ).parsley( {
           validators: {
