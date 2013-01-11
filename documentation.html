@@ -875,16 +875,29 @@
                         <td></td>
                         <td >Parsley uses a set of default overridable configs that you can override passing an object as parameter when calling Parsley on a form or a field.<br/>Default is:
 <pre><code>{
-    inputs: 'input, textarea, select'
+  // basic data-api overridable properties here..
+  inputs: 'input, textarea, select'
+  , excluded: 'input[type=hidden]'
   , trigger: false
+  , focus: 'first'
   , validationMinlength: 3
+  , successClass: 'parsley-success'
+  , errorClass: 'parsley-error'
+  , validators: {}
+  , messages: {}
+
+  //some quite advanced configuration here..
+  , error: {
+    classHandler: function ( elem ) {}
+  , container: function ( elem, template, isRadioOrCheckbox ) {}
+  , errorsWrapper: '<ul></ul>'
+  , errorElem: '<li></li>'
+  }
   , listeners: {
       onFieldValidate: function ( elem ) { return false; }
     , onFormSubmit: function ( isFormValid, event, focusedField ) {}
     , onFieldError: function ( elem, constraint ) {}
   }
-  , validators: {}
-  , messages: {}
 }</code></pre>
                         </td>
                         <td  class="not-for-mobile"><p>Add a custom validator that checks if number is a multiple of another:</p>
