@@ -16,7 +16,7 @@ var triggerEventValidation = function ( idOrClass ) {
 }
 
 var getErrorMessage = function ( idOrClass, method ) {
-  return $( 'ul#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
+  return $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
 }
 
 $( '#validate-form' ).parsley( { listeners: {
@@ -130,20 +130,20 @@ var testSuite = function () {
 
       it ( 'Test two errors on the same field', function () {
         triggerSubmitValidation( '#errormanagement', 'foo@' );
-        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );
-        expect( $( 'ul#' + fieldHash + ' li.type' ).length ).to.be( 1 );
-        expect( $( 'ul#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li' ).length ).to.be( 2 );
+        expect( $( '#' + fieldHash + ' li.type' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'If one error is fixed, show the remaining one', function () {
         triggerSubmitValidation( '#errormanagement', 'foo' );
-        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
-        expect( $( 'ul#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'If there are no more errors, full validation ok', function () {
         triggerSubmitValidation( '#errormanagement', 'foobar' );
-        expect( $( 'ul#' + fieldHash ).length ).to.be( 0 );
+        expect( $( '#' + fieldHash ).length ).to.be( 0 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
     } )

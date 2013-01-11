@@ -464,12 +464,11 @@
     * @param {String} methodName Method Name
     */
     , removeError: function ( methodName ) {
-      var ulError = 'ul#' + this.hash
-        , liError = ulError + ' li.' + methodName;
+      var liError = this.ulError + ' .' + methodName;
 
       // remove li error, and ul error if no more li inside
-      if ( $( liError ).remove() && $( ulError + ' li' ).length === 0 ) {
-        $( ulError ).remove();
+      if ( this.ulError && $( liError ).remove() && $( this.ulError ).children().length === 0 ) {
+        $( this.ulError ).remove();
       }
     }
 
@@ -479,7 +478,7 @@
     * @method removeErrors
     */
     , removeErrors: function () {
-      $( 'ul#' + this.hash ).remove();
+      !this.ulError || $( this.ulError ).remove();
     }
 
     /**
@@ -501,20 +500,25 @@
     * @param {Mixed} requirements Method requirements if adding an error
     */
     , addError: function ( methodName, requirements ) {
-      var ulError = 'ul#' + this.hash
-        , liError = ulError + ' li.' + methodName
-        , ulTemplate = '<ul class="parsley-error-list" id="' + this.hash + '"></ul>'
+      // error dom management done only once
+      if ( !this.ulError ) {
+          this.ulError = '#' + this.hash
+        , this.ulTemplate = $( this.options.error.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+      }
+
+      var liError = this.ulError + ' .' + methodName
+        , liTemplate = $( this.options.error.errorElem ).addClass( methodName )
         , message = methodName === 'type' ?
             this.Validator.messages[ methodName ][ requirements ] : ( 'undefined' === typeof this.Validator.messages[ methodName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ methodName ], requirements ) );
 
-      if ( !$( ulError ).length ) {
-        this.options.error.container( this.element, ulTemplate, this.isRadioOrCheckbox )
-          || !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
+      if ( !$( this.ulError ).length ) {
+        this.options.error.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
+          || !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate );
       }
 
       if ( !$( liError ).length ) {
-        $( ulError ).append( '<li class="parsley-error ' + methodName + '">' + message + '</li>');
+        $( this.ulError ).append( $( liTemplate ).text( message ) );
       }
     }
 
@@ -792,6 +796,8 @@
     , error: {
         classHandler: function ( elem ) {}                                // class is directly set on elem, parent for radio/checkboxes
       , container: function ( elem, template, isRadioOrCheckbox ) {}      // error ul is inserted after elem, parent for radio/checkboxes
+      , errorsWrapper: '<ul></ul>'                                        // do not set an id for this elem
+      , errorElem: '<li></li>'
       }
     , listeners: {
         onFieldValidate: function ( elem ) { return false; }              // Return true to force field to be valid, false otherwise
