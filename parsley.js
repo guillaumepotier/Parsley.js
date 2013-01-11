@@ -264,7 +264,7 @@
 
       // overrided by ParsleyItemMultiple if radio or checkbox input
       this.hash = this.generateHash();
-      this.errorClassHandler = this.options.error.classHandler( element, this.isRadioOrCheckbox );
+      this.errorClassHandler = this.options.error.classHandler( element ) || this.$element;
 
       // a field is required if data-required="true" or class="required" or required="required"
       if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) === 'required' ) {
@@ -503,13 +503,14 @@
     , addError: function ( methodName, requirements ) {
       var ulError = 'ul#' + this.hash
         , liError = ulError + ' li.' + methodName
+        , ulTemplate = '<ul class="parsley-error-list" id="' + this.hash + '"></ul>'
         , message = methodName === 'type' ?
             this.Validator.messages[ methodName ][ requirements ] : ( 'undefined' === typeof this.Validator.messages[ methodName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ methodName ], requirements ) );
 
       if ( !$( ulError ).length ) {
-        this.$element.attr( 'parsley-hash', this.hash );
-        this.options.error.container( this.element, '<ul class="parsley-error-list" id="' + this.hash + '"></ul>', this.isRadioOrCheckbox );
+        this.options.error.container( this.element, ulTemplate, this.isRadioOrCheckbox )
+          || !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
       }
 
       if ( !$( liError ).length ) {
@@ -561,6 +562,7 @@
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
       this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.$siblings = $( this.siblings );
+      this.errorClassHandler = options.error.classHandler( element ) || this.$element.parent();
     }
 
     /**
@@ -788,12 +790,8 @@
 
     //some quite advanced configuration here..
     , error: {
-        classHandler: function ( elem, isRadioOrCheckbox ) {             // class is directly set on elem, parent for radio/checkboxes
-          return !isRadioOrCheckbox ? $( elem ) : $( elem ).parent();
-        }
-      , container: function ( elem, template, isRadioOrCheckbox ) {    // error ul is inserted after elem, parent for radio/checkboxes
-          return !isRadioOrCheckbox ? $( elem ).after( template ) : $( elem ).parent().after( template );
-        }
+        classHandler: function ( elem ) {}                                // class is directly set on elem, parent for radio/checkboxes
+      , container: function ( elem, template, isRadioOrCheckbox ) {}      // error ul is inserted after elem, parent for radio/checkboxes
       }
     , listeners: {
         onFieldValidate: function ( elem ) { return false; }              // Return true to force field to be valid, false otherwise
