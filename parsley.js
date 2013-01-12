@@ -264,7 +264,7 @@
 
       // overrided by ParsleyItemMultiple if radio or checkbox input
       this.hash = this.generateHash();
-      this.errorClassHandler = this.options.error.classHandler( element ) || this.$element;
+      this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
 
       // a field is required if data-required="true" or class="required" or required="required"
       if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) === 'required' ) {
@@ -503,17 +503,17 @@
       // error dom management done only once
       if ( !this.ulError ) {
           this.ulError = '#' + this.hash
-        , this.ulTemplate = $( this.options.error.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+        , this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
       }
 
       var liError = this.ulError + ' .' + methodName
-        , liTemplate = $( this.options.error.errorElem ).addClass( methodName )
+        , liTemplate = $( this.options.errors.errorElem ).addClass( methodName )
         , message = methodName === 'type' ?
             this.Validator.messages[ methodName ][ requirements ] : ( 'undefined' === typeof this.Validator.messages[ methodName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ methodName ], requirements ) );
 
       if ( !$( this.ulError ).length ) {
-        this.options.error.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
+        this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
           || !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate );
       }
 
@@ -566,7 +566,7 @@
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
       this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.$siblings = $( this.siblings );
-      this.errorClassHandler = options.error.classHandler( element ) || this.$element.parent();
+      this.errorClassHandler = options.errors.classHandler( element ) || this.$element.parent();
     }
 
     /**
@@ -793,7 +793,7 @@
     , messages: {}                      // Add your own error messages here
 
     //some quite advanced configuration here..
-    , error: {
+    , errors: {
         classHandler: function ( elem ) {}                                // class is directly set on elem, parent for radio/checkboxes
       , container: function ( elem, template, isRadioOrCheckbox ) {}      // error ul is inserted after elem, parent for radio/checkboxes
       , errorsWrapper: '<ul></ul>'                                        // do not set an id for this elem
