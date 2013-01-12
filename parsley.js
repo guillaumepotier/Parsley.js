@@ -287,11 +287,11 @@
     * @method addConstraints
     */
     , addConstraints: function () {
-      for ( var method in this.options ) {
-        if ( 'function' === typeof this.Validator.validators[  method.toLowerCase() ] ) {
+      for ( var constraint in this.options ) {
+        if ( 'function' === typeof this.Validator.validators[  constraint.toLowerCase() ] ) {
           this.constraints.push( {
-              method: method
-            , requirements: this.options[ method ]
+              name: constraint
+            , requirements: this.options[ constraint ]
           } );
         }
       }
@@ -424,7 +424,7 @@
       var isValid = true;
 
       for ( var i in this.constraints ) {
-        var method = this.constraints[ i ].method
+        var method = this.constraints[ i ].name
           , requirements = this.constraints[ i ].requirements;
 
         if ( !this.Validator.validators[ method ]( this.val, requirements ) ) {
@@ -455,10 +455,10 @@
 
       for ( var i in this.constraints ) {
         if ( !this.constraints[ i ].isValid ) {
-          this.addError( this.constraints[ i ].method,  this.constraints[ i ].requirements );
+          this.addError( this.constraints[ i ].name,  this.constraints[ i ].requirements );
           this.options.listeners.onFieldError( this.$element, this.constraints[ i ] );
         } else {
-          this.removeError( this.constraints[ i ].method );
+          this.removeError( this.constraints[ i ].name );
         }
       }
 
@@ -470,10 +470,10 @@
     * Remove li / ul error
     *
     * @method removeError
-    * @param {String} methodName Method Name
+    * @param {String} constraintName Method Name
     */
-    , removeError: function ( methodName ) {
-      var liError = this.ulError + ' .' + methodName;
+    , removeError: function ( constraintName ) {
+      var liError = this.ulError + ' .' + constraintName;
 
       // remove li error, and ul error if no more li inside
       if ( this.ulError && $( liError ).remove() && $( this.ulError ).children().length === 0 ) {
@@ -505,21 +505,21 @@
     * Add li / ul errors messages
     *
     * @method addError
-    * @param {String} methodName Method name
+    * @param {String} constraintName Method name
     * @param {Mixed} requirements Method requirements if adding an error
     */
-    , addError: function ( methodName, requirements ) {
+    , addError: function ( constraintName, requirements ) {
       // error dom management done only once
       if ( !this.ulError ) {
           this.ulError = '#' + this.hash
         , this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
       }
 
-      var liError = this.ulError + ' .' + methodName
-        , liTemplate = $( this.options.errors.errorElem ).addClass( methodName )
-        , message = methodName === 'type' ?
-            this.Validator.messages[ methodName ][ requirements ] : ( 'undefined' === typeof this.Validator.messages[ methodName ] ?
-              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ methodName ], requirements ) );
+      var liError = this.ulError + ' .' + constraintName
+        , liTemplate = $( this.options.errors.errorElem ).addClass( constraintName )
+        , message = constraintName === 'type' ?
+            this.Validator.messages[ constraintName ][ requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
+              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], requirements ) );
 
       if ( !$( this.ulError ).length ) {
         this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )

@@ -15,8 +15,8 @@ var triggerEventValidation = function ( idOrClass ) {
   $( idOrClass ).parsley( 'eventValidation', { type: null } );
 }
 
-var getErrorMessage = function ( idOrClass, method ) {
-  return $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
+var getErrorMessage = function ( idOrClass, constraintName ) {
+  return $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + constraintName ).text();
 }
 
 $( '#validate-form' ).parsley( { listeners: {
@@ -52,7 +52,7 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
     return false;
   },
   onFieldError: function ( field, constraint ) {
-    $( field ).addClass( 'error-' + constraint.method + '_' + constraint.requirements );
+    $( field ).addClass( 'error-' + constraint.name + '_' + constraint.requirements );
   },
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
