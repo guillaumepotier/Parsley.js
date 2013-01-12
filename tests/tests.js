@@ -16,21 +16,21 @@ var triggerEventValidation = function ( idOrClass ) {
 }
 
 var getErrorMessage = function ( idOrClass, method ) {
-  return $( 'ul#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
+  return $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
 }
 
-$( '#validate-form' ).parsley( {
+$( '#validate-form' ).parsley( { listeners: {
   onFormSubmit: function ( isFormValid, event ) {
     $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
     event.preventDefault();
   }
-} );
+} } );
 
-$( '#focus-form' ).parsley( {
+$( '#focus-form' ).parsley( { listeners: {
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( focusField ).addClass( 'on-focus' );
   }
-} );
+} } );
 
 $( '#validator-tests' ).parsley( {
   validators: {
@@ -43,7 +43,7 @@ $( '#validator-tests' ).parsley( {
   }
 } );
 
-$( '#onFieldValidate-form' ).parsley( {
+$( '#onFieldValidate-form' ).parsley( { listeners: {
   onFieldValidate: function ( elem ) {
     if ( $( elem ).val() === "foo" || $( elem ).val() === "bar" ) {
       return true;
@@ -57,13 +57,13 @@ $( '#onFieldValidate-form' ).parsley( {
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
   }
-} );
+} } );
 
-$( '#listeners-form' ).parsley( 'addListener', { 
+$( '#listeners-form' ).parsley( 'addListener', { listeners: {
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#listeners-form' ).addClass( 'onFormSubmit-ok' );
   }
-} );
+} } );
 
 var testSuite = function () {
   describe ( 'Parsley.js test suite', function () {
@@ -130,20 +130,20 @@ var testSuite = function () {
 
       it ( 'Test two errors on the same field', function () {
         triggerSubmitValidation( '#errormanagement', 'foo@' );
-        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );
-        expect( $( 'ul#' + fieldHash + ' li.type' ).length ).to.be( 1 );
-        expect( $( 'ul#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li' ).length ).to.be( 2 );
+        expect( $( '#' + fieldHash + ' li.type' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'If one error is fixed, show the remaining one', function () {
         triggerSubmitValidation( '#errormanagement', 'foo' );
-        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
-        expect( $( 'ul#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( '#' + fieldHash + ' li.minlength' ).length ).to.be( 1 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'If there are no more errors, full validation ok', function () {
         triggerSubmitValidation( '#errormanagement', 'foobar' );
-        expect( $( 'ul#' + fieldHash ).length ).to.be( 0 );
+        expect( $( '#' + fieldHash ).length ).to.be( 0 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
     } )
@@ -485,7 +485,7 @@ var testSuite = function () {
       it ( 'Test that radio or checkbox isRequired constraint apply once one radio / checkbox button or more is required', function () {
         expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( false );
       } )
-      it ( 'Test that error message goes only once and after last radio / checkboxe of the group', function () {
+      it ( 'Test that error message goes only once and after last radio / checkbox of the group', function () {
         expect( $( '#check2' ).parsley( 'getHash' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
         expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
       } )
