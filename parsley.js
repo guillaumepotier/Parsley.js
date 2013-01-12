@@ -256,6 +256,7 @@
       this.type = type;
       this.isValid = true;
       this.element = element;
+      this.validatedOnce = false;
       this.$element = $( element );
       this.val = this.$element.val();
       this.isRequired = false;
@@ -366,14 +367,9 @@
         return true;
       }
 
-      // do validation process if field has enough chars and was not previously validated
-      if ( val.length < this.options.validationMinlength && this.isValid ) {
+      // start validation process only if field has enough chars and validation never started
+      if ( val.length < this.options.validationMinlength && !this.validatedOnce ) {
         return true;
-      }
-
-      // if some binded events are redundant (keyup & paste for example), validate only once by field value change
-      if ( this.val === val) {
-        return this.isValid;
       }
 
       this.validate();
@@ -387,7 +383,12 @@
     * @return {Boolean} Is field valid or not
     */
     , validate: function ( doNotShowErrors ) {
-      this.val = this.getVal();
+      var val = this.getVal();
+
+      // do not validate a field already validated and unchanged !
+      if ( !this.needsValidation( val ) ) {
+        return this.isValid;
+      }
 
       if ( this.options.listeners.onFieldValidate( this.$element ) || '' === this.val && !this.isRequired ) {
         this.reset();
@@ -401,6 +402,15 @@
       }
 
       return this.isValid;
+    }
+
+    , needsValidation: function ( val ) {
+      if ( this.val === val && this.validatedOnce ) {
+        return false;
+      }
+
+      this.val = val;
+      return this.validatedOnce = true;
     }
 
     /**
@@ -418,8 +428,7 @@
           , requirements = this.constraints[ i ].requirements;
 
         if ( !this.Validator.validators[ method ]( this.val, requirements ) ) {
-          isValid = false;
-          this.constraints[ i ].isValid = false;
+          this.constraints[ i ].isValid = isValid = false;
         } else {
           this.constraints[ i ].isValid = true;
         }
