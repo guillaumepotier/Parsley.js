@@ -10,6 +10,8 @@
 * [DONE] customize error messages placement
 * [DONE] customize error and success class names
 * [DONE] customize error and success class element
+* Add minWords maxWords rangeWords validators
+* Add native form sumbission parlsey(form).submit()
 
 # refactos
 
