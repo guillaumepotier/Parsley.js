@@ -143,6 +143,38 @@
         return val === $( elem ).val();
       }
 
+      , remote: function ( val, url, self ) {
+        var result = null
+          , data = {};
+
+        data[ self.$element.attr( 'name' ) ] = val;
+
+        $.ajax( {
+            url: url
+          , async: self.async || true
+          , method: self.options.method || "GET"
+          , data: data
+          , dataType: "json"
+          , success: function ( response ) {
+            manage( true === response || 1 === response || "true" == response || /success/i.test( response ) );
+          }
+          , error: function ( response ) {
+            manage( false );
+          }
+        } );
+
+        if ( self.async ) {
+          manage( result );
+        }
+
+        var manage = function ( isValid ) {
+          self.updateConstraint( "remote", "isValid", isValid );
+          self.manageValidationResult();
+        }
+
+        return result;
+      }
+
       /**
       * Aliases for checkboxes constraints
       */
@@ -372,17 +404,28 @@
         return true;
       }
 
-      this.validate();
+      this.validate( true, false );
+    }
+
+    /**
+    * Return if field verify its constraints
+    *
+    * @method isValid
+    * @return {Boolean} Is field valid or not
+    */
+    , isValid: function () {
+      return this.validate( false, false );
     }
 
     /**
     * Validate a field & display errors
     *
     * @method validate
-    * @param {Boolean} doNotShowErrors set to true if you just want isValid boolean without error bubbling next to fields
+    * @param {Boolean} errorBubbling set to false if you just want isValid boolean without error bubbling next to fields
+    * @param {Boolean} async if false, wait ajax calls returns
     * @return {Boolean} Is field valid or not
     */
-    , validate: function ( doNotShowErrors ) {
+    , validate: function ( errorBubbling, async ) {
       var val = this.getVal();
 
       // do not validate a field already validated and unchanged !
@@ -395,9 +438,12 @@
         return true;
       }
 
+      this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : true;
+      this.async = 'undefined' !== typeof async ? async : true;
+
       this.isValid = this.applyValidators();
 
-      if ( !doNotShowErrors ) {
+      if ( this.errorBubbling ) {
         this.manageValidationResult();
       }
 
@@ -421,20 +467,24 @@
     * @return {Boolean} Is field valid or not
     */
     , applyValidators: function () {
-      var isValid = true;
+      for ( var constraint in this.constraints ) {
+        constraint = this.constraints[ constraint ];
 
-      for ( var i in this.constraints ) {
-        var method = this.constraints[ i ].name
-          , requirements = this.constraints[ i ].requirements;
-
-        if ( !this.Validator.validators[ method ]( this.val, requirements ) ) {
-          this.constraints[ i ].isValid = isValid = false;
+        if ( false === this.Validator.validators[ constraint.name ]( this.val, constraint.requirements, this ) ) {
+          constraint.isValid = false;
         } else {
-          this.constraints[ i ].isValid = true;
+          constraint.isValid = true;
         }
       }
+    }
 
-      return isValid;
+    , updateConstraint: function ( constraintName, property, value ) {
+      for ( var i in this.constraints ) {
+        if ( this.constraints[ i ].name === constraintName ) {
+          this.constraints[ i ][ property ] = value;
+          break;
+        }
+      }
     }
 
     /**
@@ -447,19 +497,24 @@
     * @return {Boolean} Is field valid or not
     */
     , manageValidationResult: function () {
+      var isValid = true;
+
+      for ( var constraint in this.constraints ) {
+        if ( !this.constraints[ constraint ].isValid ) {
+          this.addError( this.constraints[ constraint ] );
+          this.options.listeners.onFieldError( this.$element, this.constraints[ constraint ] );
+          isValid = false;
+        } else {
+          this.removeError( this.constraints[ constraint ].name );
+        }
+      }
+
+      this.isValid = isValid;
+
       if ( this.isValid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
         return true;
-      }
-
-      for ( var i in this.constraints ) {
-        if ( !this.constraints[ i ].isValid ) {
-          this.addError( this.constraints[ i ].name,  this.constraints[ i ].requirements );
-          this.options.listeners.onFieldError( this.$element, this.constraints[ i ] );
-        } else {
-          this.removeError( this.constraints[ i ].name );
-        }
       }
 
       this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
@@ -505,21 +560,20 @@
     * Add li / ul errors messages
     *
     * @method addError
-    * @param {String} constraintName Method name
-    * @param {Mixed} requirements Method requirements if adding an error
+    * @param {Object} constraint
     */
-    , addError: function ( constraintName, requirements ) {
+    , addError: function ( constraint ) {
       // error dom management done only once
       if ( !this.ulError ) {
           this.ulError = '#' + this.hash
         , this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
       }
 
-      var liError = this.ulError + ' .' + constraintName
-        , liTemplate = $( this.options.errors.errorElem ).addClass( constraintName )
-        , message = constraintName === 'type' ?
-            this.Validator.messages[ constraintName ][ requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
-              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], requirements ) );
+      var liError = this.ulError + ' .' + constraint.name
+        , liTemplate = $( this.options.errors.errorElem ).addClass( constraint.name )
+        , message = constraint.name === 'type' ?
+            this.Validator.messages[ constraint.name ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraint.name ] ?
+              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraint.name ], constraint.requirements ) );
 
       if ( !$( this.ulError ).length ) {
         this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )

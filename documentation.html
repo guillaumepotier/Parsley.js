@@ -146,6 +146,9 @@
                                     <label for="email">Email * :</label>
                                     <input type="text" id="email" name="email" data-trigger="change" data-required="true" data-type="email" />
 
+                                    <label for="website">Ajax :</label>
+                                    <input type="text" id="website" name="keyword" data-trigger="keyup" data-remote="http://app.wisembly.dev:8888/api/1/event/find" />
+
                                     <label for="website">Website :</label>
                                     <input type="text" id="website" name="website" data-trigger="change" data-type="url" />
 
@@ -1019,7 +1022,8 @@
       </div>
 
     </div> <!-- /container -->
-    <script type="text/javascript" src="dist/parsley-standalone.min.js"></script>
+    <script type="text/javascript" src="components/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="parsley.js"></script>
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
     <script type="text/javascript">
         hljs.initHighlightingOnLoad();
