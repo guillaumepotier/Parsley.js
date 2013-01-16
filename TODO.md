@@ -25,7 +25,7 @@
 * [DONE] focus on first or last error on form validation
 * [DONE] use `keypress` event when error detected and displayed, to hide it asap when field ok ?
 * [DONE] create API doc
-
+* Do not bind twice keyup if set by user with data-trigger="keyup"
 
 # add / improve tests
 

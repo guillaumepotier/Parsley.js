@@ -338,6 +338,33 @@ var testSuite = function () {
           expect( getErrorMessage( '#checkbox-rangecheck1', 'rangecheck') ).to.be( 'You must select between 2 and 3 choices.' );
         } )
       } )
+      describe ( 'Test remote validator', function () {
+        before( function () {
+          sinon.stub( $, "ajax" );
+        } )
+
+        it ( 'Make an ajax request when remote-validator is used to passed url', function () {
+          $( '#remote1' ).val( 'foobar' );
+          $( '#remote1' ).parsley( 'validate' );
+          expect( $.ajax.calledWithMatch( { method: "GET" } ) ).to.be( true );
+
+          // Does not work currently with phantomjs cuz window.location.hostname is null
+          // expect( $.ajax.calledWithMatch( { dataType: "jsonp" } ) ).to.be( true );
+
+          expect( $.ajax.calledWithMatch( { url: "http://foo.bar" } ) ).to.be( true );
+          expect( $.ajax.calledWithMatch( { data: { remote1: "foobar" } } ) ).to.be( true );
+        } )
+        it ( 'Test ajax call parameters overriding', function () {
+          $( '#remote2' ).val( 'foo' );
+          $( '#remote2' ).parsley( 'validate' );
+          expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
+        } )
+
+        after( function () {
+            $.ajax.restore();
+        });
+
+      } )
     } )
 
     /***************************************
