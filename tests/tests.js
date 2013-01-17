@@ -1,5 +1,7 @@
 'use strict';
 
+var xhr, requests;
+
 var triggerSubmitValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
   $( idOrClass ).parsley( 'validate' );
@@ -339,30 +341,80 @@ var testSuite = function () {
         } )
       } )
       describe ( 'Test remote validator', function () {
-        before( function () {
-          sinon.stub( $, "ajax" );
-        } )
+        describe ( 'Test parameters and config', function () {
+          before( function () {
+            sinon.stub( $, "ajax" );
+          } )
 
-        it ( 'Make an ajax request when remote-validator is used to passed url', function () {
-          $( '#remote1' ).val( 'foobar' );
-          $( '#remote1' ).parsley( 'validate' );
-          expect( $.ajax.calledWithMatch( { method: "GET" } ) ).to.be( true );
+          it ( 'Make an ajax request when remote-validator is used to passed url', function () {
+            $( '#remote1' ).val( 'foobar' );
+            $( '#remote1' ).parsley( 'validate' );
+            expect( $.ajax.calledWithMatch( { method: "GET" } ) ).to.be( true );
 
-          // Does not work currently with phantomjs cuz window.location.hostname is null
-          // expect( $.ajax.calledWithMatch( { dataType: "jsonp" } ) ).to.be( true );
+            // Does not work currently with phantomjs cuz window.location.hostname is null
+            // expect( $.ajax.calledWithMatch( { dataType: "jsonp" } ) ).to.be( true );
 
-          expect( $.ajax.calledWithMatch( { url: "http://foo.bar" } ) ).to.be( true );
-          expect( $.ajax.calledWithMatch( { data: { remote1: "foobar" } } ) ).to.be( true );
-        } )
-        it ( 'Test ajax call parameters overriding', function () {
-          $( '#remote2' ).val( 'foo' );
-          $( '#remote2' ).parsley( 'validate' );
-          expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
-        } )
+            expect( $.ajax.calledWithMatch( { url: "http://foo.bar" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { data: { remote1: "foobar" } } ) ).to.be( true );
+          } )
+          it ( 'Test ajax call parameters overriding', function () {
+            $( '#remote2' ).val( 'foo' );
+            $( '#remote2' ).parsley( 'validate' );
+            expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
+          } )
 
-        after( function () {
+          after( function () {
             $.ajax.restore();
-        });
+          });
+        } )
+
+        // not passing on phantomJS yet..
+        if ( !window.mochaPhantomJS ) {
+        describe ( 'Test ASYNC ajax calls results', function () {
+          before( function () {
+            xhr = sinon.useFakeXMLHttpRequest();
+            requests = [];
+
+            xhr.onCreate = function ( xhr ) {
+              requests.push( xhr );
+            };
+          } )
+
+          it ( 'Test an ajax call that returs a 404', function ( done ) {
+            $( '#remote2' ).val( 'foobarbaz' );
+            $( '#remote2' ).parsley( 'validate' );
+            requests[ 0 ].respond([404, {}, '']);
+            expect( requests.length ).to.be( 1 );
+            done();
+            expect( $( '#remote2' ).hasClass( 'parsley-error') ).to.be( true );
+          } )
+          it ( 'Test an ajax call that returs a 200 with success code', function ( done ) {
+            $( '#remote2' ).val( 'foobarbaz' );
+            $( '#remote2' ).parsley( 'validate' );
+            requests[ 0 ].respond([200, {}, 'true']);
+            done();
+            expect( $( '#remote2' ).hasClass( 'parsley-success') ).to.be( true );
+          } )
+          it ( 'Test an ajax call that returs a 200 with error code', function ( done ) {
+            $( '#remote2' ).val( 'foobarbaz' );
+            $( '#remote2' ).parsley( 'validate' );
+            requests[ 0 ].respond([200, {}, 'error']);
+            done();
+            expect( $( '#remote2' ).hasClass( 'parsley-error') ).to.be( true );
+          } )
+          it ( 'Test an ajax call that returs a 200 with another success code', function ( done ) {
+            $( '#remote2' ).val( 'foobarbaz' );
+            $( '#remote2' ).parsley( 'validate' );
+            requests[ 0 ].respond([200, {}, '{success: "foobar"}']);
+            done();
+            expect( $( '#remote2' ).hasClass( 'parsley-success') ).to.be( true );
+          } )
+
+          after( function () {
+            xhr.restore();
+          } );
+        } )
+        }
 
       } )
     } )

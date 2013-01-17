@@ -150,27 +150,31 @@
 
         data[ self.$element.attr( 'name' ) ] = val;
 
-        if ( !new RegExp( window.location.hostname, "i" ).test( url ) ) {
-          dataType = { dataType: "jsonp" };
+        if ( 'undefined' !== typeof self.options.dataType ) {
+          dataType = { dataType: self.options.dataType };
         }
-
-        $.ajax( $.extend( {}, {
-            url: url
-          , data: data
-          , async: self.async || true
-          , method: self.options.method || "GET"
-          , success: function ( response ) {
-            manage( true === response || 1 === response || "true" == response || ( 'object' === typeof response && 'undefined' !== typeof response.success ) || new RegExp( "success", "i" ).test( response ) );
-          }
-          , error: function ( response ) {
-            manage( false );
-          }
-        }, dataType ) );
 
         var manage = function ( isValid ) {
           self.updateConstraint( "remote", "isValid", isValid );
           self.manageValidationResult();
         }
+
+        $.ajax( $.extend( {}, {
+            url: url
+          , data: data
+          , async: self.async
+          , method: self.options.method || "GET"
+          , success: function ( response ) {
+            manage( "1" === response
+              || "true" == response
+              || ( 'object' === typeof response && 'undefined' !== typeof response.success )
+              || new RegExp( "success", "i" ).test( response )
+            );
+          }
+          , error: function ( response ) {
+            manage( false );
+          }
+        }, dataType ) );
 
         if ( self.async ) {
           manage( result );
@@ -343,7 +347,7 @@
       this.$element.addClass( 'parsley-validated' );
 
       // alaways bind keyup event, for better UX when a field is invalid
-      var triggers = this.options.trigger + ' keyup';
+      var triggers = this.options.trigger + ( new RegExp( "key", "i" ).test( this.options.trigger ) ? '' : ' keyup');
 
       // if a validation trigger is defined
       if ( triggers ) {
