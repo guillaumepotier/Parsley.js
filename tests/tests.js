@@ -1,5 +1,7 @@
 'use strict';
 
+var xhr, requests;
+
 var triggerSubmitValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
   $( idOrClass ).parsley( 'validate' );
@@ -15,8 +17,8 @@ var triggerEventValidation = function ( idOrClass ) {
   $( idOrClass ).parsley( 'eventValidation', { type: null } );
 }
 
-var getErrorMessage = function ( idOrClass, method ) {
-  return $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + method ).text();
+var getErrorMessage = function ( idOrClass, constraintName ) {
+  return $( '#parsley-' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + constraintName ).text();
 }
 
 $( '#validate-form' ).parsley( { listeners: {
@@ -52,7 +54,7 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
     return false;
   },
   onFieldError: function ( field, constraint ) {
-    $( field ).addClass( 'error-' + constraint.method + '_' + constraint.requirements );
+    $( field ).addClass( 'error-' + constraint.name + '_' + constraint.requirements );
   },
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
@@ -126,7 +128,7 @@ var testSuite = function () {
           Error messages management
     ***************************************/
     describe ( 'Test Parsley error messages management', function () {
-      var fieldHash = $( '#errormanagement' ).parsley( 'getHash' );
+      var fieldHash = 'parsley-' + $( '#errormanagement' ).parsley( 'getHash' );
 
       it ( 'Test two errors on the same field', function () {
         triggerSubmitValidation( '#errormanagement', 'foo@' );
@@ -338,6 +340,74 @@ var testSuite = function () {
           expect( getErrorMessage( '#checkbox-rangecheck1', 'rangecheck') ).to.be( 'You must select between 2 and 3 choices.' );
         } )
       } )
+      describe ( 'Test remote validator', function () {
+        describe ( 'Test parameters and config', function () {
+          before( function () {
+            sinon.stub( $, "ajax" );
+          } )
+
+          it ( 'Make an ajax request when remote-validator is used to passed url', function () {
+            $( '#remote1' ).val( 'foobar' );
+            $( '#remote1' ).parsley( 'validate' );
+            expect( $.ajax.calledWithMatch( { method: "GET" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { url: "http://foo.bar" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { data: { remote1: "foobar" } } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { dataType: "jsonp" } ) ).to.be( true );
+          } )
+          it ( 'Test ajax call parameters overriding', function () {
+            $( '#remote2' ).val( 'foo' );
+            $( '#remote2' ).parsley( 'validate' );
+            expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
+          } )
+
+          after( function () {
+            $.ajax.restore();
+          });
+        } )
+
+        // not passing on phantomJS yet..
+        if ( !window.mochaPhantomJS ) {
+          describe ( 'Test ASYNC ajax calls results', function () {
+            var calls = [
+                { statusCode: 200, content: "true", expect: true }
+              , { statusCode: 404, content: "", expect: false }
+              , { statusCode: 200, content: "false", expect: false }
+              , { statusCode: 200, content: "1", expect: true }
+              , { statusCode: 200, content: "0", expect: false }
+              , { statusCode: 200, content: "{success: \"foobar\"}", expect: true }
+              ];
+
+            before( function () {
+              xhr = sinon.useFakeXMLHttpRequest();
+              requests = [];
+
+              xhr.onCreate = function ( xhr ) {
+                requests.push( xhr );
+              };
+            } )
+
+            it ( 'Test async ajax calls returns', function ( done ) {
+              $( '#remote2' ).val( 'foobarbaz' );
+
+              for ( var i = 0; i < calls.length; i++ ) {
+                $( '#remote2' ).parsley( 'validate' );
+                requests[ 0 ].respond([ calls[ i ].statusCode , {}, calls[ i ].content ]);
+                expect( requests.length ).to.be( 1 );
+                done();
+
+                expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ i ].expect)
+                expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ i ].expect );
+                expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ i ].expect );
+              }
+            } )
+
+            after( function () {
+              xhr.restore();
+            } );
+          } )
+        }
+
+      } )
     } )
 
     /***************************************
@@ -487,7 +557,7 @@ var testSuite = function () {
       } )
       it ( 'Test that error message goes only once and after last radio / checkbox of the group', function () {
         expect( $( '#check2' ).parsley( 'getHash' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
-        expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
+        expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( 'parsley-' + $( '#check1' ).parsley( 'getHash' ) );
       } )
       it ( 'Test that if a checkbox or radio is selected, isRequired validation pass', function () {
         $( '#radio1' ).attr( 'checked', 'checked' );
