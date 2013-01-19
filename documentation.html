@@ -146,9 +146,6 @@
                                     <label for="email">Email * :</label>
                                     <input type="text" id="email" name="email" data-trigger="change" data-required="true" data-type="email" />
 
-                                    <label for="website">Ajax :</label>
-                                    <input type="text" id="website" name="keyword" data-trigger="keyup" data-remote="http://app.wisembly.dev:8888/api/1/event/find" />
-
                                     <label for="website">Website :</label>
                                     <input type="text" id="website" name="website" data-trigger="change" data-type="url" />
 
@@ -176,25 +173,28 @@
                         </tr>
                 </table>
 
+                <div class="alert alert-block alert-info">
                 <span class="label label-important">Heads up!</span> <strong>Le #UX touch</strong>:
                 <ul>
                     <li>
-                        <strong>Min char validation</strong>: Parsley by default do not proceed field validation under 3 char length. Do not assault your users with to soon error messages! <i>(this behavior configurable)</i>.
+                        <strong>Min char validation</strong>: Parsley by default <strong>do not proceed field validation under 3 char length</strong>. Do not assault your users with to soon error messages! <i>(this behavior is configurable)</i>.
                     </li>
                     <li>
-                        <strong>Quick error removal</strong>: when a field is detected and shown as invalid, next checks are done on each keypress to try to quickly remove error(s) message(s) once field is ok.
+                        <strong>Quick error removal</strong>: when a field is detected and shown as invalid, next checks are done on each keypress to try to <strong>quickly remove error(s) message(s) once field is ok</strong>.
                     </li>
                     <li>
-                        <strong>Error focusing</strong>: on form submission, first error field is focused to allow user easily start its fixing process. <i>(this behavior configurable)</i>
+                        <strong>Error focusing</strong>: on form submission, first error field is focused to <strong>allow user easily start its fixing process</strong>. <i>(this behavior configurable)</i>
                     </li>
                 </ul>
+                </div>
 
                 <hr>
 
+            <a name="top"></a>
             <h2>Documentation</h2>
-            <a href="#top" class="top pull-right">Top</a>
 
             <ol>
+                <li><a href="#installation"><strong>Installation & usage</strong>: one or two inclusions !</a></li>
                 <li><a href="#parsleyform"><strong>Parsley Form</strong>: add some Parsley validation to your forms!</a></li>
                 <li><a href="#parsleyfield"><strong>Parsley Field</strong>: customize each validated field validation behavior </a></li>
                 <li>
@@ -221,6 +221,20 @@
 
             <!-- //////////////////////////////////////////////////////////////////////////////////////////////////// -->
             <section>
+              <a name="installation"></a>
+              <h3>Parsley installation</h3>
+              <p>Just include <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley.min.js">Parsley.js</a> file (with <a href="http://jquery.com/">jQuery</a> or <a href="http://zeptojs.com/">Zepto</a> loaded) or use <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley-standalone.min.js">Parsley standalone</a> (with Zepto builded inside)</p>
+<pre><code>&lt;script type="text/javascript" src="jquery.js">&lt;/script>
+&lt;script type="text/javascript" src="parsley.js">&lt;/script>
+
+&lt;form data-validate="parsley">
+  [...]
+&lt;/form></code></pre>
+            </section>
+            <a href="#top" class="top pull-right">Top</a>
+
+            <!-- //////////////////////////////////////////////////////////////////////////////////////////////////// -->
+            <section>
                 <a name="parsleyform"></a>
                 <h3>Parsley Form</h3>
                 <p>This is the main Parsely form validation factory. Where you decide if a form is validated, and some extra options.</p>
@@ -242,6 +256,35 @@
                         <td>Bind Parsley validation to the form and its items with validation constraints</td>
                         <td  class="not-for-mobile"></td>
                     </tr>
+                    <tr>
+                        <td>
+                            <code>data-focus</code>
+                        </td>
+                        <td>
+                            first
+                        </td>
+                        <td>
+                            Specify which error field would be focused first on form validation. <code>first</code>, <code>last</code> and <code>none</code> allowed
+                        </td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <form data-validate="parsley" id="focus-form" data-focus="last">
+                                            <p><input type="text" data-type="email" data-required="true" placeholder="won't have focus" /><p>
+                                            <p><input type="text" data-type="email" data-required="true" placeholder="will have focus" /></p>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#focus-form').parsley('validate');">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
                 </tbody>
             </table>
             </section>
@@ -277,34 +320,6 @@
                                 <p><input type="text" data-type="email" data-trigger="keyup" data-validation-minlength="0" placeholder="keyup validation trigger" /><p>
                                 <p><input type="text" data-type="email" data-trigger="change" data-validation-minlength="0" placeholder="change validation trigger" /></p>
                             </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <code>data-focus</code>
-                        </td>
-                        <td>
-                            first
-                        </td>
-                        <td>
-                            Specify which error field would be focused first on form validation. <code>first</code>, <code>last</code> and <code>none</code> allowed
-                        </td>
-                        <td class="not-for-mobile">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <form data-validate="parsley" id="focus-form" data-focus="last">
-                                            <p><input type="text" data-type="email" data-required="true" placeholder="won't have focus" /><p>
-                                            <p><input type="text" data-type="email" data-required="true" placeholder="will have focus" /></p>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <span class="btn btn-small" onclick="javascript:$('#focus-form').parsley('validate');">
-                                            <i class="icon-ok"></i>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </table>
                         </td>
                     </tr>
                     <tr>
@@ -675,9 +690,11 @@
                                     <td>
                                         <small>Check b/w 1&2 checkboxes:</small>
                                         <form data-validate="parsley">
-                                            <input type="checkbox" id="rangecheck" name="rangecheck[]" data-rangecheck="[1,2]" value="foo" />
-                                            <input type="checkbox" name="rangecheck[]" value="bar" />
-                                            <input type="checkbox" name="rangecheck[]" value="baz" />
+                                            <span>
+                                                <input type="checkbox" id="rangecheck" name="rangecheck[]" data-rangecheck="[1,2]" value="foo" />
+                                                <input type="checkbox" name="rangecheck[]" value="bar" />
+                                                <input type="checkbox" name="rangecheck[]" value="baz" />
+                                            </span>
                                         </form>
                                     </td>
                                     <td>
@@ -687,6 +704,19 @@
                                     </td>
                                 </tr>
                             </table>
+                        </td>
+                    </tr>
+
+                    <!-- Remote -->
+                    <tr>
+                        <td>Remote (Ajax)</td>
+                        <td>
+                            <code>data-remote="http://yoururl.com"</code>
+                        </td>
+                        <td colspan="2"><strong>Custom ajax validation made simple.</strong><br/>
+                          <code>data-remote-method="POST"</code> to change default <code>GET</code> call.<br/>
+                          <code>data-remote-datatype="jsonp"</code> if you make cross domain ajax call and expect <code>jsonp</code><br/>
+                          Parsley will accept these valid returns: <code>1</code>, <code>true</code>, <code>{ success: "" }</code> and consider false otherwise
                         </td>
                     </tr>
 
@@ -858,6 +888,9 @@
                 <div class="page-header">
                     <h3>Javascript</h3>
                     <p>Parsley DOM-API is great. But not so great for complex forms, or dynamically generated forms. Learn here how to masterise Parsley javascript style!</p>
+                    <p class="alert alert-block">
+                      <span class="label">Warning</span> you must remove <code>data-validate="parsley"</code> auto-binding code in your forms DOM to allow you to use Parsley javascript-way and override default configuration.
+                    </p>
                 </div>
                 <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -893,8 +926,8 @@
   , error: {
     classHandler: function ( elem ) {}
   , container: function ( elem, template, isRadioOrCheckbox ) {}
-  , errorsWrapper: '<ul></ul>'
-  , errorElem: '<li></li>'
+  , errorsWrapper: '&lt;ul>&lt;/ul>'
+  , errorElem: '&lt;li>&lt;/li>'
   }
   , listeners: {
       onFieldValidate: function ( elem ) { return false; }
@@ -972,6 +1005,11 @@
                     </tr>
                 </tbody>
             </table>
+            <p>
+              More generally about Parsley API: All ParsleyForm and ParsleyItem functions could be publicly called using the following synthax:
+              <pre><code>$( '#parsleyFormOrFieldId' ).parsley( 'functionName', parameter );</code></pre>
+              So help yourself, read the code and play fully with Parsley! ;)
+            </p>
             </section>
           </div>
           <a href="#top" class="top pull-right">Top</a>
@@ -980,7 +1018,7 @@
               <a name="parsleyclasses"></a>
               <div class="page-header">
                   <h3>Parsley CSS</h3>
-                  <p>A good #UX goes with a good #UI. Parsley has some classes you could use to customize a bit ;)</p>
+                  <p>A good #UX goes with a good #UI. Parsley has some base classes you could use to customize a bit ;) (and of course, rename in configuration object)</p>
               </div>
               <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -1018,7 +1056,8 @@
       <hr>
 
       <div class="footer">
-        <p>&copy; <a href="http://twitter.com/guillaumepotier">@guillaumepotier</a> @<a href="http://wisembly.com/en/#parsley">Wisembly</a> 2012</p>
+        <p>&copy; <a href="http://twitter.com/guillaumepotier">@guillaumepotier</a> @<a href="http://wisembly.com/en/">Wisembly</a> 2012 - <small><a href="http://garlicjs.org">Ever heard of #Garlic.js, Parsley little sister?</a></small>
+        </p>
       </div>
 
     </div> <!-- /container -->

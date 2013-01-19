@@ -59,7 +59,7 @@
     * @type {Object}
     */
     , validators: {
-        notnull: function ( val ) {
+      notnull: function ( val ) {
         return val.length > 0;
       }
 
@@ -67,9 +67,7 @@
         return '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
       }
 
-      /**
-      * Works on all inputs. val is object for checkboxes
-      */
+      // Works on all inputs. val is object for checkboxes
       , required: function ( val ) {
 
         // check here that at least a checkbox is checked here
@@ -150,12 +148,12 @@
 
         data[ self.$element.attr( 'name' ) ] = val;
 
-        if ( 'undefined' !== typeof self.options.dataType ) {
-          dataType = { dataType: self.options.dataType };
+        if ( 'undefined' !== typeof self.options.remoteDatatype ) {
+          dataType = { dataType: self.options.remoteDatatype };
         }
 
-        var manage = function ( isValid ) {
-          self.updateConstraint( "remote", "isValid", isValid );
+        var manage = function ( isConstraintValid ) {
+          self.updateConstraint( "remote", "isValid", isConstraintValid );
           self.manageValidationResult();
         }
 
@@ -163,7 +161,7 @@
             url: url
           , data: data
           , async: self.async
-          , method: self.options.method || "GET"
+          , method: self.options.remoteMethod || "GET"
           , success: function ( response ) {
             manage( "1" === response
               || "true" == response
@@ -349,6 +347,11 @@
       // alaways bind keyup event, for better UX when a field is invalid
       var triggers = this.options.trigger + ( new RegExp( "key", "i" ).test( this.options.trigger ) ? '' : ' keyup');
 
+      // force add 'change' event if async remote validator here to have result before form submitting
+      if ( this.options.remote ) {
+        triggers += new RegExp( "change", "i" ).test( triggers ) ? '' : ' change';
+      }
+
       // if a validation trigger is defined
       if ( triggers ) {
         this.$element.on( triggers.split( ' ' ).join( '.' + this.type + ' ' ), false, $.proxy( this.eventValidation, this ) );
@@ -422,7 +425,7 @@
     * @method isValid
     * @return {Boolean} Is field valid or not
     */
-    , isValid: function () {
+    , isFieldValid: function () {
       return this.validate( false, false );
     }
 
@@ -584,8 +587,9 @@
     , addError: function ( constraint ) {
       // error ul dom management done only once
       if ( !this.ulError ) {
-          this.ulError = '#' + this.hash
-        , this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+        var ulId = 'parsley-' + this.hash;
+        this.ulError = '#' + ulId
+        , this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', ulId ).addClass( 'parsley-error-list' );
       }
 
       // TODO: refacto error name w/ proper & readable function
@@ -880,11 +884,11 @@
     , errors: {
         classHandler: function ( elem ) {}                                // class is directly set on elem, parent for radio/checkboxes
       , container: function ( elem, template, isRadioOrCheckbox ) {}      // error ul is inserted after elem, parent for radio/checkboxes
-      , errorsWrapper: '<ul></ul>'                                        // do not set an id for this elem
-      , errorElem: '<li></li>'
+      , errorsWrapper: '<ul></ul>'                                        // do not set an id for this elem, it would have an auto-generated id
+      , errorElem: '<li></li>'                                            // each field constraint fail in an li
       }
     , listeners: {
-        onFieldValidate: function ( elem ) { return false; }              // Return true to force field to be valid, false otherwise
+        onFieldValidate: function ( elem ) { return false; }              // Return true to ignore field validation
       , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
       , onFieldError: function ( field, constraint ) {}                   // Executed when a field is detected as invalid
     }
