@@ -17,6 +17,11 @@
 
     </script>
     <script type="text/javascript">
+        function pause ( ms ) {
+            ms += new Date().getTime();
+            while ( new Date() < ms ){}
+        }
+
         function jsAppend ( js_file, fn ) {
           if ( 'string' === typeof js_file ) {
               js_file = [ js_file ];
@@ -28,6 +33,8 @@
               js_script.src = js_file[ i ];
               document.getElementsByTagName( 'head' )[ 0 ].appendChild( js_script );
           }
+
+          return 'function' == typeof fn ? fn() : true;
         }
     </script>
 </head>
@@ -88,6 +95,9 @@
             <input type="checkbox" id="checkbox-rangecheck3" name="rangecheck[]" value="baz" />
             <input type="checkbox" id="checkbox-rangecheck4" name="rangecheck[]" value="boz" />
 
+            <input type="text" id="remote1" name="remote1" data-remote="http://foo.bar" data-remote-datatype="jsonp" />
+            <input type="text" id="remote2" name="remote2" data-remote="http://foo.bar/baz" data-remote-method="POST" />
+
             <input type="submit" />
         </form>
         <form id="validate-form" data-validate="parsley">
@@ -130,26 +140,26 @@
 
     <script type="text/javascript">
         var jquery = 'resources/jquery.min.js'
-          , zepto = 'resources/zepto-1.0rc1[zepto.event.data].min.js';
+          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax].min.js';
 
         switch ( location.hash ) {
             case '#jquery':
-                jsAppend( jquery );
+                jsAppend( jquery , pause( 50 ) );
                 jsAppend( '../parsley.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
                 break;
             case '#zepto':
-                jsAppend( zepto );
+                jsAppend( zepto , pause( 50 ) );
                 jsAppend( '../parsley.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, unminified version';
                 break;
             case '#zepto-min':
-                jsAppend( zepto );
+                jsAppend( zepto , pause( 50 ) );
                 jsAppend( '../dist/parsley.min.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, minified version';
                 break;
             case '#jquery-min':
-                jsAppend( jquery );
+                jsAppend( jquery , pause( 50 ) );
                 jsAppend( '../dist/parsley.min.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
                 break;
@@ -160,7 +170,7 @@
                 break;
         }
 
-        jsAppend( [ 'mocha.js', 'expect.js', 'tests.js' ] );
+        jsAppend( [ 'mocha.js', 'expect.js', 'sinon.js', 'tests.js' ] );
 
         window.onload = function() {
 
