@@ -531,6 +531,8 @@
 
       this.isValid = isValid;
 
+      this.addOrUpdateCount();
+
       if ( true === this.isValid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
@@ -576,6 +578,30 @@
       this.isValid = true;
       this.removeErrors();
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+    }
+
+    /**
+    * Adds the remaining number of characters to the field if there exists a max length.
+    *
+    * @method addOrUpdateCount
+    */
+    , addOrUpdateCount: function () {
+      var maxLengthPredicate = $.bind(function(constraint) { this.constraints[constraint].name == 'maxlength' }, this);
+      var maxValidation = $.grep(this.constraints, maxLengthPredicate)[0];
+      if(maxValidation) {
+        var max = maxValidation.requirements;
+        var count = max - this.val.length;
+        var sibling = this.element.siblings('.parsley-count')[0];
+        if(sibling) {
+          $(sibling).html(count);
+        } else {
+          this.element.after("<p class='parsley-count' style='position: absolute'>"+count+"</p>");
+          var count = this.element.siblings('.parsley-count');
+          var left = $(this.element).offset().left + $(this.element).width() - count.width();
+          var top = $(this.element).offset().top + $(this.element).height() - count.height();
+          count.offset({left: left, top: top});
+        }
+      }
     }
 
     /**
