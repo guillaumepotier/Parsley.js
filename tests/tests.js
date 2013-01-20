@@ -84,6 +84,7 @@ var testSuite = function () {
       } )
       it ( 'Do not bind an input that type is hidden', function () {
         expect( $( '#hidden' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        expect( $( '#hidden' ).parsley( 'validate' ) ).to.be( null );
       } )
     } )
 
@@ -501,6 +502,11 @@ var testSuite = function () {
         expect( $( '#focus1' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'on-focus' ) ).to.be( true );
+      } )
+      it ( 'test that hidden excluded inputs does not affect form validation', function () {
+        expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( false );
+        $( '#hidden-input1' ).val( 'foo@bar.baz' );
+        expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( true );
       } )
     } )
 

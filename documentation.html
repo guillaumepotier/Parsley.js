@@ -152,6 +152,7 @@
                                     <label for="message">Message (20 chars min, 200 max) :</label>
                                     <textarea id="message" name="message" data-trigger="keyup" data-rangelength="[20,200]"></textarea>
 
+                                    <input type="hidden" name="superhidden" id="superhidden">
                                     <br/><span class="btn btn" id="demo-form-valid" onclick="javascript:$('#demo-form').parsley( 'validate' );"><i class="icon-ok"></i></span>
                                 </form>
                             </td>
@@ -407,7 +408,7 @@
                                 <tr>
                                     <td>
                                         <form data-validate="parsley">
-                                            <input type="text" id="data-notblank" data-notblank="true" data-required="true" placeholder="not blank field" />
+                                            <input type="text" id="data-notblank" data-notblank="true" placeholder="not blank field" />
                                         </form>
                                     </td>
                                     <td>
