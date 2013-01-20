@@ -747,7 +747,7 @@
 
       this.$element.find( options.inputs ).each( function () {
         $( this ).parsley( options );
-        self.items.push( $( this) );
+        self.items.push( $( this ) );
       });
 
       this.$element.on( 'submit' , false, $.proxy( this.validate, this ) );
@@ -826,7 +826,7 @@
   */
   $.fn.parsley = function ( option, fn ) {
     var options = $.extend(true, {}, $.fn.parsley.defaults, option, this.data() )
-      , returnValue = false;
+      , returnValue = null;
 
     function bind ( self, type ) {
       var data = $( self ).data( type );
