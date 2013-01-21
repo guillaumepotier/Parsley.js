@@ -413,8 +413,8 @@
     , eventValidation: function ( event ) {
       var val = this.getVal();
 
-      // do nothing on keypress event if not explicitely passed as data-trigger and if field has no errors
-      if ( event.type === 'keyup' && !/keyup/i.test( this.options.trigger ) && this.isValid ) {
+      // do nothing on keypress event if not explicitely passed as data-trigger and if field has not already been validated once
+      if ( event.type === 'keyup' && !/keyup/i.test( this.options.trigger ) && !this.validatedOnce ) {
         return true;
       }
 
@@ -453,7 +453,7 @@
         return this.isValid;
       }
 
-      if ( this.options.listeners.onFieldValidate( this.$element ) || '' === this.val && !this.isRequired ) {
+      if ( this.options.listeners.onFieldValidate( this.element ) || '' === this.val && !this.isRequired ) {
         this.reset();
         return null;
       }
@@ -504,6 +504,14 @@
       return isValid;
     }
 
+    /**
+    * Update a constraint state. Curently used by remote async validator
+    *
+    * @method updateConstraint
+    * @param constraintName
+    * @param property
+    * @param value
+    */
     , updateConstraint: function ( constraintName, property, value ) {
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraintName ) {
@@ -528,7 +536,6 @@
       for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].isValid ) {
           this.addError( this.constraints[ constraint ] );
-          this.options.listeners.onFieldError( this.$element, this.constraints[ constraint ] );
           isValid = false;
         } else if ( true === this.constraints[ constraint ].isValid ) {
           this.removeError( this.constraints[ constraint ].name );
@@ -541,9 +548,11 @@
       if ( true === this.isValid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+        this.options.listeners.onFieldSuccess( this.element, this.constraints );
         return true;
       } else if ( false === this.isValid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
+        this.options.listeners.onFieldError( this.element, this.constraints );
         return false;
       }
 
@@ -895,9 +904,10 @@
       , errorElem: '<li></li>'                                            // each field constraint fail in an li
       }
     , listeners: {
-        onFieldValidate: function ( elem ) { return false; }              // Return true to ignore field validation
+        onFieldValidate: function ( elem ) { return false; }              // Executed on validation. Return true to ignore field validation
       , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
-      , onFieldError: function ( field, constraint ) {}                   // Executed when a field is detected as invalid
+      , onFieldError: function ( elem, constraints ) {}                   // Executed when a field is detected as invalid
+      , onFieldSuccess: function ( elem, constraints ) {}                 // Executed when a field passes validation
     }
   }
 

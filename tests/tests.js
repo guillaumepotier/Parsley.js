@@ -61,8 +61,11 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
 
     return false;
   },
-  onFieldError: function ( field, constraint ) {
-    $( field ).addClass( 'error-' + constraint.name + '_' + constraint.requirements );
+  onFieldError: function ( field, constraints ) {
+    $( field ).addClass( 'error-' + constraints[ 0 ].name + '_' + constraints[ 0 ].requirements );
+  },
+  onFieldSuccess: function ( field ) {
+    $( field ).addClass( 'success-foo-bar' );
   },
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
@@ -508,10 +511,10 @@ var testSuite = function () {
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( true );
 
-        // than keypress event is no more listened, cuz' field passed previously validation, wait next change event..
+        // than keypress is alaways listened, to avoid false values with success classes, until real trigger event is fired..
         $( '#scenario-keyup-when-notvalid' ).val( 'foo@bar' );
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
-        expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( true );
+        expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
       } )
     } )
 
@@ -562,6 +565,11 @@ var testSuite = function () {
         } )
         it ( 'test onFieldError()', function () {
           expect( $( '#onFieldValidate2' ).hasClass( 'error-type_email' ) ).to.be( true );
+        } )
+        it ( 'test onFieldSuccess()', function () {
+          $( '#onFieldValidate2' ).val( 'foo@baz.baz' );
+          $( '#onFieldValidate-form' ).parsley( 'validate' );
+          expect( $( '#onFieldValidate2' ).hasClass( 'success-foo-bar' ) ).to.be( true );
         } )
         it ( 'test addListener onFormSubmit', function () {
           $( '#listeners1' ).val( 'foo' );
