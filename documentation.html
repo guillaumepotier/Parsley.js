@@ -117,7 +117,6 @@
                     <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=parsley.js&type=watch&count=true"
                       allowtransparency="true" frameborder="0" scrolling="0" width="90" height="20"></iframe>
 
-                    <!-- ><a style="height:30px;" href="http://news.ycombinator.com/submit" data-title="Show HN: Parsley.js - never write a single javascript line anymore to validate your forms FrontEnd" data-url="http://parsleyjs.org" class="hn-share-button"></a>-->
                 </span>
 
             </h3>
@@ -155,6 +154,7 @@
                                     <input type="hidden" name="superhidden" id="superhidden">
                                     <br/><span class="btn btn" id="demo-form-valid" onclick="javascript:$('#demo-form').parsley( 'validate' );"><i class="icon-ok"></i></span>
                                 </form>
+                                <small>Please, note that this demo form is not a perfect example of UX-awareness. Its aim is here to show a quick overview of data-API and Parsley customizable behavior</small>
                             </td>
                             <td class="not-for-mobile">
 <pre><code>&lt;form id="demo-form" data-validate="parsley">
@@ -215,6 +215,9 @@
                 </li>
                 <li>
                     <a href="#parsleyclasses"><strong>Parsley CSS</strong>: last but not least, Parsley CSS used classes</a>
+                </li>
+                <li>
+                    <a href="#plugins-and-localization"><strong>Plugins & Localization</strong>: extend Parsley messages, validators, templates and more ! </a>
                 </li>
             </ol>
 
@@ -1078,8 +1081,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <a name="javascript-item"></a>
-                        <td colspan="4"><h4>Item</h4></td>
+                        <a name="javascript-fields"></a>
+                        <td colspan="4"><h4>Field</h4></td>
                     </tr>
                     <tr>
                         <td>Validate a field</td>
@@ -1138,6 +1141,60 @@
               </table>
           </section>
           <a href="#top" class="top pull-right">Top</a>
+
+
+          <section>
+                <a name="plugins-and-localization"></a>
+                <div class="page-header">
+                    <h3>Parsley Plugins & Localization</h3>
+                    <p>Parsley is shipped with localization (i18n) for its failure messages, and with extra advanced validators, not shipped on standard edition. Learn here how to use them</p>
+                </div>
+                <h4>Localizations</h4>
+                <p>
+                    You'll find <a href="https://github.com/guillaumepotier/Parsley.js/tree/master/i18n">here</a> Parsley error messages in various supported languages. To use one of these, just call the desired language file. Eg: for french messages:
+<pre><code>&lt;script type="text/javascript" src="/i18n/messages.fr.js">&lt;/script>
+&lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
+                    Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding your own translations messages in your language !
+                </p>
+                <br/><br/>
+                <h4>Extra validators</h4>
+                <p>
+                    There are some extra validators here, not shipped along with default Parsley, because there are more specific and less common, and there is no use to add weight to Parsley insted of calling these validators only when needed. Just call <code>parsley.extend.js</code> or <code>dist/parsley.extend.min.js</code> like that:
+<pre><code>&lt;script type="text/javascript" src="parsley.extend.fr.js">&lt;/script>
+&lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
+                    Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding some useful validators !
+                </p>
+                <br/>
+
+                <h5>Here is the list of parsley.extra validators</h5>
+                <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                      <tr>
+                          <th>Name</th>
+                          <th>Api</th>
+                          <th>Description</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>Data minwords</td>
+                          <td><code>data-minwords="6"</code></td>
+                          <td>Validate that a field has at least 6 words.</td>
+                      </tr>
+                      <tr>
+                        <td>Data maxwords</td>
+                        <td><code>data-maxwords="6"</code></td>
+                        <td>Validate that a field has 6 words maximum.</td>
+                    </tr>
+                      <tr>
+                        <td>Data rangewords</td>
+                        <td><code>data-rangewords="[6,10]"</code></td>
+                        <td>Validate that a field has between 6 and 10 words.</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </section>
+            <a href="#top" class="top pull-right">Top</a>
 
       <hr>
 
