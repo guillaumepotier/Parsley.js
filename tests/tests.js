@@ -44,8 +44,8 @@ $( '#validator-tests' ).parsley( {
     } 
   }
   , messages: {
-    multiple: 'This field should be a multiple of %s'
-    ,greaterthan: 'This value should be greater than %s.'
+      multiple: 'This field should be a multiple of %s'
+    , greaterthan: 'This value should be greater than %s.'
 
   }
 } );
