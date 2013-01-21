@@ -39,9 +39,14 @@ $( '#validator-tests' ).parsley( {
     multiple: function ( val, multiple ) {
       return val % multiple === 0;
     }
+    ,greaterthan: function(val, elemid){
+      return new Number(val) > new Number($(elemid).val());
+    } 
   }
   , messages: {
     multiple: 'This field should be a multiple of %s'
+    ,greaterthan: 'This field should be greater than min.'
+
   }
 } );
 
@@ -310,6 +315,13 @@ var testSuite = function () {
         expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
         triggerSubmitValidation( '#customvalidator', '18' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'customvalidator-greaterthan', function () {
+        triggerSubmitValidation( '#customvalidator-greaterthan', '1' );
+        expect( $( '#customvalidator-greaterthan' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#customvalidator-greaterthan', 'greaterthan') ).to.be( 'This field should be greater than min.' );
+        triggerSubmitValidation( '#customvalidator-greaterthan', '2' );
+        expect( $( '#customvalidator-greaterthan' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       describe ( 'Test radio / checkboxes specific validators', function () {
         it ( 'mincheck', function () {
