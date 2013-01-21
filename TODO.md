@@ -1,11 +1,11 @@
 # new features
 
 * Existence in a dataSet
-* Add minWords maxWords rangeWords validators
 * create a error summary attached to form
 * Add native form sumbission parlsey(form).submit()
 * Add data API to set error messages (by form and by field)
 
+* [DONE] Add minWords maxWords rangeWords validators
 * [DONE] Ajax check
 * [DONE] required on radio, checkboxes and selects
 * [NOPE] add special fields features: password stenght detector for example ?
