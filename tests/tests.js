@@ -2,6 +2,14 @@
 
 var xhr, requests;
 
+window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
+  messages: {
+    type: {
+      urlstrict: "urlstrict global override."
+    }
+  }
+} ); 
+
 var triggerSubmitValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
   $( idOrClass ).parsley( 'validate' );
@@ -89,6 +97,7 @@ var testSuite = function () {
       } )
       it ( 'Do not bind an input that type is hidden', function () {
         expect( $( '#hidden' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        expect( $( '#hidden' ).parsley( 'validate' ) ).to.be( null );
       } )
     } )
 
@@ -244,12 +253,36 @@ var testSuite = function () {
         triggerSubmitValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+
+      var urls = [
+          { url: "http://foo.com/bar_(baz)#bam-1", expected: true, strict: true }
+        , { url: "http://www.foobar.com/baz/?p=364", expected: true, strict: true }
+        , { url: "mailto:name@example.com", expected: true, strict: false }
+        , { url: "foo.bar", expected: true, strict: false }
+        , { url: "www.foobar.baz", expected: true, strict: false }
+        , { url: "https://foobar.baz", expected: true, strict: true }
+        , { url: "git://foobar.baz", expected: true, strict: true }
+        , { url: "foo", expected: false, strict: false }
+        , { url: "foo:bar", expected: false, strict: false }
+        , { url: "foo://bar", expected: false, strict: false }
+        , { url: "ého", expected: false, strict: false }
+      ];
+
       it ( 'url', function () {
+        for ( var i in urls ) {
+          $( '#typeurl' ).val( urls[i].url );
+          expect( $( '#typeurl' ).parsley( 'validate' ) ).to.be( urls[ i ].expected );
+        }
         triggerSubmitValidation( '#typeurl', 'foo' );
-        expect( $( '#typeurl' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( getErrorMessage( '#typeurl', 'type') ).to.be( 'This value should be a valid url.' );
-        triggerSubmitValidation( '#typeurl', 'http://google.com' );
-        expect( $( '#typeurl' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'url strict + global config overriding type message', function () {
+        for ( var i in urls ) {
+          $( '#typeurlstrict' ).val( urls[i].url );
+          expect( $( '#typeurlstrict' ).parsley( 'validate' ) ).to.be( urls[ i ].strict );
+        }
+        triggerSubmitValidation( '#typeurlstrict', 'foo' );
+        expect( getErrorMessage( '#typeurlstrict', 'type') ).to.be( 'urlstrict global override.' );
       } )
       it ( 'email', function () {
         triggerSubmitValidation( '#typeemail', 'foo' );
@@ -528,6 +561,11 @@ var testSuite = function () {
         expect( $( '#focus2' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'on-focus' ) ).to.be( true );
       } )
+      it ( 'test that hidden excluded inputs does not affect form validation', function () {
+        expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( false );
+        $( '#hidden-input1' ).val( 'foo@bar.baz' );
+        expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( true );
+      } )
     } )
 
     /***************************************
@@ -591,6 +629,34 @@ var testSuite = function () {
         expect( $( '#radiocheckboxes' ).parsley( 'validate' ) ).to.be( true );
       } )
     } )
+
+    /***************************************
+            test parsley.extend.js
+     ***************************************/
+     describe ( 'Test Parsley extend', function () {
+       it ( 'minwords validation', function () {
+          triggerSubmitValidation( '#minwords', 'foo bar' );
+          expect( $( '#minwords' ).hasClass( 'parsley-error' ) ).to.be( true );
+          expect( getErrorMessage( '#minwords', 'minwords') ).to.be( 'This value should have 6 words at least.' );
+          triggerSubmitValidation( '#minwords', 'foo bar baz foo bar baz' );
+          expect( $( '#minwords' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'maxwords validation', function () {
+          triggerSubmitValidation( '#maxwords', 'foo bar baz foo bar baz foo bar baz foo' );
+          expect( $( '#maxwords' ).hasClass( 'parsley-error' ) ).to.be( true );
+          expect( getErrorMessage( '#maxwords', 'maxwords') ).to.be( 'This value should have 6 words maximum.' );
+          triggerSubmitValidation( '#maxwords', 'foo bar baz foo bar baz' );
+          expect( $( '#maxwords' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'rangewords validation', function () {
+          triggerSubmitValidation( '#rangewords', 'foo bar baz foo bar baz foo bar baz foo foo bar' );
+          expect( $( '#rangewords' ).hasClass( 'parsley-error' ) ).to.be( true );
+          expect( getErrorMessage( '#rangewords', 'rangewords') ).to.be( 'This value should have between 6 and 10 words.' );
+          triggerSubmitValidation( '#rangewords', 'foo bar baz foo bar baz foo' );
+          expect( $( '#rangewords' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+     } )
+
   } )
 }
 

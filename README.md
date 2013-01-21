@@ -10,11 +10,11 @@ See TODO.md
 
 #Version
 
-1.0.1
+1.1.0
 
 # Browser compatibility
 
-No idea yet..
+No idea yet.. You tell me !
 
 #Install dependencies for documentation and tests
 
@@ -35,6 +35,17 @@ You'll need ruby, and Google Closure compiler: `gem install closure-compiler`. T
 They'll be created and dumped in the dist/ directory
 
 #Contribute!
+
+##Validators
+
+Add new validators in `parsley.extend.js` and minify it. No validators will be allowed directly into parsley.js
+(but great validators could move from extra to parsley ;))
+
+##Localization
+
+If file does not existe, create it into `ì18n/` directory with same synthax as others
+
+## Global
 
 * fork repository
 * add your changes to parsley.js
