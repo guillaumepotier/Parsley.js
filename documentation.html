@@ -838,6 +838,31 @@
                         </td>
                     </tr>
 
+                    <!-- Url Strict -->
+                    <tr>
+                        <td>Url strict</td>
+                        <td>
+                            <code>data-type="urlstrict"</code>
+                        </td>
+                        <td>Validates that a value is a valid strict url, ie: with one of <code>http</code>, <code>https</code>, <code>ftp</code>, <code>git</code> allowed protocols.</td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <form data-validate="parsley">
+                                            <input type="text" id="data-url-strict" data-type="urlstrict" placeholder="urlstrict" />
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#data-url-strict').parsley('validate');">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
                     <!-- Digits -->
                     <tr>
                         <td>Digits</td>

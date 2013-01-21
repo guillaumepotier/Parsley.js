@@ -245,12 +245,32 @@ var testSuite = function () {
         triggerSubmitValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+
+      var urls = [
+          { url: "http://foo.com/bar_(baz)#bam-1", expected: true, strict: true }
+        , { url: "http://www.foobar.com/baz/?p=364", expected: true, strict: true }
+        , { url: "mailto:name@example.com", expected: true, strict: false }
+        , { url: "foo.bar", expected: true, strict: false }
+        , { url: "www.foobar.baz", expected: true, strict: false }
+        , { url: "https://foobar.baz", expected: true, strict: true }
+        , { url: "git://foobar.baz", expected: true, strict: true }
+        , { url: "foo", expected: false, strict: false }
+        , { url: "foo:bar", expected: false, strict: false }
+        , { url: "foo://bar", expected: false, strict: false }
+        , { url: "ého", expected: false, strict: false }
+      ];
+
       it ( 'url', function () {
-        triggerSubmitValidation( '#typeurl', 'foo' );
-        expect( $( '#typeurl' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#typeurl', 'type') ).to.be( 'This value should be a valid url.' );
-        triggerSubmitValidation( '#typeurl', 'http://google.com' );
-        expect( $( '#typeurl' ).hasClass( 'parsley-success' ) ).to.be( true );
+        for ( var i in urls ) {
+          $( '#typeurl' ).val( urls[i].url );
+          expect( $( '#typeurl' ).parsley( 'validate' ) ).to.be( urls[ i ].expected );
+        }
+      } )
+      it ( 'url strict', function () {
+        for ( var i in urls ) {
+          $( '#typeurlstrict' ).val( urls[i].url );
+          expect( $( '#typeurlstrict' ).parsley( 'validate' ) ).to.be( urls[ i ].strict );
+        }
       } )
       it ( 'email', function () {
         triggerSubmitValidation( '#typeemail', 'foo' );
