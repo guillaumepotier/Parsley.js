@@ -1,5 +1,13 @@
 #Changelog
 
+** 1.1.0 **
+
+    - added localization and extra validator configuration in external files.
+
+** 1.0.0 **
+
+    - added ajax remote validator and go live !
+
 ** 0.2.0 **
 
     - heavy radio / checkbox refacto. Now dedicated class `ParsleyFieldMultiple`

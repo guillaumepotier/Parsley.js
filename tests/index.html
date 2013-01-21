@@ -141,6 +141,12 @@
                 <input type="checkbox" id="check2" name="check[]" value="check2" data-required="true" />
             </div>
         </form>
+
+        <form data-validate="parsley">
+            <input type="text" id="minwords" data-minwords="6" />
+            <input type="text" id="maxwords" data-maxwords="6" />
+            <input type="text" id="rangewords" data-rangewords="[6, 10]" />
+        </form>
     </div>
 
     <script type="text/javascript">
@@ -151,26 +157,31 @@
             case '#jquery':
                 jsAppend( jquery , pause( 50 ) );
                 jsAppend( '../parsley.js' );
+                jsAppend( '../parsley.extend.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
                 break;
             case '#zepto':
                 jsAppend( zepto , pause( 50 ) );
                 jsAppend( '../parsley.js' );
+                jsAppend( '../parsley.extend.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, unminified version';
                 break;
             case '#zepto-min':
                 jsAppend( zepto , pause( 50 ) );
                 jsAppend( '../dist/parsley.min.js' );
+                jsAppend( '../dist/parsley.extend.min.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, minified version';
                 break;
             case '#jquery-min':
                 jsAppend( jquery , pause( 50 ) );
                 jsAppend( '../dist/parsley.min.js' );
+                jsAppend( '../dist/parsley.extend.min.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
                 break;
             case '#standalone':
             default:
                 jsAppend( '../dist/parsley-standalone.min.js' );
+                jsAppend( '../dist/parsley.extend.min.js' );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite - Standalone Zepto Minified version';
                 break;
         }

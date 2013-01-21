@@ -256,8 +256,12 @@
     * @param {String} message Message
     */
     , addMessage: function ( key, message ) {
+      // custom types messages are a bit tricky cuz' nested ;)
       if ( 'type' === key ) {
-        this.messages[ 'type' ][ key ] = message;
+        for ( var i in message ) {
+          this.messages[ 'type' ][ i ] = message[ i ];
+        }
+
         return;
       }
 
@@ -897,9 +901,13 @@
     }
   }
 
-  /* PARSLEY auto-bind DATA-API
-  * ======================== */
+  /* PARSLEY auto-bind DATA-API + Global config retrieving
+  * =================================================== */
   $( window ).on( 'load', function () {
+
+    // extend parsley defaults with global window config
+    $.fn.parsley.defaults = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? ParsleyConfig : {} );
+
     $( '[data-validate="parsley"]' ).each( function () {
       $( this ).parsley();
     })
