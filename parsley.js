@@ -50,7 +50,8 @@
       , maxlength:      "This value is too long. It should have %s characters or less."
       , rangelength:    "This value length is invalid. It should be between %s and %s characters long."
       , equalto:        "This value should be the same."
-      , greaterthan:    "This value should be greater than."
+      , greaterthan:    "This value should be greater than %s."
+      , lessthan:       "This value should be less than %s."
     }
 
     /**
@@ -144,6 +145,9 @@
 
       , greaterthan: function ( val, elem ) {
         return new Number(val) > new Number($( elem ).val());
+      }
+      , lessthan: function ( val, elem ) {
+        return new Number(val) < new Number($( elem ).val());
       }
 
       , remote: function ( val, url, self ) {
