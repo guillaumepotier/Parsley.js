@@ -621,6 +621,36 @@
                         </td>
                     </tr>
 
+                    <!-- GreaterThan -->
+                    <tr>
+                      <td>Greater Than other Element</td>
+                      <td>
+                        <code>data-greaterthan="#otherElement"</code>
+                      </td>
+                      <td>
+                        Validates that a given input has a value greater than the value of another input.
+                      </td>
+                      <td class="not-for-mobile">
+                          <table>
+                              <tr>
+                                  <td>
+                                      <small></small>
+                                      <form data-validate="parsley">
+                                          <input type="text" id="greaterthan" name="greaterthan" data-greaterthan="#greaterthan-min" value="1" />
+                                          <input type="text" name="greaterthan-min" id="greaterthan-min" value="1" />
+                                      </form>
+                                  </td>
+                                  <td>
+                                      <span class="btn btn-small" onclick="javascript:$('#greaterthan').parsley( 'validate' );">
+                                          <i class="icon-ok"></i>
+                                      </span>
+                                  </td>
+                              </tr>
+                          </table>
+                      </td>
+
+                    </tr>
+
                     <!-- minChecked -->
                     <tr>
                         <td>Min check</td>
