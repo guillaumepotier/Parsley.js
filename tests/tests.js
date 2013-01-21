@@ -61,8 +61,11 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
 
     return false;
   },
-  onFieldError: function ( field, constraint ) {
-    $( field ).addClass( 'error-' + constraint.name + '_' + constraint.requirements );
+  onFieldError: function ( field, constraints ) {
+    $( field ).addClass( 'error-' + constraints[ 0 ].name + '_' + constraints[ 0 ].requirements );
+  },
+  onFieldSuccess: function ( field ) {
+    $( field ).addClass( 'success-foo-bar' );
   },
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
@@ -562,6 +565,11 @@ var testSuite = function () {
         } )
         it ( 'test onFieldError()', function () {
           expect( $( '#onFieldValidate2' ).hasClass( 'error-type_email' ) ).to.be( true );
+        } )
+        it ( 'test onFieldSuccess()', function () {
+          $( '#onFieldValidate2' ).val( 'foo@baz.baz' );
+          $( '#onFieldValidate-form' ).parsley( 'validate' );
+          expect( $( '#onFieldValidate2' ).hasClass( 'success-foo-bar' ) ).to.be( true );
         } )
         it ( 'test addListener onFormSubmit', function () {
           $( '#listeners1' ).val( 'foo' );
