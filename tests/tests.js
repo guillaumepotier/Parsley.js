@@ -307,6 +307,13 @@ var testSuite = function () {
         triggerSubmitValidation( '#equalTo', 'foobar' );
         expect( $( '#equalTo' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'greaterThan', function () {
+        triggerSubmitValidation( '#greaterThan', '1' );
+        expect( $( '#greaterThan' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This value should be greater than.' );
+        triggerSubmitValidation( '#greaterThan', '2' );
+        expect( $( '#greaterThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'customvalidator', function () {
         triggerSubmitValidation( '#customvalidator', 'foo' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -579,3 +586,4 @@ var testSuite = function () {
     } )
   } )
 }
+
