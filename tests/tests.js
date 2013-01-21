@@ -310,7 +310,7 @@ var testSuite = function () {
       it ( 'greaterThan', function () {
         triggerSubmitValidation( '#greaterThan', '1' );
         expect( $( '#greaterThan' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This value should be greater than.' );
+        expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This field should be greater than min.' );
         triggerSubmitValidation( '#greaterThan', '2' );
         expect( $( '#greaterThan' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
