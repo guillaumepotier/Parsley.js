@@ -44,8 +44,8 @@ $( '#validator-tests' ).parsley( {
     } 
   }
   , messages: {
-    multiple: 'This field should be a multiple of %s'
-    ,greaterthan: 'This field should be greater than min.'
+      multiple: 'This field should be a multiple of %s'
+    , greaterthan: 'This value should be greater than %s.'
 
   }
 } );
@@ -307,6 +307,20 @@ var testSuite = function () {
         triggerSubmitValidation( '#equalTo', 'foobar' );
         expect( $( '#equalTo' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'greaterThan', function () {
+        triggerSubmitValidation( '#greaterThan', '1' );
+        expect( $( '#greaterThan' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This value should be greater than #greaterThan-model.' );
+        triggerSubmitValidation( '#greaterThan', '2' );
+        expect( $( '#greaterThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'lessThan', function () {
+        triggerSubmitValidation( '#lessThan', '5' );
+        expect( $( '#lessThan' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#lessThan', 'lessThan') ).to.be( 'This value should be less than #lessThan-model.' );
+        triggerSubmitValidation( '#lessThan', '1' );
+        expect( $( '#lessThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'customvalidator', function () {
         triggerSubmitValidation( '#customvalidator', 'foo' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -319,7 +333,7 @@ var testSuite = function () {
       it ( 'customvalidator-greaterthan', function () {
         triggerSubmitValidation( '#customvalidator-greaterthan', '1' );
         expect( $( '#customvalidator-greaterthan' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#customvalidator-greaterthan', 'greaterthan') ).to.be( 'This field should be greater than min.' );
+        expect( getErrorMessage( '#customvalidator-greaterthan', 'greaterthan') ).to.be( 'This value should be greater than #customvalidator-greaterthan-model.' );
         triggerSubmitValidation( '#customvalidator-greaterthan', '2' );
         expect( $( '#customvalidator-greaterthan' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -579,3 +593,4 @@ var testSuite = function () {
     } )
   } )
 }
+
