@@ -413,8 +413,8 @@
     , eventValidation: function ( event ) {
       var val = this.getVal();
 
-      // do nothing on keypress event if not explicitely passed as data-trigger and if field has no errors
-      if ( event.type === 'keyup' && !/keyup/i.test( this.options.trigger ) && this.isValid ) {
+      // do nothing on keypress event if not explicitely passed as data-trigger and if field has not already been validated once
+      if ( event.type === 'keyup' && !/keyup/i.test( this.options.trigger ) && !this.validatedOnce ) {
         return true;
       }
 
