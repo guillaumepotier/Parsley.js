@@ -39,9 +39,9 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       }
     }
     , messages: {
-        minwords: "This value should have %s words at least."
-      , maxwords: "This value should have %s words maximum."
-      , rangewords: "This value should have between %s and %s words."
+        minwords:       "This value should have %s words at least."
+      , maxwords:       "This value should have %s words maximum."
+      , rangewords:     "This value should have between %s and %s words."
       , greaterthan:    "This value should be greater than %s."
       , lessthan:       "This value should be less than %s."
     }
