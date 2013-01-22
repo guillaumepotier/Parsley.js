@@ -9,7 +9,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , url:        "Este valor deve ser uma URL válida."
           , urlstrict:  "Este valor deve ser uma URL válida."
           , number:     "Este valor deve ser um número válido."
-          , digits:     "Este valor deve ser uma URL válida."
+          , digits:     "Este valor deve ser um dígito válido."
           , dateIso:    "Este valor deve ser uma data válida (YYYY-MM-DD)."
           , alphanum:   "Este valor deve ser alfanumérico."
         }
