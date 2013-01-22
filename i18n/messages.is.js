@@ -3,6 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 (function ($) {
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     messages: {
+      // parsley //////////////////////////////////////
         defaultMessage: "Þetta gildi virðist vera ógilt."
       , type: {
             email:      "Þetta ætti að vera gilt netfang."
@@ -24,6 +25,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , maxlength:      "Þetta gildi er of langt. Það ætti að innihalda %s stafi eða færri."
       , rangelength:    "Þetta gildi er ógilt. Það ætti að vera %s-%s stafir að lengd."
       , equalto:        "Þetta gildi ætti að vera eins."
+
+      // parsley.extend ///////////////////////////////
     }
   });
 }(window.jQuery || window.Zepto));

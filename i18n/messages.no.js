@@ -3,6 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 (function ($) {
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     messages: {
+      // parsley //////////////////////////////////////
         defaultMessage: "Denne verdien er ikke gyldig."
       , type: {
             email:      "Denne verdien må være en gyldig e-post."
@@ -24,6 +25,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , maxlength:      "Denne verdien er for lang. Den må ikke være lenger enn %s tegn."
       , rangelength:    "Denne verdien har feil lengde. Lengden må være mellom %s og %s tegn."
       , equalto:        "Denne verdien må være lik."
+
+      // parsley.extend ///////////////////////////////
     }
   });
 }(window.jQuery || window.Zepto));

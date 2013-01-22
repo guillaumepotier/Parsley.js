@@ -129,11 +129,11 @@
       }
 
       , min: function ( val, min ) {
-        return val >= min;
+        return new Number( val ) >= new Number( min );
       }
 
       , max: function ( val, max ) {
-        return val <= max;
+        return new Number( val ) <= new Number( max );
       }
 
       , range: function ( val, arrayRange ) {
@@ -234,7 +234,7 @@
         return message;
       }
 
-      return message.replace(new RegExp("%s", "i"), args);
+      return message.replace(new RegExp( "%s", "i" ), args);
     }
 
     /**
@@ -312,10 +312,7 @@
       this.hash = this.generateHash();
       this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
 
-      // a field is required if data-required="true" or class="required" or required="required"
-      if ( 'undefined' !== typeof this.options[ 'required' ] || this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) === 'required' ) {
-        this.isRequired = this.options[ 'required' ] = true;
-      }
+      this.bindHtml5Constraints();
 
       // bind validators to field
       this.addConstraints();
@@ -323,6 +320,37 @@
       // bind parsley events if validators have been registered
       if ( this.constraints.length ) {
         this.bindValidationEvents();
+      }
+    }
+
+    /**
+    * Bind some extra html5 types / validators
+    *
+    * @method bindHtml5Constraints
+    */
+    , bindHtml5Constraints: function () {
+      // add html5 required support + class required support
+      if ( this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) ) {
+        this.options.required = true;
+      }
+
+      // add html5 supported types & options
+      if ( 'undefined' !== typeof this.$element.attr( 'type' ) && new RegExp( this.$element.attr( 'type' ), "i" ).test( "email url number range" ) ) {
+        this.options.type = this.$element.attr( 'type' );
+
+        // number and range types could have min and/or max values
+        if ( new RegExp( this.options.type, "i" ).test( "number range" ) ) {
+          this.options.type = "number";
+
+          // double condition to support jQuery and Zepto.. :(
+          if ( 'undefined' !== typeof this.$element.attr( 'min' ) && this.$element.attr( 'min' ).length ) {
+            this.options.min = this.$element.attr( 'min' );
+          }
+
+          if ( 'undefined' !== typeof this.$element.attr( 'max' ) && this.$element.attr( 'max' ).length ) {
+            this.options.max = this.$element.attr( 'max' );
+          }
+        }
       }
     }
 
@@ -339,6 +367,10 @@
             , requirements: this.options[ constraint ]
             , isValid: null
           } );
+
+          if ( constraint === "required" ) {
+            this.isRequired = true;
+          }
         }
       }
     }
@@ -470,6 +502,13 @@
       return isValid;
     }
 
+    /**
+    * Check if value has changed since previous validation
+    *
+    * @method needsValidation
+    * @param value
+    * @return {Boolean}
+    */
     , needsValidation: function ( val ) {
       if ( this.val === val && this.validatedOnce ) {
         return false;
@@ -589,7 +628,7 @@
     * @method reset
     */
     , reset: function () {
-      this.isValid = true;
+      this.isValid = null;
       this.removeErrors();
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
     }
