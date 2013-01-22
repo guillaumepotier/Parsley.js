@@ -160,32 +160,32 @@
         switch ( location.hash ) {
             case '#jquery':
                 jsAppend( jquery , pause( 50 ) );
-                jsAppend( '../parsley.js' );
-                jsAppend( '../parsley.extend.js' );
+                jsAppend( '../parsley.js' , pause( 50 ) );
+                jsAppend( '../parsley.extend.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
                 break;
             case '#zepto':
                 jsAppend( zepto , pause( 50 ) );
-                jsAppend( '../parsley.js' );
-                jsAppend( '../parsley.extend.js' );
+                jsAppend( '../parsley.js' , pause( 50 ) );
+                jsAppend( '../parsley.extend.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, unminified version';
                 break;
             case '#zepto-min':
                 jsAppend( zepto , pause( 50 ) );
-                jsAppend( '../dist/parsley.min.js' );
-                jsAppend( '../dist/parsley.extend.min.js' );
+                jsAppend( '../dist/parsley.min.js' , pause( 50 ) );
+                jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, minified version';
                 break;
             case '#jquery-min':
                 jsAppend( jquery , pause( 50 ) );
-                jsAppend( '../dist/parsley.min.js' );
-                jsAppend( '../dist/parsley.extend.min.js' );
+                jsAppend( '../dist/parsley.min.js' , pause( 50 ) );
+                jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
                 break;
             case '#standalone':
             default:
-                jsAppend( '../dist/parsley-standalone.min.js' );
-                jsAppend( '../dist/parsley.extend.min.js' );
+                jsAppend( '../dist/parsley-standalone.min.js' , pause( 50 ) );
+                jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite - Standalone Zepto Minified version';
                 break;
         }

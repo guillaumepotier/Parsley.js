@@ -625,66 +625,6 @@
                         </td>
                     </tr>
 
-                    <!-- GreaterThan -->
-                    <tr>
-                      <td>Greater Than other Element</td>
-                      <td>
-                        <code>data-greaterthan="#otherElement"</code>
-                      </td>
-                      <td>
-                        Validates that a given input has a value greater than the value of another input.
-                      </td>
-                      <td class="not-for-mobile">
-                          <table>
-                              <tr>
-                                  <td>
-                                      <small></small>
-                                      <form data-validate="parsley">
-                                          <input type="text" id="greaterthan" name="greaterthan" data-greaterthan="#greaterthan-min" value="1" />
-                                          <input type="text" name="greaterthan-min" id="greaterthan-min" value="1" />
-                                      </form>
-                                  </td>
-                                  <td>
-                                      <span class="btn btn-small" onclick="javascript:$('#greaterthan').parsley( 'validate' );">
-                                          <i class="icon-ok"></i>
-                                      </span>
-                                  </td>
-                              </tr>
-                          </table>
-                      </td>
-
-                    </tr>
-
-                    <!-- LessThan -->
-                    <tr>
-                      <td>Less Than other Element</td>
-                      <td>
-                        <code>data-lessthan="#otherElement"</code>
-                      </td>
-                      <td>
-                        Validates that a given input has a value less than the value of another input.
-                      </td>
-                      <td class="not-for-mobile">
-                          <table>
-                              <tr>
-                                  <td>
-                                      <small></small>
-                                      <form data-validate="parsley">
-                                          <input type="text" id="lessthan" name="lessthan" data-lessthan="#lessthan-max" value="2" />
-                                          <input type="text" name="lessthan-max" id="lessthan-max" value="1" />
-                                      </form>
-                                  </td>
-                                  <td>
-                                      <span class="btn btn-small" onclick="javascript:$('#lessthan').parsley( 'validate' );">
-                                          <i class="icon-ok"></i>
-                                      </span>
-                                  </td>
-                              </tr>
-                          </table>
-                      </td>
-
-                    </tr>
-
                     <!-- minChecked -->
                     <tr>
                         <td>Min check</td>
@@ -1203,29 +1143,29 @@
                   </thead>
                   <tbody>
                       <tr>
-                          <td>Data minwords</td>
+                          <td>Min Words</td>
                           <td><code>data-minwords="6"</code></td>
                           <td>Validate that a field has at least 6 words.</td>
                       </tr>
                       <tr>
-                        <td>Data maxwords</td>
+                        <td>Max Words</td>
                         <td><code>data-maxwords="6"</code></td>
                         <td>Validate that a field has 6 words maximum.</td>
                       </tr>
                       <tr>
-                        <td>Data rangewords</td>
+                        <td>Range Words</td>
                         <td><code>data-rangewords="[6,10]"</code></td>
                         <td>Validate that a field has between 6 and 10 words.</td>
                       </tr>
                       <tr>
-                        <td>Data greaterthan</td>
+                        <td>Greater Than</td>
                         <td><code>data-greaterthan="#elem"</code></td>
-                        <td>Validate that a field's value is greater than that of #elem's value.</td>
+                        <td>Validate that a field's value is greater than #elem's value.</td>
                       </tr>
                       <tr>
-                        <td>Data lessthan</td>
+                        <td>Less Than</td>
                         <td><code>data-lessthan="#elem"</code></td>
-                        <td>Validate that a field's value is less than that of #elem's value.</td>
+                        <td>Validate that a field's value is lower than #elem's value.</td>
                       </tr>
                   </tbody>
                 </table>
