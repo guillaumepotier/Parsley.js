@@ -504,6 +504,7 @@
                         <td>Min</td>
                         <td>
                             <code>data-min="6"</code>
+                            <code>type="number" min="6"</code>
                         </td>
                         <td>Validates that a given number is greater than some minimum number.</td>
                         <td class="not-for-mobile">
@@ -529,6 +530,7 @@
                         <td>Max</td>
                         <td>
                             <code>data-max="100"</code>
+                            <code>type="number" max="100"</code>
                         </td>
                         <td>Validates that a given number is less than some maximum number.</td>
                         <td class="not-for-mobile">
@@ -554,6 +556,7 @@
                         <td>Range</td>
                         <td>
                             <code>data-range="[6, 100]"</code>
+                            <code>type="range" min="6" max="100"</code>
                         </td>
                         <td>Validates that a given number is between some minimum and maximum number.</td>
                         <td class="not-for-mobile">
@@ -736,6 +739,7 @@
                         <td>Email</td>
                         <td>
                             <code>data-type="email"</code>
+                            <code>type="email"</code>
                         </td>
                         <td>Validates that a value is a valid email address.</td>
                         <td class="not-for-mobile">
@@ -761,6 +765,7 @@
                         <td>Url</td>
                         <td>
                             <code>data-type="url"</code>
+                            <code>type="url"</code>
                         </td>
                         <td>Validates that a value is a valid url.</td>
                         <td class="not-for-mobile">
@@ -836,6 +841,7 @@
                         <td>Number</td>
                         <td>
                             <code>data-type="number"</code>
+                            <code>type="number"</code>
                         </td>
                         <td>Validates that a value is a valid number.</td>
                         <td class="not-for-mobile">
@@ -1143,20 +1149,30 @@
                   </thead>
                   <tbody>
                       <tr>
-                          <td>Data minwords</td>
+                          <td>Min Words</td>
                           <td><code>data-minwords="6"</code></td>
                           <td>Validate that a field has at least 6 words.</td>
                       </tr>
                       <tr>
-                        <td>Data maxwords</td>
+                        <td>Max Words</td>
                         <td><code>data-maxwords="6"</code></td>
                         <td>Validate that a field has 6 words maximum.</td>
-                    </tr>
+                      </tr>
                       <tr>
-                        <td>Data rangewords</td>
+                        <td>Range Words</td>
                         <td><code>data-rangewords="[6,10]"</code></td>
                         <td>Validate that a field has between 6 and 10 words.</td>
-                    </tr>
+                      </tr>
+                      <tr>
+                        <td>Greater Than</td>
+                        <td><code>data-greaterthan="#elem"</code></td>
+                        <td>Validate that a field's value is greater than #elem's value.</td>
+                      </tr>
+                      <tr>
+                        <td>Less Than</td>
+                        <td><code>data-lessthan="#elem"</code></td>
+                        <td>Validate that a field's value is lower than #elem's value.</td>
+                      </tr>
                   </tbody>
                 </table>
             </section>

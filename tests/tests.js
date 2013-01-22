@@ -49,7 +49,7 @@ $( '#validator-tests' ).parsley( {
     }
   }
   , messages: {
-    multiple: 'This field should be a multiple of %s'
+      multiple: 'This field should be a multiple of %s'
   }
 } );
 
@@ -200,6 +200,15 @@ var testSuite = function () {
         triggerSubmitValidation( '#required-html5', '  foo' );
         expect( $( '#required-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'required - html5-api bis', function () {
+        triggerSubmitValidation( '#required-html5-bis', '' );
+        expect( $( '#required-html5-bis' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#required-html5-bis', 'required') ).to.be( 'This value is required.' );
+        triggerSubmitValidation( '#required-html5-bis', '  ' );
+        expect( $( '#required-html5-bis' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#required-html5-bis', '  foo' );
+        expect( $( '#required-html5-bis' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'minlength', function () {
         triggerSubmitValidation( '#minlength', '12345' );
         expect( $( '#minlength' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -227,6 +236,14 @@ var testSuite = function () {
         expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than 10.' );
         triggerSubmitValidation( '#min', '12' );
         expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'min html5', function () {
+        triggerSubmitValidation( '#min-html5', 12 );
+        expect( $( '#min-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'max html5', function () {
+        triggerSubmitValidation( '#max-html5', 8 );
+        expect( $( '#max-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'max', function () {
         triggerSubmitValidation( '#max', '12' );
@@ -263,6 +280,8 @@ var testSuite = function () {
         , { url: "foo", expected: false, strict: false }
         , { url: "foo:bar", expected: false, strict: false }
         , { url: "foo://bar", expected: false, strict: false }
+
+        // absolutely finish by false to test error message
         , { url: "ého", expected: false, strict: false }
       ];
 
@@ -273,6 +292,10 @@ var testSuite = function () {
         }
         triggerSubmitValidation( '#typeurl', 'foo' );
         expect( getErrorMessage( '#typeurl', 'type') ).to.be( 'This value should be a valid url.' );
+      } )
+      it ( 'url html5', function () {
+        $( '#typeurl-html5' ).val( "http://foo.bar" );
+        expect( $( '#typeurl-html5' ).parsley( 'validate' ) ).to.be( true );
       } )
       it ( 'url strict + global config overriding type message', function () {
         for ( var i in urls ) {
@@ -294,6 +317,14 @@ var testSuite = function () {
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
         triggerSubmitValidation( '#typeemail', 'foo.bar@bar.com.ext' );
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'email html5', function () {
+        triggerSubmitValidation( '#typeemail-html5', 'foo@bar.com' );
+        expect( $( '#typeemail-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'range html5', function () {
+        triggerSubmitValidation( '#typerange-html5', 8 );
+        expect( $( '#typerange-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'digits', function () {
         triggerSubmitValidation( '#typedigits', 'foo' );
@@ -637,7 +668,22 @@ var testSuite = function () {
           triggerSubmitValidation( '#rangewords', 'foo bar baz foo bar baz foo' );
           expect( $( '#rangewords' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
+       it ( 'greaterThan', function () {
+         triggerSubmitValidation( '#greaterThan', '1' );
+         expect( $( '#greaterThan' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This value should be greater than #greaterThan-model.' );
+         triggerSubmitValidation( '#greaterThan', '2' );
+         expect( $( '#greaterThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'lessThan', function () {
+         triggerSubmitValidation( '#lessThan', '5' );
+         expect( $( '#lessThan' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#lessThan', 'lessThan') ).to.be( 'This value should be less than #lessThan-model.' );
+         triggerSubmitValidation( '#lessThan', '1' );
+         expect( $( '#lessThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
      } )
 
   } )
 }
+

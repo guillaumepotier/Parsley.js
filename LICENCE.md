@@ -1,4 +1,4 @@
-Copyright 2012 Guillaume Potier and other contributors
+Copyright 2013 Guillaume Potier and contributors
 http://github.com/guillaumepotier/Parsley.js
 
 Permission is hereby granted, free of charge, to any person obtaining

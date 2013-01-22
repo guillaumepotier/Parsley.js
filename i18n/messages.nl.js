@@ -3,6 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 (function ($) {
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     messages: {
+      // parsley //////////////////////////////////////
         defaultMessage: "Deze waarde lijkt onjuist."
       , type: {
             email:      "Dit lijkt geen geldig e-mail adres te zijn."
@@ -24,6 +25,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , maxlength:      "Deze waarde is te lang. Deze mag maximaal %s karakters lang zijn."
       , rangelength:    "Deze waarde moet tussen %s en %s karakters lang zijn."
       , equalto:        "Deze waardes moeten identiek zijn."
+
+      // parsley.extend ///////////////////////////////
     }
   });
 }(window.jQuery || window.Zepto));

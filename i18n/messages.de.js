@@ -3,6 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 (function ($) {
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     messages: {
+      // parsley //////////////////////////////////////
         defaultMessage: "Die Eingabe scheint nicht korrekt zu sein."
       , type: {
             email:      "Die Eingabe muss eine gültige E-Mail-Adresse sein."
@@ -24,6 +25,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , maxlength:      "Die Eingabe ist zu lang. Es dürfen höchstens %s Zeichen eingegeben werden."
       , rangelength:    "Die Länge der Eingabe ist ungültig. Es müssen zwischen %s und %s Zeichen eingegeben werden."
       , equalto:        "Die Eingabe darf nicht identisch sein."
+
+      // parsley.extend ///////////////////////////////
     }
   });
 }(window.jQuery || window.Zepto));
