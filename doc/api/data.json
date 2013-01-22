@@ -39,7 +39,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 265,
+            "line": 272,
             "description": "ParsleyField class manage each form field inside a validated Parsley form.\nReturns if field valid or not depending on its value and constraints\nManage field error display and behavior, event triggers and more",
             "is_constructor": 1
         },
@@ -52,7 +52,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 625,
+            "line": 641,
             "description": "ParsleyFieldMultiple override ParsleyField for checkbox and radio inputs\nPseudo-heritance to manage divergent behavior from ParsleyItem in dedicated methods",
             "is_constructor": 1
         },
@@ -65,7 +65,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 716,
+            "line": 732,
             "description": "ParsleyForm class manage Parsley validated form.\nManage its fields and global validation",
             "is_constructor": 1
         },
@@ -78,7 +78,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "parsley.js",
-            "line": 808,
+            "line": 824,
             "description": "Parsley plugin definition\nProvides an interface to access public Validator, ParsleyForm and ParsleyField functions",
             "is_constructor": 1,
             "params": [
@@ -111,7 +111,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 55,
+            "line": 56,
             "description": "Validator list. Built-in validators functions",
             "itemtype": "property",
             "name": "validators",
@@ -120,13 +120,13 @@
         },
         {
             "file": "parsley.js",
-            "line": 184,
+            "line": 187,
             "description": "Aliases for checkboxes constraints",
             "class": "Validator"
         },
         {
             "file": "parsley.js",
-            "line": 216,
+            "line": 219,
             "description": "Replace %s placeholders by values",
             "itemtype": "method",
             "name": "formatMesssage",
@@ -150,7 +150,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 237,
+            "line": 240,
             "description": "Add / override a validator in validators list",
             "itemtype": "method",
             "name": "addValidator",
@@ -170,7 +170,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 248,
+            "line": 251,
             "description": "Add / override error message",
             "itemtype": "method",
             "name": "addMessage",
@@ -190,7 +190,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 286,
+            "line": 293,
             "description": "Set some properties, bind constraint validators and validation events",
             "itemtype": "method",
             "name": "init",
@@ -210,7 +210,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 322,
+            "line": 329,
             "description": "Attach field validators functions passed through data-api",
             "itemtype": "method",
             "name": "addConstraints",
@@ -218,7 +218,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 339,
+            "line": 346,
             "description": "Bind validation events on a field",
             "itemtype": "method",
             "name": "bindValidationEvents",
@@ -226,7 +226,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 361,
+            "line": 368,
             "description": "Hash management. Used for ul error",
             "itemtype": "method",
             "name": "generateHash",
@@ -238,7 +238,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 378,
+            "line": 385,
             "description": "Public getHash accessor",
             "itemtype": "method",
             "name": "generateHash",
@@ -250,7 +250,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 388,
+            "line": 395,
             "description": "Returns field val needed for validation\nSpecial treatment for radio & checkboxes",
             "itemtype": "method",
             "name": "getVal",
@@ -262,7 +262,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 399,
+            "line": 406,
             "description": "Called when validation is triggered by an event\nDo nothing if val.length < this.options.validationMinlength",
             "itemtype": "method",
             "name": "eventValidation",
@@ -277,7 +277,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 422,
+            "line": 429,
             "description": "Return if field verify its constraints",
             "itemtype": "method",
             "name": "isValid",
@@ -289,7 +289,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 432,
+            "line": 439,
             "description": "Validate a field & display errors",
             "itemtype": "method",
             "name": "validate",
@@ -313,7 +313,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 475,
+            "line": 482,
             "description": "Loop through every fields validators\nAdds errors after unvalid fields",
             "itemtype": "method",
             "name": "applyValidators",
@@ -325,7 +325,29 @@
         },
         {
             "file": "parsley.js",
-            "line": 509,
+            "line": 507,
+            "description": "Update a constraint state. Curently used by remote async validator",
+            "itemtype": "method",
+            "name": "updateConstraint",
+            "params": [
+                {
+                    "name": "constraintName",
+                    "description": ""
+                },
+                {
+                    "name": "property",
+                    "description": ""
+                },
+                {
+                    "name": "value",
+                    "description": ""
+                }
+            ],
+            "class": "ParsleyField"
+        },
+        {
+            "file": "parsley.js",
+            "line": 524,
             "description": "Fired when all validators have be executed\nReturns true or false if field is valid or not\nDisplay errors messages below faild fields\nAdds parsley-success or parsley-error class on fields",
             "itemtype": "method",
             "name": "manageValidationResult",
@@ -337,7 +359,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 546,
+            "line": 562,
             "description": "Remove li / ul error",
             "itemtype": "method",
             "name": "removeError",
@@ -352,7 +374,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 561,
+            "line": 577,
             "description": "Remove all ul / li errors",
             "itemtype": "method",
             "name": "removeErrors",
@@ -360,7 +382,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 570,
+            "line": 586,
             "description": "Remove ul errors and parsley error or success classes",
             "itemtype": "method",
             "name": "reset",
@@ -368,7 +390,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 581,
+            "line": 597,
             "description": "Add li / ul errors messages",
             "itemtype": "method",
             "name": "addError",
@@ -383,7 +405,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 613,
+            "line": 629,
             "description": "Add custom listeners",
             "params": [
                 {
@@ -396,7 +418,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 641,
+            "line": 657,
             "description": "Set some specific properties, call some extra methods to manage radio / checkbox",
             "itemtype": "method",
             "name": "init",
@@ -416,7 +438,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 660,
+            "line": 676,
             "description": "Set specific constraints messages, do pseudo-heritance",
             "itemtype": "method",
             "name": "inherit",
@@ -436,7 +458,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 683,
+            "line": 699,
             "description": "Set specific constraints messages, do pseudo-heritance",
             "itemtype": "method",
             "name": "getName",
@@ -448,7 +470,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 693,
+            "line": 709,
             "description": "Special treatment for radio & checkboxes\nReturns checked radio or checkboxes values",
             "itemtype": "method",
             "name": "getVal",
@@ -460,7 +482,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 747,
+            "line": 763,
             "description": "Add custom listeners",
             "params": [
                 {
@@ -473,7 +495,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 764,
+            "line": 780,
             "description": "Process each form field validation\nDisplay errors, call custom onFormSubmit() function",
             "itemtype": "method",
             "name": "validate",
@@ -492,7 +514,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 796,
+            "line": 812,
             "description": "Remove all errors ul under invalid fields",
             "itemtype": "method",
             "name": "removeErrors",
@@ -500,7 +522,7 @@
         },
         {
             "file": "parsley.js",
-            "line": 865,
+            "line": 881,
             "description": "Parsley plugin configuration",
             "itemtype": "property",
             "name": "$.fn.parsley.defaults",
@@ -511,35 +533,35 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:361"
+            "line": " parsley.js:368"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:378"
+            "line": " parsley.js:385"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:388"
+            "line": " parsley.js:395"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:683"
+            "line": " parsley.js:699"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " parsley.js:693"
+            "line": " parsley.js:709"
         },
         {
             "message": "Missing item type\nAliases for checkboxes constraints",
-            "line": " parsley.js:184"
+            "line": " parsley.js:187"
         },
         {
             "message": "Missing item type\nAdd custom listeners",
-            "line": " parsley.js:613"
+            "line": " parsley.js:629"
         },
         {
             "message": "Missing item type\nAdd custom listeners",
-            "line": " parsley.js:747"
+            "line": " parsley.js:763"
         }
     ]
 }

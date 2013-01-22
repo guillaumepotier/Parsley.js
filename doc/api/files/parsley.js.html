@@ -130,6 +130,7 @@
       , type: {
             email:      &quot;This value should be a valid email.&quot;
           , url:        &quot;This value should be a valid url.&quot;
+          , urlstrict:  &quot;This value should be a valid url.&quot;
           , number:     &quot;This value should be a valid number.&quot;
           , digits:     &quot;This value should be digits.&quot;
           , dateIso:    &quot;This value should be a valid date (YYYY-MM-DD).&quot;
@@ -191,7 +192,9 @@
             regExp = &#x2F;^((([a-z]|\d|[!#\$%&amp;&#x27;\*\+\-\&#x2F;=\?\^_&#x60;{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&amp;&#x27;\*\+\-\&#x2F;=\?\^_&#x60;{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$&#x2F;i;
             break;
           case &quot;url&quot;:
-            regExp = &#x2F;^(https?|s?ftp):\&#x2F;\&#x2F;(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\&#x2F;((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)+(\&#x2F;(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\&#x2F;|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|\&#x2F;|\?)*)?$&#x2F;i;
+            val = new RegExp( &quot;(https?|s?ftp|git)&quot;, &quot;i&quot; ).test( val ) ? val : &#x27;http:&#x2F;&#x2F;&#x27; + val;
+          case &quot;urlstrict&quot;:
+            regExp = &#x2F;^(https?|s?ftp|git):\&#x2F;\&#x2F;(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\&#x2F;((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)+(\&#x2F;(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\&#x2F;|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|\&#x2F;|\?)*)?$&#x2F;i;
             break;
           case &quot;dateIso&quot;:
             regExp = &#x2F;^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$&#x2F;;
@@ -349,8 +352,12 @@
     * @param {String} message Message
     *&#x2F;
     , addMessage: function ( key, message ) {
+      &#x2F;&#x2F; custom types messages are a bit tricky cuz&#x27; nested ;)
       if ( &#x27;type&#x27; === key ) {
-        this.messages[ &#x27;type&#x27; ][ key ] = message;
+        for ( var i in message ) {
+          this.messages[ &#x27;type&#x27; ][ i ] = message[ i ];
+        }
+
         return;
       }
 
@@ -502,8 +509,8 @@
     , eventValidation: function ( event ) {
       var val = this.getVal();
 
-      &#x2F;&#x2F; do nothing on keypress event if not explicitely passed as data-trigger and if field has no errors
-      if ( event.type === &#x27;keyup&#x27; &amp;&amp; !&#x2F;keyup&#x2F;i.test( this.options.trigger ) &amp;&amp; this.isValid ) {
+      &#x2F;&#x2F; do nothing on keypress event if not explicitely passed as data-trigger and if field has not already been validated once
+      if ( event.type === &#x27;keyup&#x27; &amp;&amp; !&#x2F;keyup&#x2F;i.test( this.options.trigger ) &amp;&amp; !this.validatedOnce ) {
         return true;
       }
 
@@ -542,7 +549,7 @@
         return this.isValid;
       }
 
-      if ( this.options.listeners.onFieldValidate( this.$element ) || &#x27;&#x27; === this.val &amp;&amp; !this.isRequired ) {
+      if ( this.options.listeners.onFieldValidate( this.element ) || &#x27;&#x27; === this.val &amp;&amp; !this.isRequired ) {
         this.reset();
         return null;
       }
@@ -593,6 +600,14 @@
       return isValid;
     }
 
+    &#x2F;**
+    * Update a constraint state. Curently used by remote async validator
+    *
+    * @method updateConstraint
+    * @param constraintName
+    * @param property
+    * @param value
+    *&#x2F;
     , updateConstraint: function ( constraintName, property, value ) {
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraintName ) {
@@ -617,7 +632,6 @@
       for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].isValid ) {
           this.addError( this.constraints[ constraint ] );
-          this.options.listeners.onFieldError( this.$element, this.constraints[ constraint ] );
           isValid = false;
         } else if ( true === this.constraints[ constraint ].isValid ) {
           this.removeError( this.constraints[ constraint ].name );
@@ -630,9 +644,11 @@
       if ( true === this.isValid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+        this.options.listeners.onFieldSuccess( this.element, this.constraints );
         return true;
       } else if ( false === this.isValid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
+        this.options.listeners.onFieldError( this.element, this.constraints );
         return false;
       }
 
@@ -834,7 +850,7 @@
 
       this.$element.find( options.inputs ).each( function () {
         $( this ).parsley( options );
-        self.items.push( $( this) );
+        self.items.push( $( this ) );
       });
 
       this.$element.on( &#x27;submit&#x27; , false, $.proxy( this.validate, this ) );
@@ -913,7 +929,7 @@
   *&#x2F;
   $.fn.parsley = function ( option, fn ) {
     var options = $.extend(true, {}, $.fn.parsley.defaults, option, this.data() )
-      , returnValue = false;
+      , returnValue = null;
 
     function bind ( self, type ) {
       var data = $( self ).data( type );
@@ -984,15 +1000,20 @@
       , errorElem: &#x27;&lt;li&gt;&lt;&#x2F;li&gt;&#x27;                                            &#x2F;&#x2F; each field constraint fail in an li
       }
     , listeners: {
-        onFieldValidate: function ( elem ) { return false; }              &#x2F;&#x2F; Return true to ignore field validation
+        onFieldValidate: function ( elem ) { return false; }              &#x2F;&#x2F; Executed on validation. Return true to ignore field validation
       , onFormSubmit: function ( isFormValid, event, focusedField ) {}    &#x2F;&#x2F; Executed once on form validation
-      , onFieldError: function ( field, constraint ) {}                   &#x2F;&#x2F; Executed when a field is detected as invalid
+      , onFieldError: function ( elem, constraints ) {}                   &#x2F;&#x2F; Executed when a field is detected as invalid
+      , onFieldSuccess: function ( elem, constraints ) {}                 &#x2F;&#x2F; Executed when a field passes validation
     }
   }
 
-  &#x2F;* PARSLEY auto-bind DATA-API
-  * ======================== *&#x2F;
+  &#x2F;* PARSLEY auto-bind DATA-API + Global config retrieving
+  * =================================================== *&#x2F;
   $( window ).on( &#x27;load&#x27;, function () {
+
+    &#x2F;&#x2F; extend parsley defaults with global window config
+    $.fn.parsley.defaults = $.extend( true, {}, $.fn.parsley.defaults, &#x27;undefined&#x27; !== typeof window.ParsleyConfig ? ParsleyConfig : {} );
+
     $( &#x27;[data-validate=&quot;parsley&quot;]&#x27; ).each( function () {
       $( this ).parsley();
     })
