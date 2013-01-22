@@ -34,8 +34,6 @@ else
   File.open(output, 'w') do |f|
     f.write "/* Parsley %s build version %s http://parsleyjs.org */\n" %
                     [output, garlic_version]
-    f.write Closure::Compiler.new.compile(input.map { |file|
-      File.read(file)
-    })
+    f.write Closure::Compiler.new.compile_files(input)
   end
 end
