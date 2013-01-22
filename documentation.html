@@ -1021,7 +1021,8 @@
   , listeners: {
       onFieldValidate: function ( elem ) { return false; }
     , onFormSubmit: function ( isFormValid, event, focusedField ) {}
-    , onFieldError: function ( elem, constraint ) {}
+    , onFieldError: function ( elem, constraints ) {}
+    , onFieldSuccess: function ( elem, constraints ) {}
   }
 }</code></pre>
                         </td>
@@ -1118,6 +1119,9 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td colspan="2">Default classes & templates</td>
+                    </tr>
+                    <tr>
                         <td><code>.parsley-validated</code></td>
                         <td>Auto added on each form item that have Parsley validation.</td>
                     </tr>
@@ -1136,6 +1140,28 @@
                     <tr>
                         <td><code>li.parsley-error</code></td>
                         <td>Message for constraint failed on validation.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Override them !</td>
+                    </tr>
+                    <tr>
+                        <td>Change class names</td>
+                        <td><pre><code>$('#form').parsley({ successClass: 'my name', errorClass: 'still my name' });</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Change class handler</td>
+                        <td>Add parsley-success and parsley-error to direct parent:
+<pre><code>$('#form').parsley( {
+    errors: {
+        classHandler: function ( elem ) {
+            return $( elem ).parent();
+        }
+    }
+} );</code></pre></td>
+                    </tr>
+                    <tr>
+                        <td>Advanced changes</td>
+                        <td>See <code>errorsWrapper</code>, <code>errorElem</code> and <code>container</code> errors properties in Parsley default options..</td>
                     </tr>
                 </tbody>
               </table>
