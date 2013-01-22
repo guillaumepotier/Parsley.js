@@ -342,11 +342,12 @@
         if ( new RegExp( this.options.type, "i" ).test( "number range" ) ) {
           this.options.type = "number";
 
-          if ( 'undefined' !== typeof this.$element.attr( 'min' ) ) {
+          // double condition to support jQuery and Zepto.. :(
+          if ( 'undefined' !== typeof this.$element.attr( 'min' ) && this.$element.attr( 'min' ).length ) {
             this.options.min = this.$element.attr( 'min' );
           }
 
-          if ( 'undefined' !== typeof this.$element.attr( 'max' ) ) {
+          if ( 'undefined' !== typeof this.$element.attr( 'max' ) && this.$element.attr( 'max' ).length ) {
             this.options.max = this.$element.attr( 'max' );
           }
         }

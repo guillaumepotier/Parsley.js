@@ -27,9 +27,11 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , equalto:        "Cette valeur devrait être identique."
 
       // parsley.extend ///////////////////////////////
-      , minwords: "Cette valeur doit contenir plus de %s mots."
-      , maxwords: "Cette valeur ne peut pas dépasser %s mots."
-      , rangewords: "Cette valeur doit comprendre %s à %s mots."
+      , minwords:       "Cette valeur doit contenir plus de %s mots."
+      , maxwords:       "Cette valeur ne peut pas dépasser %s mots."
+      , rangewords:     "Cette valeur doit comprendre %s à %s mots."
+      , greaterthan:    "Cette valeur doit être plus grande que %s."
+      , lessthan:       "Cette valeur doit être plus petite que %s."
     }
   });
 }(window.jQuery || window.Zepto));
