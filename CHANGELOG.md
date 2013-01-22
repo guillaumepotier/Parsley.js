@@ -1,5 +1,13 @@
 #Changelog
 
+** 1.1.2 **
+
+    - added html5 types supports for existing validators
+
+** 1.1.1 **
+
+    - two new parsley.extra validators: greaterthan & lowerthen
+
 ** 1.1.0 **
 
     - added localization and extra validator configuration in external files.
