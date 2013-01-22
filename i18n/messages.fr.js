@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 (function ($) {
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     messages: {
-        defaultMessage: "Cette valeur semble invalide."
+        defaultMessage: "Cette valeur semble non valide."
       , type: {
             email:      "Cette valeur n'est pas une adresse email valide."
           , url:        "Cette valeur n'est pas une URL valide."
@@ -16,7 +16,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , notnull:        "Cette valeur ne peux pas être nulle."
       , notblank:       "Cette valeur ne peux pas être vide."
       , required:       "Ce champ est requis."
-      , regexp:         "Cette valeur semble invalide."
+      , regexp:         "Cette valeur semble non valide."
       , min:            "Cette valeur ne doit pas être inféreure à %s."
       , max:            "Cette valeur ne doit pas excéder %s."
       , range:          "Cette valeur doit être comprise entre %s et %s."
