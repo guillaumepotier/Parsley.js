@@ -49,7 +49,7 @@ $( '#validator-tests' ).parsley( {
     }
   }
   , messages: {
-    multiple: 'This field should be a multiple of %s'
+      multiple: 'This field should be a multiple of %s'
   }
 } );
 
@@ -637,7 +637,22 @@ var testSuite = function () {
           triggerSubmitValidation( '#rangewords', 'foo bar baz foo bar baz foo' );
           expect( $( '#rangewords' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
+       it ( 'greaterThan', function () {
+         triggerSubmitValidation( '#greaterThan', '1' );
+         expect( $( '#greaterThan' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This value should be greater than #greaterThan-model.' );
+         triggerSubmitValidation( '#greaterThan', '2' );
+         expect( $( '#greaterThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'lessThan', function () {
+         triggerSubmitValidation( '#lessThan', '5' );
+         expect( $( '#lessThan' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#lessThan', 'lessThan') ).to.be( 'This value should be less than #lessThan-model.' );
+         triggerSubmitValidation( '#lessThan', '1' );
+         expect( $( '#lessThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
      } )
 
   } )
 }
+
