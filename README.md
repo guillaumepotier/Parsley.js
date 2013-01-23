@@ -10,7 +10,7 @@ See TODO.md
 
 #Version
 
-1.1.2
+1.1.3
 
 # Browser compatibility
 

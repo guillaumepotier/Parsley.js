@@ -4,7 +4,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     messages: {
       // parsley //////////////////////////////////////
-        defaultMessage: "Cette valeur semble invalide."
+        defaultMessage: "Cette valeur semble non valide."
       , type: {
             email:      "Cette valeur n'est pas une adresse email valide."
           , url:        "Cette valeur n'est pas une URL valide."

@@ -480,14 +480,15 @@
       var val = this.getVal()
         , isValid = null;
 
+      // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
+      if ( this.options.listeners.onFieldValidate( this.element ) || ( '' === val && !this.isRequired ) ) {
+        this.reset();
+        return null;
+      }
+
       // do not validate a field already validated and unchanged !
       if ( !this.needsValidation( val ) ) {
         return this.isValid;
-      }
-
-      if ( this.options.listeners.onFieldValidate( this.element ) || '' === this.val && !this.isRequired ) {
-        this.reset();
-        return null;
       }
 
       this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : true;
@@ -657,7 +658,7 @@
 
       if ( !$( this.ulError ).length ) {
         this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate );
+          || (!this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ));
       }
 
       if ( !$( liError ).length ) {
