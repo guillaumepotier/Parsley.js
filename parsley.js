@@ -657,7 +657,7 @@
 
       if ( !$( this.ulError ).length ) {
         this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate );
+          || (!this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ));
       }
 
       if ( !$( liError ).length ) {
