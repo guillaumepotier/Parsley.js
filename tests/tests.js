@@ -623,6 +623,27 @@ var testSuite = function () {
           } )
         } )
       } )
+      describe ( 'Test some typical use cases with listeners', function () {
+        it( 'Test onFieldValidate could reset Parsley validation with return true;', function () {
+           $( '#onFieldValidatetrue' ).val( 'foo@bar.com' );
+           expect( $( '#onFieldValidatetrue-form' ).parsley( 'validate' ) ).to.be( false );
+
+           // do not validate #onFieldValidatefalse
+           $( '#onFieldValidatetrue-form' ).parsley( 'addListener', {
+             onFieldValidate: function ( elem ) {
+               console.log( $( elem ).attr( 'id' ) )
+               if ( $( elem ).attr( 'id' ) === "onFieldValidatefalse" ) {
+                 return true;
+               }
+
+               return false;
+             }
+           } )
+
+           // even with #onFieldValidatefalse invalid, validation is ok
+           expect( $( '#onFieldValidatetrue-form' ).parsley( 'validate' ) ).to.be( true );
+         } )
+      } )
     } )
 
    /***************************************

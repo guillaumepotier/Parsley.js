@@ -1,5 +1,10 @@
 #Changelog
 
+** 1.1.3 **
+
+    - fixed bug on onFieldValidate listener that do not reseted Parsley validation
+      on return = false;
+
 ** 1.1.2 **
 
     - added html5 types supports for existing validators
