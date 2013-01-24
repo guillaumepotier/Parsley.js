@@ -20,13 +20,18 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , regexp:         "Die Eingabe scheint ungültig zu sein."
       , min:            "Die Eingabe muss größer als %s sein."
       , max:            "Die Eingabe muss kleiner als %s sein."
-      , range:          "Die Eingabe muss zwischen %s und %s sein."
+      , range:          "Die Eingabe muss zwischen %s und %s liegen."
       , minlength:      "Die Eingabe ist zu kurz. Es müssen mindestens %s Zeichen eingegeben werden."
       , maxlength:      "Die Eingabe ist zu lang. Es dürfen höchstens %s Zeichen eingegeben werden."
       , rangelength:    "Die Länge der Eingabe ist ungültig. Es müssen zwischen %s und %s Zeichen eingegeben werden."
       , equalto:        "Die Eingabe darf nicht identisch sein."
 
       // parsley.extend ///////////////////////////////
+      , minwords:       "Die Eingabe muss mindestens %s Wörter enthalten."
+      , maxwords:       "Die Eingabe darf höchstens %s Wörter enthalten."
+      , rangewords:     "Die Eingabe muss zwischen %s und %s Wörter enthalten."
+      , greaterthan:    "Die Eingabe muss größer als  %s sein."
+      , lessthan:       "Die Eingabe muss kleiner als %s sein."
     }
   });
 }(window.jQuery || window.Zepto));
