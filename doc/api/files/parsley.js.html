@@ -225,11 +225,11 @@
       }
 
       , min: function ( val, min ) {
-        return val &gt;= min;
+        return new Number( val ) &gt;= new Number( min );
       }
 
       , max: function ( val, max ) {
-        return val &lt;= max;
+        return new Number( val ) &lt;= new Number( max );
       }
 
       , range: function ( val, arrayRange ) {
@@ -330,7 +330,7 @@
         return message;
       }
 
-      return message.replace(new RegExp(&quot;%s&quot;, &quot;i&quot;), args);
+      return message.replace(new RegExp( &quot;%s&quot;, &quot;i&quot; ), args);
     }
 
     &#x2F;**
@@ -408,10 +408,7 @@
       this.hash = this.generateHash();
       this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
 
-      &#x2F;&#x2F; a field is required if data-required=&quot;true&quot; or class=&quot;required&quot; or required=&quot;required&quot;
-      if ( &#x27;undefined&#x27; !== typeof this.options[ &#x27;required&#x27; ] || this.$element.hasClass( &#x27;required&#x27; ) || this.$element.attr( &#x27;required&#x27; ) === &#x27;required&#x27; ) {
-        this.isRequired = this.options[ &#x27;required&#x27; ] = true;
-      }
+      this.bindHtml5Constraints();
 
       &#x2F;&#x2F; bind validators to field
       this.addConstraints();
@@ -419,6 +416,37 @@
       &#x2F;&#x2F; bind parsley events if validators have been registered
       if ( this.constraints.length ) {
         this.bindValidationEvents();
+      }
+    }
+
+    &#x2F;**
+    * Bind some extra html5 types &#x2F; validators
+    *
+    * @method bindHtml5Constraints
+    *&#x2F;
+    , bindHtml5Constraints: function () {
+      &#x2F;&#x2F; add html5 required support + class required support
+      if ( this.$element.hasClass( &#x27;required&#x27; ) || this.$element.attr( &#x27;required&#x27; ) ) {
+        this.options.required = true;
+      }
+
+      &#x2F;&#x2F; add html5 supported types &amp; options
+      if ( &#x27;undefined&#x27; !== typeof this.$element.attr( &#x27;type&#x27; ) &amp;&amp; new RegExp( this.$element.attr( &#x27;type&#x27; ), &quot;i&quot; ).test( &quot;email url number range&quot; ) ) {
+        this.options.type = this.$element.attr( &#x27;type&#x27; );
+
+        &#x2F;&#x2F; number and range types could have min and&#x2F;or max values
+        if ( new RegExp( this.options.type, &quot;i&quot; ).test( &quot;number range&quot; ) ) {
+          this.options.type = &quot;number&quot;;
+
+          &#x2F;&#x2F; double condition to support jQuery and Zepto.. :(
+          if ( &#x27;undefined&#x27; !== typeof this.$element.attr( &#x27;min&#x27; ) &amp;&amp; this.$element.attr( &#x27;min&#x27; ).length ) {
+            this.options.min = this.$element.attr( &#x27;min&#x27; );
+          }
+
+          if ( &#x27;undefined&#x27; !== typeof this.$element.attr( &#x27;max&#x27; ) &amp;&amp; this.$element.attr( &#x27;max&#x27; ).length ) {
+            this.options.max = this.$element.attr( &#x27;max&#x27; );
+          }
+        }
       }
     }
 
@@ -435,6 +463,10 @@
             , requirements: this.options[ constraint ]
             , isValid: null
           } );
+
+          if ( constraint === &quot;required&quot; ) {
+            this.isRequired = true;
+          }
         }
       }
     }
@@ -544,14 +576,15 @@
       var val = this.getVal()
         , isValid = null;
 
+      &#x2F;&#x2F; reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
+      if ( this.options.listeners.onFieldValidate( this.element ) || ( &#x27;&#x27; === val &amp;&amp; !this.isRequired ) ) {
+        this.reset();
+        return null;
+      }
+
       &#x2F;&#x2F; do not validate a field already validated and unchanged !
       if ( !this.needsValidation( val ) ) {
         return this.isValid;
-      }
-
-      if ( this.options.listeners.onFieldValidate( this.element ) || &#x27;&#x27; === this.val &amp;&amp; !this.isRequired ) {
-        this.reset();
-        return null;
       }
 
       this.errorBubbling = &#x27;undefined&#x27; !== typeof errorBubbling ? errorBubbling : true;
@@ -566,6 +599,13 @@
       return isValid;
     }
 
+    &#x2F;**
+    * Check if value has changed since previous validation
+    *
+    * @method needsValidation
+    * @param value
+    * @return {Boolean}
+    *&#x2F;
     , needsValidation: function ( val ) {
       if ( this.val === val &amp;&amp; this.validatedOnce ) {
         return false;
@@ -685,7 +725,7 @@
     * @method reset
     *&#x2F;
     , reset: function () {
-      this.isValid = true;
+      this.isValid = null;
       this.removeErrors();
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
     }
@@ -714,7 +754,7 @@
 
       if ( !$( this.ulError ).length ) {
         this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate );
+          || (!this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ));
       }
 
       if ( !$( liError ).length ) {
@@ -1021,6 +1061,7 @@
 
 &#x2F;&#x2F; This plugin works with jQuery or Zepto (with data extension builded for Zepto.)
 }(window.jQuery || window.Zepto);
+
     </pre>
 </div>
 
