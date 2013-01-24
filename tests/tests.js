@@ -209,6 +209,10 @@ var testSuite = function () {
         triggerSubmitValidation( '#required-html5-bis', '  foo' );
         expect( $( '#required-html5-bis' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'required - select multiple', function () {
+        expect( $( '#required-selectmultiple' ).parsley( 'validate' ) ).to.be( false );
+        $( '#required-selectmultiple' )
+      } )
       it ( 'minlength', function () {
         triggerSubmitValidation( '#minlength', '12345' );
         expect( $( '#minlength' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -631,7 +635,6 @@ var testSuite = function () {
            // do not validate #onFieldValidatefalse
            $( '#onFieldValidatetrue-form' ).parsley( 'addListener', {
              onFieldValidate: function ( elem ) {
-               console.log( $( elem ).attr( 'id' ) )
                if ( $( elem ).attr( 'id' ) === "onFieldValidatefalse" ) {
                  return true;
                }

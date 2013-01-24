@@ -65,15 +65,21 @@
       }
 
       , notblank: function ( val ) {
-        return '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
+        return null !== val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
       }
 
       // Works on all inputs. val is object for checkboxes
       , required: function ( val ) {
 
-        // check here that at least a checkbox is checked here
+        // for checkboxes and select multiples. Check there is at least one required value
         if ( 'object' === typeof val ) {
-          return val.length > 0;
+          for ( var i in val ) {
+            if ( this.required( val[ i ]) ) {
+              return true
+            }
+          }
+
+          return false;
         }
 
         return this.notnull( val ) && this.notblank( val );
