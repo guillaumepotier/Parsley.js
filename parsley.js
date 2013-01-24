@@ -65,15 +65,21 @@
       }
 
       , notblank: function ( val ) {
-        return '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
+        return null !== val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
       }
 
       // Works on all inputs. val is object for checkboxes
       , required: function ( val ) {
 
-        // check here that at least a checkbox is checked here
+        // for checkboxes and select multiples. Check there is at least one required value
         if ( 'object' === typeof val ) {
-          return val.length > 0;
+          for ( var i in val ) {
+            if ( this.required( val[ i ]) ) {
+              return true
+            }
+          }
+
+          return false;
         }
 
         return this.notnull( val ) && this.notblank( val );
@@ -306,12 +312,18 @@
       this.val = this.$element.val();
       this.isRequired = false;
       this.constraints = [];
-      this.isRadioOrCheckbox = false;
 
       // overrided by ParsleyItemMultiple if radio or checkbox input
-      this.hash = this.generateHash();
-      this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
+      if ( 'undefined' === typeof this.isRadioOrCheckbox ) {
+        this.isRadioOrCheckbox = false;
+        this.hash = this.generateHash();
+        this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
+      }
 
+      // error ul dom management done only once at init
+      this.ulErrorManagement();
+
+      // bind some html5 properties
       this.bindHtml5Constraints();
 
       // bind validators to field
@@ -404,14 +416,14 @@
     * @returns {String} 5 letters unique hash
     */
     , generateHash: function () {
-      var text = ''
-        , possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      var hash = ''
+        , possibles = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
       for ( var i = 0; i < 5; i++ ) {
-        text += possible.charAt( Math.floor( Math.random() * possible.length ) );
+        hash += possibles.charAt( Math.floor( Math.random() * possibles.length ) );
       }
 
-      return text;
+      return 'parsley-' + hash;
     }
 
     /**
@@ -481,7 +493,7 @@
         , isValid = null;
 
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
-      if ( this.options.listeners.onFieldValidate( this.element ) || ( '' === val && !this.isRequired ) ) {
+      if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
         this.reset();
         return null;
       }
@@ -588,15 +600,23 @@
       if ( true === this.isValid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
-        this.options.listeners.onFieldSuccess( this.element, this.constraints );
+        this.options.listeners.onFieldSuccess( this.element, this.constraints, ParsleyField );
         return true;
       } else if ( false === this.isValid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
-        this.options.listeners.onFieldError( this.element, this.constraints );
+        this.options.listeners.onFieldError( this.element, this.constraints, ParsleyField );
         return false;
       }
 
       return isValid;
+    }
+
+    /**
+    * Manage ul error Container
+    */
+    , ulErrorManagement: function () {
+      this.ulError = '#' + this.hash;
+      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
     }
 
     /**
@@ -641,27 +661,24 @@
     * @param {Object} constraint
     */
     , addError: function ( constraint ) {
-      // error ul dom management done only once
-      if ( !this.ulError ) {
-        var ulId = 'parsley-' + this.hash;
-        this.ulError = '#' + ulId
-        , this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', ulId ).addClass( 'parsley-error-list' );
+
+      // display ulError container if it has been removed previously (or never shown)
+      if ( !$( this.ulError ).length ) {
+        this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
+          || ( !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ) );
       }
 
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
         , liError = this.ulError + ' .' + constraintName
         , liTemplate = $( this.options.errors.errorElem ).addClass( constraintName )
-        , message = constraint.name === 'type' ?
+        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
-              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) );
+              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
-      if ( !$( this.ulError ).length ) {
-        this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || (!this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ));
-      }
-
-      if ( !$( liError ).length ) {
+      // TODO: refacto this shit too
+      // add liError if not shown. Do not add more than once custom errorMessage if exsit
+      if ( !$( liError ).length && !( $( liError ).length === 1 && false !== this.options.errorMessage ) ) {
         $( this.ulError ).append( $( liTemplate ).text( message ) );
       }
     }
@@ -688,6 +705,9 @@
   var ParsleyFieldMultiple = function ( element, options ) {
     this.initMultiple( element, options );
     this.inherit( element, options );
+
+    // call ParsleyField constructor
+    this.init( element, options );
   }
 
   ParsleyFieldMultiple.prototype = {
@@ -743,7 +763,7 @@
     * @returns {String} radio / checkbox hash is cleaned "name" property
     */
    , getName: function () {
-     return this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
+     return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
    }
 
    /**
@@ -826,25 +846,25 @@
     * @return {Boolean} Is form valid or not
     */
     , validate: function ( event ) {
-      var isValid = true
-        , focusedField = false;
+      var isValid = true;
+      this.focusedField = false;
 
       for ( var item in this.items ) {
         if ( false === this.items[ item ].parsley( 'validate' ) ) {
           isValid = false;
 
-          if ( !focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
-            focusedField = this.items[ item ];
+          if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
+            this.focusedField = this.items[ item ];
           }
         }
       }
 
       // form is invalid, focus an error field depending on focus policy
       if ( !isValid ) {
-        focusedField.focus();
+        this.focusedField.focus();
       }
 
-      this.options.listeners.onFormSubmit( isValid, event, focusedField );
+      this.options.listeners.onFormSubmit( isValid, event, this );
 
       return isValid;
     }
@@ -933,6 +953,7 @@
     , validationMinlength: 3            // If trigger validation specified, only if value.length > validationMinlength
     , successClass: 'parsley-success'   // Class name on each valid input
     , errorClass: 'parsley-error'       // Class name on each invalid input
+    , errorMessage: false               // Customize an unique error message showed if one constraint fails
     , validators: {}                    // Add your custom validators functions
     , messages: {}                      // Add your own error messages here
 
@@ -944,10 +965,10 @@
       , errorElem: '<li></li>'                                            // each field constraint fail in an li
       }
     , listeners: {
-        onFieldValidate: function ( elem ) { return false; }              // Executed on validation. Return true to ignore field validation
-      , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
-      , onFieldError: function ( elem, constraints ) {}                   // Executed when a field is detected as invalid
-      , onFieldSuccess: function ( elem, constraints ) {}                 // Executed when a field passes validation
+        onFieldValidate: function ( elem, ParsleyForm ) { return false; } // Executed on validation. Return true to ignore field validation
+      , onFormSubmit: function ( isFormValid, event, ParsleyField ) {}    // Executed once on form validation
+      , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
+      , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
     }
   }
 

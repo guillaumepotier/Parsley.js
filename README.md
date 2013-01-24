@@ -10,7 +10,7 @@ See TODO.md
 
 #Version
 
-1.1.3
+1.1.5
 
 # Browser compatibility
 
@@ -43,7 +43,8 @@ Add new validators in `parsley.extend.js` and minify it. No validators will be a
 
 ##Localization
 
-If file does not existe, create it into `ì18n/` directory with same synthax as others
+If file does not existe, create it into `ì18n/` directory with same synthax as others.  
+Reference file is French one! ;)
 
 ## Global
 

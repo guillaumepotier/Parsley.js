@@ -54,6 +54,7 @@
         </form>
         <form data-validate="parsley">
             <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum" />
+            <input type="text" id="errorMessage" data-error-message="This is my custom message" data-minlength="20" data-type="email" />
         </form>
         <form id="validator-tests" data-validate="parsley">
             <input type="text" id="notnull" data-notnull="true" />
@@ -63,6 +64,11 @@
             <input type="text" id="required-class" class="required" />
             <input type="text" id="required-html5" required="required" />
             <input type="text" id="required-html5-bis" required />
+            <select id="required-selectmultiple" multiple="multiple" name="selectmultiple" data-required="true">
+                <option value="">Select</option>
+                <option value="foo">foo</option>
+                <option value="bar">bar</option>
+            </select>
 
             <input type="text" id="minlength" data-minlength="6" />
             <input type="text" id="maxlength" data-maxlength="6" />
@@ -173,32 +179,32 @@
 
         switch ( location.hash ) {
             case '#jquery':
-                jsAppend( jquery , pause( 50 ) );
+                jsAppend( jquery , pause( 100 ) );
                 jsAppend( '../parsley.js' , pause( 50 ) );
                 jsAppend( '../parsley.extend.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
                 break;
             case '#zepto':
-                jsAppend( zepto , pause( 50 ) );
+                jsAppend( zepto , pause( 100 ) );
                 jsAppend( '../parsley.js' , pause( 50 ) );
                 jsAppend( '../parsley.extend.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, unminified version';
                 break;
             case '#zepto-min':
-                jsAppend( zepto , pause( 50 ) );
+                jsAppend( zepto , pause( 100 ) );
                 jsAppend( '../dist/parsley.min.js' , pause( 50 ) );
                 jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for Zepto, minified version';
                 break;
             case '#jquery-min':
-                jsAppend( jquery , pause( 50 ) );
+                jsAppend( jquery , pause( 100 ) );
                 jsAppend( '../dist/parsley.min.js' , pause( 50 ) );
                 jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
                 break;
             case '#standalone':
             default:
-                jsAppend( '../dist/parsley-standalone.min.js' , pause( 50 ) );
+                jsAppend( '../dist/parsley-standalone.min.js' , pause( 100 ) );
                 jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite - Standalone Zepto Minified version';
                 break;

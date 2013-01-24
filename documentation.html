@@ -114,8 +114,9 @@
                     <a href="https://twitter.com/share" class="twitter-share-button" data-related="garlicjs: auto persist form values to avoid data loss,guillaumepotier" data-url="http://parsleyjs.org" data-lang="en" data-text="Parsley.js: never write a single javascript line anymore to validate your forms FrontEnd. #ui #ux #javascript"></a>
                     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-                    <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=parsley.js&type=watch&count=true"
-                      allowtransparency="true" frameborder="0" scrolling="0" width="90" height="20"></iframe>
+                    <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=Parsley.js&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+
+                    <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=Parsley.js&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
 
                 </span>
 
@@ -340,6 +341,22 @@
                             <form data-validate="parsley">
                                 <p><input type="text" data-type="email" data-trigger="keyup" placeholder="default keyup validation" /><p>
                                 <p><input type="text" data-type="email" data-trigger="keyup" data-validation-minlength="8" placeholder="8 chars keyup validation" /></p>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <code>data-error-message</code>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            Customize the error message for this field. Shown if one assert fails
+                        </td>
+                        <td class="not-for-mobile">
+                            <form data-validate="parsley">
+                                <p><input type="text" data-type="email" data-minlenght="20" data-trigger="keyup" data-error-message="This is a custom error message here! Even if there are two different constraints here: email and minlenght=20" placeholder="custom error message" /><p>
                             </form>
                         </td>
                     </tr>
@@ -958,17 +975,17 @@
   , messages: {}
 
   //some quite advanced configuration here..
-  , error: {
+  , errors: {
     classHandler: function ( elem ) {}
   , container: function ( elem, template, isRadioOrCheckbox ) {}
   , errorsWrapper: '&lt;ul>&lt;/ul>'
   , errorElem: '&lt;li>&lt;/li>'
   }
   , listeners: {
-      onFieldValidate: function ( elem ) { return false; }
-    , onFormSubmit: function ( isFormValid, event, focusedField ) {}
-    , onFieldError: function ( elem, constraints ) {}
-    , onFieldSuccess: function ( elem, constraints ) {}
+      onFieldValidate: function ( elem, ParsleyField ) { return false; }
+    , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}
+    , onFieldError: function ( elem, constraints, ParsleyField ) {}
+    , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}
   }
 }</code></pre>
                         </td>
