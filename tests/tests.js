@@ -37,8 +37,8 @@ $( '#validate-form' ).parsley( { listeners: {
 } } );
 
 $( '#focus-form' ).parsley( { listeners: {
-  onFormSubmit: function ( isFormValid, event, focusField ) {
-    $( focusField ).addClass( 'on-focus' );
+  onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
+    $( ParsleyForm.focusedField ).addClass( 'on-focus' );
   }
 } } );
 

@@ -481,7 +481,7 @@
         , isValid = null;
 
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
-      if ( this.options.listeners.onFieldValidate( this.element ) || ( '' === val && !this.isRequired ) ) {
+      if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
         this.reset();
         return null;
       }
@@ -588,11 +588,11 @@
       if ( true === this.isValid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
-        this.options.listeners.onFieldSuccess( this.element, this.constraints );
+        this.options.listeners.onFieldSuccess( this.element, this.constraints, ParsleyField );
         return true;
       } else if ( false === this.isValid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
-        this.options.listeners.onFieldError( this.element, this.constraints );
+        this.options.listeners.onFieldError( this.element, this.constraints, ParsleyField );
         return false;
       }
 
@@ -826,25 +826,25 @@
     * @return {Boolean} Is form valid or not
     */
     , validate: function ( event ) {
-      var isValid = true
-        , focusedField = false;
+      var isValid = true;
+      this.focusedField = false;
 
       for ( var item in this.items ) {
         if ( false === this.items[ item ].parsley( 'validate' ) ) {
           isValid = false;
 
-          if ( !focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
-            focusedField = this.items[ item ];
+          if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
+            this.focusedField = this.items[ item ];
           }
         }
       }
 
       // form is invalid, focus an error field depending on focus policy
       if ( !isValid ) {
-        focusedField.focus();
+        this.focusedField.focus();
       }
 
-      this.options.listeners.onFormSubmit( isValid, event, focusedField );
+      this.options.listeners.onFormSubmit( isValid, event, this );
 
       return isValid;
     }
@@ -944,10 +944,10 @@
       , errorElem: '<li></li>'                                            // each field constraint fail in an li
       }
     , listeners: {
-        onFieldValidate: function ( elem ) { return false; }              // Executed on validation. Return true to ignore field validation
-      , onFormSubmit: function ( isFormValid, event, focusedField ) {}    // Executed once on form validation
-      , onFieldError: function ( elem, constraints ) {}                   // Executed when a field is detected as invalid
-      , onFieldSuccess: function ( elem, constraints ) {}                 // Executed when a field passes validation
+        onFieldValidate: function ( elem, ParsleyForm ) { return false; } // Executed on validation. Return true to ignore field validation
+      , onFormSubmit: function ( isFormValid, event, ParsleyField ) {}    // Executed once on form validation
+      , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
+      , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
     }
   }
 

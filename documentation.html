@@ -958,17 +958,17 @@
   , messages: {}
 
   //some quite advanced configuration here..
-  , error: {
+  , errors: {
     classHandler: function ( elem ) {}
   , container: function ( elem, template, isRadioOrCheckbox ) {}
   , errorsWrapper: '&lt;ul>&lt;/ul>'
   , errorElem: '&lt;li>&lt;/li>'
   }
   , listeners: {
-      onFieldValidate: function ( elem ) { return false; }
-    , onFormSubmit: function ( isFormValid, event, focusedField ) {}
-    , onFieldError: function ( elem, constraints ) {}
-    , onFieldSuccess: function ( elem, constraints ) {}
+      onFieldValidate: function ( elem, ParsleyField ) { return false; }
+    , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}
+    , onFieldError: function ( elem, constraints, ParsleyField ) {}
+    , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}
   }
 }</code></pre>
                         </td>
