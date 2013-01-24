@@ -312,12 +312,18 @@
       this.val = this.$element.val();
       this.isRequired = false;
       this.constraints = [];
-      this.isRadioOrCheckbox = false;
 
       // overrided by ParsleyItemMultiple if radio or checkbox input
-      this.hash = this.generateHash();
-      this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
+      if ( 'undefined' === typeof this.isRadioOrCheckbox ) {
+        this.isRadioOrCheckbox = false;
+        this.hash = this.generateHash();
+        this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
+      }
 
+      // error ul dom management done only once at init
+      this.ulErrorManagement();
+
+      // bind some html5 properties
       this.bindHtml5Constraints();
 
       // bind validators to field
@@ -410,14 +416,14 @@
     * @returns {String} 5 letters unique hash
     */
     , generateHash: function () {
-      var text = ''
-        , possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      var hash = ''
+        , possibles = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
       for ( var i = 0; i < 5; i++ ) {
-        text += possible.charAt( Math.floor( Math.random() * possible.length ) );
+        hash += possibles.charAt( Math.floor( Math.random() * possibles.length ) );
       }
 
-      return text;
+      return 'parsley-' + hash;
     }
 
     /**
@@ -606,6 +612,14 @@
     }
 
     /**
+    * Manage ul error Container
+    */
+    , ulErrorManagement: function () {
+      this.ulError = '#' + this.hash;
+      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+    }
+
+    /**
     * Remove li / ul error
     *
     * @method removeError
@@ -647,27 +661,24 @@
     * @param {Object} constraint
     */
     , addError: function ( constraint ) {
-      // error ul dom management done only once
-      if ( !this.ulError ) {
-        var ulId = 'parsley-' + this.hash;
-        this.ulError = '#' + ulId
-        , this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', ulId ).addClass( 'parsley-error-list' );
+
+      // display ulError container if it has been removed previously (or never shown)
+      if ( !$( this.ulError ).length ) {
+        this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
+          || ( !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ) );
       }
 
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
         , liError = this.ulError + ' .' + constraintName
         , liTemplate = $( this.options.errors.errorElem ).addClass( constraintName )
-        , message = constraint.name === 'type' ?
+        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
-              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) );
+              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
-      if ( !$( this.ulError ).length ) {
-        this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || (!this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ));
-      }
-
-      if ( !$( liError ).length ) {
+      // TODO: refacto this shit too
+      // add liError if not shown. Do not add more than once custom errorMessage if exsit
+      if ( !$( liError ).length && !( $( liError ).length === 1 && false !== this.options.errorMessage ) ) {
         $( this.ulError ).append( $( liTemplate ).text( message ) );
       }
     }
@@ -694,6 +705,9 @@
   var ParsleyFieldMultiple = function ( element, options ) {
     this.initMultiple( element, options );
     this.inherit( element, options );
+
+    // call ParsleyField constructor
+    this.init( element, options );
   }
 
   ParsleyFieldMultiple.prototype = {
@@ -749,7 +763,7 @@
     * @returns {String} radio / checkbox hash is cleaned "name" property
     */
    , getName: function () {
-     return this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
+     return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
    }
 
    /**
@@ -939,6 +953,7 @@
     , validationMinlength: 3            // If trigger validation specified, only if value.length > validationMinlength
     , successClass: 'parsley-success'   // Class name on each valid input
     , errorClass: 'parsley-error'       // Class name on each invalid input
+    , errorMessage: false               // Customize an unique error message showed if one constraint fails
     , validators: {}                    // Add your custom validators functions
     , messages: {}                      // Add your own error messages here
 

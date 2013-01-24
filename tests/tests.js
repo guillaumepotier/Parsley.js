@@ -26,7 +26,7 @@ var triggerEventValidation = function ( idOrClass ) {
 }
 
 var getErrorMessage = function ( idOrClass, constraintName ) {
-  return $( '#parsley-' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + constraintName ).text();
+  return $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + constraintName ).text();
 }
 
 $( '#validate-form' ).parsley( { listeners: {
@@ -140,7 +140,7 @@ var testSuite = function () {
           Error messages management
     ***************************************/
     describe ( 'Test Parsley error messages management', function () {
-      var fieldHash = 'parsley-' + $( '#errormanagement' ).parsley( 'getHash' );
+      var fieldHash =  $( '#errormanagement' ).parsley( 'getHash' );
 
       it ( 'Test two errors on the same field', function () {
         triggerSubmitValidation( '#errormanagement', 'foo@' );
@@ -159,6 +159,12 @@ var testSuite = function () {
         triggerSubmitValidation( '#errormanagement', 'foobar' );
         expect( $( '#' + fieldHash ).length ).to.be( 0 );
         expect( $( '#errormanagement' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'If custom message is set, show only it and show it once', function () {
+        triggerSubmitValidation( '#errorMessage', 'foobar' );
+        expect( $( '#errorMessage' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( $( '#' + fieldHash ).length ).to.be( 0 );
+
       } )
     } )
 
@@ -658,7 +664,7 @@ var testSuite = function () {
       } )
       it ( 'Test that error message goes only once and after last radio / checkbox of the group', function () {
         expect( $( '#check2' ).parsley( 'getHash' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
-        expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( 'parsley-' + $( '#check1' ).parsley( 'getHash' ) );
+        expect( $( '#check2' ).parent().next( 'ul' ).attr( 'id' ) ).to.be( $( '#check1' ).parsley( 'getHash' ) );
       } )
       it ( 'Test that if a checkbox or radio is selected, isRequired validation pass', function () {
         $( '#radio1' ).attr( 'checked', 'checked' );
