@@ -1,5 +1,12 @@
 #Changelog
 
+** 1.1.6 **
+
+  - fixed custom error message bug (displayed once by validator that failed)
+  - fixed error messages validators overrinding on multiple forms
+  - added data-API error message customization
+  - corrected lot of typo / mistakes on doc
+
 ** 1.1.5 **
 
   - added data-error-message="message" customization ability
