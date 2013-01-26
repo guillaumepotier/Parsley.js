@@ -373,7 +373,9 @@
     */
     , addConstraints: function () {
       for ( var constraint in this.options ) {
-        if ( 'function' === typeof this.Validator.validators[  constraint.toLowerCase() ] ) {
+        var constraint = constraint.toLowerCase();
+
+        if ( 'function' === typeof this.Validator.validators[ constraint ] ) {
           this.constraints.push( {
               name: constraint
             , requirements: this.options[ constraint ]
@@ -383,7 +385,24 @@
           if ( constraint === "required" ) {
             this.isRequired = true;
           }
+
+          this.addCustomMessage( constraint );
         }
+      }
+    }
+
+    , addCustomMessage: function ( constraint ) {
+      var customMessage = constraint + ( "type" === constraint ? this.options[ constraint ].charAt( 0 ).toUpperCase() + this.options[ constraint ].substr( 1 ) : '' ) + 'Message';
+
+      if ( 'undefined' !== typeof this.options[ customMessage ] ) {
+        var message = [];
+        if ( "type" === constraint ) {
+          message[ this.options[ constraint ] ] = this.options[ customMessage ];
+        } else {
+          message = this.options[ customMessage ];
+        }
+
+        this.Validator.addMessage( constraint, message );
       }
     }
 
@@ -396,7 +415,7 @@
       this.$element.addClass( 'parsley-validated' );
 
       // alaways bind keyup event, for better UX when a field is invalid
-      var triggers = this.options.trigger + ( new RegExp( "key", "i" ).test( this.options.trigger ) ? '' : ' keyup');
+      var triggers = this.options.trigger + ( new RegExp( "key", "i" ).test( this.options.trigger ) ? '' : ' keyup' );
 
       // force add 'change' event if async remote validator here to have result before form submitting
       if ( this.options.remote ) {
@@ -670,15 +689,16 @@
 
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
-        , liError = this.ulError + ' .' + constraintName
-        , liTemplate = $( this.options.errors.errorElem ).addClass( constraintName )
+        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
+        , liError = this.ulError + ' .' + liClass
+        , liTemplate = $( this.options.errors.errorElem ).addClass( liClass )
         , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
       // TODO: refacto this shit too
       // add liError if not shown. Do not add more than once custom errorMessage if exsit
-      if ( !$( liError ).length && !( $( this.ulError ).children().length === 1 && false !== this.options.errorMessage ) ) {
+      if ( !$( liError ).length ) {
         $( this.ulError ).append( $( liTemplate ).text( message ) );
       }
     }

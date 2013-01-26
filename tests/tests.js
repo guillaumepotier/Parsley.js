@@ -509,6 +509,11 @@ var testSuite = function () {
         expect( getErrorMessage( '#requiredchanged1', 'required') ).to.be( 'required 1' );
         expect( getErrorMessage( '#requiredchanged2', 'required') ).to.be( 'required 2' );
       } )
+      it ( 'Change error messages with data-api', function () {
+        triggerSubmitValidation( '#requiredchanged3', '' );
+        expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
+        expect( getErrorMessage( '#requiredchanged3', 'required') ).to.be( 'custom required' );
+      } )
     } )
 
     /***************************************

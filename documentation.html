@@ -335,7 +335,8 @@
                             3
                         </td>
                         <td>
-                            Specify after how many characters entered validation process should fire. eg: <code>data-validation-minlength="4"</code>
+                            Specify after how many characters entered validation process should fire.<br/>
+                            eg: <code>data-validation-minlength="4"</code>
                         </td>
                         <td class="not-for-mobile">
                             <form data-validate="parsley">
@@ -352,11 +353,32 @@
                             
                         </td>
                         <td>
-                            Customize the error message for this field. Shown if one assert fails
+                            Customize an unique global message for this field. Shown if one constraint fails.
+                            <br/>eg: <pre><code>data-type="alphanum" data-rangelength="[10,10]"
+data-message="You must enter an 10 characters alphanumeric value"</code></pre>
                         </td>
                         <td class="not-for-mobile">
                             <form data-validate="parsley">
-                                <p><input type="text" data-type="email" data-minlenght="20" data-trigger="keyup" data-error-message="This is a custom error message here! Even if there are two different constraints here: email and minlenght=20" placeholder="custom error message" /><p>
+                                <p><input type="text" data-type="alphanum" data-rangelength="[10,10]" data-trigger="keyup" data-error-message="You must enter an 10 characters alphanumeric value" placeholder="custom error message" /><p>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <code>data-`constraintName`-message</code><br/><br/>
+                            <code>data-type-`type`-message</code>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            Customize the error message for the field constraint.<br/>
+                            eg: <code>data-minlength-message="Custom minlength message"</code><br/><br/>
+                            <code>data-type-email-message="Custom email message"</code>
+                        </td>
+                        <td class="not-for-mobile">
+                            <form data-validate="parsley">
+                                <p><input type="text" data-type="email" data-minlength="20" data-trigger="keyup" data-type-email-message="Custom email message" data-minlength-message="Custom minlength message" placeholder="custom error messages" /><p>
                             </form>
                         </td>
                     </tr>
