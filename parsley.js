@@ -16,20 +16,13 @@
   * @constructor
   */
   var Validator = function ( options ) {
-    this.init( options );
-  }
-
-  Validator.prototype = {
-
-    constructor: Validator
-
     /**
     * Error messages
     * 
     * @property messages
     * @type {Object}
     */
-    , messages: {
+    this.messages = {
         defaultMessage: "This value seems to be invalid."
       , type: {
             email:      "This value should be a valid email."
@@ -50,8 +43,18 @@
       , minlength:      "This value is too short. It should have %s characters or more."
       , maxlength:      "This value is too long. It should have %s characters or less."
       , rangelength:    "This value length is invalid. It should be between %s and %s characters long."
+      , mincheck:       "You must select at least %s choices."
+      , maxcheck:       "You must select %s choices or less."
+      , rangecheck:     "You must select between %s and %s choices."
       , equalto:        "This value should be the same."
     }
+
+    this.init( options );
+  }
+
+  Validator.prototype = {
+
+    constructor: Validator
 
     /**
     * Validator list. Built-in validators functions
@@ -286,10 +289,7 @@
   var ParsleyField = function ( element, options, type ) {
     this.options = options;
     this.Validator = new Validator( options );
-
     this.init( element, type || 'ParsleyField' );
-
-    return this;
   }
 
   ParsleyField.prototype = {
@@ -678,7 +678,7 @@
 
       // TODO: refacto this shit too
       // add liError if not shown. Do not add more than once custom errorMessage if exsit
-      if ( !$( liError ).length && !( $( liError ).length === 1 && false !== this.options.errorMessage ) ) {
+      if ( !$( liError ).length && !( $( this.ulError ).children().length === 1 && false !== this.options.errorMessage ) ) {
         $( this.ulError ).append( $( liTemplate ).text( message ) );
       }
     }
@@ -741,13 +741,7 @@
     * @param {Object} options
     */
     , inherit: function ( element, options ) {
-      var messages = {
-          mincheck:     "You must select at least %s choices."
-        , maxcheck:     "You must select %s choices or less."
-        , rangecheck:   "You must select between %s and %s choices."
-      }
-      , options = $.extend(true, {}, { messages: messages }, options )
-      , clone = new ParsleyField( element, options );
+      var clone = new ParsleyField( element, options );
 
       for ( var property in clone ) {
         if ( 'undefined' === typeof this[ property ] ) {
@@ -892,7 +886,7 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend(true, {}, $.fn.parsley.defaults, option, this.data() )
+    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? ParsleyConfig : {}, option, this.data() )
       , returnValue = null;
 
     function bind ( self, type ) {
@@ -975,9 +969,6 @@
   /* PARSLEY auto-bind DATA-API + Global config retrieving
   * =================================================== */
   $( window ).on( 'load', function () {
-
-    // extend parsley defaults with global window config
-    $.fn.parsley.defaults = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? ParsleyConfig : {} );
 
     $( '[data-validate="parsley"]' ).each( function () {
       $( this ).parsley();

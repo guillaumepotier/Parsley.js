@@ -8,7 +8,7 @@ window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
       urlstrict: "urlstrict global override."
     }
   }
-} ); 
+} );
 
 var triggerSubmitValidation = function ( idOrClass, value ) {
   $( idOrClass ).val( value );
@@ -163,8 +163,7 @@ var testSuite = function () {
       it ( 'If custom message is set, show only it and show it once', function () {
         triggerSubmitValidation( '#errorMessage', 'foobar' );
         expect( $( '#errorMessage' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( $( '#' + fieldHash ).length ).to.be( 0 );
-
+        expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
       } )
     } )
 
@@ -488,9 +487,9 @@ var testSuite = function () {
     } )
 
     /***************************************
-    test in field options validation changes
+          test options changes
     ***************************************/
-    describe ( 'Test in field options validation changes', function () {
+    describe ( 'Test options changes', function () {
       it ( 'Change min char validation tresshold', function () {
         // default min char validation is set to 3. here we expect an email value
         // it should normally throw an error, but not here, since custom tresshlod is set to 7
@@ -501,6 +500,14 @@ var testSuite = function () {
         // here we passed the 7 char length, throw error
         triggerEventChangeValidation( '#minchar-change', 'foobarbaz' );
         expect( $( '#minchar-change' ).hasClass( 'parsley-error' ) ).to.be( true );
+      } )
+      it ( 'Change differently errors messages for two same validators on different forms', function () {
+        $( '#requiredchanged1-form' ).parsley( { messages: { required: "required 1" } } );
+        $( '#requiredchanged2-form' ).parsley( { messages: { required: "required 2" } } );
+        triggerSubmitValidation( '#requiredchanged1', '' );
+        triggerSubmitValidation( '#requiredchanged2', '' );
+        expect( getErrorMessage( '#requiredchanged1', 'required') ).to.be( 'required 1' );
+        expect( getErrorMessage( '#requiredchanged2', 'required') ).to.be( 'required 2' );
       } )
     } )
 
