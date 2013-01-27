@@ -43,8 +43,15 @@ Add new validators in `parsley.extend.js` and minify it. No validators will be a
 
 ##Localization
 
-If file does not existe, create it into `ì18n/` directory with same synthax as others.  
+If file does not exist, create it into `ì18n/` directory with same syntax as others.  
 Reference file is French one! ;)
+
+##Integrations
+
+Create integration with other framework as a separate Github repo and send a pull request for including here.  
+Some integrations are
+
+* [Django](https://github.com/agiliq/django-parsley)
 
 ## Global
 
