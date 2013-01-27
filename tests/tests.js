@@ -596,6 +596,16 @@ var testSuite = function () {
         $( '#hidden-input1' ).val( 'foo@bar.baz' );
         expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( true );
       } )
+      it ( 'test parsley(\'destroy\')', function () {
+        expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        triggerSubmitValidation( '#destroy-email', 'foo' );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#destroy' ).parsley( 'destroy' );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        triggerEventValidation( '#destroy-email', 'bar' );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+      } )
     } )
 
     /***************************************

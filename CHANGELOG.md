@@ -1,5 +1,10 @@
 #Changelog
 
+** 1.1.7 **
+
+  - fixed a lot of typos
+  - added .parsley( 'destroy' ) method
+
 ** 1.1.6 **
 
   - fixed custom error message bug (displayed once by validator that failed)
