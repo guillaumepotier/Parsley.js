@@ -264,7 +264,13 @@
     * @param {String} name Message name. Will automatically be binded to validator with same name
     * @param {String} message Message
     */
-    , addMessage: function ( key, message ) {
+    , addMessage: function ( key, message, type ) {
+
+      if ( 'undefined' !== typeof type && true === type ) {
+        this.messages[ 'type' ][ key ] = message;
+        return;
+      }
+
       // custom types messages are a bit tricky cuz' nested ;)
       if ( 'type' === key ) {
         for ( var i in message ) {
@@ -407,15 +413,7 @@
         + 'Message';
 
       if ( 'undefined' !== typeof this.options[ customMessage ] ) {
-        var message = [];
-
-        if ( 'type' === constraint ) {
-          message[ this.options[ constraint ] ] = this.options[ customMessage ];
-        } else {
-          message = this.options[ customMessage ];
-        }
-
-        this.Validator.addMessage( constraint, message );
+        this.Validator.addMessage( 'type' === constraint ? this.options[ constraint ] : constraint, this.options[ customMessage ], 'type' === constraint );
       }
     }
 
