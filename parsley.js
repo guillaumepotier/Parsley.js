@@ -547,7 +547,7 @@
     * @return {Boolean}
     */
     , needsValidation: function ( val ) {
-      if ( this.val === val && this.validatedOnce ) {
+      if ( this.isValid !== null && this.val === val && this.validatedOnce ) {
         return false;
       }
 
