@@ -42,6 +42,16 @@ $( '#focus-form' ).parsley( { listeners: {
   }
 } } );
 
+$( '#focus-form2' ).parsley( { listeners: {
+  onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
+    if ( ParsleyForm.focusedField ) {
+      $( ParsleyForm.$element ).addClass( 'focus-on' );
+    } else {
+      $( ParsleyForm.$element ).addClass( 'focus-off' );
+    }
+  }
+} } );
+
 $( '#validator-tests' ).parsley( {
   validators: {
     multiple: function ( val, multiple ) {
@@ -590,6 +600,10 @@ var testSuite = function () {
         expect( $( '#focus1' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'on-focus' ) ).to.be( true );
+      } )
+      it ( 'test error focus none', function () {
+        $( '#focus-form2' ).parsley( 'validate' );
+        expect( $( '#focus-form2' ).hasClass( 'focus-off' ) ).to.be( true );
       } )
       it ( 'test that hidden excluded inputs does not affect form validation', function () {
         expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( false );

@@ -59,7 +59,7 @@ Some integrations are
 * add your changes to parsley.js
 * add / update tests to test suite (tests/index.html / tests/tests.js)
 * run tests (see above)
-* create new minified versions with minify script (see above)
+* create new minified versions with minify script (see above) (use current tag-dev as version)
 * make a Pull Request!
 
 #Licence
