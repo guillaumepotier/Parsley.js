@@ -895,7 +895,7 @@
       }
 
       // form is invalid, focus an error field depending on focus policy
-      if ( !isValid ) {
+      if ( this.focusedField && !isValid ) {
         this.focusedField.focus();
       }
 
