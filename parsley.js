@@ -867,7 +867,7 @@
             this.items[ item ].parsley( 'addListener', object );
           }
         } else {
-          this.options[ listener ] = object[ listener ];
+          this.options.listeners[ listener ] = object[ listener ];
         }
       }
     }
