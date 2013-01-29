@@ -88,6 +88,14 @@ $( '#listeners-form' ).parsley( 'addListener', { listeners: {
   }
 } } );
 
+$( '#scenario-validation-after-field-reset' ).data( 'callCount', 0 );
+$( '#scenario-validation-after-field-reset' ).parsley( 'addListener', {
+  onFieldError: function ( field ) {
+    var callCount = $( '#scenario-validation-after-field-reset' ).data( 'callCount' );
+    $( '#scenario-validation-after-field-reset' ).data( 'callCount', callCount + 1 );
+  }
+} );
+
 var testSuite = function () {
   describe ( 'Parsley.js test suite', function () {
 
@@ -578,6 +586,19 @@ var testSuite = function () {
         $( '#scenario-keyup-when-notvalid' ).val( 'foo@bar' );
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
+      } )
+      it ( 'Test validation of unchanged fields after reset() has been called on them', function () {
+        $( '#scenario-validation-after-field-reset' ).val( '' );
+
+        // Validate Field, setting the call count to 1
+        $( '#scenario-validation-after-field-reset' ).parsley( 'validate' );
+
+        // Reset the field and trigger validation via keyup event
+        $( '#scenario-validation-after-field-reset' ).parsley( 'reset' );
+        $( '#scenario-validation-after-field-reset' ).trigger( $.Event( 'keyup' ) );
+
+        // The field has not changed, but since the field was reset, the call count should now be 2.
+        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 2 );
       } )
     } )
 
