@@ -164,8 +164,8 @@
           dataType = { dataType: self.options.remoteDatatype };
         }
 
-        var manage = function ( isConstraintValid ) {
-          self.updateConstraint( 'remote', 'isValid', isConstraintValid );
+        var manage = function ( isConstraintValid , message) {
+          self.updateConstraint( "remote", "isValid", isConstraintValid, message );
           self.manageValidationResult();
         }
 
@@ -182,7 +182,7 @@
             );
           }
           , error: function ( response ) {
-            manage( false );
+            manage( false , response.responseText);
           }
         }, dataType ) );
 
@@ -588,10 +588,12 @@
     * @param property
     * @param value
     */
-    , updateConstraint: function ( constraintName, property, value ) {
+    , updateConstraint: function ( constraintName, property, value, message ) {
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraintName ) {
           this.constraints[ i ][ property ] = value;
+          this.constraints[ i ][ 'message' ] = message;
+          (message) ? this.Validator.messages[this.constraints[ i ].name] = message : null;
           break;
         }
       }
