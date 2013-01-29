@@ -638,7 +638,8 @@ var testSuite = function () {
         $( '#destroy' ).parsley( 'destroy' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
-        triggerEventValidation( '#destroy-email', 'bar' );
+        $( '#destroy-email' ).val( 'bar' );
+        $( '#destroy-email' ).trigger( 'change' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
       } )
     } )
