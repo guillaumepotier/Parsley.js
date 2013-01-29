@@ -82,11 +82,11 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
   }
 } } );
 
-$( '#listeners-form' ).parsley( 'addListener', { listeners: {
+$( '#listeners-form' ).parsley( 'addListener', {
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#listeners-form' ).addClass( 'onFormSubmit-ok' );
   }
-} } );
+} );
 
 $( '#scenario-validation-after-field-reset' ).data( 'callCount', 0 );
 $( '#scenario-validation-after-field-reset' ).parsley( 'addListener', {
