@@ -845,11 +845,15 @@
       this.items = [];
       this.$element = $( element );
       this.options = options;
-      var self = this;
+      var self = this
+        , parsleyItem;
 
       this.$element.find( options.inputs ).each( function () {
-        $( this ).parsley( options );
-        self.items.push( $( this ) );
+        parsleyItem = $( this ).parsley( options );
+
+        if ( null !== parsleyItem ) {
+          self.items.push( parsleyItem );
+        }
       });
 
       this.$element.on( 'submit.' + this.type , false, $.proxy( this.validate, this ) );
@@ -864,7 +868,7 @@
       for ( var listener in object ) {
         if ( new RegExp( 'Field' ).test( listener ) ) {
           for ( var item in this.items ) {
-            this.items[ item ].parsley( 'addListener', object );
+            this.items[ item ].addListener( object );
           }
         } else {
           this.options.listeners[ listener ] = object[ listener ];
@@ -885,11 +889,11 @@
       this.focusedField = false;
 
       for ( var item in this.items ) {
-        if ( false === this.items[ item ].parsley( 'validate' ) ) {
+        if ( false === this.items[ item ].validate() ) {
           isValid = false;
 
           if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
-            this.focusedField = this.items[ item ];
+            this.focusedField = this.items[ item ].$element;
           }
         }
       }
@@ -922,7 +926,7 @@
     */
     , destroy: function () {
       for ( var item in this.items ) {
-        this.items[ item ].parsley( 'destroy' );
+        this.items[ item ].destroy();
       }
 
       this.$element.off( '.' + this.type ).removeData( this.type );
@@ -944,31 +948,33 @@
       , returnValue = null;
 
     function bind ( self, type ) {
-      var data = $( self ).data( type );
+      var parsleyInstance = $( self ).data( type );
 
       // if data never binded or we want to clone a build (for radio & checkboxes), bind it right now!
-      if ( !data ) {
+      if ( !parsleyInstance ) {
         switch ( type ) {
           case 'parsleyForm':
-            data = new ParsleyForm( self, options );
+            parsleyInstance = new ParsleyForm( self, options );
             break;
           case 'parsleyField':
-            data = new ParsleyField( self, options );
+            parsleyInstance = new ParsleyField( self, options );
             break;
           case 'parsleyFieldMultiple':
-            data = new ParsleyFieldMultiple( self, options );
+            parsleyInstance = new ParsleyFieldMultiple( self, options );
             break;
           default:
             return;
         }
 
-        $( self ).data( type, data );
+        $( self ).data( type, parsleyInstance );
       }
 
       // here is our parsley public function accessor
-      if ( 'string' === typeof option && 'function' === typeof data[ option ] ) {
-        return data[ option ]( fn );
+      if ( 'string' === typeof option && 'function' === typeof parsleyInstance[ option ] ) {
+        return parsleyInstance[ option ]( fn );
       }
+
+      return parsleyInstance;
     }
 
     // if a form elem is given, bind all its input children

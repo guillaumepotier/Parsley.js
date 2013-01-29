@@ -1,5 +1,12 @@
 #Changelog
 
+** 1.1.8 **
+
+  - ParsleyForm.items are now ParsleyField instances!!
+  - fixed needsValidation function if element is reseted (#77)
+  - fixed addListener for onFormSubmit (#72)
+  - fixed focus 'none' bug (#73)
+
 ** 1.1.7 **
 
   - fixed a lot of typos
