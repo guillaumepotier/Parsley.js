@@ -166,10 +166,25 @@
           dataType = { dataType: self.options.remoteDatatype };
         }
 
-        var manage = function ( isConstraintValid ) {
-          self.updtConstraint( { name: 'remote', isValid: isConstraintValid } );
+        var manage = function ( isConstraintValid, message ) {
+          // remove error message because ajax response message could change depending on the sent value !
+          self.removeError( 'remote' );
+
+          self.updtConstraint( { name: 'remote', isValid: isConstraintValid }, message );
           self.manageValidationResult();
         };
+
+        var handleResponse = function ( response ) {
+          try {
+            response = $.parseJSON( response );
+          } catch ( err ) {}
+
+          return response;
+        }
+
+        var manageErrorMessage = function ( response ) {
+          return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null) ) : null;
+        }
 
         $.ajax( $.extend( {}, {
             url: url
@@ -177,14 +192,13 @@
           , async: self.async
           , method: self.options.remoteMethod || 'GET'
           , success: function ( response ) {
-            manage( '1' === response
-              || 'true' == response
-              || ( 'object' === typeof response && 'undefined' !== typeof response.success )
-              || new RegExp( 'success', 'i' ).test( response )
+            response = handleResponse( response );
+            manage( 1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success ), manageErrorMessage( response )
             );
           }
           , error: function ( response ) {
-            manage( false );
+            response = handleResponse( response );
+            manage( false, manageErrorMessage( response ) );
           }
         }, dataType ) );
 
@@ -246,7 +260,7 @@
         return message;
       }
 
-      return message.replace(new RegExp( '%s', 'i' ), args);
+      return 'string' === typeof message ? message.replace(new RegExp( '%s', 'i' ), args) : '';
     }
 
     /**
@@ -436,9 +450,9 @@
     * @method updtConstraint
     * @param {Object} constraint
     */
-    , updateConstraint: function ( constraint ) {
+    , updateConstraint: function ( constraint, message) {
       for ( var name in constraint ) {
-        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null } );
+        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null }, message );
       }
     }
 
@@ -449,10 +463,13 @@
     * @method updtConstraint
     * @param {Object} constraint
     */
-    , updtConstraint: function ( constraint ) {
+    , updtConstraint: function ( constraint, message ) {
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraint.name ) {
           this.constraints[ i ] = $.extend( true, this.constraints[ i ], constraint );
+          if ( 'string' === typeof message ) {
+            this.Validator.messages[ this.constraints[ i ].name ] = message ;
+          }
         }
       }
 
