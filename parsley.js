@@ -47,10 +47,10 @@
       , maxcheck:       "You must select %s choices or less."
       , rangecheck:     "You must select between %s and %s choices."
       , equalto:        "This value should be the same."
-    }
+    },
 
     this.init( options );
-  }
+  };
 
   Validator.prototype = {
 
@@ -78,7 +78,7 @@
         if ( 'object' === typeof val ) {
           for ( var i in val ) {
             if ( this.required( val[ i ] ) ) {
-              return true
+              return true;
             }
           }
 
@@ -106,6 +106,7 @@
             break;
           case 'url':
             val = new RegExp( '(https?|s?ftp|git)', 'i' ).test( val ) ? val : 'http://' + val;
+            /* falls through */
           case 'urlstrict':
             regExp = /^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
             break;
@@ -114,7 +115,6 @@
             break;
           default:
             return false;
-            break;
         }
 
         // test regExp if not null
@@ -138,11 +138,11 @@
       }
 
       , min: function ( val, min ) {
-        return new Number( val ) >= min;
+        return Number( val ) >= min;
       }
 
       , max: function ( val, max ) {
-        return new Number( val ) <= max;
+        return Number( val ) <= max;
       }
 
       , range: function ( val, arrayRange ) {
@@ -167,7 +167,7 @@
         var manage = function ( isConstraintValid ) {
           self.updateConstraint( 'remote', 'isValid', isConstraintValid );
           self.manageValidationResult();
-        }
+        };
 
         $.ajax( $.extend( {}, {
             url: url
@@ -216,12 +216,13 @@
       var customValidators = options.validators
         , customMessages = options.messages;
 
-      for ( var i in customValidators ) {
-        this.addValidator(i, customValidators[ i ]);
+      var key;
+      for ( key in customValidators ) {
+        this.addValidator(key, customValidators[ key ]);
       }
 
-      for ( var i in customMessages ) {
-        this.addMessage(i, customMessages[ i ]);
+      for ( key in customMessages ) {
+        this.addMessage(key, customMessages[ key ]);
       }
     }
 
@@ -267,14 +268,14 @@
     , addMessage: function ( key, message, type ) {
 
       if ( 'undefined' !== typeof type && true === type ) {
-        this.messages[ 'type' ][ key ] = message;
+        this.messages.type[ key ] = message;
         return;
       }
 
       // custom types messages are a bit tricky cuz' nested ;)
       if ( 'type' === key ) {
         for ( var i in message ) {
-          this.messages[ 'type' ][ i ] = message[ i ];
+          this.messages.type[ i ] = message[ i ];
         }
 
         return;
@@ -282,7 +283,7 @@
 
       this.messages[ key ] = message;
     }
-  }
+  };
 
   /**
   * ParsleyField class manage each form field inside a validated Parsley form.
@@ -296,7 +297,7 @@
     this.options = options;
     this.Validator = new Validator( options );
     this.init( element, type || 'ParsleyField' );
-  }
+  };
 
   ParsleyField.prototype = {
 
@@ -381,7 +382,7 @@
     */
     , addConstraints: function () {
       for ( var constraint in this.options ) {
-        var constraint = constraint.toLowerCase();
+        constraint = constraint.toLowerCase();
 
         if ( 'function' === typeof this.Validator.validators[ constraint ] ) {
           this.constraints.push( {
@@ -733,7 +734,7 @@
       this.$element.removeClass( 'parsley-validated' );
       this.reset().$element.off( '.' + this.type ).removeData( this.type );
     }
-  }
+  };
 
   /**
   * ParsleyFieldMultiple override ParsleyField for checkbox and radio inputs
@@ -748,7 +749,7 @@
 
     // call ParsleyField constructor
     this.init( element, options );
-  }
+  };
 
   ParsleyFieldMultiple.prototype = {
 
@@ -817,12 +818,12 @@
         var values = [];
         $( this.siblings + ':checked' ).each( function () {
           values.push( $( this ).val() );
-        } )
+        } );
 
         return values;
       }
    }
-  }
+  };
 
   /**
   * ParsleyForm class manage Parsley validated form.
@@ -833,7 +834,7 @@
   */
   var ParsleyForm = function ( element, options ) {
     this.init( 'parsleyForm', element, options );
-  }
+  };
 
   ParsleyForm.prototype = {
 
@@ -931,7 +932,7 @@
 
       this.$element.off( '.' + this.type ).removeData( this.type );
     }
-  }
+  };
 
   /**
   * Parsley plugin definition
@@ -944,7 +945,7 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? ParsleyConfig : {}, option, this.data() )
+    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data() )
       , returnValue = null;
 
     function bind ( self, type ) {
@@ -988,7 +989,7 @@
     }
 
     return 'function' === typeof fn ? fn() : returnValue;
-  }
+  };
 
   $.fn.parsley.Constructor = ParsleyForm;
 
@@ -1024,7 +1025,7 @@
       , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
       , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
     }
-  }
+  };
 
   /* PARSLEY auto-bind DATA-API + Global config retrieving
   * =================================================== */
