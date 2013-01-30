@@ -165,7 +165,7 @@
         }
 
         var manage = function ( isConstraintValid , message) {
-          self.updateConstraint( "remote", "isValid", isConstraintValid, message );
+          self.updateConstraint( 'remote', 'isValid', isConstraintValid, message );
           self.manageValidationResult();
         }
 
@@ -181,8 +181,8 @@
               || new RegExp( 'success', 'i' ).test( response )
             );
           }
-          , error: function ( response ) {
-            manage( false , response.responseText);
+          , error: function ( jqXHR, textStatus, errorThrown ) {
+            manage( false , jqXHR.responseText);
           }
         }, dataType ) );
 
@@ -592,8 +592,9 @@
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraintName ) {
           this.constraints[ i ][ property ] = value;
-          this.constraints[ i ][ 'message' ] = message;
-          (message) ? this.Validator.messages[this.constraints[ i ].name] = message : null;
+          if ( 'undefined' !== message) {
+            this.Validator.messages[this.constraints[ i ].name] = message ;
+          }
           break;
         }
       }
