@@ -1001,16 +1001,16 @@
   */
   $.fn.parsley.defaults = {
     // basic data-api overridable properties here..
-    inputs: 'input, textarea, select'   // Default supported inputs.
-    , excluded: 'input[type=hidden]'    // Do not validate input[type=hidden].
-    , trigger: false                    // $.Event() that will trigger validation. eg: keyup, change..
-    , focus: 'first'                    // 'fist'|'last'|'none' which error field would have focus first on form validation
-    , validationMinlength: 3            // If trigger validation specified, only if value.length > validationMinlength
-    , successClass: 'parsley-success'   // Class name on each valid input
-    , errorClass: 'parsley-error'       // Class name on each invalid input
-    , errorMessage: false               // Customize an unique error message showed if one constraint fails
-    , validators: {}                    // Add your custom validators functions
-    , messages: {}                      // Add your own error messages here
+    inputs: 'input, textarea, select'           // Default supported inputs.
+    , excluded: 'input[type=hidden], :disabled' // Do not validate input[type=hidden].
+    , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
+    , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
+    , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
+    , successClass: 'parsley-success'           // Class name on each valid input
+    , errorClass: 'parsley-error'               // Class name on each invalid input
+    , errorMessage: false                       // Customize an unique error message showed if one constraint fails
+    , validators: {}                            // Add your custom validators functions
+    , messages: {}                              // Add your own error messages here
 
     //some quite advanced configuration here..
     , errors: {
