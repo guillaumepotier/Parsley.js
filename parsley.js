@@ -566,7 +566,7 @@
     , applyValidators: function () {
       var isValid = null;
 
-      for ( var constraint in this.constraints ) {
+      for ( var constraint = 0; constraint < this.constraints.length; constraint++ ) {
         var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
 
         if ( false === result ) {
@@ -590,7 +590,7 @@
     * @param value
     */
     , updateConstraint: function ( constraintName, property, value ) {
-      for ( var i in this.constraints ) {
+      for ( var i = 0; i < this.constraints.length; i++ ) {
         if ( this.constraints[ i ].name === constraintName ) {
           this.constraints[ i ][ property ] = value;
           break;
@@ -610,7 +610,7 @@
     , manageValidationResult: function () {
       var isValid = null;
 
-      for ( var constraint in this.constraints ) {
+      for ( var constraint = 0; constraint < this.constraints.length; constraint++ ) {
         if ( false === this.constraints[ constraint ].isValid ) {
           this.addError( this.constraints[ constraint ] );
           isValid = false;
@@ -868,7 +868,7 @@
     , addListener: function ( object ) {
       for ( var listener in object ) {
         if ( new RegExp( 'Field' ).test( listener ) ) {
-          for ( var item in this.items ) {
+          for ( var item = 0; item < this.items.length; item++ ) {
             this.items[ item ].addListener( object );
           }
         } else {
@@ -889,7 +889,7 @@
       var isValid = true;
       this.focusedField = false;
 
-      for ( var item in this.items ) {
+      for ( var item = 0; item < this.items.length; item++ ) {
         if ( false === this.items[ item ].validate() ) {
           isValid = false;
 
@@ -915,7 +915,7 @@
     * @method removeErrors
     */
     , removeErrors: function () {
-      for ( var item in this.items ) {
+      for ( var item = 0; item < this.items.length; item++ ) {
         this.items[ item ].parsley( 'reset' );
       }
     }
@@ -926,7 +926,7 @@
     * @method destroy
     */
     , destroy: function () {
-      for ( var item in this.items ) {
+      for ( var item = 0; item < this.items.length; item++ ) {
         this.items[ item ].destroy();
       }
 
