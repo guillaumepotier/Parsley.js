@@ -27,7 +27,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , equalto:        "Deze waardes moeten identiek zijn."
 
       // parsley.extend ///////////////////////////////
-        minwords:       "Deze waarde moet minstens %s woorden bevatten."
+      , minwords:       "Deze waarde moet minstens %s woorden bevatten."
       , maxwords:       "Deze waarde mag maximaal %s woorden bevatten."
       , rangewords:     "Deze waarde moet tussen de %s en %s woorden bevatten."
       , greaterthan:    "Deze waarde moet groter dan %s zijn."
