@@ -178,11 +178,11 @@
             manage( '1' === response
               || 'true' == response
               || ( 'object' === typeof response && 'undefined' !== typeof response.success )
-              || new RegExp( 'success', 'i' ).test( response )
+              || new RegExp( 'success', 'i' ).test( response ), response.error
             );
           }
           , error: function ( jqXHR, textStatus, errorThrown ) {
-            manage( false , jqXHR.responseText);
+            manage( false );
           }
         }, dataType ) );
 
