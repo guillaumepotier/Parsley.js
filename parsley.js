@@ -743,12 +743,13 @@
   * @class ParsleyFieldMultiple
   * @constructor
   */
-  var ParsleyFieldMultiple = function ( element, options ) {
+  var ParsleyFieldMultiple = function ( element, options, type ) {
     this.initMultiple( element, options );
     this.inherit( element, options );
+    this.Validator = new Validator( options );
 
     // call ParsleyField constructor
-    this.init( element, options );
+    this.init( element, type || 'ParsleyFieldMultiple' );
   };
 
   ParsleyFieldMultiple.prototype = {
@@ -832,8 +833,8 @@
   * @class ParsleyForm
   * @constructor
   */
-  var ParsleyForm = function ( element, options ) {
-    this.init( 'parsleyForm', element, options );
+  var ParsleyForm = function ( element, options, type ) {
+    this.init( element, options, type || 'parsleyForm' );
   };
 
   ParsleyForm.prototype = {
@@ -841,7 +842,7 @@
     constructor: ParsleyForm
 
     /* init data, bind jQuery on() actions */
-    , init: function ( type, element, options ) {
+    , init: function ( element, options, type ) {
       this.type = type;
       this.items = [];
       this.$element = $( element );
@@ -955,13 +956,13 @@
       if ( !parsleyInstance ) {
         switch ( type ) {
           case 'parsleyForm':
-            parsleyInstance = new ParsleyForm( self, options );
+            parsleyInstance = new ParsleyForm( self, options, 'parsleyForm' );
             break;
           case 'parsleyField':
-            parsleyInstance = new ParsleyField( self, options );
+            parsleyInstance = new ParsleyField( self, options, 'parsleyField' );
             break;
           case 'parsleyFieldMultiple':
-            parsleyInstance = new ParsleyFieldMultiple( self, options );
+            parsleyInstance = new ParsleyFieldMultiple( self, options, 'parsleyFieldMultiple' );
             break;
           default:
             return;

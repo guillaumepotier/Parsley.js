@@ -631,16 +631,23 @@ var testSuite = function () {
         $( '#hidden-input1' ).val( 'foo@bar.baz' );
         expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( true );
       } )
-      it ( 'test parsley(\'destroy\')', function () {
+      it ( 'test parsley(\'destroy\') on ParsleyField', function () {
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( true );
         triggerSubmitValidation( '#destroy-email', 'foo' );
+        triggerSubmitValidation( '#destroy-multiple', '' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( true );
         $( '#destroy' ).parsley( 'destroy' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( false );
         $( '#destroy-email' ).val( 'bar' );
         $( '#destroy-email' ).trigger( 'change' );
+        $( '#destroy-multiple' ).trigger( 'change' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
       } )
     } )
 
