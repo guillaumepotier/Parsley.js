@@ -847,15 +847,10 @@
       this.items = [];
       this.$element = $( element );
       this.options = options;
-      var self = this
-        , parsleyItem;
+      var self = this;
 
       this.$element.find( options.inputs ).each( function () {
-        parsleyItem = $( this ).parsley( options );
-
-        if ( null !== parsleyItem ) {
-          self.items.push( parsleyItem );
-        }
+        self.addItem( this );
       });
 
       this.$element.on( 'submit.' + this.type , false, $.proxy( this.validate, this ) );
@@ -879,6 +874,42 @@
     }
 
     /**
+    * Adds a new parsleyItem child to ParsleyForm
+    *
+    * @method addItem
+    * @param elem
+    */
+    , addItem: function ( elem ) {
+      if ( $( elem ).is( this.options.excluded ) ) {
+        return false;
+      }
+
+      var parsleyItem = $( elem ).parsley( this.options );
+
+      if ( null !== parsleyItem ) {
+        this.items.push( parsleyItem );
+      }
+    }
+
+    /**
+    * Removes a parsleyItem child from ParsleyForm
+    *
+    * @method removeItem
+    * @param elem
+    * @return {Boolean}
+    */
+    , removeItem: function ( elem ) {
+      for ( var i in this.items ) {
+        if ( this.items[ i ].$element.attr( 'id' ) === $( elem ).attr( 'id' ) ) {
+          delete this.items[ i ];
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
     * Process each form field validation
     * Display errors, call custom onFormSubmit() function
     *
@@ -891,7 +922,7 @@
       this.focusedField = false;
 
       for ( var item = 0; item < this.items.length; item++ ) {
-        if ( false === this.items[ item ].validate() ) {
+        if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
           isValid = false;
 
           if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
@@ -1003,7 +1034,7 @@
   $.fn.parsley.defaults = {
     // basic data-api overridable properties here..
     inputs: 'input, textarea, select'           // Default supported inputs.
-    , excluded: 'input[type=hidden], :disabled' // Do not validate input[type=hidden].
+    , excluded: 'input[type=hidden], :disabled' // Do not validate input[type=hidden] & :disabled.
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
     , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
     , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength

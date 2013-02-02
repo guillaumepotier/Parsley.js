@@ -1078,6 +1078,22 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
                     <tr>
+                        <td>Dynamically add an Item to Form</td>
+                        <td></td>
+                        <td>If an item is dynamically created, it won't be naturally validated with Parsley. Use this to attach it to existing Parsley validated form.</td>
+                        <td class="not-for-mobile">
+<pre><code>$( '#form' ).parsley( 'addItem', '#itemid' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Dynamically remove an Item to Form</td>
+                        <td></td>
+                        <td>If an item is dynamically deleted / removed from form, it will be unfortunately still present in Parsley validation process. Use this to remove it in Parsley form validation process. <span class="label label-important">This field <strong>must</strong> have an id to be properly destroyed</span></td>
+                        <td class="not-for-mobile">
+<pre><code>$( '#form' ).parsley( 'removeItem', '#itemid' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
                         <a name="javascript-fields"></a>
                         <td colspan="4"><h4>Field</h4></td>
                     </tr>
@@ -1142,7 +1158,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     </tr>
                     <tr>
                         <td>Change class names</td>
-                        <td><pre><code>$('#form').parsley({ successClass: 'my name', errorClass: 'still my name' });</code></pre></td>
+                        <td><pre><code>$('#form').parsley({ successClass: 'my-class-name', errorClass: 'still-my-class-name' });</code></pre></td>
                     </tr>
                     <tr>
                         <td>Change class handler</td>

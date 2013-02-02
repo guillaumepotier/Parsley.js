@@ -1,5 +1,9 @@
 #Changelog
 
+** 1.1.9-dev **
+
+  - added `addItem` and `removeItem` functions to validate dynamically created fields
+
 ** 1.1.8 **
 
   - ParsleyForm.items are now ParsleyField instances!!
