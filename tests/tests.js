@@ -660,6 +660,26 @@ var testSuite = function () {
         $( '#dynamic-form' ).parsley( 'removeItem', '#dynamic-email' );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
       } )
+      it ( 'test adding constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'addConstraint', { type: "email" } ).val( 'foo' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#onthefly' ).val( 'foo@bar.baz' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'test updating constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'updateConstraint', { type: "url" } ).val( 'foo' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#onthefly' ).val( 'http://foo.bar' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'test removing constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'removeConstraint', 'type' ).val( 'foo' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
+      } )
     } )
 
     /***************************************

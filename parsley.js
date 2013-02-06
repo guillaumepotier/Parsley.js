@@ -165,7 +165,7 @@
         }
 
         var manage = function ( isConstraintValid ) {
-          self.updateConstraint( 'remote', 'isValid', isConstraintValid );
+          self.updtConstraint( { name: 'remote', isValid: isConstraintValid } );
           self.manageValidationResult();
         };
 
@@ -401,6 +401,86 @@
     }
 
     /**
+    * Dynamically add a new constraint to a field
+    *
+    * @method addConstraint
+    * @param {Object} constraint { name: requirements }
+    */
+    , addConstraint: function ( constraint ) {
+        for ( var name in constraint ) {
+          this.constraints.push( {
+              name: name.toLowerCase()
+            , requirements: constraint[ name ]
+            , isValid: null
+          } );
+
+          if ( name === 'required' ) {
+            this.isRequired = true;
+          }
+        }
+
+        // force field validation next check
+        this.isValid = null;
+    }
+
+    /**
+    * Dynamically update an existing constraint to a field.
+    * Simple API: { name: requirements }
+    *
+    * @method updtConstraint
+    * @param {Object} constraint
+    */
+    , updateConstraint: function ( constraint ) {
+      for ( var name in constraint ) {
+        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null } );
+      }
+    }
+
+    /**
+    * Dynamically update an existing constraint to a field.
+    * Complex API: { name: name, requirements: requirements, isValid: boolean }
+    *
+    * @method updtConstraint
+    * @param {Object} constraint
+    */
+    , updtConstraint: function ( constraint ) {
+      for ( var i in this.constraints ) {
+        if ( this.constraints[ i ].name === constraint.name ) {
+          this.constraints[ i ] = $.extend( true, this.constraints[ i ], constraint );
+        }
+      }
+
+      // force field validation next check
+      this.isValid = null;
+    }
+
+    /**
+    * Dynamically remove an existing constraint to a field.
+    *
+    * @method removeConstraint
+    * @param {String} constraintName
+    */
+    , removeConstraint: function ( constraintName ) {
+      var constraintName = constraintName.toLowerCase()
+        , updatedConstraints = [];
+
+      for ( var constraint in this.constraints ) {
+        if ( this.constraints[ constraint ].name !== constraintName ) {
+          updatedConstraints.push( this.constraints[ constraint ] );
+        }
+      }
+
+      if ( constraintName === 'required' ) {
+        this.isRequired = false;
+      }
+
+      // force field validation next check
+      this.isValid = null;
+
+      this.constraints = updatedConstraints;
+    }
+
+    /**
     * Add custom constraint message, passed through data-API
     *
     * @private
@@ -579,23 +659,6 @@
       }
 
       return isValid;
-    }
-
-    /**
-    * Update a constraint state. Curently used by remote async validator
-    *
-    * @method updateConstraint
-    * @param constraintName
-    * @param property
-    * @param value
-    */
-    , updateConstraint: function ( constraintName, property, value ) {
-      for ( var i = 0; i < this.constraints.length; i++ ) {
-        if ( this.constraints[ i ].name === constraintName ) {
-          this.constraints[ i ][ property ] = value;
-          break;
-        }
-      }
     }
 
     /**
@@ -978,7 +1041,7 @@
   */
   $.fn.parsley = function ( option, fn ) {
     var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data() )
-      , returnValue = null;
+      , newInstance = null;
 
     function bind ( self, type ) {
       var parsleyInstance = $( self ).data( type );
@@ -1004,7 +1067,9 @@
 
       // here is our parsley public function accessor
       if ( 'string' === typeof option && 'function' === typeof parsleyInstance[ option ] ) {
-        return parsleyInstance[ option ]( fn );
+        var response = parsleyInstance[ option ]( fn );
+
+        return 'undefined' !== typeof response ? response : $( self );
       }
 
       return parsleyInstance;
@@ -1012,15 +1077,15 @@
 
     // if a form elem is given, bind all its input children
     if ( $( this ).is( 'form' ) ) {
-      returnValue = bind ( $( this ), 'parsleyForm' );
+      newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
     // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
     } else if ( $( this ).is( options.inputs ) && !$( this ).is( options.excluded ) ) {
-      returnValue = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
+      newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
     }
 
-    return 'function' === typeof fn ? fn() : returnValue;
+    return 'function' === typeof fn ? fn() : newInstance;
   };
 
   $.fn.parsley.Constructor = ParsleyForm;

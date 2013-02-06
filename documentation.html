@@ -1050,8 +1050,10 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
                     <tr>
-                        <a name="javascript-form"></a>
-                        <td colspan="4"><h4>Form</h4></td>
+                        <td colspan="4">
+                            <a name="javascript-form"></a>
+                            <h4>Form</h4>
+                        </td>
                     </tr>
                     <tr>
                         <td>Bind Parsley to a form</td>
@@ -1094,8 +1096,10 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
                     <tr>
-                        <a name="javascript-fields"></a>
-                        <td colspan="4"><h4>Field</h4></td>
+                        <td colspan="4">
+                            <a name="javascript-fields"></a>
+                            <h4>Field</h4>
+                        </td>
                     </tr>
                     <tr>
                         <td>Validate a field</td>
@@ -1103,6 +1107,30 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>Useful if your want to integrate the field validation process inside custom functions.</td>
                         <td  class="not-for-mobile">
 <pre><code>$( '#field' ).parsley( 'validate' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Add new constraint</td>
+                        <td></td>
+                        <td>Useful if your want to add a constraint to an existing Parsley validated field.</td>
+                        <td  class="not-for-mobile">
+<pre><code>$( '#field' ).parsley( 'addConstraint', { minlength: 2 } );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Update constraint</td>
+                        <td></td>
+                        <td>Useful if your want to update an existing constraint for a field.</td>
+                        <td  class="not-for-mobile">
+    <pre><code>$( '#field' ).parsley( 'updatedConstraint', { minlength: 6 } );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Remove constraint</td>
+                        <td></td>
+                        <td>Useful if your want to remove an existing constraint to an existing Parsley validated field.</td>
+                        <td  class="not-for-mobile">
+    <pre><code>$( '#field' ).parsley( 'removeConstraint', 'minlength' );</code></pre>
                         </td>
                     </tr>
                 </tbody>

@@ -68,6 +68,24 @@
           background: #FB4006;
           text-shadow: #FB4006 1px 2px 2px;
       }
+
+      /* Link styles (used on .masthead-links as well) */
+      .jumbotron a {
+        -webkit-transition: all .2s ease-in-out;
+           -moz-transition: all .2s ease-in-out;
+                transition: all .2s ease-in-out;
+      }
+
+      /* Textual links in masthead */
+      .masthead-links {
+        margin: 0;
+        list-style: none;
+      }
+      .masthead-links li {
+        display: inline;
+        padding: 0 10px;
+        color: #949494;
+      }
     </style>
     <link href="components/bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -109,9 +127,15 @@
       <hr>
 
       <div class="jumbotron">
-        <h1>Javascript forms validation.<br/><strong>Powerful, UX Aware &amp; Dead Simple.</strong></h1>
-        <p class="lead">Never write another line of javascript to validate your front-end forms. Parsley will do it for you &ndash; and do it right, thanks to its powerful DOM-API!</p>
-        <a class="btn btn-large call-to-action" href="documentation.html">See documentation &amp; examples</a>
+        <h1>Javascript forms validation.<br/><strong>Powerful, UX aware &amp; Dead simple.</strong></h1>
+        <p class="lead">Never write a single javascript line anymore to validate your forms FrontEnd. Parsley will do that for you &ndash; and do it right &ndash;, thanks to its powerful DOM-API !</p>
+        <p>
+            <a class="btn btn-large call-to-action" href="documentation.html">See documentation &amp; examples</a>
+        </p>
+        <ul class="masthead-links">
+            <li><i class="icon-download-alt"></i>&nbsp;<a href="https://github.com/guillaumepotier/Parsley.js/archive/1.1.8.zip">Download</a></li>
+            <li>Version 1.1.8</li>
+        </ul>
       </div>
 
       <hr>
