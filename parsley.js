@@ -768,6 +768,8 @@
         , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
+		//Substitute 'This value' for data-name value if available
+	   message = typeof this.$element.attr('data-name') === 'undefined' ? message : message.replace(/(This value)/, this.$element.attr('data-name'));
 
       // TODO: refacto this shit too
       // add liError if not shown. Do not add more than once custom errorMessage if exsit
