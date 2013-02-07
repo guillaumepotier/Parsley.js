@@ -634,12 +634,13 @@ var testSuite = function () {
       it ( 'test parsley(\'destroy\') on ParsleyField', function () {
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( true );
         expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( true );
-        triggerSubmitValidation( '#destroy-email', 'foo' );
+        triggerSubmitValidation( '#destroy-email', 'foo@bar.baz' );
         triggerSubmitValidation( '#destroy-multiple', '' );
-        expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-success' ) ).to.be( true );
         expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( true );
         $( '#destroy' ).parsley( 'destroy' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-success' ) ).to.be( false );
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( false );
@@ -662,6 +663,7 @@ var testSuite = function () {
       } )
       it ( 'test adding constraint on the fly', function () {
         $( '#onthefly' ).parsley( 'addConstraint', { type: "email" } ).val( 'foo' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( true );
         $( '#onthefly-form' ).parsley( 'validate' );
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( true );
         $( '#onthefly' ).val( 'foo@bar.baz' );
@@ -679,6 +681,7 @@ var testSuite = function () {
         $( '#onthefly' ).parsley( 'removeConstraint', 'type' ).val( 'foo' );
         $( '#onthefly-form' ).parsley( 'validate' );
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
     } )
 

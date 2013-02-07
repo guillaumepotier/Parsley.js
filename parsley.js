@@ -419,8 +419,8 @@
           }
         }
 
-        // force field validation next check
-        this.isValid = null;
+        // force field validation next check and reset validation events
+        this.bindValidationEvents();
     }
 
     /**
@@ -450,8 +450,8 @@
         }
       }
 
-      // force field validation next check
-      this.isValid = null;
+      // force field validation next check and reset validation events
+      this.bindValidationEvents();
     }
 
     /**
@@ -474,10 +474,15 @@
         this.isRequired = false;
       }
 
-      // force field validation next check
-      this.isValid = null;
-
       this.constraints = updatedConstraints;
+
+      // if there are no more constraint, destroy parsley instance for this field and exit
+      if ( updatedConstraints.length === 0 ) {
+        this.destroy();
+        return;
+      }
+
+      this.bindValidationEvents();
     }
 
     /**
@@ -505,7 +510,12 @@
     * @method bindValidationEvents
     */
     , bindValidationEvents: function () {
+      // this field has validation events, that means it has to be validated
+      this.isValid = null;
       this.$element.addClass( 'parsley-validated' );
+
+      // remove eventually already binded events
+      this.$element.off( '.' + this.type );
 
       // alaways bind keyup event, for better UX when a field is invalid
       var triggers = this.options.trigger + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
@@ -795,6 +805,7 @@
     */
     , destroy: function () {
       this.$element.removeClass( 'parsley-validated' );
+      this.errorClassHandler.removeClass( this.options.errorClass ).removeClass( this.options.successClass );
       this.reset().$element.off( '.' + this.type ).removeData( this.type );
     }
   };
