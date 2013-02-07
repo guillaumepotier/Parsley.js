@@ -102,7 +102,7 @@
 
 !function ($) {
 
-  &quot;use strict&quot;;
+  &#x27;use strict&#x27;;
 
   &#x2F;**
   * Validator class stores all constraints functions and associated messages.
@@ -173,7 +173,7 @@
         &#x2F;&#x2F; for checkboxes and select multiples. Check there is at least one required value
         if ( &#x27;object&#x27; === typeof val ) {
           for ( var i in val ) {
-            if ( this.required( val[ i ]) ) {
+            if ( this.required( val[ i ] ) ) {
               return true
             }
           }
@@ -188,24 +188,24 @@
         var regExp;
 
         switch ( type ) {
-          case &quot;number&quot;:
+          case &#x27;number&#x27;:
             regExp = &#x2F;^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$&#x2F;;
             break;
-          case &quot;digits&quot;:
+          case &#x27;digits&#x27;:
             regExp = &#x2F;^\d+$&#x2F;;
             break;
-          case &quot;alphanum&quot;:
+          case &#x27;alphanum&#x27;:
             regExp = &#x2F;^\w+$&#x2F;;
             break;
-          case &quot;email&quot;:
+          case &#x27;email&#x27;:
             regExp = &#x2F;^((([a-z]|\d|[!#\$%&amp;&#x27;\*\+\-\&#x2F;=\?\^_&#x60;{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&amp;&#x27;\*\+\-\&#x2F;=\?\^_&#x60;{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$&#x2F;i;
             break;
-          case &quot;url&quot;:
-            val = new RegExp( &quot;(https?|s?ftp|git)&quot;, &quot;i&quot; ).test( val ) ? val : &#x27;http:&#x2F;&#x2F;&#x27; + val;
-          case &quot;urlstrict&quot;:
+          case &#x27;url&#x27;:
+            val = new RegExp( &#x27;(https?|s?ftp|git)&#x27;, &#x27;i&#x27; ).test( val ) ? val : &#x27;http:&#x2F;&#x2F;&#x27; + val;
+          case &#x27;urlstrict&#x27;:
             regExp = &#x2F;^(https?|s?ftp|git):\&#x2F;\&#x2F;(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\&#x2F;((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)+(\&#x2F;(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\&#x2F;|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|\&#x2F;|\?)*)?$&#x2F;i;
             break;
-          case &quot;dateIso&quot;:
+          case &#x27;dateIso&#x27;:
             regExp = &#x2F;^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$&#x2F;;
             break;
           default:
@@ -234,11 +234,11 @@
       }
 
       , min: function ( val, min ) {
-        return new Number( val ) &gt;= new Number( min );
+        return new Number( val ) &gt;= min;
       }
 
       , max: function ( val, max ) {
-        return new Number( val ) &lt;= new Number( max );
+        return new Number( val ) &lt;= max;
       }
 
       , range: function ( val, arrayRange ) {
@@ -261,7 +261,7 @@
         }
 
         var manage = function ( isConstraintValid ) {
-          self.updateConstraint( &quot;remote&quot;, &quot;isValid&quot;, isConstraintValid );
+          self.updateConstraint( &#x27;remote&#x27;, &#x27;isValid&#x27;, isConstraintValid );
           self.manageValidationResult();
         }
 
@@ -269,12 +269,12 @@
             url: url
           , data: data
           , async: self.async
-          , method: self.options.remoteMethod || &quot;GET&quot;
+          , method: self.options.remoteMethod || &#x27;GET&#x27;
           , success: function ( response ) {
-            manage( &quot;1&quot; === response
-              || &quot;true&quot; == response
+            manage( &#x27;1&#x27; === response
+              || &#x27;true&#x27; == response
               || ( &#x27;object&#x27; === typeof response &amp;&amp; &#x27;undefined&#x27; !== typeof response.success )
-              || new RegExp( &quot;success&quot;, &quot;i&quot; ).test( response )
+              || new RegExp( &#x27;success&#x27;, &#x27;i&#x27; ).test( response )
             );
           }
           , error: function ( response ) {
@@ -339,14 +339,14 @@
         return message;
       }
 
-      return message.replace(new RegExp( &quot;%s&quot;, &quot;i&quot; ), args);
+      return message.replace(new RegExp( &#x27;%s&#x27;, &#x27;i&#x27; ), args);
     }
 
     &#x2F;**
     * Add &#x2F; override a validator in validators list
     *
     * @method addValidator
-    * @param {String} name Validator name. Will automatically bindable through data-name=&quot;&quot;
+    * @param {String} name Validator name. Will automatically bindable through data-name=&#x27;&#x27;
     * @param {Function} fn Validator function. Must return {Boolean}
     *&#x2F;
     , addValidator: function ( name, fn ) {
@@ -360,7 +360,13 @@
     * @param {String} name Message name. Will automatically be binded to validator with same name
     * @param {String} message Message
     *&#x2F;
-    , addMessage: function ( key, message ) {
+    , addMessage: function ( key, message, type ) {
+
+      if ( &#x27;undefined&#x27; !== typeof type &amp;&amp; true === type ) {
+        this.messages[ &#x27;type&#x27; ][ key ] = message;
+        return;
+      }
+
       &#x2F;&#x2F; custom types messages are a bit tricky cuz&#x27; nested ;)
       if ( &#x27;type&#x27; === key ) {
         for ( var i in message ) {
@@ -409,7 +415,7 @@
       this.isRequired = false;
       this.constraints = [];
 
-      &#x2F;&#x2F; overrided by ParsleyItemMultiple if radio or checkbox input
+      &#x2F;&#x2F; overriden by ParsleyItemMultiple if radio or checkbox input
       if ( &#x27;undefined&#x27; === typeof this.isRadioOrCheckbox ) {
         this.isRadioOrCheckbox = false;
         this.hash = this.generateHash();
@@ -434,6 +440,7 @@
     &#x2F;**
     * Bind some extra html5 types &#x2F; validators
     *
+    * @private
     * @method bindHtml5Constraints
     *&#x2F;
     , bindHtml5Constraints: function () {
@@ -443,12 +450,12 @@
       }
 
       &#x2F;&#x2F; add html5 supported types &amp; options
-      if ( &#x27;undefined&#x27; !== typeof this.$element.attr( &#x27;type&#x27; ) &amp;&amp; new RegExp( this.$element.attr( &#x27;type&#x27; ), &quot;i&quot; ).test( &quot;email url number range&quot; ) ) {
+      if ( &#x27;undefined&#x27; !== typeof this.$element.attr( &#x27;type&#x27; ) &amp;&amp; new RegExp( this.$element.attr( &#x27;type&#x27; ), &#x27;i&#x27; ).test( &#x27;email url number range&#x27; ) ) {
         this.options.type = this.$element.attr( &#x27;type&#x27; );
 
         &#x2F;&#x2F; number and range types could have min and&#x2F;or max values
-        if ( new RegExp( this.options.type, &quot;i&quot; ).test( &quot;number range&quot; ) ) {
-          this.options.type = &quot;number&quot;;
+        if ( new RegExp( this.options.type, &#x27;i&#x27; ).test( &#x27;number range&#x27; ) ) {
+          this.options.type = &#x27;number&#x27;;
 
           &#x2F;&#x2F; double condition to support jQuery and Zepto.. :(
           if ( &#x27;undefined&#x27; !== typeof this.$element.attr( &#x27;min&#x27; ) &amp;&amp; this.$element.attr( &#x27;min&#x27; ).length ) {
@@ -465,6 +472,7 @@
     &#x2F;**
     * Attach field validators functions passed through data-api
     *
+    * @private
     * @method addConstraints
     *&#x2F;
     , addConstraints: function () {
@@ -478,49 +486,53 @@
             , isValid: null
           } );
 
-          if ( constraint === &quot;required&quot; ) {
+          if ( constraint === &#x27;required&#x27; ) {
             this.isRequired = true;
           }
 
-          this.addCustomMessage( constraint );
+          this.addCustomConstraintMessage( constraint );
         }
       }
     }
 
-    , addCustomMessage: function ( constraint ) {
-      var customMessage = constraint + ( &quot;type&quot; === constraint ? this.options[ constraint ].charAt( 0 ).toUpperCase() + this.options[ constraint ].substr( 1 ) : &#x27;&#x27; ) + &#x27;Message&#x27;;
+    &#x2F;**
+    * Add custom constraint message, passed through data-API
+    *
+    * @private
+    * @method addCustomConstraintMessage
+    * @param constraint
+    *&#x2F;
+    , addCustomConstraintMessage: function ( constraint ) {
+      &#x2F;&#x2F; custom message type data-type-email-message -&gt; typeEmailMessage | data-minlength-error =&gt; minlengthMessage
+      var customMessage = constraint
+        + ( &#x27;type&#x27; === constraint ? this.options[ constraint ].charAt( 0 ).toUpperCase() + this.options[ constraint ].substr( 1 ) : &#x27;&#x27; )
+        + &#x27;Message&#x27;;
 
       if ( &#x27;undefined&#x27; !== typeof this.options[ customMessage ] ) {
-        var message = [];
-        if ( &quot;type&quot; === constraint ) {
-          message[ this.options[ constraint ] ] = this.options[ customMessage ];
-        } else {
-          message = this.options[ customMessage ];
-        }
-
-        this.Validator.addMessage( constraint, message );
+        this.Validator.addMessage( &#x27;type&#x27; === constraint ? this.options[ constraint ] : constraint, this.options[ customMessage ], &#x27;type&#x27; === constraint );
       }
     }
 
     &#x2F;**
     * Bind validation events on a field
     *
+    * @private
     * @method bindValidationEvents
     *&#x2F;
     , bindValidationEvents: function () {
       this.$element.addClass( &#x27;parsley-validated&#x27; );
 
       &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
-      var triggers = this.options.trigger + ( new RegExp( &quot;key&quot;, &quot;i&quot; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27; keyup&#x27; );
+      var triggers = this.options.trigger + ( new RegExp( &#x27;key&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27; keyup&#x27; );
 
       &#x2F;&#x2F; force add &#x27;change&#x27; event if async remote validator here to have result before form submitting
       if ( this.options.remote ) {
-        triggers += new RegExp( &quot;change&quot;, &quot;i&quot; ).test( triggers ) ? &#x27;&#x27; : &#x27; change&#x27;;
+        triggers += new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( triggers ) ? &#x27;&#x27; : &#x27; change&#x27;;
       }
 
       &#x2F;&#x2F; if a validation trigger is defined
       if ( triggers ) {
-        this.$element.on( triggers.split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27; ), false, $.proxy( this.eventValidation, this ) );
+        this.$element.on( ( triggers + &#x27; &#x27;).split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27; ), false, $.proxy( this.eventValidation, this ) );
       }
     }
 
@@ -531,20 +543,13 @@
     * @returns {String} 5 letters unique hash
     *&#x2F;
     , generateHash: function () {
-      var hash = &#x27;&#x27;
-        , possibles = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&quot;;
-
-      for ( var i = 0; i &lt; 5; i++ ) {
-        hash += possibles.charAt( Math.floor( Math.random() * possibles.length ) );
-      }
-
-      return &#x27;parsley-&#x27; + hash;
+      return &#x27;parsley-&#x27; + ( Math.random() + &#x27;&#x27; ).substring( 2 );
     }
 
     &#x2F;**
     * Public getHash accessor
     *
-    * @method generateHash
+    * @method getHash
     * @returns {String} hash
     *&#x2F;
     , getHash: function () {
@@ -728,6 +733,9 @@
 
     &#x2F;**
     * Manage ul error Container
+    *
+    * @private
+    * @method ulErrorManagement
     *&#x2F;
     , ulErrorManagement: function () {
       this.ulError = &#x27;#&#x27; + this.hash;
@@ -755,7 +763,7 @@
     * @method removeErrors
     *&#x2F;
     , removeErrors: function () {
-      !this.ulError || $( this.ulError ).remove();
+      $( this.ulError ).remove();
     }
 
     &#x2F;**
@@ -767,6 +775,7 @@
       this.isValid = null;
       this.removeErrors();
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+      return this;
     }
 
     &#x2F;**
@@ -808,6 +817,17 @@
       for ( var listener in object ) {
         this.options.listeners[ listener ] = object[ listener ];
       }
+    }
+
+    &#x2F;**
+    * Destroy parsley field instance
+    *
+    * @private
+    * @method destroy
+    *&#x2F;
+    , destroy: function () {
+      this.$element.removeClass( &#x27;parsley-validated&#x27; );
+      this.reset().$element.off( &#x27;.&#x27; + this.type ).removeData( this.type );
     }
   }
 
@@ -852,6 +872,7 @@
     &#x2F;**
     * Set specific constraints messages, do pseudo-heritance
     *
+    * @private
     * @method inherit
     * @param {Object} element
     * @param {Object} options
@@ -870,7 +891,7 @@
     * Set specific constraints messages, do pseudo-heritance
     *
     * @method getName
-    * @returns {String} radio &#x2F; checkbox hash is cleaned &quot;name&quot; property
+    * @returns {String} radio &#x2F; checkbox hash is cleaned &#x27;name&#x27; property
     *&#x2F;
    , getName: function () {
      return &#x27;parsley-&#x27; + this.$element.attr( &#x27;name&#x27; ).replace( &#x2F;(:|\.|\[|\])&#x2F;g, &#x27;&#x27; );
@@ -927,7 +948,7 @@
         self.items.push( $( this ) );
       });
 
-      this.$element.on( &#x27;submit&#x27; , false, $.proxy( this.validate, this ) );
+      this.$element.on( &#x27;submit.&#x27; + this.type , false, $.proxy( this.validate, this ) );
     }
 
     &#x2F;**
@@ -988,6 +1009,19 @@
       for ( var item in this.items ) {
         this.items[ item ].parsley( &#x27;reset&#x27; );
       }
+    }
+
+    &#x2F;**
+    * destroy Parsley binded on the form and its fields
+    *
+    * @method destroy
+    *&#x2F;
+    , destroy: function () {
+      for ( var item in this.items ) {
+        this.items[ item ].parsley( &#x27;destroy&#x27; );
+      }
+
+      this.$element.off( &#x27;.&#x27; + this.type ).removeData( this.type );
     }
   }
 
@@ -1057,7 +1091,7 @@
   $.fn.parsley.defaults = {
     &#x2F;&#x2F; basic data-api overridable properties here..
     inputs: &#x27;input, textarea, select&#x27;   &#x2F;&#x2F; Default supported inputs.
-    , excluded: &#x27;input[type=hidden]&#x27;    &#x2F;&#x2F; Do not validate input[type=hidded].
+    , excluded: &#x27;input[type=hidden]&#x27;    &#x2F;&#x2F; Do not validate input[type=hidden].
     , trigger: false                    &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
     , focus: &#x27;first&#x27;                    &#x2F;&#x2F; &#x27;fist&#x27;|&#x27;last&#x27;|&#x27;none&#x27; which error field would have focus first on form validation
     , validationMinlength: 3            &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
@@ -1085,13 +1119,12 @@
   &#x2F;* PARSLEY auto-bind DATA-API + Global config retrieving
   * =================================================== *&#x2F;
   $( window ).on( &#x27;load&#x27;, function () {
-
     $( &#x27;[data-validate=&quot;parsley&quot;]&#x27; ).each( function () {
       $( this ).parsley();
-    })
-  });
+    } );
+  } );
 
-&#x2F;&#x2F; This plugin works with jQuery or Zepto (with data extension builded for Zepto.)
+&#x2F;&#x2F; This plugin works with jQuery or Zepto (with data extension built for Zepto.)
 }(window.jQuery || window.Zepto);
 
     </pre>
