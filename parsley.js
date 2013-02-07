@@ -382,21 +382,9 @@
     */
     , addConstraints: function () {
       for ( var constraint in this.options ) {
-        constraint = constraint.toLowerCase();
-
-        if ( 'function' === typeof this.Validator.validators[ constraint ] ) {
-          this.constraints.push( {
-              name: constraint
-            , requirements: this.options[ constraint ]
-            , isValid: null
-          } );
-
-          if ( constraint === 'required' ) {
-            this.isRequired = true;
-          }
-
-          this.addCustomConstraintMessage( constraint );
-        }
+        var addConstraint = {};
+        addConstraint[ constraint ] = this.options[ constraint ];
+        this.addConstraint( addConstraint, true );
       }
     }
 
@@ -406,21 +394,29 @@
     * @method addConstraint
     * @param {Object} constraint { name: requirements }
     */
-    , addConstraint: function ( constraint ) {
+    , addConstraint: function ( constraint, doNotUpdateValidationEvents ) {
         for ( var name in constraint ) {
-          this.constraints.push( {
-              name: name.toLowerCase()
-            , requirements: constraint[ name ]
-            , isValid: null
-          } );
+          name = name.toLowerCase();
 
-          if ( name === 'required' ) {
-            this.isRequired = true;
+          if ( 'function' === typeof this.Validator.validators[ name ] ) {
+            this.constraints.push( {
+                name: name
+              , requirements: constraint[ name ]
+              , isValid: null
+            } );
+
+            if ( name === 'required' ) {
+              this.isRequired = true;
+            }
+
+            this.addCustomConstraintMessage( name );
           }
         }
 
         // force field validation next check and reset validation events
-        this.bindValidationEvents();
+        if ( 'undefined' === typeof doNotUpdateValidationEvents ) {
+          this.bindValidationEvents();
+        }
     }
 
     /**
@@ -495,7 +491,7 @@
     , addCustomConstraintMessage: function ( constraint ) {
       // custom message type data-type-email-message -> typeEmailMessage | data-minlength-error => minlengthMessage
       var customMessage = constraint
-        + ( 'type' === constraint ? this.options[ constraint ].charAt( 0 ).toUpperCase() + this.options[ constraint ].substr( 1 ) : '' )
+        + ( 'type' === constraint && 'undefined' !== typeof this.options[ constraint ] ? this.options[ constraint ].charAt( 0 ).toUpperCase() + this.options[ constraint ].substr( 1 ) : '' )
         + 'Message';
 
       if ( 'undefined' !== typeof this.options[ customMessage ] ) {
@@ -638,7 +634,7 @@
     * @return {Boolean}
     */
     , needsValidation: function ( val ) {
-      if ( this.isValid !== null && this.val === val && this.validatedOnce ) {
+      if ( !this.options.validateIfUnchanged && this.isValid !== null && this.val === val && this.validatedOnce ) {
         return false;
       }
 
@@ -1121,6 +1117,7 @@
     , messages: {}                              // Add your own error messages here
 
     //some quite advanced configuration here..
+    , validateIfUnchanged: false                                          // false: validate once by field value change
     , errors: {
         classHandler: function ( elem ) {}                                // class is directly set on elem, parent for radio/checkboxes
       , container: function ( elem, template, isRadioOrCheckbox ) {}      // error ul is inserted after elem, parent for radio/checkboxes

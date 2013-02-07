@@ -162,6 +162,9 @@
             <input type="text" id="onFieldValidate1" data-type="email" data-required="true" />
             <input type="text" id="onFieldValidate2" data-type="email" data-required="true" />
         </form>
+        <form id="alwaysValidate-form">
+            <input type="text" id="alwaysValidate" data-type="email" />
+        </form>
         <form data-validate="parsley" id="listeners-form">
             <input type="text" id="listeners1" data-type="email" data-required="true" />
         </form>
@@ -235,8 +238,8 @@
 
         window.onload = function() {
 
-            mocha.setup('bdd');
-            mocha.reporter('html');
+            mocha.setup( 'bdd' );
+            mocha.reporter( 'html' );
             testSuite();
 
             if ( window.mochaPhantomJS ) {

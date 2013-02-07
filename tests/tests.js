@@ -600,6 +600,19 @@ var testSuite = function () {
         // The field has not changed, but since the field was reset, the call count should now be 2.
         expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 2 );
       } )
+      it( 'Test always validate field', function () {
+        $( '#alwaysValidate-form' ).parsley( { validateIfUnchanged: true, listeners: { onFieldError: function ( elem ) {
+          if ( 'undefined' === typeof $( elem ).data( 'count' ) ) {
+            $( elem ).data( 'count', 0 );
+          }
+          $( elem ).data( 'count', parseInt( $( elem ).data( 'count' ) ) + 1 );
+        } } } );
+        $( '#alwaysValidate' ).val( 'foo' ).parsley( 'validate' );
+        expect( $( '#alwaysValidate' ).data( 'count' ) ).to.be( 1 );
+        $( '#alwaysValidate' ).parsley( 'validate' );
+        $( '#alwaysValidate' ).parsley( 'validate' );
+        expect( $( '#alwaysValidate' ).data( 'count' ) ).to.be( 3 );
+      } )
     } )
 
     /***************************************
