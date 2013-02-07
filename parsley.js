@@ -149,7 +149,9 @@
         return val >= arrayRange[ 0 ] && val <= arrayRange[ 1 ];
       }
 
-      , equalto: function ( val, elem ) {
+      , equalto: function ( val, elem, self ) {
+        self.options.validateIfUnchanged = true;
+
         return val === $( elem ).val();
       }
 

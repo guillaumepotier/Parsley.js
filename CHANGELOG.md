@@ -1,13 +1,16 @@
 #Changelog
 
-** 1.1.9-dev **
+** 1.1.10-dev **
+
+** 1.1.9 **
 
   - added `addItem` and `removeItem` functions to validate dynamically created fields
   - added addConstraint, updateConstraint and removeConstraint API to dynamically
-    update fields constraints
-  - `.delete()` method removes now all parsley related classes
+    update fields constraints (#52)
+  - `.delete()` method removes now all parsley related classes (#102)
   - added validateIfUnchanged option to force fields validation even if value is
-    unchanged since last validation
+    unchanged since last validation (#104)
+  - fixed equalTo, lessThan and greaterThan validators (#78)
 
 ** 1.1.8 **
 

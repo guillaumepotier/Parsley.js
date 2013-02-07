@@ -395,6 +395,9 @@ var testSuite = function () {
         expect( getErrorMessage( '#equalTo', 'equalTo') ).to.be( 'This value should be the same.' );
         triggerSubmitValidation( '#equalTo', 'foobar' );
         expect( $( '#equalTo' ).hasClass( 'parsley-success' ) ).to.be( true );
+        $( '#equalTo-model' ).val( 'baz' );
+        $( '#equalTo' ).parsley( 'validate' );
+        expect( $( '#equalTo' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'customvalidator', function () {
         triggerSubmitValidation( '#customvalidator', 'foo' );
@@ -816,6 +819,8 @@ var testSuite = function () {
          expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This value should be greater than #greaterThan-model.' );
          triggerSubmitValidation( '#greaterThan', '2' );
          expect( $( '#greaterThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+         $( '#greaterThan-model' ).val( '5' );
+         expect( $( '#greaterThan' ).parsley( 'validate' ) ).to.be( false );
        } )
        it ( 'lessThan', function () {
          triggerSubmitValidation( '#lessThan', '5' );
@@ -823,6 +828,8 @@ var testSuite = function () {
          expect( getErrorMessage( '#lessThan', 'lessThan') ).to.be( 'This value should be less than #lessThan-model.' );
          triggerSubmitValidation( '#lessThan', '1' );
          expect( $( '#lessThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+         $( '#lessThan-model' ).val( '1' );
+         expect( $( '#lessThan' ).parsley( 'validate' ) ).to.be( false );
        } )
      } )
 
