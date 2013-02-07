@@ -631,16 +631,57 @@ var testSuite = function () {
         $( '#hidden-input1' ).val( 'foo@bar.baz' );
         expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( true );
       } )
-      it ( 'test parsley(\'destroy\')', function () {
+      it ( 'test parsley(\'destroy\') on ParsleyField', function () {
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( true );
-        triggerSubmitValidation( '#destroy-email', 'foo' );
-        expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        triggerSubmitValidation( '#destroy-email', 'foo@bar.baz' );
+        triggerSubmitValidation( '#destroy-multiple', '' );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-success' ) ).to.be( true );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( true );
         $( '#destroy' ).parsley( 'destroy' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-success' ) ).to.be( false );
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( false );
         $( '#destroy-email' ).val( 'bar' );
         $( '#destroy-email' ).trigger( 'change' );
+        $( '#destroy-multiple' ).trigger( 'change' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
+      } )
+      it ( 'test parsley dynamic add item', function () {
+        $( '#dynamic-form' ).append( '<input type="text" data-type="email" id="dynamic-email" data-trigger="change" value="foo" />' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+        $( '#dynamic-form' ).parsley( 'addItem', '#dynamic-email' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( false );
+        $( '#dynamic-email' ).val( 'foo@bar.baz' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+        $( '#dynamic-email' ).val( 'foo' );
+        $( '#dynamic-form' ).parsley( 'removeItem', '#dynamic-email' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+      } )
+      it ( 'test adding constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'addConstraint', { type: "email" } ).val( 'foo' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#onthefly' ).val( 'foo@bar.baz' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'test updating constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'updateConstraint', { type: "url" } ).val( 'foo' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#onthefly' ).val( 'http://foo.bar' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'test removing constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'removeConstraint', 'type' ).val( 'foo' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
     } )
 

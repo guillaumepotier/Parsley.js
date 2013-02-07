@@ -10,7 +10,7 @@ See TODO.md
 
 #Version
 
-1.1.7
+1.1.8
 
 # Browser compatibility
 
@@ -59,7 +59,7 @@ Some integrations are
 * add your changes to parsley.js
 * add / update tests to test suite (tests/index.html / tests/tests.js)
 * run tests (see above)
-* create new minified versions with minify script (see above) (use current tag-dev as version)
+* create new minified versions with minify script (see above) (use next tag-dev as version. Ie: if 1.1.1, use 1.1.2-dev)
 * make a Pull Request!
 
 #Licence

@@ -1,5 +1,12 @@
 #Changelog
 
+** 1.1.9-dev **
+
+  - added `addItem` and `removeItem` functions to validate dynamically created fields
+  - added addConstraint, updateConstraint and removeConstraint API to dynamically
+    update fields constraints
+  - `.delete()` method removes now all parsley related classes
+
 ** 1.1.8 **
 
   - ParsleyForm.items are now ParsleyField instances!!
