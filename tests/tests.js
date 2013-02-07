@@ -42,6 +42,16 @@ $( '#focus-form' ).parsley( { listeners: {
   }
 } } );
 
+$( '#focus-form2' ).parsley( { listeners: {
+  onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
+    if ( ParsleyForm.focusedField ) {
+      $( ParsleyForm.$element ).addClass( 'focus-on' );
+    } else {
+      $( ParsleyForm.$element ).addClass( 'focus-off' );
+    }
+  }
+} } );
+
 $( '#validator-tests' ).parsley( {
   validators: {
     multiple: function ( val, multiple ) {
@@ -72,11 +82,19 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
   }
 } } );
 
-$( '#listeners-form' ).parsley( 'addListener', { listeners: {
+$( '#listeners-form' ).parsley( 'addListener', {
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#listeners-form' ).addClass( 'onFormSubmit-ok' );
   }
-} } );
+} );
+
+$( '#scenario-validation-after-field-reset' ).data( 'callCount', 0 );
+$( '#scenario-validation-after-field-reset' ).parsley( 'addListener', {
+  onFieldError: function ( field ) {
+    var callCount = $( '#scenario-validation-after-field-reset' ).data( 'callCount' );
+    $( '#scenario-validation-after-field-reset' ).data( 'callCount', callCount + 1 );
+  }
+} );
 
 var testSuite = function () {
   describe ( 'Parsley.js test suite', function () {
@@ -377,6 +395,9 @@ var testSuite = function () {
         expect( getErrorMessage( '#equalTo', 'equalTo') ).to.be( 'This value should be the same.' );
         triggerSubmitValidation( '#equalTo', 'foobar' );
         expect( $( '#equalTo' ).hasClass( 'parsley-success' ) ).to.be( true );
+        $( '#equalTo-model' ).val( 'baz' );
+        $( '#equalTo' ).parsley( 'validate' );
+        expect( $( '#equalTo' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
       it ( 'customvalidator', function () {
         triggerSubmitValidation( '#customvalidator', 'foo' );
@@ -569,6 +590,32 @@ var testSuite = function () {
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
       } )
+      it ( 'Test validation of unchanged fields after reset() has been called on them', function () {
+        $( '#scenario-validation-after-field-reset' ).val( '' );
+
+        // Validate Field, setting the call count to 1
+        $( '#scenario-validation-after-field-reset' ).parsley( 'validate' );
+
+        // Reset the field and trigger validation via keyup event
+        $( '#scenario-validation-after-field-reset' ).parsley( 'reset' );
+        $( '#scenario-validation-after-field-reset' ).trigger( $.Event( 'keyup' ) );
+
+        // The field has not changed, but since the field was reset, the call count should now be 2.
+        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 2 );
+      } )
+      it( 'Test always validate field', function () {
+        $( '#alwaysValidate-form' ).parsley( { validateIfUnchanged: true, listeners: { onFieldError: function ( elem ) {
+          if ( 'undefined' === typeof $( elem ).data( 'count' ) ) {
+            $( elem ).data( 'count', 0 );
+          }
+          $( elem ).data( 'count', parseInt( $( elem ).data( 'count' ) ) + 1 );
+        } } } );
+        $( '#alwaysValidate' ).val( 'foo' ).parsley( 'validate' );
+        expect( $( '#alwaysValidate' ).data( 'count' ) ).to.be( 1 );
+        $( '#alwaysValidate' ).parsley( 'validate' );
+        $( '#alwaysValidate' ).parsley( 'validate' );
+        expect( $( '#alwaysValidate' ).data( 'count' ) ).to.be( 3 );
+      } )
     } )
 
     /***************************************
@@ -591,20 +638,66 @@ var testSuite = function () {
         expect( $( '#focus2' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#focus2' ).hasClass( 'on-focus' ) ).to.be( true );
       } )
+      it ( 'test error focus none', function () {
+        $( '#focus-form2' ).parsley( 'validate' );
+        expect( $( '#focus-form2' ).hasClass( 'focus-off' ) ).to.be( true );
+      } )
       it ( 'test that hidden excluded inputs does not affect form validation', function () {
         expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( false );
         $( '#hidden-input1' ).val( 'foo@bar.baz' );
         expect( $( '#hidden-input-form' ).parsley( 'validate' ) ).to.be( true );
       } )
-      it ( 'test parsley(\'destroy\')', function () {
+      it ( 'test parsley(\'destroy\') on ParsleyField', function () {
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( true );
-        triggerSubmitValidation( '#destroy-email', 'foo' );
-        expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        triggerSubmitValidation( '#destroy-email', 'foo@bar.baz' );
+        triggerSubmitValidation( '#destroy-multiple', '' );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-success' ) ).to.be( true );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( true );
         $( '#destroy' ).parsley( 'destroy' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-email' ).hasClass( 'parsley-success' ) ).to.be( false );
         expect( $( '#destroy-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
-        triggerEventValidation( '#destroy-email', 'bar' );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        $( '#destroy-email' ).val( 'bar' );
+        $( '#destroy-email' ).trigger( 'change' );
+        $( '#destroy-multiple' ).trigger( 'change' );
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
+      } )
+      it ( 'test parsley dynamic add item', function () {
+        $( '#dynamic-form' ).append( '<input type="text" data-type="email" id="dynamic-email" data-trigger="change" value="foo" />' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+        $( '#dynamic-form' ).parsley( 'addItem', '#dynamic-email' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( false );
+        $( '#dynamic-email' ).val( 'foo@bar.baz' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+        $( '#dynamic-email' ).val( 'foo' );
+        $( '#dynamic-form' ).parsley( 'removeItem', '#dynamic-email' );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+      } )
+      it ( 'test adding constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'addConstraint', { type: "email" } ).val( 'foo' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#onthefly' ).val( 'foo@bar.baz' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'test updating constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'updateConstraint', { type: "url" } ).val( 'foo' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#onthefly' ).val( 'http://foo.bar' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'test removing constraint on the fly', function () {
+        $( '#onthefly' ).parsley( 'removeConstraint', 'type' ).val( 'foo' );
+        $( '#onthefly-form' ).parsley( 'validate' );
+        expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
     } )
 
@@ -726,6 +819,8 @@ var testSuite = function () {
          expect( getErrorMessage( '#greaterThan', 'greaterThan') ).to.be( 'This value should be greater than #greaterThan-model.' );
          triggerSubmitValidation( '#greaterThan', '2' );
          expect( $( '#greaterThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+         $( '#greaterThan-model' ).val( '5' );
+         expect( $( '#greaterThan' ).parsley( 'validate' ) ).to.be( false );
        } )
        it ( 'lessThan', function () {
          triggerSubmitValidation( '#lessThan', '5' );
@@ -733,6 +828,8 @@ var testSuite = function () {
          expect( getErrorMessage( '#lessThan', 'lessThan') ).to.be( 'This value should be less than #lessThan-model.' );
          triggerSubmitValidation( '#lessThan', '1' );
          expect( $( '#lessThan' ).hasClass( 'parsley-success' ) ).to.be( true );
+         $( '#lessThan-model' ).val( '1' );
+         expect( $( '#lessThan' ).parsley( 'validate' ) ).to.be( false );
        } )
      } )
 

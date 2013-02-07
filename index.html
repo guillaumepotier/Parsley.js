@@ -68,6 +68,24 @@
           background: #FB4006;
           text-shadow: #FB4006 1px 2px 2px;
       }
+
+      /* Link styles (used on .masthead-links as well) */
+      .jumbotron a {
+        -webkit-transition: all .2s ease-in-out;
+           -moz-transition: all .2s ease-in-out;
+                transition: all .2s ease-in-out;
+      }
+
+      /* Textual links in masthead */
+      .masthead-links {
+        margin: 0;
+        list-style: none;
+      }
+      .masthead-links li {
+        display: inline;
+        padding: 0 10px;
+        color: #949494;
+      }
     </style>
     <link href="components/bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -94,7 +112,7 @@
             Parsley.js
 
             <span class="social-buttons inline-block">
-                <a href="https://twitter.com/share" class="twitter-share-button" data-related="guillaumepotier,garlicjs: Auto persist form values to avoid data loss" data-url="http://parsleyjs.org" data-lang="en" data-text="Parsley.js: Javascript forms validation. Powerful, UX aware & Dead simple. #ux #javascript"></a>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-related="guillaumepotier,garlicjs: Auto persist form values to avoid data loss" data-url="http://parsleyjs.org" data-lang="en" data-text="Parsley.js: Javascript forms validation. Powerful, UX aware &amp; Dead simple. #ux #javascript"></a>
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
                 <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=Parsley.js&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
@@ -109,9 +127,15 @@
       <hr>
 
       <div class="jumbotron">
-        <h1>Javascript forms validation.<br/><strong>Powerful, UX aware & Dead simple.</strong></h1>
-        <p class="lead">Never write a single javascript line anymore to validate your forms FrontEnd. Parsley will do that for you and do it right, thanks to its powerful DOM-API !</p>
-        <a class="btn btn-large call-to-action" href="documentation.html">See documentation & examples</a>
+        <h1>Javascript forms validation.<br/><strong>Powerful, UX aware &amp; Dead simple.</strong></h1>
+        <p class="lead">Never write a single javascript line anymore to validate your forms FrontEnd. Parsley will do that for you &ndash; and do it right &ndash;, thanks to its powerful DOM-API !</p>
+        <p>
+            <a class="btn btn-large call-to-action" href="documentation.html">See documentation &amp; examples</a>
+        </p>
+        <ul class="masthead-links">
+            <li><i class="icon-download-alt"></i>&nbsp;<a href="https://github.com/guillaumepotier/Parsley.js/archive/1.1.9.zip">Download</a></li>
+            <li>Version 1.1.9</li>
+        </ul>
       </div>
 
       <hr>
@@ -127,22 +151,22 @@
             <p>Get <a href="https://github.com/guillaumepotier/Parsley.js/tree/master/dist">Latest version</a>.</p>
 
             <h4><i class="icon-gift"></i> Super free</h4>
-            <p>Parsley is <strong>open source</strong>, <strong>MIT</strong> licenced, and developed to help everyone. It will <strong>stay that way</strong>.</p>
-            <p>See <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/LICENCE.md">Licence</a>.</p>
+            <p>Parsley is <strong>open source</strong>, <strong>MIT</strong> licensed, and developed to help everyone. It will <strong>stay that way</strong>.</p>
+            <p>See <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/LICENCE.md">License</a>.</p>
 
         </div>
 
         <div class="span6">
             <h4><i class="icon-wrench"></i> Super configurable</h4>
-            <p>Like no other javascript library, Parsley has a full room for #UX concerns and details options. <strong>Override <i>almost</i> every Parsley default behaviors</strong> to fit your <strong>exact needs</strong>.</p>
+            <p>Like no other javascript library, Parsley has a full support for #UX concerns and detailed options. <strong>Override <i>almost</i> every Parsley default behaviors</strong> to fit your <strong>exact needs</strong>.</p>
             <p>See <a href="documentation.html#parsleyform">documentation</a>.</p>
 
             <h4><i class="icon-play"></i> Super simple</h4>
-            <p>Want to validate a form? Just <strong>write it in English</strong> with awesome Parsley <strong>DOM-API</strong> using jQuery data API.</p>
+            <p>Want to validate a form? Just <strong>write it in English</strong> with the awesome Parsley <strong>DOM-API</strong> using jQuery data API.</p>
             <p>See <a href="documentation.html">documentation</a>.</p>
 
             <h4><i class="icon-check"></i> Super reliable</h4>
-            <p>Form validation is important, #UX is critical. Parsley is shipped <strong><i>almost</i> bugs free</strong> to help you on that.</p>
+            <p>Form validation is important, #UX is critical. Parsley is shipped <strong><i>almost</i> bug free</strong> to help you with that.</p>
             <p><a href="https://travis-ci.org/guillaumepotier/Parsley.js"><img src="https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master" /></a> See Parsley <a href="tests/index.html">Test Suite</a>.</p>
 
         </div>
@@ -151,7 +175,7 @@
       <hr>
 
       <div class="footer">
-        <p>&copy; <a href="http://twitter.com/guillaumepotier">@guillaumepotier</a> @<a href="http://wisembly.com/en/">Wisembly</a> 2012 - <small><a href="http://garlicjs.org">Ever heard of #Garlic.js, Parsley little sister?</a></small>
+        <p>&copy; <a href="http://twitter.com/guillaumepotier">@guillaumepotier</a> @<a href="http://wisembly.com/en/">Wisembly</a> 2012 - <small><a href="http://garlicjs.org">Ever heard of #Garlic.js, Parsleys little sister?</a></small>
         </p>
       </div>
 

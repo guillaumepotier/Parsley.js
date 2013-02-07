@@ -30,11 +30,15 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         return val >= obj[0] && val <= obj[1];
       }
 
-      , greaterthan: function ( val, elem ) {
+      , greaterthan: function ( val, elem, self ) {
+        self.options.validateIfUnchanged = true;
+
         return new Number(val) > new Number($( elem ).val());
       }
 
-      , lessthan: function ( val, elem ) {
+      , lessthan: function ( val, elem, self ) {
+        self.options.validateIfUnchanged = true;
+
         return new Number(val) < new Number($( elem ).val());
       }
     }

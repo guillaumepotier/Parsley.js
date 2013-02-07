@@ -155,7 +155,7 @@
                                     <input type="hidden" name="superhidden" id="superhidden">
                                     <br/><span class="btn btn" id="demo-form-valid" onclick="javascript:$('#demo-form').parsley( 'validate' );"><i class="icon-ok"></i></span>
                                 </form>
-                                <small>Please, note that this demo form is not a perfect example of UX-awareness. Its aim is here to show a quick overview of data-API and Parsley customizable behavior</small>
+                                <small>Please, note that this demo form is not a perfect example of UX-awareness. The aim here is to show a quick overview of data-API and Parsley customizable behavior.</small>
                             </td>
                             <td class="not-for-mobile">
 <pre><code>&lt;form id="demo-form" data-validate="parsley">
@@ -185,7 +185,7 @@
                         <strong>Quick error removal</strong>: when a field is detected and shown as invalid, further checks are done on each keypress to try to <strong>quickly remove error messages once the field is ok</strong>.
                     </li>
                     <li>
-                        <strong>Control focusing on error</strong>: on form submission, the first error field is focused to <strong>allow the user to easily start fixing errors</strong>. <i>(this behavior configurable)</i>
+                        <strong>Control focusing on error</strong>: on form submission, the first error field is focused to <strong>allow the user to easily start fixing errors</strong>. <i>(this behavior is configurable)</i>
                     </li>
                 </ul>
                 </div>
@@ -245,7 +245,7 @@
             <section>
                 <a name="parsleyform"></a>
                 <h3>Parsley Form</h3>
-                <p>This is the main Parsely form validation factory, where you decide if a form is validated, and set some extra options.</p>
+                <p>This is the main Parsley form validation factory, where you decide if a form is validated, and set some extra options.</p>
                 <pre><code>&lt;form data-validate="parsley">&lt;/form></code></pre>
                 <h4>Properties</h4>
                 <table class="table table-striped table-bordered table-hover">
@@ -834,7 +834,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>
                             <code>data-type="urlstrict"</code>
                         </td>
-                        <td>Validates that a value is a valid strict url, ie: with one of <code>http</code>, <code>https</code>, <code>ftp</code>, <code>git</code> allowed protocols.</td>
+                        <td>Validates that a value is a valid strict URL, ie: with one of <code>http</code>, <code>https</code>, <code>ftp</code>, <code>git</code> allowed protocols.</td>
                         <td class="not-for-mobile">
                             <table>
                                 <tr>
@@ -986,7 +986,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     <tr>
                         <td>Override default plugin configs</td>
                         <td></td>
-                        <td >Parsley uses a set of default overridable configs that you can override by passing an object as a parameter when calling Parsley on a form or a field.<br/>Default is:
+                        <td>Parsley uses a set of default configs that you can override by passing an object as a parameter when calling Parsley on a form or a field.<br/>Default is:
 <pre><code>{
   // basic data-api overridable properties here..
   inputs: 'input, textarea, select'
@@ -1000,6 +1000,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
   , messages: {}
 
   //some quite advanced configuration here..
+  , validateIfUnchanged: false
   , errors: {
     classHandler: function ( elem ) {}
   , container: function ( elem, template, isRadioOrCheckbox ) {}
@@ -1050,8 +1051,10 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
                     <tr>
-                        <a name="javascript-form"></a>
-                        <td colspan="4"><h4>Form</h4></td>
+                        <td colspan="4">
+                            <a name="javascript-form"></a>
+                            <h4>Form</h4>
+                        </td>
                     </tr>
                     <tr>
                         <td>Bind Parsley to a form</td>
@@ -1078,8 +1081,26 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
                     <tr>
-                        <a name="javascript-fields"></a>
-                        <td colspan="4"><h4>Field</h4></td>
+                        <td>Dynamically add an Item to Form</td>
+                        <td></td>
+                        <td>If an item is dynamically created, it won't be naturally validated with Parsley. Use this to attach it to existing Parsley validated form.</td>
+                        <td class="not-for-mobile">
+<pre><code>$( '#form' ).parsley( 'addItem', '#itemid' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Dynamically remove an Item to Form</td>
+                        <td></td>
+                        <td>If an item is dynamically deleted / removed from form, it will be unfortunately still present in Parsley validation process. Use this to remove it in Parsley form validation process. <span class="label label-important">This field <strong>must</strong> have an id to be properly destroyed</span></td>
+                        <td class="not-for-mobile">
+<pre><code>$( '#form' ).parsley( 'removeItem', '#itemid' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <a name="javascript-fields"></a>
+                            <h4>Field</h4>
+                        </td>
                     </tr>
                     <tr>
                         <td>Validate a field</td>
@@ -1087,6 +1108,30 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>Useful if your want to integrate the field validation process inside custom functions.</td>
                         <td  class="not-for-mobile">
 <pre><code>$( '#field' ).parsley( 'validate' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Add new constraint</td>
+                        <td></td>
+                        <td>Useful if your want to add a constraint to an existing Parsley validated field.</td>
+                        <td  class="not-for-mobile">
+<pre><code>$( '#field' ).parsley( 'addConstraint', { minlength: 2 } );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Update constraint</td>
+                        <td></td>
+                        <td>Useful if your want to update an existing constraint for a field.</td>
+                        <td  class="not-for-mobile">
+    <pre><code>$( '#field' ).parsley( 'updateConstraint', { minlength: 6 } );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Remove constraint</td>
+                        <td></td>
+                        <td>Useful if your want to remove an existing constraint to an existing Parsley validated field.</td>
+                        <td  class="not-for-mobile">
+    <pre><code>$( '#field' ).parsley( 'removeConstraint', 'minlength' );</code></pre>
                         </td>
                     </tr>
                 </tbody>
@@ -1142,7 +1187,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     </tr>
                     <tr>
                         <td>Change class names</td>
-                        <td><pre><code>$('#form').parsley({ successClass: 'my name', errorClass: 'still my name' });</code></pre></td>
+                        <td><pre><code>$('#form').parsley({ successClass: 'my-class-name', errorClass: 'still-my-class-name' });</code></pre></td>
                     </tr>
                     <tr>
                         <td>Change class handler</td>
