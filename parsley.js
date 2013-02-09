@@ -474,9 +474,10 @@
 
       this.constraints = updatedConstraints;
 
-      // if there are no more constraint, destroy parsley instance for this field and exit
+      // if there are no more constraint, reset parsley instance for this field, remove events and exit
       if ( updatedConstraints.length === 0 ) {
-        this.destroy();
+        this.reset();
+        this.$element.off( '.' + this.type );
         return;
       }
 

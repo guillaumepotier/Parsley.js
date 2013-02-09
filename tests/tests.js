@@ -697,7 +697,8 @@ var testSuite = function () {
         $( '#onthefly' ).parsley( 'removeConstraint', 'type' ).val( 'foo' );
         $( '#onthefly-form' ).parsley( 'validate' );
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
-        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        // still parsley validated, even if no more constraint
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( true );
       } )
     } )
 
