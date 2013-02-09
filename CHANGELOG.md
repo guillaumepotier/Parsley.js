@@ -2,6 +2,8 @@
 
 ** 1.1.10-dev **
 
+  - animating errors show / hide now
+
 ** 1.1.9 **
 
   - added `addItem` and `removeItem` functions to validate dynamically created fields

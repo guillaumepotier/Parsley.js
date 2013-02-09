@@ -728,9 +728,11 @@
     , removeError: function ( constraintName ) {
       var liError = this.ulError + ' .' + constraintName;
 
+      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () { $( this ).remove() } ) : $( liError ).remove();
+
       // remove li error, and ul error if no more li inside
-      if ( this.ulError && $( liError ).remove() && $( this.ulError ).children().length === 0 ) {
-        $( this.ulError ).remove();
+      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
+        this.removeErrors();
       }
     }
 
@@ -740,7 +742,7 @@
     * @method removeErrors
     */
     , removeErrors: function () {
-      $( this.ulError ).remove();
+      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
     }
 
     /**
@@ -766,7 +768,7 @@
       // display ulError container if it has been removed previously (or never shown)
       if ( !$( this.ulError ).length ) {
         this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || ( !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ) );
+          || ( !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate.show() ) : this.$element.parent().after( this.ulTemplate.show() ) );
       }
 
       // TODO: refacto error name w/ proper & readable function
@@ -781,7 +783,7 @@
       // TODO: refacto this shit too
       // add liError if not shown. Do not add more than once custom errorMessage if exsit
       if ( !$( liError ).length ) {
-        $( this.ulError ).append( $( liTemplate ).text( message ) );
+        $( this.ulError ).append( this.options.animate ? $( liTemplate ).text( message ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).text( message ) );
       }
     }
 
@@ -1111,6 +1113,8 @@
     inputs: 'input, textarea, select'           // Default supported inputs.
     , excluded: 'input[type=hidden], :disabled' // Do not validate input[type=hidden] & :disabled.
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
+    , animate: true                             // fade in / fade out error messages
+    , animateDuration: 300                      // fadein/fadout ms time
     , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
     , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
     , successClass: 'parsley-success'           // Class name on each valid input

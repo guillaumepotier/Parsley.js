@@ -3,7 +3,9 @@
 var xhr, requests;
 
 window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
-  messages: {
+    // deactivate errors animation, causing travis test suite failing
+    animate: false
+  , messages: {
     type: {
       urlstrict: "urlstrict global override."
     }
