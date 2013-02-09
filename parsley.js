@@ -728,7 +728,6 @@
     , removeError: function ( constraintName ) {
       var liError = this.ulError + ' .' + constraintName;
 
-      console.log( 'remove li error' )
       this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () { $( this ).remove() } ) : $( liError ).remove();
 
       // remove li error, and ul error if no more li inside
@@ -743,7 +742,6 @@
     * @method removeErrors
     */
     , removeErrors: function () {
-      console.log( 'remove ul errors' )
       this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
     }
 
@@ -769,7 +767,6 @@
 
       // display ulError container if it has been removed previously (or never shown)
       if ( !$( this.ulError ).length ) {
-        console.log( 'add ul error' )
         this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
           || ( !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate.show() ) : this.$element.parent().after( this.ulTemplate.show() ) );
       }
@@ -786,7 +783,6 @@
       // TODO: refacto this shit too
       // add liError if not shown. Do not add more than once custom errorMessage if exsit
       if ( !$( liError ).length ) {
-        console.log( 'add li error' );
         $( this.ulError ).append( this.options.animate ? $( liTemplate ).text( message ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).text( message ) );
       }
     }
