@@ -841,7 +841,6 @@
       this.$element = $( element );
       this.hash = this.getName();
       this.isRadioOrCheckbox = true;
-      this.validationMinlength = 0;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
       this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
@@ -908,14 +907,31 @@
      // remove eventually already binded events
      this.$element.off( '.' + this.type );
 
-     // bind trigger event on every siblings
-     if ( this.options.trigger ) {
-       var self = this;
+      // alaways bind keyup event, for better UX when a field is invalid
+      var self = this
+        , triggers = ( !this.options.trigger ? '' : this.options.trigger + ' ' )
+        + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : 'change' );
 
-       $( this.siblings ).each(function () {
-           $( this ).on( ( self.options.trigger + ' ').split( ' ' ).join( '.' + self.type + ' ' ), false, $.proxy( self.eventValidation, self ) );
-       } )
+     // bind trigger event on every siblings
+     $( this.siblings ).each(function () {
+       $( this ).on( triggers.split( ' ' ).join( '.' + self.type + ' ' ), false, $.proxy( self.eventValidation, self ) );
+     } )
+   }
+
+   /**
+   * Called when validation is triggered by an event
+   * Do nothing if never validated. validate on change otherwise
+   *
+   * @method eventValidation
+   * @param {Object} event jQuery event
+   */
+   , eventValidation: function ( event ) {
+     // start validation process only if field has enough chars and validation never started
+     if ( !this.validatedOnce ) {
+       return true;
      }
+
+     this.validate( true, false );
    }
   };
 

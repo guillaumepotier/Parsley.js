@@ -3,7 +3,8 @@
 ** 1.1.10-dev **
 
   - animating errors show / hide now
-  - fixed radio/checkboxes data-trigger behavior (#75)
+  - fixed radio/checkboxes data-trigger behavior (#115)
+  - added `change` event to quickly remove radio/checkboxes errors (#115)
 
 ** 1.1.9 **
 

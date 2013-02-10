@@ -628,6 +628,16 @@ var testSuite = function () {
         $( '#checkbox-maxcheck3' ).attr( 'checked', null ).trigger( $.Event( 'change' ) );
         expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
       } )
+      it ( 'Test change validation for checkboxes', function () {
+        $( '#checkbox-maxcheckchange1' ).attr( 'checked', 'checked' );
+        $( '#checkbox-maxcheckchange2' ).attr( 'checked', 'checked' );
+        $( '#checkbox-maxcheckchange3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+        expect( $( '#checkbox-maxcheckchange1' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
+        $( '#checkbox-maxcheckchange2' ).attr( 'checked', null ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+      } )
     } )
 
     /***************************************
