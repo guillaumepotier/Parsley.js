@@ -448,7 +448,7 @@
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraint.name ) {
           this.constraints[ i ] = $.extend( true, this.constraints[ i ], constraint );
-          if ( 'undefined' !== typeof message ) {
+          if ( 'string' === typeof message ) {
             this.Validator.messages[ this.constraints[ i ].name ] = message ;
           }
         }
