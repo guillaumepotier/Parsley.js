@@ -327,6 +327,9 @@
                             <form data-validate="parsley">
                                 <p><input type="text" data-type="email" data-trigger="keyup" data-validation-minlength="0" placeholder="keyup validation trigger" /><p>
                                 <p><input type="text" data-type="email" data-trigger="change" data-validation-minlength="0" placeholder="change validation trigger" /></p>
+                                <input type="checkbox" name="mincheck[]" data-mincheck="2" value="foo" data-trigger="change" />
+                                <input type="checkbox" name="mincheck[]" value="bar" />
+                                <input type="checkbox" name="mincheck[]" value="baz" />
                             </form>
                         </td>
                     </tr>
@@ -656,7 +659,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                                 <tr>
                                     <td>
                                         <form data-validate="parsley">
-                                            <input type="text" id="eqalToModel" data-equalTo="#eqalToModel" disabled="disabled" value="foo" />
+                                            <input type="text" id="eqalToModel" data-equalTo="#eqalToModel" value="foo" />
                                             <input type="text" id="data-equalto" data-equalTo="#eqalToModel" placeholder="equal to foo" />
                                         </form>
                                     </td>
@@ -966,7 +969,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     <h3>Javascript</h3>
                     <p>Parsleys DOM-API is great. But not so great for complex forms, or dynamically generated forms. Learn how to master Parsley javascript style!</p>
                     <p class="alert alert-block">
-                      <span class="label">Warning:</span> you must remove <code>data-validate="parsley"</code> auto-binding code in your forms DOM to allow you to override the default processing and use Parsley purely from javascript.
+                      <span class="label">Warning :</span> you must remove <code>data-validate="parsley"</code> auto-binding code in your forms DOM to allow you to override the default processing and use Parsley purely from javascript.
                     </p>
                 </div>
                 <table class="table table-striped table-bordered table-hover">
@@ -1035,7 +1038,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     <tr>
                         <td>Add a listener</td>
                         <td></td>
-                        <td>Allows you, even after Parsleys initial form binding, to add a custom listener. Available listeners currently are: <code>onFieldValidate</code>, <code>onFieldError</code> and <code>onFormSubmit</code>. Their passed arguments are listed above in Default Plugin config.</td>
+                        <td>Allows you, even after Parsleys initial form binding, to add a custom listener. Available listeners currently are: <code>onFieldValidate</code>, <code>onFieldError</code>, <code>onFieldSuccess</code> and <code>onFormSubmit</code>. Their passed arguments are listed above in Default Plugin config.</td>
                         <td class="not-for-mobile">
 <pre><code>$( '#form' ).parsley( 'addListener', {
     onFieldValidate: function ( elem ) {

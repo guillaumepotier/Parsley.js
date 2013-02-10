@@ -517,17 +517,15 @@
       this.$element.off( '.' + this.type );
 
       // alaways bind keyup event, for better UX when a field is invalid
-      var triggers = this.options.trigger + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
+      var triggers = ( !this.options.trigger ? '' : this.options.trigger + ' ' )
+        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : 'keyup' );
 
       // force add 'change' event if async remote validator here to have result before form submitting
       if ( this.options.remote ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
 
-      // if a validation trigger is defined
-      if ( triggers ) {
-        this.$element.on( ( triggers + ' ').split( ' ' ).join( '.' + this.type + ' ' ), false, $.proxy( this.eventValidation, this ) );
-      }
+      this.$element.on( ( triggers + ' ' ).split( ' ' ).join( '.' + this.type + ' ' ), false, $.proxy( this.eventValidation, this ) );
     }
 
     /**
@@ -577,7 +575,7 @@
       }
 
       // start validation process only if field has enough chars and validation never started
-      if ( val.length < this.options.validationMinlength && !this.validatedOnce ) {
+      if ( !this.isRadioOrCheckbox && val.length < this.options.validationMinlength && !this.validatedOnce ) {
         return true;
       }
 
@@ -843,6 +841,7 @@
       this.$element = $( element );
       this.hash = this.getName();
       this.isRadioOrCheckbox = true;
+      this.validationMinlength = 0;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
       this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
@@ -892,12 +891,31 @@
 
       if ( this.isCheckbox ) {
         var values = [];
+
         $( this.siblings + ':checked' ).each( function () {
           values.push( $( this ).val() );
         } );
 
         return values;
       }
+   }
+
+   , bindValidationEvents: function () {
+     // this field has validation events, that means it has to be validated
+     this.isValid = null;
+     this.$element.addClass( 'parsley-validated' );
+
+     // remove eventually already binded events
+     this.$element.off( '.' + this.type );
+
+     // bind trigger event on every siblings
+     if ( this.options.trigger ) {
+       var self = this;
+
+       $( this.siblings ).each(function () {
+           $( this ).on( ( self.options.trigger + ' ').split( ' ' ).join( '.' + self.type + ' ' ), false, $.proxy( self.eventValidation, self ) );
+       } )
+     }
    }
   };
 

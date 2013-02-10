@@ -605,7 +605,7 @@ var testSuite = function () {
         // The field has not changed, but since the field was reset, the call count should now be 2.
         expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 2 );
       } )
-      it( 'Test always validate field', function () {
+      it ( 'Test always validate field', function () {
         $( '#alwaysValidate-form' ).parsley( { validateIfUnchanged: true, listeners: { onFieldError: function ( elem ) {
           if ( 'undefined' === typeof $( elem ).data( 'count' ) ) {
             $( elem ).data( 'count', 0 );
@@ -617,6 +617,16 @@ var testSuite = function () {
         $( '#alwaysValidate' ).parsley( 'validate' );
         $( '#alwaysValidate' ).parsley( 'validate' );
         expect( $( '#alwaysValidate' ).data( 'count' ) ).to.be( 3 );
+      } )
+      it ( 'Test data-trigger="change" on multiple inputs', function () {
+        $( '#checkbox-maxcheck1' ).parsley( 'reset' );
+        $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' );
+        $( '#checkbox-maxcheck2' ).attr( 'checked', 'checked' );
+        $( '#checkbox-maxcheck3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
+        expect( getErrorMessage( '#checkbox-maxcheck1', 'maxcheck') ).to.be( 'You must select 2 choices or less.' );
+        $( '#checkbox-maxcheck3' ).attr( 'checked', null ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
       } )
     } )
 
