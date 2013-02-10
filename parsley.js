@@ -326,7 +326,7 @@
       if ( 'undefined' === typeof this.isRadioOrCheckbox ) {
         this.isRadioOrCheckbox = false;
         this.hash = this.generateHash();
-        this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
+        this.errorClassHandler = this.options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element;
       }
 
       // error ul dom management done only once at init
@@ -682,7 +682,7 @@
 
       for ( var constraint = 0; constraint < this.constraints.length; constraint++ ) {
         if ( false === this.constraints[ constraint ].isValid ) {
-          this.addError( this.constraints[ constraint ] );
+          this.manageError( this.constraints[ constraint ] );
           isValid = false;
         } else if ( true === this.constraints[ constraint ].isValid ) {
           this.removeError( this.constraints[ constraint ].name );
@@ -735,6 +735,20 @@
     }
 
     /**
+    * Add li error
+    *
+    * @method addError
+    * @param {Object} { minlength: "error message for minlength constraint" }
+    */
+    , addError: function ( error ) {
+      for ( var constraint in error ) {
+        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
+
+        $( this.ulError ).append( this.options.animate ? $( liTemplate ).text( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).text( error[ constraint ] ) );
+      }
+    }
+
+    /**
     * Remove all ul / li errors
     *
     * @method removeErrors
@@ -758,31 +772,45 @@
     /**
     * Add li / ul errors messages
     *
-    * @method addError
+    * @method manageError
     * @param {Object} constraint
     */
-    , addError: function ( constraint ) {
-
+    , manageError: function ( constraint ) {
       // display ulError container if it has been removed previously (or never shown)
       if ( !$( this.ulError ).length ) {
-        this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || ( !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate.show() ) : this.$element.parent().after( this.ulTemplate.show() ) );
+        this.manageErrorContainer();
       }
 
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
         , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
-        , liError = this.ulError + ' .' + liClass
-        , liTemplate = $( this.options.errors.errorElem ).addClass( liClass )
+        , liError = {}
         , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
-      // TODO: refacto this shit too
-      // add liError if not shown. Do not add more than once custom errorMessage if exsit
-      if ( !$( liError ).length ) {
-        $( this.ulError ).append( this.options.animate ? $( liTemplate ).text( message ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).text( message ) );
+      // add liError if not shown. Do not add more than once custom errorMessage if exist
+      if ( !$( this.ulError + ' .' + liClass ).length ) {
+        liError[ liClass ] = message;
+        this.addError( liError );
       }
+    }
+
+    /**
+    * Create ul error container
+    *
+    * @method manageErrorContainer
+    */
+    , manageErrorContainer: function () {
+      var errorContainer = this.options.errors.container( this.element, this.isRadioOrCheckbox )
+        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
+
+      if ( 'undefined' !== typeof errorContainer ) {
+        $( errorContainer ).append( ulTemplate );
+        return;
+      }
+
+      !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
     }
 
     /**
@@ -841,11 +869,11 @@
       this.$element = $( element );
       this.hash = this.getName();
       this.isRadioOrCheckbox = true;
+      this.$siblings = $( this.siblings );
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
       this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
-      this.$siblings = $( this.siblings );
-      this.errorClassHandler = options.errors.classHandler( element ) || this.$element.parent();
+      this.errorClassHandler = options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element.parent();
     }
 
     /**
@@ -873,6 +901,10 @@
     * @returns {String} radio / checkbox hash is cleaned 'name' property
     */
    , getName: function () {
+     if ( 'undefined' === typeof this.$element.attr( 'name' ) ) {
+       throw "A radio / checkbox input must have a name to be Parsley validated !";
+     }
+
      return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
    }
 
@@ -899,6 +931,12 @@
       }
    }
 
+   /**
+   * Bind validation events on a field
+   *
+   * @private
+   * @method bindValidationEvents
+   */
    , bindValidationEvents: function () {
      // this field has validation events, that means it has to be validated
      this.isValid = null;
@@ -1160,8 +1198,8 @@
     //some quite advanced configuration here..
     , validateIfUnchanged: false                                          // false: validate once by field value change
     , errors: {
-        classHandler: function ( elem ) {}                                // class is directly set on elem, parent for radio/checkboxes
-      , container: function ( elem, template, isRadioOrCheckbox ) {}      // error ul is inserted after elem, parent for radio/checkboxes
+        classHandler: function ( elem, isRadioOrCheckbox ) {}             // specify where parsley error-success classes are set
+      , container: function ( elem, isRadioOrCheckbox ) {}                // specify an elem where errors will be **apened**
       , errorsWrapper: '<ul></ul>'                                        // do not set an id for this elem, it would have an auto-generated id
       , errorElem: '<li></li>'                                            // each field constraint fail in an li
       }

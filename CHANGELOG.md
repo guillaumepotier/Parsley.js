@@ -2,6 +2,7 @@
 
 ** 1.1.10-dev **
 
+  - **BC Break** changed errors.classHandler and errors.container
   - animating errors show / hide now
   - fixed radio/checkboxes data-trigger behavior (#115)
   - added `change` event to quickly remove radio/checkboxes errors (#115)

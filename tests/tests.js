@@ -537,6 +537,28 @@ var testSuite = function () {
         expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
         expect( getErrorMessage( '#requiredchanged3', 'required') ).to.be( 'custom required' );
       } )
+      it ( 'Change error handler', function () {
+        $( '#errorsmanagement-form' ).parsley( {
+            successClass: 'parsley-great'
+          , errorClass: 'parsley-fail'
+          , errors: {
+            classHandler: function () {
+              return $( '#errorsmanagement-labelinfo' );
+            }
+            , container: function () {
+              return $( '#errorsmanagement-labelerror' );
+            }
+            , errorsWrapper: '<div></div>'
+            , errorElem: '<span></span>'
+          }
+        } );
+        $( '#errorsmanagement-email' ).val( 'foo' ).parsley( 'validate' );
+        expect( $( '#errorsmanagement-labelinfo' ).hasClass( 'parsley-fail' ) ).to.be( true );
+        expect( $( '#errorsmanagement-labelerror div.parsley-error-list span.type' ).length ).to.be( 1 );
+        $( '#errorsmanagement-email' ).val( 'foo@bar.baz' ).parsley( 'validate' );
+        expect( $( '#errorsmanagement-labelerror div' ).length ).to.be( 0 );
+        expect( $( '#errorsmanagement-labelinfo' ).hasClass( 'parsley-great' ) ).to.be( true );
+      } )
     } )
 
     /***************************************

@@ -36,6 +36,6 @@
 # add / improve tests
 
 * test that remote validator imply field has onchange event validation
-* customization parsley classes (js & data api)
-* customization errorClass handler (js & data api)
-* customization error ul position (js & data api)
+* [DONE] customization parsley classes (js & data api)
+* [DONE] customization errorClass handler (js & data api)
+* [DONE] customization error ul position (js & data api)

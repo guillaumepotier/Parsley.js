@@ -136,6 +136,13 @@
             <input type="text" id="requiredchanged2" data-required="true" />
             <input type="text" id="requiredchanged3" data-required="true" data-type="email" data-required-message="custom required" data-type-email-message="custom email" />
         </form>
+
+        <form id="errorsmanagement-form">
+            <label id="errorsmanagement-labelinfo"></label>
+            <label id="errorsmanagement-labelerror"></label>
+            <input type="text" id="errorsmanagement-email" data-type="email" />
+        </form>
+
         <form id="validation-scenarios" data-validate="parsley">
             <input type="text" id="scenario-not-required" data-trigger="keyup" data-minlength="6" />
             <input type="text" id="scenario-keyup-when-notvalid" data-trigger="change" data-type="email" />
