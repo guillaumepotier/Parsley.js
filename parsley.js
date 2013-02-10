@@ -166,8 +166,8 @@
           dataType = { dataType: self.options.remoteDatatype };
         }
 
-        var manage = function ( isConstraintValid ) {
-          self.updtConstraint( { name: 'remote', isValid: isConstraintValid } );
+        var manage = function ( isConstraintValid, message ) {
+          self.updtConstraint( { name: 'remote', isValid: isConstraintValid }, message );
           self.manageValidationResult();
         };
 
@@ -180,10 +180,11 @@
             manage( '1' === response
               || 'true' == response
               || ( 'object' === typeof response && 'undefined' !== typeof response.success )
-              || new RegExp( 'success', 'i' ).test( response )
+              || new RegExp( 'success', 'i' ).test( response ),
+              ( response.error ) ? response.error : (( response.message ) ? response.message : null)
             );
           }
-          , error: function ( response ) {
+          , error: function ( jqXHR, textStatus, errorThrown ) {
             manage( false );
           }
         }, dataType ) );
@@ -428,9 +429,9 @@
     * @method updtConstraint
     * @param {Object} constraint
     */
-    , updateConstraint: function ( constraint ) {
+    , updateConstraint: function ( constraint, message) {
       for ( var name in constraint ) {
-        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null } );
+        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null }, message );
       }
     }
 
@@ -441,10 +442,13 @@
     * @method updtConstraint
     * @param {Object} constraint
     */
-    , updtConstraint: function ( constraint ) {
+    , updtConstraint: function ( constraint, message ) {
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraint.name ) {
           this.constraints[ i ] = $.extend( true, this.constraints[ i ], constraint );
+          if ( 'string' === typeof message ) {
+            this.Validator.messages[ this.constraints[ i ].name ] = message ;
+          }
         }
       }
 

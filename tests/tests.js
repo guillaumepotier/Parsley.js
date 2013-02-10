@@ -1,6 +1,6 @@
 'use strict';
 
-var xhr, requests;
+var xhr, requests, server;
 
 window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     // deactivate errors animation, causing travis test suite failing
@@ -458,7 +458,7 @@ var testSuite = function () {
             $( '#remote2' ).parsley( 'validate' );
             expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
           } )
-
+          
           after( function () {
             $.ajax.restore();
           });
@@ -474,6 +474,8 @@ var testSuite = function () {
               , { statusCode: 200, content: "1", expect: true }
               , { statusCode: 200, content: "0", expect: false }
               , { statusCode: 200, content: "{success: \"foobar\"}", expect: true }
+              , { statusCode: 200, content: "{error: \"foobar\"}", expect: true }
+              , { statusCode: 500, content: "This is a message error", expect: true }
               ];
 
             before( function () {
