@@ -769,7 +769,8 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td colspan="2"><strong>Custom ajax validation made simple.</strong><br/>
                           <code>data-remote-method="POST"</code> to change default <code>GET</code> call.<br/>
                           <code>data-remote-datatype="jsonp"</code> if you make cross domain ajax call and expect <code>jsonp</code><br/>
-                          Parsley will accept these valid returns: <code>1</code>, <code>true</code>, <code>{ success: "" }</code> and assume false otherwise
+                          Parsley will accept these valid returns with a 200 response code: <code>1</code>, <code>true</code>, <code>{ "success": "..." }</code> and assume false otherwise<br/>
+                          You can show frontend server-side specific error messages by returning <code>{ "error": "your custom message" }</code> or <code>{ "message": "your custom message" }</code>
                         </td>
                     </tr>
 
