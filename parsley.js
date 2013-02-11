@@ -174,7 +174,12 @@
           self.manageValidationResult();
         };
 
+        // transform string response into object
         var handleResponse = function ( response ) {
+          if ( 'object' === typeof response ) {
+            return response;
+          }
+
           try {
             response = $.parseJSON( response );
           } catch ( err ) {}
@@ -183,7 +188,7 @@
         }
 
         var manageErrorMessage = function ( response ) {
-          return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null) ) : null;
+          return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null ) ) : null;
         }
 
         $.ajax( $.extend( {}, {
@@ -260,7 +265,7 @@
         return message;
       }
 
-      return 'string' === typeof message ? message.replace(new RegExp( '%s', 'i' ), args) : '';
+      return 'string' === typeof message ? message.replace( new RegExp( '%s', 'i' ), args ) : '';
     }
 
     /**
@@ -450,7 +455,7 @@
     * @method updtConstraint
     * @param {Object} constraint
     */
-    , updateConstraint: function ( constraint, message) {
+    , updateConstraint: function ( constraint, message ) {
       for ( var name in constraint ) {
         this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null }, message );
       }
