@@ -719,6 +719,7 @@ var testSuite = function () {
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
         $( '#dynamic-email' ).val( 'foo' );
         $( '#dynamic-form' ).parsley( 'removeItem', '#dynamic-email' );
+        expect( $( '#dynamic-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
       } )
       it ( 'test adding constraint on the fly', function () {
@@ -741,8 +742,7 @@ var testSuite = function () {
         $( '#onthefly' ).parsley( 'removeConstraint', 'type' ).val( 'foo' );
         $( '#onthefly-form' ).parsley( 'validate' );
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
-        // still parsley validated, even if no more constraint
-        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
     } )
 

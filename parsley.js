@@ -344,6 +344,14 @@
       }
     }
 
+    , setParent: function ( elem ) {
+      this.$parent = $( elem );
+    }
+
+    , getParent: function () {
+      return this.$parent;
+    }
+
     /**
     * Bind some extra html5 types / validators
     *
@@ -474,10 +482,15 @@
 
       this.constraints = updatedConstraints;
 
-      // if there are no more constraint, reset parsley instance for this field, remove events and exit
+      // if there are no more constraint, destroy parsley instance for this field
       if ( updatedConstraints.length === 0 ) {
-        this.reset();
-        this.$element.off( '.' + this.type );
+        // in a form context, remove item from parent
+        if ( 'ParsleyForm' === typeof this.getParent() ) {
+          this.getParent().removeItem( this.$element );
+          return;
+        }
+
+        this.destroy();
         return;
       }
 
@@ -1031,11 +1044,11 @@
         return false;
       }
 
-      var parsleyItem = $( elem ).parsley( this.options );
+      var ParsleyField = $( elem ).parsley( this.options );
+      ParsleyField.setParent( this );
 
-      if ( null !== parsleyItem ) {
-        this.items.push( parsleyItem );
-      }
+      this.removeItem( $( elem ) );
+      this.items.push( ParsleyField );
     }
 
     /**
@@ -1046,9 +1059,10 @@
     * @return {Boolean}
     */
     , removeItem: function ( elem ) {
-      for ( var i in this.items ) {
+      for ( var i = 0; i < this.items.length; i++ ) {
         if ( this.items[ i ].$element.attr( 'id' ) === $( elem ).attr( 'id' ) ) {
-          delete this.items[ i ];
+          this.items[ i ].destroy();
+          this.items.splice( i, 1 );
           return true;
         }
       }
