@@ -1147,6 +1147,17 @@
 
       this.$element.off( '.' + this.type ).removeData( this.type );
     }
+    
+    /**
+    * reset Parsley binded on the form and its fields
+    *
+    * @method reset
+    */
+    , reset: function () {
+      for ( var item = 0; item < this.items.length; item++ ) {
+        this.items[ item ].reset();
+      }
+    }
   };
 
   /**

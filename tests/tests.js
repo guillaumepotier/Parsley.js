@@ -762,6 +762,14 @@ var testSuite = function () {
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
       } )
+      it ( 'test parsley(\'reset\')', function () {
+          $('#reset').parsley('validate');
+          expect( $('#reset-email').hasClass('parsley-error') ).to.be( true );
+          expect( $('#reset-textarea').hasClass('parsley-error') ).to.be( true );
+          $('#reset').parsley('reset');
+          expect( $('#reset-email').hasClass('parsley-error')).to.be( false );
+          expect( $('#reset-textarea').hasClass('parsley-error')).to.be( false );
+      })
       it ( 'test parsley dynamic add item', function () {
         $( '#dynamic-form' ).append( '<input type="text" data-type="email" id="dynamic-email" data-trigger="change" value="foo" />' );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
