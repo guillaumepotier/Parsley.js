@@ -2,6 +2,12 @@
 
 ** 1.1.10-dev **
 
+  - **BC Break** changed errors.classHandler and errors.container
+  - animating errors show / hide now
+  - fixed radio/checkboxes data-trigger behavior (#115)
+  - added `change` event to quickly remove radio/checkboxes errors (#115)
+  - added ability to group radio / checkboxes by `data-group` attribute intead of name
+
 ** 1.1.9 **
 
   - added `addItem` and `removeItem` functions to validate dynamically created fields

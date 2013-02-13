@@ -100,20 +100,27 @@
             <input type="text" id="equalTo-model" value="foobar" />
             <input type="text" id="equalTo" data-equalTo="#equalTo-model" />
 
-            <input type="checkbox" id="checkbox-mincheck1" name="mincheck[]" data-mincheck="2" value="foo" />
+            <input type="checkbox" id="checkbox-mincheck1" name="mincheck[]" value="foo" data-mincheck="2" />
             <input type="checkbox" id="checkbox-mincheck2" name="mincheck[]" value="bar" />
 
-            <input type="checkbox" id="checkbox-maxcheck1" name="maxcheck[]" data-maxcheck="2" value="foo" />
+            <input type="checkbox" id="checkbox-mincheckgroup1" value="foo" data-group="foo" data-mincheck="2" />
+            <input type="checkbox" id="checkbox-mincheckgroup2" value="bar" data-group="foo" />
+
+            <input type="checkbox" id="checkbox-maxcheck1" name="maxcheck[]" value="foo" data-maxcheck="2" data-trigger="change"/>
             <input type="checkbox" id="checkbox-maxcheck2" name="maxcheck[]" value="bar" />
             <input type="checkbox" id="checkbox-maxcheck3" name="maxcheck[]" value="baz" />
 
-            <input type="checkbox" id="checkbox-rangecheck1" name="rangecheck[]" data-rangecheck="[2,3]" value="foo" />
+            <input type="checkbox" id="checkbox-rangecheck1" name="rangecheck[]" value="foo" data-rangecheck="[2,3]" />
             <input type="checkbox" id="checkbox-rangecheck2" name="rangecheck[]" value="bar" />
             <input type="checkbox" id="checkbox-rangecheck3" name="rangecheck[]" value="baz" />
             <input type="checkbox" id="checkbox-rangecheck4" name="rangecheck[]" value="boz" />
 
+            <input type="checkbox" id="checkbox-maxcheckchange1" name="maxcheckchange[]" value="foo" data-maxcheck="2" />
+            <input type="checkbox" id="checkbox-maxcheckchange2" name="maxcheckchange[]" value="bar" />
+            <input type="checkbox" id="checkbox-maxcheckchange3" name="maxcheckchange[]" value="baz" />
+
             <input type="text" id="remote1" name="remote1" data-remote="http://foo.bar" data-remote-datatype="jsonp" />
-            <input type="text" id="remote2" name="remote2" data-remote="http://foo.bar/baz" data-remote-method="POST" />
+            <input type="text" id="remote2" name="remote2" data-remote="http://foo.bar/baz" data-trigger="change" data-remote-method="POST" />
 
             <input type="submit" />
         </form>
@@ -132,6 +139,13 @@
             <input type="text" id="requiredchanged2" data-required="true" />
             <input type="text" id="requiredchanged3" data-required="true" data-type="email" data-required-message="custom required" data-type-email-message="custom email" />
         </form>
+
+        <form id="errorsmanagement-form">
+            <label id="errorsmanagement-labelinfo"></label>
+            <label id="errorsmanagement-labelerror"></label>
+            <input type="text" id="errorsmanagement-email" data-type="email" />
+        </form>
+
         <form id="validation-scenarios" data-validate="parsley">
             <input type="text" id="scenario-not-required" data-trigger="keyup" data-minlength="6" />
             <input type="text" id="scenario-keyup-when-notvalid" data-trigger="change" data-type="email" />
@@ -152,6 +166,10 @@
         <form data-validate="parsley" id="destroy">
             <input type="text" data-type="email" id="destroy-email" data-trigger="change" />
             <input type="select" id="destroy-multiple" data-required="true"></input>
+        </form>
+        <form data-validate="parsley" id="reset">
+            <input type="text" id="reset-email" data-required="true" />
+            <textarea id="reset-textarea" data-required="true"></textarea>
         </form>
         <form data-validate="parsley" id="dynamic-form">
         </form>
