@@ -902,12 +902,12 @@
     , initMultiple: function ( element, options ) {
       this.element = element;
       this.$element = $( element );
+      this.group = options.group || false;
       this.hash = this.getName();
+      this.siblings = this.group ? '[data-group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.isRadioOrCheckbox = true;
-      this.$siblings = $( this.siblings );
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
-      this.siblings = 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.errorClassHandler = options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element.parent();
     }
 
@@ -933,11 +933,15 @@
     * Set specific constraints messages, do pseudo-heritance
     *
     * @method getName
-    * @returns {String} radio / checkbox hash is cleaned 'name' property
+    * @returns {String} radio / checkbox hash is cleaned 'name' or data-group property
     */
    , getName: function () {
+     if ( this.group ) {
+       return 'parsley-' + this.group;
+     }
+
      if ( 'undefined' === typeof this.$element.attr( 'name' ) ) {
-       throw "A radio / checkbox input must have a name to be Parsley validated !";
+       throw "A radio / checkbox input must have a data-group attribute or a name to be Parsley validated !";
      }
 
      return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );

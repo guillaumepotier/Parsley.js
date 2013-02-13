@@ -416,6 +416,13 @@ var testSuite = function () {
           $( '#checkbox-mincheck2' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-mincheck1' ).parsley( 'validate' ) ).to.be( true );
         } )
+        it ( 'mincheck data-group', function () {
+          $( '#checkbox-mincheckgroup1' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-mincheckgroup1' ).parsley( 'validate' ) ).to.be( false );
+          expect( getErrorMessage( '#checkbox-mincheckgroup1', 'mincheck') ).to.be( 'You must select at least 2 choices.' );
+          $( '#checkbox-mincheckgroup2' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-mincheckgroup1' ).parsley( 'validate' ) ).to.be( true );
+        } )
         it ( 'maxcheck', function () {
           $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-maxcheck1' ).parsley( 'validate' ) ).to.be( true );
