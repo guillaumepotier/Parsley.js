@@ -143,10 +143,10 @@
       , maxcheck:       &quot;You must select %s choices or less.&quot;
       , rangecheck:     &quot;You must select between %s and %s choices.&quot;
       , equalto:        &quot;This value should be the same.&quot;
-    }
+    },
 
     this.init( options );
-  }
+  };
 
   Validator.prototype = {
 
@@ -174,7 +174,7 @@
         if ( &#x27;object&#x27; === typeof val ) {
           for ( var i in val ) {
             if ( this.required( val[ i ] ) ) {
-              return true
+              return true;
             }
           }
 
@@ -202,6 +202,7 @@
             break;
           case &#x27;url&#x27;:
             val = new RegExp( &#x27;(https?|s?ftp|git)&#x27;, &#x27;i&#x27; ).test( val ) ? val : &#x27;http:&#x2F;&#x2F;&#x27; + val;
+            &#x2F;* falls through *&#x2F;
           case &#x27;urlstrict&#x27;:
             regExp = &#x2F;^(https?|s?ftp|git):\&#x2F;\&#x2F;(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\&#x2F;((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)+(\&#x2F;(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\&#x2F;|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&amp;&#x27;\(\)\*\+,;=]|:|@)|\&#x2F;|\?)*)?$&#x2F;i;
             break;
@@ -210,7 +211,6 @@
             break;
           default:
             return false;
-            break;
         }
 
         &#x2F;&#x2F; test regExp if not null
@@ -234,18 +234,20 @@
       }
 
       , min: function ( val, min ) {
-        return new Number( val ) &gt;= min;
+        return Number( val ) &gt;= min;
       }
 
       , max: function ( val, max ) {
-        return new Number( val ) &lt;= max;
+        return Number( val ) &lt;= max;
       }
 
       , range: function ( val, arrayRange ) {
         return val &gt;= arrayRange[ 0 ] &amp;&amp; val &lt;= arrayRange[ 1 ];
       }
 
-      , equalto: function ( val, elem ) {
+      , equalto: function ( val, elem, self ) {
+        self.options.validateIfUnchanged = true;
+
         return val === $( elem ).val();
       }
 
@@ -261,9 +263,9 @@
         }
 
         var manage = function ( isConstraintValid ) {
-          self.updateConstraint( &#x27;remote&#x27;, &#x27;isValid&#x27;, isConstraintValid );
+          self.updtConstraint( { name: &#x27;remote&#x27;, isValid: isConstraintValid } );
           self.manageValidationResult();
-        }
+        };
 
         $.ajax( $.extend( {}, {
             url: url
@@ -312,12 +314,13 @@
       var customValidators = options.validators
         , customMessages = options.messages;
 
-      for ( var i in customValidators ) {
-        this.addValidator(i, customValidators[ i ]);
+      var key;
+      for ( key in customValidators ) {
+        this.addValidator(key, customValidators[ key ]);
       }
 
-      for ( var i in customMessages ) {
-        this.addMessage(i, customMessages[ i ]);
+      for ( key in customMessages ) {
+        this.addMessage(key, customMessages[ key ]);
       }
     }
 
@@ -363,14 +366,14 @@
     , addMessage: function ( key, message, type ) {
 
       if ( &#x27;undefined&#x27; !== typeof type &amp;&amp; true === type ) {
-        this.messages[ &#x27;type&#x27; ][ key ] = message;
+        this.messages.type[ key ] = message;
         return;
       }
 
       &#x2F;&#x2F; custom types messages are a bit tricky cuz&#x27; nested ;)
       if ( &#x27;type&#x27; === key ) {
         for ( var i in message ) {
-          this.messages[ &#x27;type&#x27; ][ i ] = message[ i ];
+          this.messages.type[ i ] = message[ i ];
         }
 
         return;
@@ -378,7 +381,7 @@
 
       this.messages[ key ] = message;
     }
-  }
+  };
 
   &#x2F;**
   * ParsleyField class manage each form field inside a validated Parsley form.
@@ -392,7 +395,7 @@
     this.options = options;
     this.Validator = new Validator( options );
     this.init( element, type || &#x27;ParsleyField&#x27; );
-  }
+  };
 
   ParsleyField.prototype = {
 
@@ -477,22 +480,103 @@
     *&#x2F;
     , addConstraints: function () {
       for ( var constraint in this.options ) {
-        var constraint = constraint.toLowerCase();
+        var addConstraint = {};
+        addConstraint[ constraint ] = this.options[ constraint ];
+        this.addConstraint( addConstraint, true );
+      }
+    }
 
-        if ( &#x27;function&#x27; === typeof this.Validator.validators[ constraint ] ) {
-          this.constraints.push( {
-              name: constraint
-            , requirements: this.options[ constraint ]
-            , isValid: null
-          } );
+    &#x2F;**
+    * Dynamically add a new constraint to a field
+    *
+    * @method addConstraint
+    * @param {Object} constraint { name: requirements }
+    *&#x2F;
+    , addConstraint: function ( constraint, doNotUpdateValidationEvents ) {
+        for ( var name in constraint ) {
+          name = name.toLowerCase();
 
-          if ( constraint === &#x27;required&#x27; ) {
-            this.isRequired = true;
+          if ( &#x27;function&#x27; === typeof this.Validator.validators[ name ] ) {
+            this.constraints.push( {
+                name: name
+              , requirements: constraint[ name ]
+              , isValid: null
+            } );
+
+            if ( name === &#x27;required&#x27; ) {
+              this.isRequired = true;
+            }
+
+            this.addCustomConstraintMessage( name );
           }
+        }
 
-          this.addCustomConstraintMessage( constraint );
+        &#x2F;&#x2F; force field validation next check and reset validation events
+        if ( &#x27;undefined&#x27; === typeof doNotUpdateValidationEvents ) {
+          this.bindValidationEvents();
+        }
+    }
+
+    &#x2F;**
+    * Dynamically update an existing constraint to a field.
+    * Simple API: { name: requirements }
+    *
+    * @method updtConstraint
+    * @param {Object} constraint
+    *&#x2F;
+    , updateConstraint: function ( constraint ) {
+      for ( var name in constraint ) {
+        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null } );
+      }
+    }
+
+    &#x2F;**
+    * Dynamically update an existing constraint to a field.
+    * Complex API: { name: name, requirements: requirements, isValid: boolean }
+    *
+    * @method updtConstraint
+    * @param {Object} constraint
+    *&#x2F;
+    , updtConstraint: function ( constraint ) {
+      for ( var i in this.constraints ) {
+        if ( this.constraints[ i ].name === constraint.name ) {
+          this.constraints[ i ] = $.extend( true, this.constraints[ i ], constraint );
         }
       }
+
+      &#x2F;&#x2F; force field validation next check and reset validation events
+      this.bindValidationEvents();
+    }
+
+    &#x2F;**
+    * Dynamically remove an existing constraint to a field.
+    *
+    * @method removeConstraint
+    * @param {String} constraintName
+    *&#x2F;
+    , removeConstraint: function ( constraintName ) {
+      var constraintName = constraintName.toLowerCase()
+        , updatedConstraints = [];
+
+      for ( var constraint in this.constraints ) {
+        if ( this.constraints[ constraint ].name !== constraintName ) {
+          updatedConstraints.push( this.constraints[ constraint ] );
+        }
+      }
+
+      if ( constraintName === &#x27;required&#x27; ) {
+        this.isRequired = false;
+      }
+
+      this.constraints = updatedConstraints;
+
+      &#x2F;&#x2F; if there are no more constraint, destroy parsley instance for this field and exit
+      if ( updatedConstraints.length === 0 ) {
+        this.destroy();
+        return;
+      }
+
+      this.bindValidationEvents();
     }
 
     &#x2F;**
@@ -505,7 +589,7 @@
     , addCustomConstraintMessage: function ( constraint ) {
       &#x2F;&#x2F; custom message type data-type-email-message -&gt; typeEmailMessage | data-minlength-error =&gt; minlengthMessage
       var customMessage = constraint
-        + ( &#x27;type&#x27; === constraint ? this.options[ constraint ].charAt( 0 ).toUpperCase() + this.options[ constraint ].substr( 1 ) : &#x27;&#x27; )
+        + ( &#x27;type&#x27; === constraint &amp;&amp; &#x27;undefined&#x27; !== typeof this.options[ constraint ] ? this.options[ constraint ].charAt( 0 ).toUpperCase() + this.options[ constraint ].substr( 1 ) : &#x27;&#x27; )
         + &#x27;Message&#x27;;
 
       if ( &#x27;undefined&#x27; !== typeof this.options[ customMessage ] ) {
@@ -520,7 +604,12 @@
     * @method bindValidationEvents
     *&#x2F;
     , bindValidationEvents: function () {
+      &#x2F;&#x2F; this field has validation events, that means it has to be validated
+      this.isValid = null;
       this.$element.addClass( &#x27;parsley-validated&#x27; );
+
+      &#x2F;&#x2F; remove eventually already binded events
+      this.$element.off( &#x27;.&#x27; + this.type );
 
       &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
       var triggers = this.options.trigger + ( new RegExp( &#x27;key&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27; keyup&#x27; );
@@ -643,7 +732,7 @@
     * @return {Boolean}
     *&#x2F;
     , needsValidation: function ( val ) {
-      if ( this.val === val &amp;&amp; this.validatedOnce ) {
+      if ( !this.options.validateIfUnchanged &amp;&amp; this.isValid !== null &amp;&amp; this.val === val &amp;&amp; this.validatedOnce ) {
         return false;
       }
 
@@ -661,7 +750,7 @@
     , applyValidators: function () {
       var isValid = null;
 
-      for ( var constraint in this.constraints ) {
+      for ( var constraint = 0; constraint &lt; this.constraints.length; constraint++ ) {
         var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
 
         if ( false === result ) {
@@ -677,23 +766,6 @@
     }
 
     &#x2F;**
-    * Update a constraint state. Curently used by remote async validator
-    *
-    * @method updateConstraint
-    * @param constraintName
-    * @param property
-    * @param value
-    *&#x2F;
-    , updateConstraint: function ( constraintName, property, value ) {
-      for ( var i in this.constraints ) {
-        if ( this.constraints[ i ].name === constraintName ) {
-          this.constraints[ i ][ property ] = value;
-          break;
-        }
-      }
-    }
-
-    &#x2F;**
     * Fired when all validators have be executed
     * Returns true or false if field is valid or not
     * Display errors messages below faild fields
@@ -705,7 +777,7 @@
     , manageValidationResult: function () {
       var isValid = null;
 
-      for ( var constraint in this.constraints ) {
+      for ( var constraint = 0; constraint &lt; this.constraints.length; constraint++ ) {
         if ( false === this.constraints[ constraint ].isValid ) {
           this.addError( this.constraints[ constraint ] );
           isValid = false;
@@ -720,11 +792,11 @@
       if ( true === this.isValid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
-        this.options.listeners.onFieldSuccess( this.element, this.constraints, ParsleyField );
+        this.options.listeners.onFieldSuccess( this.element, this.constraints, this );
         return true;
       } else if ( false === this.isValid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
-        this.options.listeners.onFieldError( this.element, this.constraints, ParsleyField );
+        this.options.listeners.onFieldError( this.element, this.constraints, this );
         return false;
       }
 
@@ -827,9 +899,10 @@
     *&#x2F;
     , destroy: function () {
       this.$element.removeClass( &#x27;parsley-validated&#x27; );
+      this.errorClassHandler.removeClass( this.options.errorClass ).removeClass( this.options.successClass );
       this.reset().$element.off( &#x27;.&#x27; + this.type ).removeData( this.type );
     }
-  }
+  };
 
   &#x2F;**
   * ParsleyFieldMultiple override ParsleyField for checkbox and radio inputs
@@ -838,13 +911,14 @@
   * @class ParsleyFieldMultiple
   * @constructor
   *&#x2F;
-  var ParsleyFieldMultiple = function ( element, options ) {
+  var ParsleyFieldMultiple = function ( element, options, type ) {
     this.initMultiple( element, options );
     this.inherit( element, options );
+    this.Validator = new Validator( options );
 
     &#x2F;&#x2F; call ParsleyField constructor
-    this.init( element, options );
-  }
+    this.init( element, type || &#x27;ParsleyFieldMultiple&#x27; );
+  };
 
   ParsleyFieldMultiple.prototype = {
 
@@ -913,12 +987,12 @@
         var values = [];
         $( this.siblings + &#x27;:checked&#x27; ).each( function () {
           values.push( $( this ).val() );
-        } )
+        } );
 
         return values;
       }
    }
-  }
+  };
 
   &#x2F;**
   * ParsleyForm class manage Parsley validated form.
@@ -927,16 +1001,16 @@
   * @class ParsleyForm
   * @constructor
   *&#x2F;
-  var ParsleyForm = function ( element, options ) {
-    this.init( &#x27;parsleyForm&#x27;, element, options );
-  }
+  var ParsleyForm = function ( element, options, type ) {
+    this.init( element, options, type || &#x27;parsleyForm&#x27; );
+  };
 
   ParsleyForm.prototype = {
 
     constructor: ParsleyForm
 
     &#x2F;* init data, bind jQuery on() actions *&#x2F;
-    , init: function ( type, element, options ) {
+    , init: function ( element, options, type ) {
       this.type = type;
       this.items = [];
       this.$element = $( element );
@@ -944,8 +1018,7 @@
       var self = this;
 
       this.$element.find( options.inputs ).each( function () {
-        $( this ).parsley( options );
-        self.items.push( $( this ) );
+        self.addItem( this );
       });
 
       this.$element.on( &#x27;submit.&#x27; + this.type , false, $.proxy( this.validate, this ) );
@@ -959,13 +1032,49 @@
     , addListener: function ( object ) {
       for ( var listener in object ) {
         if ( new RegExp( &#x27;Field&#x27; ).test( listener ) ) {
-          for ( var item in this.items ) {
-            this.items[ item ].parsley( &#x27;addListener&#x27;, object );
+          for ( var item = 0; item &lt; this.items.length; item++ ) {
+            this.items[ item ].addListener( object );
           }
         } else {
-          this.options[ listener ] = object[ listener ];
+          this.options.listeners[ listener ] = object[ listener ];
         }
       }
+    }
+
+    &#x2F;**
+    * Adds a new parsleyItem child to ParsleyForm
+    *
+    * @method addItem
+    * @param elem
+    *&#x2F;
+    , addItem: function ( elem ) {
+      if ( $( elem ).is( this.options.excluded ) ) {
+        return false;
+      }
+
+      var parsleyItem = $( elem ).parsley( this.options );
+
+      if ( null !== parsleyItem ) {
+        this.items.push( parsleyItem );
+      }
+    }
+
+    &#x2F;**
+    * Removes a parsleyItem child from ParsleyForm
+    *
+    * @method removeItem
+    * @param elem
+    * @return {Boolean}
+    *&#x2F;
+    , removeItem: function ( elem ) {
+      for ( var i in this.items ) {
+        if ( this.items[ i ].$element.attr( &#x27;id&#x27; ) === $( elem ).attr( &#x27;id&#x27; ) ) {
+          delete this.items[ i ];
+          return true;
+        }
+      }
+
+      return false;
     }
 
     &#x2F;**
@@ -980,18 +1089,18 @@
       var isValid = true;
       this.focusedField = false;
 
-      for ( var item in this.items ) {
-        if ( false === this.items[ item ].parsley( &#x27;validate&#x27; ) ) {
+      for ( var item = 0; item &lt; this.items.length; item++ ) {
+        if ( &#x27;undefined&#x27; !== typeof this.items[ item ] &amp;&amp; false === this.items[ item ].validate() ) {
           isValid = false;
 
           if ( !this.focusedField &amp;&amp; &#x27;first&#x27; === this.options.focus || &#x27;last&#x27; === this.options.focus ) {
-            this.focusedField = this.items[ item ];
+            this.focusedField = this.items[ item ].$element;
           }
         }
       }
 
       &#x2F;&#x2F; form is invalid, focus an error field depending on focus policy
-      if ( !isValid ) {
+      if ( this.focusedField &amp;&amp; !isValid ) {
         this.focusedField.focus();
       }
 
@@ -1006,7 +1115,7 @@
     * @method removeErrors
     *&#x2F;
     , removeErrors: function () {
-      for ( var item in this.items ) {
+      for ( var item = 0; item &lt; this.items.length; item++ ) {
         this.items[ item ].parsley( &#x27;reset&#x27; );
       }
     }
@@ -1017,13 +1126,13 @@
     * @method destroy
     *&#x2F;
     , destroy: function () {
-      for ( var item in this.items ) {
-        this.items[ item ].parsley( &#x27;destroy&#x27; );
+      for ( var item = 0; item &lt; this.items.length; item++ ) {
+        this.items[ item ].destroy();
       }
 
       this.$element.off( &#x27;.&#x27; + this.type ).removeData( this.type );
     }
-  }
+  };
 
   &#x2F;**
   * Parsley plugin definition
@@ -1036,49 +1145,53 @@
   * @return {Mixed} public class method return
   *&#x2F;
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, &#x27;undefined&#x27; !== typeof window.ParsleyConfig ? ParsleyConfig : {}, option, this.data() )
-      , returnValue = null;
+    var options = $.extend( true, {}, $.fn.parsley.defaults, &#x27;undefined&#x27; !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data() )
+      , newInstance = null;
 
     function bind ( self, type ) {
-      var data = $( self ).data( type );
+      var parsleyInstance = $( self ).data( type );
 
       &#x2F;&#x2F; if data never binded or we want to clone a build (for radio &amp; checkboxes), bind it right now!
-      if ( !data ) {
+      if ( !parsleyInstance ) {
         switch ( type ) {
           case &#x27;parsleyForm&#x27;:
-            data = new ParsleyForm( self, options );
+            parsleyInstance = new ParsleyForm( self, options, &#x27;parsleyForm&#x27; );
             break;
           case &#x27;parsleyField&#x27;:
-            data = new ParsleyField( self, options );
+            parsleyInstance = new ParsleyField( self, options, &#x27;parsleyField&#x27; );
             break;
           case &#x27;parsleyFieldMultiple&#x27;:
-            data = new ParsleyFieldMultiple( self, options );
+            parsleyInstance = new ParsleyFieldMultiple( self, options, &#x27;parsleyFieldMultiple&#x27; );
             break;
           default:
             return;
         }
 
-        $( self ).data( type, data );
+        $( self ).data( type, parsleyInstance );
       }
 
       &#x2F;&#x2F; here is our parsley public function accessor
-      if ( &#x27;string&#x27; === typeof option &amp;&amp; &#x27;function&#x27; === typeof data[ option ] ) {
-        return data[ option ]( fn );
+      if ( &#x27;string&#x27; === typeof option &amp;&amp; &#x27;function&#x27; === typeof parsleyInstance[ option ] ) {
+        var response = parsleyInstance[ option ]( fn );
+
+        return &#x27;undefined&#x27; !== typeof response ? response : $( self );
       }
+
+      return parsleyInstance;
     }
 
     &#x2F;&#x2F; if a form elem is given, bind all its input children
     if ( $( this ).is( &#x27;form&#x27; ) ) {
-      returnValue = bind ( $( this ), &#x27;parsleyForm&#x27; );
+      newInstance = bind ( $( this ), &#x27;parsleyForm&#x27; );
 
     &#x2F;&#x2F; if it is a Parsley supported single element, bind it too, except inputs type hidden
     &#x2F;&#x2F; add here a return instance, cuz&#x27; we could call public methods on single elems with data[ option ]() above
     } else if ( $( this ).is( options.inputs ) &amp;&amp; !$( this ).is( options.excluded ) ) {
-      returnValue = bind( $( this ), !$( this ).is( &#x27;input[type=radio], input[type=checkbox]&#x27; ) ? &#x27;parsleyField&#x27; : &#x27;parsleyFieldMultiple&#x27; );
+      newInstance = bind( $( this ), !$( this ).is( &#x27;input[type=radio], input[type=checkbox]&#x27; ) ? &#x27;parsleyField&#x27; : &#x27;parsleyFieldMultiple&#x27; );
     }
 
-    return &#x27;function&#x27; === typeof fn ? fn() : returnValue;
-  }
+    return &#x27;function&#x27; === typeof fn ? fn() : newInstance;
+  };
 
   $.fn.parsley.Constructor = ParsleyForm;
 
@@ -1090,18 +1203,19 @@
   *&#x2F;
   $.fn.parsley.defaults = {
     &#x2F;&#x2F; basic data-api overridable properties here..
-    inputs: &#x27;input, textarea, select&#x27;   &#x2F;&#x2F; Default supported inputs.
-    , excluded: &#x27;input[type=hidden]&#x27;    &#x2F;&#x2F; Do not validate input[type=hidden].
-    , trigger: false                    &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
-    , focus: &#x27;first&#x27;                    &#x2F;&#x2F; &#x27;fist&#x27;|&#x27;last&#x27;|&#x27;none&#x27; which error field would have focus first on form validation
-    , validationMinlength: 3            &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
-    , successClass: &#x27;parsley-success&#x27;   &#x2F;&#x2F; Class name on each valid input
-    , errorClass: &#x27;parsley-error&#x27;       &#x2F;&#x2F; Class name on each invalid input
-    , errorMessage: false               &#x2F;&#x2F; Customize an unique error message showed if one constraint fails
-    , validators: {}                    &#x2F;&#x2F; Add your custom validators functions
-    , messages: {}                      &#x2F;&#x2F; Add your own error messages here
+    inputs: &#x27;input, textarea, select&#x27;           &#x2F;&#x2F; Default supported inputs.
+    , excluded: &#x27;input[type=hidden], :disabled&#x27; &#x2F;&#x2F; Do not validate input[type=hidden] &amp; :disabled.
+    , trigger: false                            &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
+    , focus: &#x27;first&#x27;                            &#x2F;&#x2F; &#x27;fist&#x27;|&#x27;last&#x27;|&#x27;none&#x27; which error field would have focus first on form validation
+    , validationMinlength: 3                    &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
+    , successClass: &#x27;parsley-success&#x27;           &#x2F;&#x2F; Class name on each valid input
+    , errorClass: &#x27;parsley-error&#x27;               &#x2F;&#x2F; Class name on each invalid input
+    , errorMessage: false                       &#x2F;&#x2F; Customize an unique error message showed if one constraint fails
+    , validators: {}                            &#x2F;&#x2F; Add your custom validators functions
+    , messages: {}                              &#x2F;&#x2F; Add your own error messages here
 
     &#x2F;&#x2F;some quite advanced configuration here..
+    , validateIfUnchanged: false                                          &#x2F;&#x2F; false: validate once by field value change
     , errors: {
         classHandler: function ( elem ) {}                                &#x2F;&#x2F; class is directly set on elem, parent for radio&#x2F;checkboxes
       , container: function ( elem, template, isRadioOrCheckbox ) {}      &#x2F;&#x2F; error ul is inserted after elem, parent for radio&#x2F;checkboxes
@@ -1110,11 +1224,11 @@
       }
     , listeners: {
         onFieldValidate: function ( elem, ParsleyForm ) { return false; } &#x2F;&#x2F; Executed on validation. Return true to ignore field validation
-      , onFormSubmit: function ( isFormValid, event, ParsleyField ) {}    &#x2F;&#x2F; Executed once on form validation
+      , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}     &#x2F;&#x2F; Executed once on form validation
       , onFieldError: function ( elem, constraints, ParsleyField ) {}     &#x2F;&#x2F; Executed when a field is detected as invalid
       , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   &#x2F;&#x2F; Executed when a field passes validation
     }
-  }
+  };
 
   &#x2F;* PARSLEY auto-bind DATA-API + Global config retrieving
   * =================================================== *&#x2F;
