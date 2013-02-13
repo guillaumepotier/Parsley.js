@@ -771,15 +771,19 @@ var testSuite = function () {
           expect( $('#reset-textarea').hasClass('parsley-error')).to.be( false );
       })
       it ( 'test parsley dynamic add item', function () {
-        $( '#dynamic-form' ).append( '<input type="text" data-type="email" id="dynamic-email" data-trigger="change" value="foo" />' );
+        $( '#dynamic-form' ).append( '<input type="text" data-type="email" class="dynamic-email" data-trigger="change" value="foo" />' );
+        var ParsleyForm = $( '#dynamic-form' ).parsley();
+        expect( ParsleyForm.items.length ).to.be( 0 );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
-        $( '#dynamic-form' ).parsley( 'addItem', '#dynamic-email' );
+        $( '#dynamic-form' ).parsley( 'addItem', '.dynamic-email' );
+        expect( ParsleyForm.items.length ).to.be( 1 );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( false );
-        $( '#dynamic-email' ).val( 'foo@bar.baz' );
+        $( '.dynamic-email' ).val( 'foo@bar.baz' );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
-        $( '#dynamic-email' ).val( 'foo' );
-        $( '#dynamic-form' ).parsley( 'removeItem', '#dynamic-email' );
-        expect( $( '#dynamic-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        $( '.dynamic-email' ).val( 'foo' );
+        $( '#dynamic-form' ).parsley( 'removeItem', '.dynamic-email' );
+        expect( ParsleyForm.items.length ).to.be( 0 );
+        expect( $( '.dynamic-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
       } )
       it ( 'test adding constraint on the fly', function () {

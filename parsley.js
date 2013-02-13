@@ -1069,7 +1069,6 @@
       var ParsleyField = $( elem ).parsley( this.options );
       ParsleyField.setParent( this );
 
-      this.removeItem( $( elem ) );
       this.items.push( ParsleyField );
     }
 
@@ -1081,8 +1080,11 @@
     * @return {Boolean}
     */
     , removeItem: function ( elem ) {
+      var parsleyItem = $( elem ).parsley();
+
+      // identify & remove item if same Parsley hash
       for ( var i = 0; i < this.items.length; i++ ) {
-        if ( this.items[ i ].$element.attr( 'id' ) === $( elem ).attr( 'id' ) ) {
+        if ( this.items[ i ].hash === parsleyItem.hash ) {
           this.items[ i ].destroy();
           this.items.splice( i, 1 );
           return true;
