@@ -401,6 +401,11 @@
           }
         }
       }
+
+      if ( 'undefined' !== typeof this.$element.attr( 'pattern' )) {
+          this.options.regexp = this.$element.attr( 'pattern' );
+      }
+
     }
 
     /**
