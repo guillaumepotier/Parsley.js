@@ -295,6 +295,13 @@ var testSuite = function () {
         triggerSubmitValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'pattern html5-regexp', function () {
+        triggerSubmitValidation( '#regexp-html5', 'foo' );
+        expect( $( '#regexp-html5' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#regexp-html5', 'regexp') ).to.be( 'This value seems to be invalid.' );
+        triggerSubmitValidation( '#regexp-html5', '42');
+        expect( $( '#regexp-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
 
       var urls = [
           { url: "http://foo.com/bar_(baz)#bam-1", expected: true, strict: true }
