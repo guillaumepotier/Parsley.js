@@ -639,6 +639,11 @@
       var val = this.getVal()
         , isValid = null;
 
+      // do not even bother trying validating a field w/o constraints
+      if ( this.constraints.length === 0 ) {
+        return null;
+      }
+
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
       if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
         this.reset();
