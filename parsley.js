@@ -402,7 +402,7 @@
         }
       }
 
-      if ( 'undefined' !== typeof this.$element.attr( 'pattern' )) {
+      if ( 'string' === typeof this.$element.attr( 'pattern' ) && this.$element.attr( 'pattern' ).length ) {
           this.options.regexp = this.$element.attr( 'pattern' );
       }
 
