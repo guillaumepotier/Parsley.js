@@ -1003,8 +1003,8 @@
    * @param {Object} event jQuery event
    */
    , eventValidation: function ( event ) {
-     // start validation process only if field has enough chars and validation never started
-     if ( !this.validatedOnce ) {
+     // do nothing on change event if not explicitely passed as data-trigger and if field has not already been validated once
+     if ( event.type === 'change' && !/change/i.test( this.options.trigger ) && !this.validatedOnce ) {
        return true;
      }
 

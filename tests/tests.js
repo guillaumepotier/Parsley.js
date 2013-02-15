@@ -710,6 +710,7 @@ var testSuite = function () {
         expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
       } )
       it ( 'Test change validation for checkboxes', function () {
+        // test on change auto triggered event to correct mistakes
         $( '#checkbox-maxcheckchange1' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheckchange2' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheckchange3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
@@ -718,6 +719,17 @@ var testSuite = function () {
         expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
         $( '#checkbox-maxcheckchange2' ).attr( 'checked', null ).trigger( $.Event( 'change' ) );
         expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+
+        // test explicitely change trigger
+        $( '#checkbox-maxcheck3' ).parsley( 'destroy' );
+        $( '#checkbox-maxcheck2' ).parsley( 'destroy' );
+        $( '#checkbox-maxcheck1' ).parsley( 'destroy' ).parsley();
+        $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+        $( '#checkbox-maxcheck2' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+        $( '#checkbox-maxcheck3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
       } )
     } )
 
