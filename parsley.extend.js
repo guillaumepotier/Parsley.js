@@ -43,15 +43,11 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       }
 
       , beforedate: function ( val, elem, self) {
-        before_date = Date.parse(val);
-        after_date = Date.parse($(elem).val());
-        return before_date < after_date;
+        return Date.parse(val) < Date.parse($(elem).val());
       }
 
       , afterdate: function ( val, elem, self) {
-        after_date = Date.parse(val);
-        before_date = Date.parse($(elem).val());
-        return before_date < after_date;
+        return Date.parse($(elem).val()) < Date.parse(val);
       }
     }
     , messages: {

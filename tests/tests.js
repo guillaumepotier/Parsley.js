@@ -928,6 +928,22 @@ var testSuite = function () {
          $( '#lessThan-model' ).val( '1' );
          expect( $( '#lessThan' ).parsley( 'validate' ) ).to.be( false );
        } )
+       it ( 'beforeDate', function () {
+         triggerSubmitValidation( '#beforeDate', '04/15/2015' );
+         expect( $( '#beforeDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#beforeDate', 'beforeDate') ).to.be( 'This date should be before #beforeDate-model.' );
+         triggerSubmitValidation( '#beforeDate', '4/15/1990' );
+         expect( $( '#beforeDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'afterDate', function () {
+         triggerSubmitValidation( '#afterDate', '4/15/1990' );
+         expect( $( '#afterDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#afterDate', 'afterDate') ).to.be( 'This date should be after #afterDate-model.' );
+         triggerSubmitValidation( '#afterDate', '04/15/2015' );
+         expect( $( '#afterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+
+
      } )
 
   } )
