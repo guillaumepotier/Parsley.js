@@ -41,6 +41,14 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 
         return new Number(val) < new Number($( elem ).val());
       }
+
+      , beforedate: function ( val, elem, self) {
+        return Date.parse(val) < Date.parse($(elem).val());
+      }
+
+      , afterdate: function ( val, elem, self) {
+        return Date.parse($(elem).val()) < Date.parse(val);
+      }
     }
     , messages: {
         minwords:       "This value should have %s words at least."
@@ -48,6 +56,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , rangewords:     "This value should have between %s and %s words."
       , greaterthan:    "This value should be greater than %s."
       , lessthan:       "This value should be less than %s."
+      , beforedate:     "This date should be before %s."
+      , afterdate:      "This date should be after %s."
     }
   });
 }(window.jQuery || window.Zepto));
