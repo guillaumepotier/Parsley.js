@@ -4,6 +4,7 @@
 
   - added `change` auto binded event for select inputs to have same behavior w/ fields
   - fixed bug on radio buttons and required constraint
+  - added afterDate and beforeDate validators in parsley.extend
 
 **1.1.10**
 
