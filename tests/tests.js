@@ -680,6 +680,12 @@ var testSuite = function () {
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
       } )
+      it ( 'Test auto-change binding when select has errors', function () {
+        expect( $( '#scenario-validation-change-select' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#scenario-validation-change-select' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#scenario-validation-change-select' ).val( 'foo' ).trigger( $.Event( 'change' ) );
+        expect( $( '#scenario-validation-change-select' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'Test validation of unchanged fields after reset() has been called on them', function () {
         $( '#scenario-validation-after-field-reset' ).val( '' );
 
