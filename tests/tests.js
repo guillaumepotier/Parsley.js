@@ -460,7 +460,7 @@ var testSuite = function () {
           it ( 'Make an ajax request when remote-validator is used to passed url', function () {
             $( '#remote1' ).val( 'foobar' );
             $( '#remote1' ).parsley( 'validate' );
-            expect( $.ajax.calledWithMatch( { method: "GET" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { type: "GET" } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { url: "http://foo.bar" } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { data: { remote1: "foobar" } } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { dataType: "jsonp" } ) ).to.be( true );
@@ -468,7 +468,7 @@ var testSuite = function () {
           it ( 'Test ajax call parameters overriding', function () {
             $( '#remote2' ).val( 'foo' );
             $( '#remote2' ).parsley( 'validate' );
-            expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { type: "POST" } ) ).to.be( true );
           } )
 
           after( function () {

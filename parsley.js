@@ -195,7 +195,7 @@
             url: url
           , data: data
           , async: self.async
-          , method: self.options.remoteMethod || 'GET'
+          , type: self.options.remoteMethod || 'GET'
           , success: function ( response ) {
             response = handleResponse( response );
             manage( 1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success ), manageErrorMessage( response )
