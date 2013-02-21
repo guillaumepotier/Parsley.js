@@ -79,7 +79,9 @@
             <input type="number" id="max-html5" max="10" />
 
             <input type="text" id="range" data-range="[6,10]" />
+
             <input type="text" id="regexp" data-regexp="\d+" />
+            <input type="text" id="regexp-html5" pattern="\d+" />
 
             <input type="text" id="typeemail" data-type="email" />
             <input type="email" id="typeemail-html5" />
@@ -150,6 +152,11 @@
             <input type="text" id="scenario-not-required" data-trigger="keyup" data-minlength="6" />
             <input type="text" id="scenario-keyup-when-notvalid" data-trigger="change" data-type="email" />
             <input type="text" id="scenario-validation-after-field-reset" data-trigger="keyup" data-required="true" />
+            <select id="scenario-validation-change-select" data-required="true">
+                <option value="">Chose</option>
+                <option value="foo">foo</option>
+                <option value="bar">bar</option>
+            </select>
         </form>
         <form data-validate="parsley" id="focus-form" data-focus="last">
             <input type="text" id="focus1" data-type="email" data-required="true" />
@@ -212,12 +219,16 @@
             <input type="text" id="greaterThan" data-greaterThan="#greaterThan-model" />
             <input type="text" id="lessThan-model" value="2" />
             <input type="text" id="lessThan" data-lessThan="#lessThan-model" />
+            <input type="text" id="beforeDate-model" value="1/1/2014" />
+            <input type="text" id="beforeDate" data-beforedate="#beforeDate-model" />
+            <input type="text" id="afterDate-model" value="1/1/2014" />
+            <input type="text" id="afterDate" data-afterdate="#afterDate-model" />
         </form>
     </div>
 
     <script type="text/javascript">
         var jquery = 'resources/jquery.min.js'
-          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax].min.js';
+          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js';
 
         switch ( location.hash ) {
             case '#jquery':

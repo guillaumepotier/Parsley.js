@@ -232,7 +232,7 @@
             <section>
               <a name="installation"></a>
               <h3>Parsley Installation</h3>
-              <p>Just include the <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley.min.js">Parsley.js</a> file (with <a href="http://jquery.com/">jQuery</a> or <a href="http://zeptojs.com/">Zepto</a> loaded) or use <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley-standalone.min.js">Parsley standalone</a> (with Zepto bundled inside)</p>
+              <p>Just include the <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley.min.js">Parsley.js</a> file (with <a href="http://jquery.com/">jQuery</a> or <a href="http://zeptojs.com/">Zepto</a> with <strong><a href="https://github.com/madrobby/zepto#building">data and fx_methods modules</a></strong> added) or use <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley-standalone.min.js">Parsley standalone</a> (with Zepto bundled inside)</p>
 <pre><code>&lt;script type="text/javascript" src="jquery.js">&lt;/script>
 &lt;script type="text/javascript" src="parsley.js">&lt;/script>
 
@@ -431,12 +431,19 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                             <table>
                                 <tr>
                                     <td>
-                                        <form data-validate="parsley">
-                                            <input type="text" id="data-required" data-required="true" placeholder="required field" />
+                                        <form data-validate="parsley" id="form-required">
+                                            <input type="text" id="data-required" data-required="true" placeholder="required field" /><br/><br/>
+                                            <select id="select-required" data-required="true">
+                                                <option value="">Please choose</option>
+                                                <option value="foo">Foo</option>
+                                                <option value="bar">Bar</option>
+                                            </select><br/>
+                                            Radio: <input type="radio" name="radiorequired" value="foo" id="radio-required" data-required="true"/>
+                                            <input type="radio" name="radiorequired" id="radio-required2" value="bar" />
                                         </form>
                                     </td>
                                     <td>
-                                        <span class="btn btn-small" onclick="javascript:$('#data-required').parsley('validate');">
+                                        <span class="btn btn-small" onclick="javascript:$('#form-required').parsley('validate');">
                                             <i class="icon-ok"></i>
                                         </span>
                                     </td>
@@ -627,7 +634,8 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     <tr>
                         <td>RegExp</td>
                         <td>
-                            <code>data-regexp="&lt;regexp>"</code>
+                            <code>data-regexp="&lt;regexp>"</code><br/><br/>
+                            <span class="label label-info">HTML5</span><code>pattern="regexp"</code>
                         </td>
                         <td>Validates that a value matches a specific regular expression. eg: validate a color hexadecimal code: <code>data-regexp="#[A-Fa-f0-9]{6}"</code>.</td>
                         <td class="not-for-mobile">
@@ -1272,6 +1280,16 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>Less Than</td>
                         <td><code>data-lessthan="#elem"</code></td>
                         <td>Validate that a field's value is lower than #elem's value.</td>
+                      </tr>
+                      <tr>
+                        <td>Before date</td>
+                        <td><code>data-before-date="#elem"</code></td>
+                        <td>Validate that a field's date is before #elem's date.</td>
+                      </tr>
+                      <tr>
+                        <td>After date</td>
+                        <td><code>data-after-date="#elem"</code></td>
+                        <td>Validate that a field's date is after #elem's date.</td>
                       </tr>
                   </tbody>
                 </table>

@@ -295,6 +295,13 @@ var testSuite = function () {
         triggerSubmitValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'pattern html5-regexp', function () {
+        triggerSubmitValidation( '#regexp-html5', 'foo' );
+        expect( $( '#regexp-html5' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#regexp-html5', 'regexp') ).to.be( 'This value seems to be invalid.' );
+        triggerSubmitValidation( '#regexp-html5', '42');
+        expect( $( '#regexp-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
 
       var urls = [
           { url: "http://foo.com/bar_(baz)#bam-1", expected: true, strict: true }
@@ -453,7 +460,7 @@ var testSuite = function () {
           it ( 'Make an ajax request when remote-validator is used to passed url', function () {
             $( '#remote1' ).val( 'foobar' );
             $( '#remote1' ).parsley( 'validate' );
-            expect( $.ajax.calledWithMatch( { method: "GET" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { type: "GET" } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { url: "http://foo.bar" } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { data: { remote1: "foobar" } } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { dataType: "jsonp" } ) ).to.be( true );
@@ -461,7 +468,7 @@ var testSuite = function () {
           it ( 'Test ajax call parameters overriding', function () {
             $( '#remote2' ).val( 'foo' );
             $( '#remote2' ).parsley( 'validate' );
-            expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { type: "POST" } ) ).to.be( true );
           } )
 
           after( function () {
@@ -673,6 +680,12 @@ var testSuite = function () {
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
       } )
+      it ( 'Test auto-change binding when select has errors', function () {
+        expect( $( '#scenario-validation-change-select' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#scenario-validation-change-select' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#scenario-validation-change-select' ).val( 'foo' ).trigger( $.Event( 'change' ) );
+        expect( $( '#scenario-validation-change-select' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'Test validation of unchanged fields after reset() has been called on them', function () {
         $( '#scenario-validation-after-field-reset' ).val( '' );
 
@@ -710,6 +723,7 @@ var testSuite = function () {
         expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
       } )
       it ( 'Test change validation for checkboxes', function () {
+        // test on change auto triggered event to correct mistakes
         $( '#checkbox-maxcheckchange1' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheckchange2' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheckchange3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
@@ -718,6 +732,17 @@ var testSuite = function () {
         expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
         $( '#checkbox-maxcheckchange2' ).attr( 'checked', null ).trigger( $.Event( 'change' ) );
         expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+
+        // test explicitely change trigger
+        $( '#checkbox-maxcheck3' ).parsley( 'destroy' );
+        $( '#checkbox-maxcheck2' ).parsley( 'destroy' );
+        $( '#checkbox-maxcheck1' ).parsley( 'destroy' ).parsley();
+        $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+        $( '#checkbox-maxcheck2' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+        $( '#checkbox-maxcheck3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
       } )
     } )
 
@@ -947,6 +972,22 @@ var testSuite = function () {
          $( '#lessThan-model' ).val( '1' );
          expect( $( '#lessThan' ).parsley( 'validate' ) ).to.be( false );
        } )
+       it ( 'beforeDate', function () {
+         triggerSubmitValidation( '#beforeDate', '04/15/2015' );
+         expect( $( '#beforeDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#beforeDate', 'beforeDate') ).to.be( 'This date should be before #beforeDate-model.' );
+         triggerSubmitValidation( '#beforeDate', '4/15/1990' );
+         expect( $( '#beforeDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'afterDate', function () {
+         triggerSubmitValidation( '#afterDate', '4/15/1990' );
+         expect( $( '#afterDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#afterDate', 'afterDate') ).to.be( 'This date should be after #afterDate-model.' );
+         triggerSubmitValidation( '#afterDate', '04/15/2015' );
+         expect( $( '#afterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+
+
      } )
 
   } )

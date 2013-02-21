@@ -195,7 +195,7 @@
             url: url
           , data: data
           , async: self.async
-          , method: self.options.remoteMethod || 'GET'
+          , type: self.options.remoteMethod || 'GET'
           , success: function ( response ) {
             response = handleResponse( response );
             manage( 1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success ), manageErrorMessage( response )
@@ -401,6 +401,11 @@
           }
         }
       }
+
+      if ( 'string' === typeof this.$element.attr( 'pattern' ) && this.$element.attr( 'pattern' ).length ) {
+          this.options.regexp = this.$element.attr( 'pattern' );
+      }
+
     }
 
     /**
@@ -549,14 +554,21 @@
       this.$element.addClass( 'parsley-validated' );
 
       // remove eventually already binded events
-      this.$element.off( '.' + this.type );
+      if ( this.$element.data( 'events' ) ) {
+        this.$element.off( '.' + this.type );
+      }
+
+      // force add 'change' event if async remote validator here to have result before form submitting
+      if ( this.options.remote && !new RegExp( 'change', 'i' ).test( this.options.trigger ) ) {
+        this.options.trigger = !this.options.trigger ? 'change' : ' change';
+      }
 
       // alaways bind keyup event, for better UX when a field is invalid
       var triggers = ( !this.options.trigger ? '' : this.options.trigger + ' ' )
         + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : 'keyup' );
 
-      // force add 'change' event if async remote validator here to have result before form submitting
-      if ( this.options.remote ) {
+      // alaways bind change event, for better UX when a select is invalid
+      if ( this.$element.is( 'select' ) ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
 
@@ -609,6 +621,11 @@
         return true;
       }
 
+      // do nothing on change event if not explicitely passed as data-trigger and if field has not already been validated once
+      if ( event.type === 'change' && !/change/i.test( this.options.trigger ) && !this.validatedOnce ) {
+        return true;
+      }
+
       // start validation process only if field has enough chars and validation never started
       if ( !this.isRadioOrCheckbox && val.length < this.options.validationMinlength && !this.validatedOnce ) {
         return true;
@@ -638,6 +655,11 @@
     , validate: function ( errorBubbling, async ) {
       var val = this.getVal()
         , isValid = null;
+
+      // do not even bother trying validating a field w/o constraints
+      if ( this.constraints.length === 0 ) {
+        return null;
+      }
 
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
       if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
@@ -982,7 +1004,9 @@
      this.$element.addClass( 'parsley-validated' );
 
      // remove eventually already binded events
-     this.$element.off( '.' + this.type );
+     if ( this.$element.data( 'events' ) ) {
+       this.$element.off( '.' + this.type );
+     }
 
       // alaways bind keyup event, for better UX when a field is invalid
       var self = this
@@ -993,22 +1017,6 @@
      $( this.siblings ).each(function () {
        $( this ).on( triggers.split( ' ' ).join( '.' + self.type + ' ' ), false, $.proxy( self.eventValidation, self ) );
      } )
-   }
-
-   /**
-   * Called when validation is triggered by an event
-   * Do nothing if never validated. validate on change otherwise
-   *
-   * @method eventValidation
-   * @param {Object} event jQuery event
-   */
-   , eventValidation: function ( event ) {
-     // start validation process only if field has enough chars and validation never started
-     if ( !this.validatedOnce ) {
-       return true;
-     }
-
-     this.validate( true, false );
    }
   };
 

@@ -17,7 +17,7 @@
 
 # refactos
 
-* refacto ugly manageErrors() function
+* [DONE] refacto ugly manageErrors() function
 
 * [DONE] stop binding `keypress` and `change` events by default. Must be passed as data 
   arguments. By default, onSubmit validation only
