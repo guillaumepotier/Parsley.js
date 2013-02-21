@@ -554,7 +554,9 @@
       this.$element.addClass( 'parsley-validated' );
 
       // remove eventually already binded events
-      this.$element.off( '.' + this.type );
+      if ( this.$element.data( 'events' ) ) {
+        this.$element.off( '.' + this.type );
+      }
 
       // force add 'change' event if async remote validator here to have result before form submitting
       if ( this.options.remote && !new RegExp( 'change', 'i' ).test( this.options.trigger ) ) {
@@ -1002,7 +1004,9 @@
      this.$element.addClass( 'parsley-validated' );
 
      // remove eventually already binded events
-     this.$element.off( '.' + this.type );
+     if ( this.$element.data( 'events' ) ) {
+       this.$element.off( '.' + this.type );
+     }
 
       // alaways bind keyup event, for better UX when a field is invalid
       var self = this

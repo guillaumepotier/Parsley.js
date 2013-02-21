@@ -2,6 +2,8 @@
 
 **1.1.11-dev**
 
+  - fixed bug "Uncaught RangeError: Maximum call stack size exceeded" on
+    bindEventValidation (#138)
   - fixed remote validator method (#130)
   - added `change` auto binded event for select inputs to have same behavior w/ fields
   - fixed bug on radio buttons and required constraint
