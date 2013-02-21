@@ -1,7 +1,9 @@
 #Changelog
 
-**1.1.11-dev**
+**1.1.11**
 
+  - fixed `fadeIn()` undefined function with standalone version. Had to update Zepto
+    with fx_module and fx loaded (#137)
   - fixed bug "Uncaught RangeError: Maximum call stack size exceeded" on
     bindEventValidation (#138)
   - fixed remote validator method (#130)

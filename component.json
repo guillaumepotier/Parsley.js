@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "main": ["./dist/*", "./i18n/*"],
   "dependencies": {
     "jquery": "1.8.*"

@@ -10,11 +10,11 @@ See TODO.md
 
 #Version
 
-1.1.10
+1.1.11
 
 # Browser compatibility
 
-No idea yet.. You tell me !
+IE 8+, FF 14+, Chrome
 
 #Install dependencies for documentation and tests
 

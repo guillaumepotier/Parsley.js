@@ -9,7 +9,7 @@ else
   echo "  done!"
 
   echo "** building parsley-standalone.min.js version " $1
-  ruby ./bin/minify tests/resources/zepto-1.0rc1[zepto.event.data.ajax].min.js parsley.js dist/parsley-standalone.min.js $1 --force
+  ruby ./bin/minify tests/resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js parsley.js dist/parsley-standalone.min.js $1 --force
   echo "  done!"
 
   echo "** building parsley.extend.min.js version " $1
