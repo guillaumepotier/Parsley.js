@@ -1014,9 +1014,9 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
 
   //some quite advanced configuration here..
   , validateIfUnchanged: false
-  , errors: {
-    classHandler: function ( elem ) {}
-  , container: function ( elem, template, isRadioOrCheckbox ) {}
+  , errors: {                     // specify where parsley error-success classes are set
+    classHandler: function ( elem, isRadioOrCheckbox ) {}
+  , container: function ( elem, isRadioOrCheckbox ) {}
   , errorsWrapper: '&lt;ul>&lt;/ul>'
   , errorElem: '&lt;li>&lt;/li>'
   }
@@ -1207,7 +1207,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>Add parsley-success and parsley-error to direct parent:
 <pre><code>$('#form').parsley( {
     errors: {
-        classHandler: function ( elem ) {
+        classHandler: function ( elem, isRadioOrCheckbox ) {
             return $( elem ).parent();
         }
     }
