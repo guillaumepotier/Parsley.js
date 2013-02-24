@@ -52,6 +52,7 @@ Create integration with other framework as a separate Github repo and send a pul
 Some integrations are
 
 * [Django](https://github.com/agiliq/django-parsley)
+* [Rails](https://github.com/mekishizufu/parsley-rails)
 
 ## Global
 
