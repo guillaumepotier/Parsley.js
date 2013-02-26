@@ -8,9 +8,9 @@ Javascript form validation, without actually writing a single line of javascript
 
 See TODO.md
 
-#Version
+#Curent Stable Version
 
-1.1.11
+1.1.12
 
 # Browser compatibility
 
