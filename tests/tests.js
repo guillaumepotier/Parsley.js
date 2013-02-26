@@ -696,8 +696,7 @@ var testSuite = function () {
         $( '#scenario-validation-after-field-reset' ).parsley( 'reset' );
         $( '#scenario-validation-after-field-reset' ).trigger( $.Event( 'keyup' ) );
 
-        // The field has not changed, but since the field was reset, the call count should now be 2.
-        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 2 );
+        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 1 );
       } )
       it ( 'Test always validate field', function () {
         $( '#alwaysValidate-form' ).parsley( { validateIfUnchanged: true, listeners: { onFieldError: function ( elem ) {
@@ -839,6 +838,10 @@ var testSuite = function () {
         $( '#onthefly-form' ).parsley( 'validate' );
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
+      } )
+      it ( 'test setting custom error container within data-attributes', function () {
+        expect( $( '#dataerrorcontainer-form' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#mycustomerrorcontainer ul.parsley-error-list' ).length ).to.be( 1 );
       } )
     } )
 

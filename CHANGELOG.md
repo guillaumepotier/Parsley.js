@@ -1,5 +1,11 @@
 #Changelog
 
+**1.1.12 (current stable)**
+
+  - added some more localizations
+  - `reset()` action now totaly reset field behavior, since never validated before
+  - added `data-error-container` data-attribute to easily specify where to put errors
+
 **1.1.11**
 
   - fixed `fadeIn()` undefined function with standalone version. Had to update Zepto
