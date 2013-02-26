@@ -822,6 +822,7 @@
     , reset: function () {
       this.isValid = null;
       this.removeErrors();
+      this.validatedOnce = false;
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
       return this;
     }

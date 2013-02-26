@@ -696,8 +696,7 @@ var testSuite = function () {
         $( '#scenario-validation-after-field-reset' ).parsley( 'reset' );
         $( '#scenario-validation-after-field-reset' ).trigger( $.Event( 'keyup' ) );
 
-        // The field has not changed, but since the field was reset, the call count should now be 2.
-        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 2 );
+        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 1 );
       } )
       it ( 'Test always validate field', function () {
         $( '#alwaysValidate-form' ).parsley( { validateIfUnchanged: true, listeners: { onFieldError: function ( elem ) {
