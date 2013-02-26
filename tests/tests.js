@@ -839,6 +839,10 @@ var testSuite = function () {
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
+      it ( 'test setting custom error container within data-attributes', function () {
+        expect( $( '#dataerrorcontainer-form' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#mycustomerrorcontainer ul.parsley-error-list' ).length ).to.be( 1 );
+      } )
     } )
 
     /***************************************

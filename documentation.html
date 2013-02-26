@@ -376,6 +376,24 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     </tr>
                     <tr>
                         <td>
+                            <code>data-error-container</code>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            <span style="color:red; !important" id="demoerrorcontainer"></span>
+                            Specify here the container where Parsley should set the errors.
+                            <br/>eg: <pre><code>data-error-container="ul#myproperlabel li.someclass"</code></pre>
+                        </td>
+                        <td class="not-for-mobile">
+                            <form data-validate="parsley">
+                                <p><input type="text" data-type="email" data-trigger="keyup" data-validation-minlength="0" data-error-container="#demoerrorcontainer" placeholder="error will pop above text on the left" /><p>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <code>data-`constraintName`-message</code><br/><br/>
                             <code>data-type-`type`-message</code>
                         </td>
