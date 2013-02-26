@@ -262,25 +262,44 @@
           dataType = { dataType: self.options.remoteDatatype };
         }
 
-        var manage = function ( isConstraintValid ) {
-          self.updtConstraint( { name: &#x27;remote&#x27;, isValid: isConstraintValid } );
+        var manage = function ( isConstraintValid, message ) {
+          &#x2F;&#x2F; remove error message because ajax response message could change depending on the sent value !
+          self.removeError( &#x27;remote&#x27; );
+
+          self.updtConstraint( { name: &#x27;remote&#x27;, isValid: isConstraintValid }, message );
           self.manageValidationResult();
         };
+
+        &#x2F;&#x2F; transform string response into object
+        var handleResponse = function ( response ) {
+          if ( &#x27;object&#x27; === typeof response ) {
+            return response;
+          }
+
+          try {
+            response = $.parseJSON( response );
+          } catch ( err ) {}
+
+          return response;
+        }
+
+        var manageErrorMessage = function ( response ) {
+          return &#x27;object&#x27; === typeof response &amp;&amp; null !== response ? ( &#x27;undefined&#x27; !== typeof response.error ? response.error : ( &#x27;undefined&#x27; !== typeof response.message ? response.message : null ) ) : null;
+        }
 
         $.ajax( $.extend( {}, {
             url: url
           , data: data
           , async: self.async
-          , method: self.options.remoteMethod || &#x27;GET&#x27;
+          , type: self.options.remoteMethod || &#x27;GET&#x27;
           , success: function ( response ) {
-            manage( &#x27;1&#x27; === response
-              || &#x27;true&#x27; == response
-              || ( &#x27;object&#x27; === typeof response &amp;&amp; &#x27;undefined&#x27; !== typeof response.success )
-              || new RegExp( &#x27;success&#x27;, &#x27;i&#x27; ).test( response )
+            response = handleResponse( response );
+            manage( 1 === response || true === response || ( &#x27;object&#x27; === typeof response &amp;&amp; null !== response &amp;&amp; &#x27;undefined&#x27; !== typeof response.success ), manageErrorMessage( response )
             );
           }
           , error: function ( response ) {
-            manage( false );
+            response = handleResponse( response );
+            manage( false, manageErrorMessage( response ) );
           }
         }, dataType ) );
 
@@ -342,7 +361,7 @@
         return message;
       }
 
-      return message.replace(new RegExp( &#x27;%s&#x27;, &#x27;i&#x27; ), args);
+      return &#x27;string&#x27; === typeof message ? message.replace( new RegExp( &#x27;%s&#x27;, &#x27;i&#x27; ), args ) : &#x27;&#x27;;
     }
 
     &#x2F;**
@@ -422,7 +441,7 @@
       if ( &#x27;undefined&#x27; === typeof this.isRadioOrCheckbox ) {
         this.isRadioOrCheckbox = false;
         this.hash = this.generateHash();
-        this.errorClassHandler = this.options.errors.classHandler( element ) || this.$element;
+        this.errorClassHandler = this.options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element;
       }
 
       &#x2F;&#x2F; error ul dom management done only once at init
@@ -438,6 +457,14 @@
       if ( this.constraints.length ) {
         this.bindValidationEvents();
       }
+    }
+
+    , setParent: function ( elem ) {
+      this.$parent = $( elem );
+    }
+
+    , getParent: function () {
+      return this.$parent;
     }
 
     &#x2F;**
@@ -470,6 +497,11 @@
           }
         }
       }
+
+      if ( &#x27;string&#x27; === typeof this.$element.attr( &#x27;pattern&#x27; ) &amp;&amp; this.$element.attr( &#x27;pattern&#x27; ).length ) {
+          this.options.regexp = this.$element.attr( &#x27;pattern&#x27; );
+      }
+
     }
 
     &#x2F;**
@@ -524,9 +556,9 @@
     * @method updtConstraint
     * @param {Object} constraint
     *&#x2F;
-    , updateConstraint: function ( constraint ) {
+    , updateConstraint: function ( constraint, message ) {
       for ( var name in constraint ) {
-        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null } );
+        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null }, message );
       }
     }
 
@@ -537,10 +569,13 @@
     * @method updtConstraint
     * @param {Object} constraint
     *&#x2F;
-    , updtConstraint: function ( constraint ) {
+    , updtConstraint: function ( constraint, message ) {
       for ( var i in this.constraints ) {
         if ( this.constraints[ i ].name === constraint.name ) {
           this.constraints[ i ] = $.extend( true, this.constraints[ i ], constraint );
+          if ( &#x27;string&#x27; === typeof message ) {
+            this.Validator.messages[ this.constraints[ i ].name ] = message ;
+          }
         }
       }
 
@@ -570,8 +605,14 @@
 
       this.constraints = updatedConstraints;
 
-      &#x2F;&#x2F; if there are no more constraint, destroy parsley instance for this field and exit
+      &#x2F;&#x2F; if there are no more constraint, destroy parsley instance for this field
       if ( updatedConstraints.length === 0 ) {
+        &#x2F;&#x2F; in a form context, remove item from parent
+        if ( &#x27;ParsleyForm&#x27; === typeof this.getParent() ) {
+          this.getParent().removeItem( this.$element );
+          return;
+        }
+
         this.destroy();
         return;
       }
@@ -609,20 +650,25 @@
       this.$element.addClass( &#x27;parsley-validated&#x27; );
 
       &#x2F;&#x2F; remove eventually already binded events
-      this.$element.off( &#x27;.&#x27; + this.type );
-
-      &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
-      var triggers = this.options.trigger + ( new RegExp( &#x27;key&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27; keyup&#x27; );
+      if ( this.$element.data( &#x27;events&#x27; ) ) {
+        this.$element.off( &#x27;.&#x27; + this.type );
+      }
 
       &#x2F;&#x2F; force add &#x27;change&#x27; event if async remote validator here to have result before form submitting
-      if ( this.options.remote ) {
+      if ( this.options.remote &amp;&amp; !new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ) {
+        this.options.trigger = !this.options.trigger ? &#x27;change&#x27; : &#x27; change&#x27;;
+      }
+
+      &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
+      var triggers = ( !this.options.trigger ? &#x27;&#x27; : this.options.trigger + &#x27; &#x27; )
+        + ( new RegExp( &#x27;key&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27;keyup&#x27; );
+
+      &#x2F;&#x2F; alaways bind change event, for better UX when a select is invalid
+      if ( this.$element.is( &#x27;select&#x27; ) ) {
         triggers += new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( triggers ) ? &#x27;&#x27; : &#x27; change&#x27;;
       }
 
-      &#x2F;&#x2F; if a validation trigger is defined
-      if ( triggers ) {
-        this.$element.on( ( triggers + &#x27; &#x27;).split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27; ), false, $.proxy( this.eventValidation, this ) );
-      }
+      this.$element.on( ( triggers + &#x27; &#x27; ).split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27; ), false, $.proxy( this.eventValidation, this ) );
     }
 
     &#x2F;**
@@ -671,8 +717,13 @@
         return true;
       }
 
+      &#x2F;&#x2F; do nothing on change event if not explicitely passed as data-trigger and if field has not already been validated once
+      if ( event.type === &#x27;change&#x27; &amp;&amp; !&#x2F;change&#x2F;i.test( this.options.trigger ) &amp;&amp; !this.validatedOnce ) {
+        return true;
+      }
+
       &#x2F;&#x2F; start validation process only if field has enough chars and validation never started
-      if ( val.length &lt; this.options.validationMinlength &amp;&amp; !this.validatedOnce ) {
+      if ( !this.isRadioOrCheckbox &amp;&amp; val.length &lt; this.options.validationMinlength &amp;&amp; !this.validatedOnce ) {
         return true;
       }
 
@@ -700,6 +751,11 @@
     , validate: function ( errorBubbling, async ) {
       var val = this.getVal()
         , isValid = null;
+
+      &#x2F;&#x2F; do not even bother trying validating a field w&#x2F;o constraints
+      if ( this.constraints.length === 0 ) {
+        return null;
+      }
 
       &#x2F;&#x2F; reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
       if ( this.options.listeners.onFieldValidate( this.element, this ) || ( &#x27;&#x27; === val &amp;&amp; !this.isRequired ) ) {
@@ -779,7 +835,7 @@
 
       for ( var constraint = 0; constraint &lt; this.constraints.length; constraint++ ) {
         if ( false === this.constraints[ constraint ].isValid ) {
-          this.addError( this.constraints[ constraint ] );
+          this.manageError( this.constraints[ constraint ] );
           isValid = false;
         } else if ( true === this.constraints[ constraint ].isValid ) {
           this.removeError( this.constraints[ constraint ].name );
@@ -823,9 +879,25 @@
     , removeError: function ( constraintName ) {
       var liError = this.ulError + &#x27; .&#x27; + constraintName;
 
+      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () { $( this ).remove() } ) : $( liError ).remove();
+
       &#x2F;&#x2F; remove li error, and ul error if no more li inside
-      if ( this.ulError &amp;&amp; $( liError ).remove() &amp;&amp; $( this.ulError ).children().length === 0 ) {
-        $( this.ulError ).remove();
+      if ( this.ulError &amp;&amp; $( this.ulError ).children().length === 0 ) {
+        this.removeErrors();
+      }
+    }
+
+    &#x2F;**
+    * Add li error
+    *
+    * @method addError
+    * @param {Object} { minlength: &quot;error message for minlength constraint&quot; }
+    *&#x2F;
+    , addError: function ( error ) {
+      for ( var constraint in error ) {
+        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
+
+        $( this.ulError ).append( this.options.animate ? $( liTemplate ).text( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).text( error[ constraint ] ) );
       }
     }
 
@@ -835,7 +907,7 @@
     * @method removeErrors
     *&#x2F;
     , removeErrors: function () {
-      $( this.ulError ).remove();
+      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
     }
 
     &#x2F;**
@@ -846,6 +918,7 @@
     , reset: function () {
       this.isValid = null;
       this.removeErrors();
+      this.validatedOnce = false;
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
       return this;
     }
@@ -853,31 +926,45 @@
     &#x2F;**
     * Add li &#x2F; ul errors messages
     *
-    * @method addError
+    * @method manageError
     * @param {Object} constraint
     *&#x2F;
-    , addError: function ( constraint ) {
-
+    , manageError: function ( constraint ) {
       &#x2F;&#x2F; display ulError container if it has been removed previously (or never shown)
       if ( !$( this.ulError ).length ) {
-        this.options.errors.container( this.element, this.ulTemplate, this.isRadioOrCheckbox )
-          || ( !this.isRadioOrCheckbox ? this.$element.after( this.ulTemplate ) : this.$element.parent().after( this.ulTemplate ) );
+        this.manageErrorContainer();
       }
 
       &#x2F;&#x2F; TODO: refacto error name w&#x2F; proper &amp; readable function
       var constraintName = constraint.name
         , liClass = false !== this.options.errorMessage ? &#x27;custom-error-message&#x27; : constraintName
-        , liError = this.ulError + &#x27; .&#x27; + liClass
-        , liTemplate = $( this.options.errors.errorElem ).addClass( liClass )
+        , liError = {}
         , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === &#x27;type&#x27; ?
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( &#x27;undefined&#x27; === typeof this.Validator.messages[ constraintName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
-      &#x2F;&#x2F; TODO: refacto this shit too
-      &#x2F;&#x2F; add liError if not shown. Do not add more than once custom errorMessage if exsit
-      if ( !$( liError ).length ) {
-        $( this.ulError ).append( $( liTemplate ).text( message ) );
+      &#x2F;&#x2F; add liError if not shown. Do not add more than once custom errorMessage if exist
+      if ( !$( this.ulError + &#x27; .&#x27; + liClass ).length ) {
+        liError[ liClass ] = message;
+        this.addError( liError );
       }
+    }
+
+    &#x2F;**
+    * Create ul error container
+    *
+    * @method manageErrorContainer
+    *&#x2F;
+    , manageErrorContainer: function () {
+      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox )
+        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
+
+      if ( &#x27;undefined&#x27; !== typeof errorContainer ) {
+        $( errorContainer ).append( ulTemplate );
+        return;
+      }
+
+      !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
     }
 
     &#x2F;**
@@ -934,13 +1021,13 @@
     , initMultiple: function ( element, options ) {
       this.element = element;
       this.$element = $( element );
+      this.group = options.group || false;
       this.hash = this.getName();
+      this.siblings = this.group ? &#x27;[data-group=&quot;&#x27; + this.group + &#x27;&quot;]&#x27; : &#x27;input[name=&quot;&#x27; + this.$element.attr( &#x27;name&#x27; ) + &#x27;&quot;]&#x27;;
       this.isRadioOrCheckbox = true;
       this.isRadio = this.$element.is( &#x27;input[type=radio]&#x27; );
       this.isCheckbox = this.$element.is( &#x27;input[type=checkbox]&#x27; );
-      this.siblings = &#x27;input[name=&quot;&#x27; + this.$element.attr( &#x27;name&#x27; ) + &#x27;&quot;]&#x27;;
-      this.$siblings = $( this.siblings );
-      this.errorClassHandler = options.errors.classHandler( element ) || this.$element.parent();
+      this.errorClassHandler = options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element.parent();
     }
 
     &#x2F;**
@@ -965,9 +1052,17 @@
     * Set specific constraints messages, do pseudo-heritance
     *
     * @method getName
-    * @returns {String} radio &#x2F; checkbox hash is cleaned &#x27;name&#x27; property
+    * @returns {String} radio &#x2F; checkbox hash is cleaned &#x27;name&#x27; or data-group property
     *&#x2F;
    , getName: function () {
+     if ( this.group ) {
+       return &#x27;parsley-&#x27; + this.group;
+     }
+
+     if ( &#x27;undefined&#x27; === typeof this.$element.attr( &#x27;name&#x27; ) ) {
+       throw &quot;A radio &#x2F; checkbox input must have a data-group attribute or a name to be Parsley validated !&quot;;
+     }
+
      return &#x27;parsley-&#x27; + this.$element.attr( &#x27;name&#x27; ).replace( &#x2F;(:|\.|\[|\])&#x2F;g, &#x27;&#x27; );
    }
 
@@ -985,12 +1080,40 @@
 
       if ( this.isCheckbox ) {
         var values = [];
+
         $( this.siblings + &#x27;:checked&#x27; ).each( function () {
           values.push( $( this ).val() );
         } );
 
         return values;
       }
+   }
+
+   &#x2F;**
+   * Bind validation events on a field
+   *
+   * @private
+   * @method bindValidationEvents
+   *&#x2F;
+   , bindValidationEvents: function () {
+     &#x2F;&#x2F; this field has validation events, that means it has to be validated
+     this.isValid = null;
+     this.$element.addClass( &#x27;parsley-validated&#x27; );
+
+     &#x2F;&#x2F; remove eventually already binded events
+     if ( this.$element.data( &#x27;events&#x27; ) ) {
+       this.$element.off( &#x27;.&#x27; + this.type );
+     }
+
+      &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
+      var self = this
+        , triggers = ( !this.options.trigger ? &#x27;&#x27; : this.options.trigger + &#x27; &#x27; )
+        + ( new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27;change&#x27; );
+
+     &#x2F;&#x2F; bind trigger event on every siblings
+     $( this.siblings ).each(function () {
+       $( this ).on( triggers.split( &#x27; &#x27; ).join( &#x27;.&#x27; + self.type + &#x27; &#x27; ), false, $.proxy( self.eventValidation, self ) );
+     } )
    }
   };
 
@@ -1052,11 +1175,10 @@
         return false;
       }
 
-      var parsleyItem = $( elem ).parsley( this.options );
+      var ParsleyField = $( elem ).parsley( this.options );
+      ParsleyField.setParent( this );
 
-      if ( null !== parsleyItem ) {
-        this.items.push( parsleyItem );
-      }
+      this.items.push( ParsleyField );
     }
 
     &#x2F;**
@@ -1067,9 +1189,13 @@
     * @return {Boolean}
     *&#x2F;
     , removeItem: function ( elem ) {
-      for ( var i in this.items ) {
-        if ( this.items[ i ].$element.attr( &#x27;id&#x27; ) === $( elem ).attr( &#x27;id&#x27; ) ) {
-          delete this.items[ i ];
+      var parsleyItem = $( elem ).parsley();
+
+      &#x2F;&#x2F; identify &amp; remove item if same Parsley hash
+      for ( var i = 0; i &lt; this.items.length; i++ ) {
+        if ( this.items[ i ].hash === parsleyItem.hash ) {
+          this.items[ i ].destroy();
+          this.items.splice( i, 1 );
           return true;
         }
       }
@@ -1131,6 +1257,17 @@
       }
 
       this.$element.off( &#x27;.&#x27; + this.type ).removeData( this.type );
+    }
+    
+    &#x2F;**
+    * reset Parsley binded on the form and its fields
+    *
+    * @method reset
+    *&#x2F;
+    , reset: function () {
+      for ( var item = 0; item &lt; this.items.length; item++ ) {
+        this.items[ item ].reset();
+      }
     }
   };
 
@@ -1206,6 +1343,8 @@
     inputs: &#x27;input, textarea, select&#x27;           &#x2F;&#x2F; Default supported inputs.
     , excluded: &#x27;input[type=hidden], :disabled&#x27; &#x2F;&#x2F; Do not validate input[type=hidden] &amp; :disabled.
     , trigger: false                            &#x2F;&#x2F; $.Event() that will trigger validation. eg: keyup, change..
+    , animate: true                             &#x2F;&#x2F; fade in &#x2F; fade out error messages
+    , animateDuration: 300                      &#x2F;&#x2F; fadein&#x2F;fadout ms time
     , focus: &#x27;first&#x27;                            &#x2F;&#x2F; &#x27;fist&#x27;|&#x27;last&#x27;|&#x27;none&#x27; which error field would have focus first on form validation
     , validationMinlength: 3                    &#x2F;&#x2F; If trigger validation specified, only if value.length &gt; validationMinlength
     , successClass: &#x27;parsley-success&#x27;           &#x2F;&#x2F; Class name on each valid input
@@ -1217,8 +1356,8 @@
     &#x2F;&#x2F;some quite advanced configuration here..
     , validateIfUnchanged: false                                          &#x2F;&#x2F; false: validate once by field value change
     , errors: {
-        classHandler: function ( elem ) {}                                &#x2F;&#x2F; class is directly set on elem, parent for radio&#x2F;checkboxes
-      , container: function ( elem, template, isRadioOrCheckbox ) {}      &#x2F;&#x2F; error ul is inserted after elem, parent for radio&#x2F;checkboxes
+        classHandler: function ( elem, isRadioOrCheckbox ) {}             &#x2F;&#x2F; specify where parsley error-success classes are set
+      , container: function ( elem, isRadioOrCheckbox ) {}                &#x2F;&#x2F; specify an elem where errors will be **apened**
       , errorsWrapper: &#x27;&lt;ul&gt;&lt;&#x2F;ul&gt;&#x27;                                        &#x2F;&#x2F; do not set an id for this elem, it would have an auto-generated id
       , errorElem: &#x27;&lt;li&gt;&lt;&#x2F;li&gt;&#x27;                                            &#x2F;&#x2F; each field constraint fail in an li
       }
