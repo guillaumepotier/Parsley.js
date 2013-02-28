@@ -989,7 +989,13 @@ var testSuite = function () {
          triggerSubmitValidation( '#afterDate', '04/15/2015' );
          expect( $( '#afterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
-
+       it ( 'luhn', function () {
+         triggerSubmitValidation( '#luhn', '4000000000000000' );
+         expect( $( '#luhn' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#luhn', 'luhn') ).to.be( 'This value should pass the luhn test.' );
+         triggerSubmitValidation( '#luhn', '4000000000000002' );
+         expect( $( '#luhn' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
 
      } )
 
