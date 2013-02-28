@@ -1236,8 +1236,21 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
 } );</code></pre></td>
                     </tr>
                     <tr>
+                      <td>Change error container</td>
+                      <td><p>Override the container that the <code>errorWrapper</code> (ie. by default the <code>&lt;ul&gt;&lt;/ul&gt;</code> containing the errors) is inserted into.</p>
+                      <p>By default this function does not return anything and so the <code>errorWrapper</code> is added to the DOM directly after the element containing the error, however if you override this function in your options you can return an alternative container where the <code>errorWrapper</code> will be appended</p>
+                      <p>For example, to have the error messages appear before the field with the error in a <code>div</code> with the class <code>.parsley-container</code>:<pre><code>errors: {
+    container: function (element, isRadioOrCheckbox) {
+        var $container = element.parent().find(".parsley-container");
+        if ($container.length === 0) {
+            $container = $("&lt;div class='parsley-container'&gt;&lt;/div&gt;").insertBefore(element);
+        }
+        return $container;
+    }
+}</code></pre></p></td></tr>
+                    <tr>
                         <td>Advanced changes</td>
-                        <td>See <code>errorsWrapper</code>, <code>errorElem</code> and <code>container</code> errors properties in Parsley default options.</td>
+                        <td>See <code>errorsWrapper</code>, <code>errorElem</code> errors properties in Parsley default options.</td>
                     </tr>
                 </tbody>
               </table>

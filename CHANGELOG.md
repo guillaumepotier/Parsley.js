@@ -1,6 +1,10 @@
 #Changelog
 
-**1.1.12 (current stable)**
+**1.1.13  (current stable)**
+
+  - added jquery plugin manifest
+
+**1.1.12**
 
   - added some more localizations
   - `reset()` action now totaly reset field behavior, since never validated before
