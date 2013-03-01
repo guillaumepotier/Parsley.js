@@ -49,6 +49,12 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , afterdate: function ( val, elem, self) {
         return Date.parse($(elem).val()) < Date.parse(val);
       }
+
+      , inlist: function ( val, list ) {
+        var listItems = (list + "").split(/\s*,\s*/);
+
+        return (listItems.indexOf(val.trim()) !== -1);
+      }
     }
     , messages: {
         minwords:       "This value should have %s words at least."
