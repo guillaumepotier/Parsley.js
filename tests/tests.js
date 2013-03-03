@@ -843,6 +843,18 @@ var testSuite = function () {
         expect( $( '#dataerrorcontainer-form' ).parsley( 'validate' ) ).to.be( false );
         expect( $( '#mycustomerrorcontainer ul.parsley-error-list' ).length ).to.be( 1 );
       } )
+      it ( 'test isValid', function () {
+        expect( $( '#isValid-form' ).parsley( 'isValid' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        $( '#isValid-field' ).val( 'foo' );
+        expect( $( '#isValid-form' ).parsley( 'isValid' ) ).to.be( true );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        $( '#isValid-field' ).val( '' );
+        expect( $( '#isValid-form' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-error' ) ).to.be( true );
+      } )
     } )
 
     /***************************************

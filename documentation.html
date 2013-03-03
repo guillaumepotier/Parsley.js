@@ -1108,6 +1108,14 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
                     <tr>
+                        <td>Test if form valid</td>
+                        <td>Boolean</td>
+                        <td>Useful if you want to integrate the form validation process inside custom functions, without triggering error messages.</td>
+                        <td  class="not-for-mobile">
+<pre><code>$( '#form' ).parsley( 'isValid' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Destroy Parsley</td>
                         <td></td>
                         <td>Reset error messages, error classes, stop prevent form submission and validation triggered events.</td>

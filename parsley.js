@@ -1139,6 +1139,16 @@
       return isValid;
     }
 
+    , isValid: function () {
+      for ( var item = 0; item < this.items.length; item++ ) {
+        if ( false === this.items[ item ].isFieldValid() ) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
     /**
     * Remove all errors ul under invalid fields
     *

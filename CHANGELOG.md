@@ -1,5 +1,10 @@
 #Changelog
 
+**1.1.14-dev (next version)**
+
+  - added $('#form').parsley('isValid') to know if form constraints fails, without
+    adding DOM errors. Refs #94
+
 **1.1.13  (current stable)**
 
   - added jquery plugin manifest
