@@ -977,6 +977,9 @@ var testSuite = function () {
 
           triggerSubmitValidation( '#inListSingleComma', 'value' );
           expect( $( '#inListSingleComma' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListCustomDelimiter', 'foo bar' );
+          expect( $( '#inListCustomDelimiter' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
        it ( 'greaterThan', function () {
          triggerSubmitValidation( '#greaterThan', '1' );
