@@ -50,8 +50,10 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         return Date.parse($(elem).val()) < Date.parse(val);
       }
 
-      , inlist: function ( val, list ) {
-        var listItems = (list + "").split(/\s*,\s*/);
+      , inlist: function ( val, list, self ) {
+        var delimiter = self.options.inlistDelimiter || ',';
+        //var listItems = (list + "").split('\s*' + delimiter + '\s*');
+        var listItems = (list + "").split(new RegExp("\\s*\\" + delimiter + "\\s*"));
 
         return (listItems.indexOf(val.trim()) !== -1);
       }
