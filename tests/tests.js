@@ -969,6 +969,30 @@ var testSuite = function () {
           triggerSubmitValidation( '#rangewords', 'foo bar baz foo bar baz foo' );
           expect( $( '#rangewords' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
+       it ( 'inlist validation', function () {
+          triggerSubmitValidation( '#inList', 'invalid' );
+          expect( $( '#inList' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'false' );
+          expect( $( '#inList' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'true' );
+          expect( $( '#inList' ).hasClass( 'parsley-success' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'one' );
+          expect( $( '#inList' ).hasClass( 'parsley-success' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'value with spaces' );
+          expect( $( '#inList' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListSingleValue', 'true' );
+          expect( $( '#inListSingleValue' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListEmpty', 'foo' );
+          expect( $( '#inListEmpty' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListSingleComma', 'value' );
+          expect( $( '#inListSingleComma' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListCustomDelimiter', 'foo bar' );
+          expect( $( '#inListCustomDelimiter' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
        it ( 'greaterThan', function () {
          triggerSubmitValidation( '#greaterThan', '1' );
          expect( $( '#greaterThan' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -1001,7 +1025,6 @@ var testSuite = function () {
          triggerSubmitValidation( '#afterDate', '04/15/2015' );
          expect( $( '#afterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
-
 
      } )
 
