@@ -1,10 +1,10 @@
 # new features
 
-* Existence in a dataSet
 * create a error summary attached to form
 * Add native form sumbission parlsey(form).submit()
-* Add data API to set error messages (by form and by field)
 
+* [DONE] Add data API to set error messages (by form and by field)
+* [DONE] Existence in a dataSet
 * [DONE] Add minWords maxWords rangeWords validators
 * [DONE] Ajax check
 * [DONE] required on radio, checkboxes and selects
@@ -18,7 +18,6 @@
 # refactos
 
 * [DONE] refacto ugly manageErrors() function
-
 * [DONE] stop binding `keypress` and `change` events by default. Must be passed as data 
   arguments. By default, onSubmit validation only
 
