@@ -50,6 +50,13 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         return Date.parse($(elem).val()) < Date.parse(val);
       }
 
+      , inlist: function ( val, list, self ) {
+        var delimiter = self.options.inlistDelimiter || ',';
+        var listItems = (list + "").split(new RegExp("\\s*\\" + delimiter + "\\s*"));
+
+        return (listItems.indexOf(val.trim()) !== -1);
+      }
+
       , luhn: function ( val, elem, self) {
         val = val.replace(/[ -]/g, '');
         var digit, n, sum, _j, _len1, _ref2;
