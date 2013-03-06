@@ -49,6 +49,35 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , afterdate: function ( val, elem, self) {
         return Date.parse($(elem).val()) < Date.parse(val);
       }
+
+      , inlist: function ( val, list, self ) {
+        var delimiter = self.options.inlistDelimiter || ',';
+        var listItems = (list + "").split(new RegExp("\\s*\\" + delimiter + "\\s*"));
+
+        return (listItems.indexOf(val.trim()) !== -1);
+      }
+
+      , luhn: function ( val, elem, self) {
+        val = val.replace(/[ -]/g, '');
+        var digit, n, sum, _j, _len1, _ref2;
+        sum = 0;
+        _ref2 = val.split('').reverse();
+        for (n = _j = 0, _len1 = _ref2.length; _j < _len1; n = ++_j) {
+          digit = _ref2[n];
+          digit = +digit;
+          if (n % 2) {
+            digit *= 2;
+            if (digit < 10) {
+              sum += digit;
+            } else {
+              sum += digit - 9;
+            }
+          } else {
+            sum += digit;
+          }
+        }
+        return sum % 10 === 0;
+      }
     }
     , messages: {
         minwords:       "This value should have %s words at least."
@@ -58,6 +87,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , lessthan:       "This value should be less than %s."
       , beforedate:     "This date should be before %s."
       , afterdate:      "This date should be after %s."
+      , luhn:           "This value should pass the luhn test."
     }
   });
 }(window.jQuery || window.Zepto));

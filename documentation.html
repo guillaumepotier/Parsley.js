@@ -1108,6 +1108,14 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
                     <tr>
+                        <td>Test if form valid</td>
+                        <td>Boolean</td>
+                        <td>Useful if you want to integrate the form validation process inside custom functions, without triggering error messages.</td>
+                        <td  class="not-for-mobile">
+<pre><code>$( '#form' ).parsley( 'isValid' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Destroy Parsley</td>
                         <td></td>
                         <td>Reset error messages, error classes, stop prevent form submission and validation triggered events.</td>
@@ -1325,6 +1333,20 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>After date</td>
                         <td><code>data-after-date="#elem"</code></td>
                         <td>Validate that a field's date is after #elem's date.</td>
+                      </tr>
+                      <tr>
+                        <td>In list</td>
+                        <td><code>data-inlist="foo, bar, foo bar"</code></td>
+                        <td>
+                          Validates that a field's value is present within the value list. You can define the delimiter using <code>data-inlist-delimiter=","</code>. Delimiter defaults to <code>","</code>.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Luhn</td>
+                        <td><code>data-luhn="true"</code></td>
+                        <td>
+                          Validates that a fields value passes the Luhn algorithm. Validates credit card numbers, as well as some other kinds of account numbers.
+                        </td>
                       </tr>
                   </tbody>
                 </table>

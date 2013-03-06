@@ -1,6 +1,18 @@
 #Changelog
 
-**1.1.13  (current stable)**
+**1.1.15 (next version)**
+
+**1.1.14 (current stable)**
+
+  - added luhn validator in parsley.extra (#150)
+  - added inlist validator in parsley.extra (#153)
+  - added _messages.en.js template in localization folder
+  - fixed "Uncaught RangeError: Maximum call stack size exceeded" on jQuery `.off()`
+    Refs #136
+  - added $('#form').parsley('isValid') to know if form constraints fails, without
+    adding DOM errors. Refs #94
+
+**1.1.13**
 
   - added jquery plugin manifest
 

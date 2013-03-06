@@ -178,13 +178,16 @@
             <input type="text" id="reset-email" data-required="true" />
             <textarea id="reset-textarea" data-required="true"></textarea>
         </form>
-        <form data-validate="parsley" id="dynamic-form">
+        <form data-validate="parsley" id="dynamic-form" data-triggers="keyup change">
         </form>
         <form data-validate="parsley" id="onthefly-form">
             <input type="text" id="onthefly" />
         </form>
         <form dat-validate="parsley" id="dataerrorcontainer-form">
             <input id="dataerrorcontainer" type="text" required data-error-container="#mycustomerrorcontainer" />
+        </form>
+        <form dat-validate="parsley" id="isValid-form">
+            <input id="isValid-field" type="text" required />
         </form>
         <div id="mycustomerrorcontainer"></div>
         <form data-validate="parsley" id="onFieldValidate-form">
@@ -227,6 +230,13 @@
             <input type="text" id="beforeDate" data-beforedate="#beforeDate-model" />
             <input type="text" id="afterDate-model" value="1/1/2014" />
             <input type="text" id="afterDate" data-afterdate="#afterDate-model" />
+            <input type="text" id="inList" data-inlist="true, 1, valid, value with spaces, yes, one" />
+            <input type="text" id="inListSingleValue" data-inlist="true" />
+            <input type="text" id="inListEmpty" data-inlist="" />
+            <input type="text" id="inListSingleComma" data-inlist="," />
+            <input type="text" id="inListCustomDelimiter" data-inlist="foo | bar | foo bar" data-inlist-delimiter="|" />
+
+            <input type="text" id="luhn" data-luhn="true" />
         </form>
     </div>
 
