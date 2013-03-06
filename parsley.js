@@ -1232,7 +1232,7 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) ) {
+    if ( $( this ).data( "bind" ) === true || $( this ).is( 'form' ) ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
