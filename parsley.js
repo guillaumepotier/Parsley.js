@@ -568,15 +568,18 @@
       }
 
       // alaways bind keyup event, for better UX when a field is invalid
-      var triggers = ( !this.options.trigger ? '' : this.options.trigger + ' ' )
-        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : 'keyup' );
+      var triggers = ( !this.options.trigger ? '' : this.options.trigger )
+        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
 
       // alaways bind change event, for better UX when a select is invalid
       if ( this.$element.is( 'select' ) ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
 
-      this.$element.on( ( triggers + ' ' ).split( ' ' ).join( '.' + this.type + ' ' ).replace( /\s+$/g , '' ), false, $.proxy( this.eventValidation, this ) );
+      // trim triggers to bind them correctly with .on()
+      triggers = triggers.replace( /^\s+/g , '' ).replace( /\s+$/g , '' );
+
+      this.$element.on( ( triggers + ' ' ).split( ' ' ).join( '.' + this.type + ' ' ), false, $.proxy( this.eventValidation, this ) );
     }
 
     /**
@@ -1013,12 +1016,15 @@
 
       // alaways bind keyup event, for better UX when a field is invalid
       var self = this
-        , triggers = ( !this.options.trigger ? '' : this.options.trigger + ' ' )
-        + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : 'change' );
+        , triggers = ( !this.options.trigger ? '' : this.options.trigger )
+        + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : ' change' );
+
+      // trim triggers to bind them correctly with .on()
+      triggers = triggers.replace( /^\s+/g , '' ).replace( /\s+$/g ,'' );
 
      // bind trigger event on every siblings
      $( this.siblings ).each(function () {
-       $( this ).on( triggers.split( ' ' ).join( '.' + self.type + ' ' ).replace( /\s+$/g , '' ) , false, $.proxy( self.eventValidation, self ) );
+       $( this ).on( triggers.split( ' ' ).join( '.' + self.type + ' ' ) , false, $.proxy( self.eventValidation, self ) );
      } )
    }
   };
