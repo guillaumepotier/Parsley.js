@@ -931,6 +931,7 @@
       this.isRadioOrCheckbox = true;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
+      this.isSelect = this.$element.is('select');
       this.errorClassHandler = options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element.parent();
     }
 
@@ -989,6 +990,14 @@
           values.push( $( this ).val() );
         } );
 
+        return values;
+      }
+
+      if( this.isSelect ) {
+        var values = [];
+        $( this.siblings + ' :selected').parent().each(function(){
+          values.push( $(this).val() );
+        });
         return values;
       }
    }
@@ -1238,7 +1247,7 @@
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
     // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
     } else if ( $( this ).is( options.inputs ) && !$( this ).is( options.excluded ) ) {
-      newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
+      newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox], select[data-group]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
     }
 
     return 'function' === typeof fn ? fn() : newInstance;
