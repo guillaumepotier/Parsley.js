@@ -2,6 +2,9 @@
 
 **1.1.15 (next version)**
 
+  - specific behavior when field have required constraint. Do not show required error
+    along another errors, and reciprocally (#142)
+
 **1.1.14 (current stable)**
 
   - added luhn validator in parsley.extra (#150)

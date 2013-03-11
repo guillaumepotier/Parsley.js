@@ -234,7 +234,6 @@ var testSuite = function () {
       } )
       it ( 'required - select multiple', function () {
         expect( $( '#required-selectmultiple' ).parsley( 'validate' ) ).to.be( false );
-        $( '#required-selectmultiple' )
       } )
       it ( 'minlength', function () {
         triggerSubmitValidation( '#minlength', '12345' );
@@ -600,8 +599,10 @@ var testSuite = function () {
       } )
       it ( 'Change error messages with data-api', function () {
         triggerSubmitValidation( '#requiredchanged3', '' );
-        expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
         expect( getErrorMessage( '#requiredchanged3', 'required') ).to.be( 'custom required' );
+
+        triggerSubmitValidation( '#requiredchanged3', 'foo' );
+        expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
       } )
       it ( 'Change error handler', function () {
         $( '#errorsmanagement-form' ).parsley( {
@@ -631,6 +632,21 @@ var testSuite = function () {
          test field validation scenarios
     ***************************************/
     describe ( 'Test field validation scenarios', function () {
+      it ( 'Test multiple constraints/errors required field scenario', function () {
+        var fieldHash = $( '#scenario-multiple-errors-and-required' ).parsley( 'getHash' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( 'ul#' + fieldHash + ' li' ).eq( 0 ).hasClass( 'required' ) ).to.be( true );
+
+        $( '#scenario-multiple-errors-and-required' ).val( 'foo@bar.com' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );        
+        expect( $( 'ul#' + fieldHash + ' li' ).eq( 0 ).hasClass( 'rangelength' ) ).to.be( true );
+
+        $( '#scenario-multiple-errors-and-required' ).val( 'foo' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );        
+      } )
       it ( 'Test keyup scenario for non-required field', function () {
         // do not pass the 3 chars min trigger
         $( '#scenario-not-required' ).val( 'fo' );
