@@ -294,6 +294,18 @@ var testSuite = function () {
         triggerSubmitValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'regexp with custom flag', function () {
+        triggerSubmitValidation( '#regexp-flag1', 'foo' );
+        expect( $( '#regexp-flag1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#regexp-flag1', 'Foo' );
+        expect( $( '#regexp-flag1' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        // passing 'i' flag, case unsensitive make allways regexp pass
+        triggerSubmitValidation( '#regexp-flag2', 'foo' );
+        expect( $( '#regexp-flag2' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerSubmitValidation( '#regexp-flag2', 'Foo' );
+        expect( $( '#regexp-flag2' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'pattern html5-regexp', function () {
         triggerSubmitValidation( '#regexp-html5', 'foo' );
         expect( $( '#regexp-html5' ).hasClass( 'parsley-error' ) ).to.be( true );

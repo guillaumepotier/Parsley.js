@@ -2,6 +2,8 @@
 
 **1.1.15 (next version)**
 
+  - removed default 'i' flag with data-regex validator. Added data-regex-flag attribute
+    (#168)
   - specific behavior when field have required constraint. Do not show required error
     along another errors, and reciprocally (#142)
 

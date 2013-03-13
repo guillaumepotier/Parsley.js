@@ -121,8 +121,8 @@
         return '' !== val ? regExp.test( val ) : false;
       }
 
-      , regexp: function ( val, regExp ) {
-        return new RegExp( regExp, 'i' ).test( val );
+      , regexp: function ( val, regExp, self ) {
+        return new RegExp( regExp, self.options.regexpFlag || '' ).test( val );
       }
 
       , minlength: function ( val, min ) {
