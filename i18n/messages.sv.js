@@ -26,7 +26,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , range:          "Värdet måste vara mellan %s och %s."
       , minlength:      "Värdet är för kort. Det måste innehålla minst %s tecken."
       , maxlength:      "Värdet är för långt. Det får maximalt innehålla %s tecken."
-      , rangelength:    "Värdets längd är felaktigt. Det måste innehålla mellan %s och %s tecken."
+      , rangelength:    "Värdets längd är felaktig. Det måste innehålla mellan %s och %s tecken."
       , mincheck:       "Minst %s värden måste väljas."
       , maxcheck:       "Maximalt %s värden får väljas."
       , rangecheck:     "Du måste göra minst %s och maximalt %s val."
