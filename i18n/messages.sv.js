@@ -29,7 +29,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , rangelength:    "Värdets längd är felaktigt. Det måste innehålla mellan %s och %s tecken."
       , mincheck:       "Minst %s värden måste väljas."
       , maxcheck:       "Maximalt %s värden får väljas."
-      , rangecheck:     "Gör minst %s och maximalt %s val."
+      , rangecheck:     "Du måste göra minst %s och maximalt %s val."
       , equalto:        "Värdet måste vara lika."
 
       // parsley.extend ///////////////////////////////
