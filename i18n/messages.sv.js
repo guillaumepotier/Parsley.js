@@ -24,12 +24,12 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , min:            "Värdet måste vara större än %s."
       , max:            "Värdet måste vara mindre än %s."
       , range:          "Värdet måste vara mellan %s och %s."
-      , minlength:      "Värdet är för kort, det måste innehålla minst %s tecken."
-      , maxlength:      "Värdet är för långt, det får maximalt innehålla %s tecken."
-      , rangelength:    "Värdets längd är felaktigt, det måste innehålla mellan %s och %s tecken."
+      , minlength:      "Värdet är för kort. Det måste innehålla minst %s tecken."
+      , maxlength:      "Värdet är för långt. Det får maximalt innehålla %s tecken."
+      , rangelength:    "Värdets längd är felaktig. Det måste innehålla mellan %s och %s tecken."
       , mincheck:       "Minst %s värden måste väljas."
       , maxcheck:       "Maximalt %s värden får väljas."
-      , rangecheck:     "Gör minst %s och maximalt %s val."
+      , rangecheck:     "Du måste göra minst %s och maximalt %s val."
       , equalto:        "Värdet måste vara lika."
 
       // parsley.extend ///////////////////////////////
