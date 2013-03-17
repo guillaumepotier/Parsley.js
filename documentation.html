@@ -659,7 +659,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                             <code>data-regexp="&lt;regexp>"</code><br/><br/>
                             <span class="label label-info">HTML5</span><code>pattern="regexp"</code>
                         </td>
-                        <td>Validates that a value matches a specific regular expression. eg: validate a color hexadecimal code: <code>data-regexp="#[A-Fa-f0-9]{6}"</code>.</td>
+                        <td>Validates that a value matches a specific regular expression. eg: validate a color hexadecimal code: <code>data-regexp="#[A-Fa-f0-9]{6}"</code>.<br/><br/>Add a flag to <code>Regexp()</code> function: <code>data-regexp-flag="i"</code> for example to make regexp case unsensitive</td>
                         <td class="not-for-mobile">
                             <table>
                                 <tr>
@@ -1339,6 +1339,13 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td><code>data-inlist="foo, bar, foo bar"</code></td>
                         <td>
                           Validates that a field's value is present within the value list. You can define the delimiter using <code>data-inlist-delimiter=","</code>. Delimiter defaults to <code>","</code>.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Luhn</td>
+                        <td><code>data-luhn="true"</code></td>
+                        <td>
+                          Validates that a fields value passes the Luhn algorithm. Validates credit card numbers, as well as some other kinds of account numbers.
                         </td>
                       </tr>
                   </tbody>

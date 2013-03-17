@@ -4,12 +4,13 @@
     "description": "Never write a single javascript line anymore to validate your forms FrontEnd. Parsley will do that for you,and do it right, thanks to its powerful DOM-API !",
     "keywords": [
         "parsley",
+        "parsleyjs",
         "forms",
+        "form",
         "validation",
-        "validate",
-        "form"
+        "validate"
     ],
-    "version": "1.1.12",
+    "version": "1.1.14",
     "author": {
         "name": "Guillaume Potier",
         "email": "guillaume@wisembly.com",
@@ -26,6 +27,6 @@
     "docs": "http://parsleyjs.org/documentation.html",
     "download": "https://github.com/guillaumepotier/Parsley.js/",
     "dependencies": {
-        "jquery": ">=1.4.4"
+        "jquery": ">=1.7"
     }
 }

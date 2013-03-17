@@ -82,6 +82,8 @@
 
             <input type="text" id="regexp" data-regexp="\d+" />
             <input type="text" id="regexp-html5" pattern="\d+" />
+            <input type="text" id="regexp-flag1" data-regexp="^[A-Z]" />
+            <input type="text" id="regexp-flag2" data-regexp="^[A-Z]" data-regexp-flag="i" />
 
             <input type="text" id="typeemail" data-type="email" />
             <input type="email" id="typeemail-html5" />
@@ -149,6 +151,7 @@
         </form>
 
         <form id="validation-scenarios" data-validate="parsley">
+            <input type="text" id="scenario-multiple-errors-and-required" data-required="true" data-type="email" data-rangelength="[20,50]" >
             <input type="text" id="scenario-not-required" data-trigger="keyup" data-minlength="6" />
             <input type="text" id="scenario-keyup-when-notvalid" data-trigger="change" data-type="email" />
             <input type="text" id="scenario-validation-after-field-reset" data-trigger="keyup" data-required="true" />
@@ -178,7 +181,7 @@
             <input type="text" id="reset-email" data-required="true" />
             <textarea id="reset-textarea" data-required="true"></textarea>
         </form>
-        <form data-validate="parsley" id="dynamic-form">
+        <form data-validate="parsley" id="dynamic-form" data-triggers="keyup change">
         </form>
         <form data-validate="parsley" id="onthefly-form">
             <input type="text" id="onthefly" />
@@ -235,6 +238,8 @@
             <input type="text" id="inListEmpty" data-inlist="" />
             <input type="text" id="inListSingleComma" data-inlist="," />
             <input type="text" id="inListCustomDelimiter" data-inlist="foo | bar | foo bar" data-inlist-delimiter="|" />
+
+            <input type="text" id="luhn" data-luhn="true" />
         </form>
     </div>
 

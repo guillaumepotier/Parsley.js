@@ -121,8 +121,8 @@
         return '' !== val ? regExp.test( val ) : false;
       }
 
-      , regexp: function ( val, regExp ) {
-        return new RegExp( regExp, 'i' ).test( val );
+      , regexp: function ( val, regExp, self ) {
+        return new RegExp( regExp, self.options.regexpFlag || '' ).test( val );
       }
 
       , minlength: function ( val, min ) {
@@ -317,6 +317,12 @@
   var ParsleyField = function ( element, options, type ) {
     this.options = options;
     this.Validator = new Validator( options );
+
+    // if type is ParsleyFieldMultiple, just return this. used for clone
+    if ( type === 'ParsleyFieldMultiple' ) {
+      return this;
+    }
+
     this.init( element, type || 'ParsleyField' );
   };
 
@@ -554,9 +560,7 @@
       this.$element.addClass( 'parsley-validated' );
 
       // remove eventually already binded events
-      if ( this.$element.data( 'events' ) ) {
-        this.$element.off( '.' + this.type );
-      }
+      this.$element.off( '.' + this.type );
 
       // force add 'change' event if async remote validator here to have result before form submitting
       if ( this.options.remote && !new RegExp( 'change', 'i' ).test( this.options.trigger ) ) {
@@ -564,13 +568,16 @@
       }
 
       // alaways bind keyup event, for better UX when a field is invalid
-      var triggers = ( !this.options.trigger ? '' : this.options.trigger + ' ' )
-        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : 'keyup' );
+      var triggers = ( !this.options.trigger ? '' : this.options.trigger )
+        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
 
       // alaways bind change event, for better UX when a select is invalid
       if ( this.$element.is( 'select' ) ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
+
+      // trim triggers to bind them correctly with .on()
+      triggers = triggers.replace( /^\s+/g , '' ).replace( /\s+$/g , '' );
 
       this.$element.on( ( triggers + ' ' ).split( ' ' ).join( '.' + this.type + ' ' ), false, $.proxy( this.eventValidation, this ) );
     }
@@ -824,6 +831,7 @@
       this.removeErrors();
       this.validatedOnce = false;
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+
       return this;
     }
 
@@ -837,6 +845,15 @@
       // display ulError container if it has been removed previously (or never shown)
       if ( !$( this.ulError ).length ) {
         this.manageErrorContainer();
+      }
+
+      // TODO: refacto properly
+      // if required constraint but field is not null, do not display
+      if ( 'required' === constraint.name && null !== this.getVal() && this.getVal().length > 0 ) {
+        return;
+      // if empty required field and non required constraint fails, do not display
+      } else if ( this.isRequired && 'required' !== constraint.name && ( null === this.getVal() || 0 === this.getVal().length ) ) {
+        return;
       }
 
       // TODO: refacto error name w/ proper & readable function
@@ -890,7 +907,6 @@
     */
     , destroy: function () {
       this.$element.removeClass( 'parsley-validated' );
-      this.errorClassHandler.removeClass( this.options.errorClass ).removeClass( this.options.successClass );
       this.reset().$element.off( '.' + this.type ).removeData( this.type );
     }
   };
@@ -944,7 +960,7 @@
     * @param {Object} options
     */
     , inherit: function ( element, options ) {
-      var clone = new ParsleyField( element, options );
+      var clone = new ParsleyField( element, options, 'ParsleyFieldMultiple' );
 
       for ( var property in clone ) {
         if ( 'undefined' === typeof this[ property ] ) {
@@ -1014,18 +1030,19 @@
      this.$element.addClass( 'parsley-validated' );
 
      // remove eventually already binded events
-     if ( this.$element.data( 'events' ) ) {
-       this.$element.off( '.' + this.type );
-     }
+     this.$element.off( '.' + this.type );
 
       // alaways bind keyup event, for better UX when a field is invalid
       var self = this
-        , triggers = ( !this.options.trigger ? '' : this.options.trigger + ' ' )
-        + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : 'change' );
+        , triggers = ( !this.options.trigger ? '' : this.options.trigger )
+        + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : ' change' );
+
+      // trim triggers to bind them correctly with .on()
+      triggers = triggers.replace( /^\s+/g , '' ).replace( /\s+$/g ,'' );
 
      // bind trigger event on every siblings
      $( this.siblings ).each(function () {
-       $( this ).on( triggers.split( ' ' ).join( '.' + self.type + ' ' ), false, $.proxy( self.eventValidation, self ) );
+       $( this ).on( triggers.split( ' ' ).join( '.' + self.type + ' ' ) , false, $.proxy( self.eventValidation, self ) );
      } )
    }
   };
