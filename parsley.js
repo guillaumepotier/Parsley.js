@@ -562,16 +562,11 @@
       // remove eventually already binded events
       this.$element.off( '.' + this.type );
 
-      // force add 'change' event if async remote validator here to have result before form submitting
-      if ( this.options.remote && !new RegExp( 'change', 'i' ).test( this.options.trigger ) ) {
-        this.options.trigger = !this.options.trigger ? 'change' : ' change';
-      }
-
-      // alaways bind keyup event, for better UX when a field is invalid
+      // alaways bind keyup event, for better UX when a field is invalid (execpt in remote fields)
       var triggers = ( !this.options.trigger ? '' : this.options.trigger )
-        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
+        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) || this.options.remote ? '' : ' keyup' );
 
-      // alaways bind change event, for better UX when a select is invalid
+      // always bind change event, for better UX when a select is invalid (execpt in remote fields)
       if ( this.$element.is( 'select' ) ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
@@ -579,7 +574,7 @@
       // trim triggers to bind them correctly with .on()
       triggers = triggers.replace( /^\s+/g , '' ).replace( /\s+$/g , '' );
 
-      this.$element.on( ( triggers + ' ' ).split( ' ' ).join( '.' + this.type + ' ' ), false, $.proxy( this.eventValidation, this ) );
+    this.$element.on( ( triggers + ' ' ).split( ' ' ).join( '.' + this.type + ' ' ), false, $.proxy( this.eventValidation, this ) );
     }
 
     /**
