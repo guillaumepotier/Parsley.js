@@ -72,7 +72,9 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
     return false;
   },
   onFieldError: function ( field, constraints ) {
-    $( field ).addClass( 'error-' + constraints[ 0 ].name + '_' + constraints[ 0 ].requirements );
+    for ( var i in constraints ) {
+      $( field ).addClass( 'error-' + constraints[ i ].name + '_' + constraints[ i ].requirements );
+    }
   },
   onFieldSuccess: function ( field ) {
     $( field ).addClass( 'success-foo-bar' );

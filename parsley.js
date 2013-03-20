@@ -345,7 +345,7 @@
       this.$element = $( element );
       this.val = this.$element.val();
       this.isRequired = false;
-      this.constraints = [];
+      this.constraints = {};
 
       // overriden by ParsleyItemMultiple if radio or checkbox input
       if ( 'undefined' === typeof this.isRadioOrCheckbox ) {
@@ -364,7 +364,7 @@
       this.addConstraints();
 
       // bind parsley events if validators have been registered
-      if ( this.constraints.length ) {
+      if ( this.hasConstraints() ) {
         this.bindValidationEvents();
       }
     }
@@ -439,11 +439,11 @@
           name = name.toLowerCase();
 
           if ( 'function' === typeof this.Validator.validators[ name ] ) {
-            this.constraints.push( {
+            this.constraints[ name ] = {
                 name: name
               , requirements: constraint[ name ]
               , isValid: null
-            } );
+            }
 
             if ( name === 'required' ) {
               this.isRequired = true;
@@ -480,13 +480,10 @@
     * @param {Object} constraint
     */
     , updtConstraint: function ( constraint, message ) {
-      for ( var i in this.constraints ) {
-        if ( this.constraints[ i ].name === constraint.name ) {
-          this.constraints[ i ] = $.extend( true, this.constraints[ i ], constraint );
-          if ( 'string' === typeof message ) {
-            this.Validator.messages[ this.constraints[ i ].name ] = message ;
-          }
-        }
+      this.constraints[ constraint.name ] = $.extend( true, this.constraints[ constraint.name ], constraint );
+
+      if ( 'string' === typeof message ) {
+        this.Validator.messages[ constraint.name ] = message ;
       }
 
       // force field validation next check and reset validation events
@@ -500,23 +497,16 @@
     * @param {String} constraintName
     */
     , removeConstraint: function ( constraintName ) {
-      var constraintName = constraintName.toLowerCase()
-        , updatedConstraints = [];
+      var constraintName = constraintName.toLowerCase();
 
-      for ( var constraint in this.constraints ) {
-        if ( this.constraints[ constraint ].name !== constraintName ) {
-          updatedConstraints.push( this.constraints[ constraint ] );
-        }
-      }
+      delete this.constraints[ constraintName ];
 
       if ( constraintName === 'required' ) {
         this.isRequired = false;
       }
 
-      this.constraints = updatedConstraints;
-
       // if there are no more constraint, destroy parsley instance for this field
-      if ( updatedConstraints.length === 0 ) {
+      if ( !this.hasConstraints() ) {
         // in a form context, remove item from parent
         if ( 'ParsleyForm' === typeof this.getParent() ) {
           this.getParent().removeItem( this.$element );
@@ -652,6 +642,20 @@
     }
 
     /**
+    * Return if field has constraints
+    *
+    * @method hasConstraints
+    * @return {Boolean} Is field has constraints or not
+    */
+    , hasConstraints: function () {
+      for ( var constraint in this.constraints ) {
+        return true;
+      }
+
+      return false;
+    }
+
+    /**
     * Validate a field & display errors
     *
     * @method validate
@@ -664,7 +668,7 @@
         , isValid = null;
 
       // do not even bother trying validating a field w/o constraints
-      if ( this.constraints.length === 0 ) {
+      if ( !this.hasConstraints() ) {
         return null;
       }
 
@@ -717,7 +721,7 @@
     , applyValidators: function () {
       var isValid = null;
 
-      for ( var constraint = 0; constraint < this.constraints.length; constraint++ ) {
+      for ( var constraint in this.constraints ) {
         var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
 
         if ( false === result ) {
@@ -744,7 +748,7 @@
     , manageValidationResult: function () {
       var isValid = null;
 
-      for ( var constraint = 0; constraint < this.constraints.length; constraint++ ) {
+      for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].isValid ) {
           this.manageError( this.constraints[ constraint ] );
           isValid = false;
@@ -831,6 +835,10 @@
       this.removeErrors();
       this.validatedOnce = false;
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+
+      for ( var constraint in this.constraints ) {
+        this.constraints[ constraint ].isValid = null;
+      }
 
       return this;
     }
