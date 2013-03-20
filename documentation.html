@@ -140,7 +140,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <form id="demo-form" data-validate="parsley">
+                                <form id="demo-form">
                                     <label for="fullname">Full Name * :</label>
                                     <input type="text" id="fullname" name="fullname" data-required="true" />
 
@@ -1375,13 +1375,18 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
     <script type="text/javascript" src="parsley.js"></script>
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
     <script type="text/javascript">
-        hljs.initHighlightingOnLoad();
+        try {
+            hljs.initHighlightingOnLoad();
+        } catch ( err ) {}
 
         $( '#demo-form' ).parsley( { listeners: {
             onFormSubmit: function ( isFormValid, event ) {
                 if ( isFormValid && !$( '#good-to-go').length ) {
-                    $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Good to go!</span>' );
+                    $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Yay, good to go!</span>' );
                     $( '#demo-form-valid' ).hide();
+                    $( '#not-good-to-go' ).hide();
+                } else if ( !isFormValid && !$( '#not-good-to-go').length ) {
+                    $( '#demo-form-valid' ).after( '<span id="not-good-to-go" style="display:block;margin-top:5px;" class="alert alert-error">Oops! Seems there are some errors..</span>' );
                 }
             },
             onFieldError: function ( field, constraint ) {
