@@ -194,7 +194,6 @@
         $.ajax( $.extend( {}, {
             url: url
           , data: data
-          , async: self.async
           , type: self.options.remoteMethod || 'GET'
           , success: function ( response ) {
             response = handleResponse( response );
@@ -206,10 +205,6 @@
             manage( false, manageErrorMessage( response ) );
           }
         }, dataType ) );
-
-        if ( self.async ) {
-          manage( result );
-        }
 
         return result;
       }
@@ -628,7 +623,7 @@
         return true;
       }
 
-      this.validate( true, false );
+      this.validate( true );
     }
 
     /**
@@ -638,7 +633,7 @@
     * @return {Boolean} Is field valid or not
     */
     , isFieldValid: function () {
-      return this.validate( false, false );
+      return this.validate( false );
     }
 
     /**
@@ -660,10 +655,9 @@
     *
     * @method validate
     * @param {Boolean} errorBubbling set to false if you just want isValid boolean without error bubbling next to fields
-    * @param {Boolean} async if false, wait ajax calls returns
     * @return {Boolean} Is field valid or not
     */
-    , validate: function ( errorBubbling, async ) {
+    , validate: function ( errorBubbling ) {
       var val = this.getVal()
         , isValid = null;
 
@@ -684,7 +678,6 @@
       }
 
       this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : true;
-      this.async = 'undefined' !== typeof async ? async : true;
 
       isValid = this.applyValidators();
 
