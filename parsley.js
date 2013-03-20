@@ -167,8 +167,10 @@
         }
 
         var manage = function ( isConstraintValid, message ) {
-          // remove error message because ajax response message could change depending on the sent value !
-          self.removeError( 'remote' );
+          // remove error message if we got a server message, different from previous message
+          if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
+            $( self.ulError + ' .remote' ).remove();
+          }
 
           self.updtConstraint( { name: 'remote', isValid: isConstraintValid }, message );
           self.manageValidationResult();
