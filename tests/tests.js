@@ -31,7 +31,7 @@ var getErrorMessage = function ( idOrClass, constraintName ) {
 
 $( '#validate-form' ).parsley( { listeners: {
   onFormSubmit: function ( isFormValid, event ) {
-    $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
+    $( '#validate-form' ).removeClass( isFormValid ? 'form-invalid' : 'form-valid' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
     event.preventDefault();
   }
 } } );
@@ -753,11 +753,13 @@ var testSuite = function () {
         $( '#validate2' ).val( '1234567' );
         $( '#validate-form-submit' ).click();
         expect( $( '#validate-form' ).hasClass( 'form-invalid' ) ).to.be( true );
+        expect( $( '#validate-form' ).hasClass( 'form-valid' ) ).to.be( false );
       } )
       it ( 'if all fields are valid, form is submitted', function () {
         $( '#validate1' ).val( 'foo' );
         $( '#validate-form-submit' ).click();
         expect( $( '#validate-form' ).hasClass( 'form-valid' ) ).to.be( true );
+        expect( $( '#validate-form' ).hasClass( 'form-invalid' ) ).to.be( false );
       } )
       it ( 'test error focus', function () {
         $( '#focus-form' ).parsley( 'validate' );
