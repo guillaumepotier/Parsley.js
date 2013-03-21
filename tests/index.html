@@ -129,7 +129,8 @@
         <form id="validate-form" data-validate="parsley">
             <input type="text" id="validate1" data-required="true" />
             <input type="text" id="validate2" data-minlength="6" />
-            <input type="submit" id="validate-form-submit" />
+            <input type="submit" id="validate-form-submit" data-cause-validation="true"/>
+            <input type="submit" id="dont-validate-form-submit" data-cause-validation="false"/>
         </form>
         <form id="change-validation" data-validate="parsley">
             <input type="text" id="minchar-change" data-type="email" data-trigger="keyup" data-validation-minlength="7" />

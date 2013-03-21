@@ -1057,6 +1057,10 @@
       });
 
       this.$element.on( 'submit.' + this.type , false, $.proxy( this.validate, this ) );
+
+      this.$element.children().click(function(e){
+        self.$clickedElement = $(this);
+      });
     }
 
     /**
@@ -1124,6 +1128,10 @@
     * @return {Boolean} Is form valid or not
     */
     , validate: function ( event ) {
+
+      if(typeof this.$clickedElement !== 'undefined' && this.$clickedElement.data('cause-validation') === false){
+        return false;
+      }
       var isValid = true;
       this.focusedField = false;
 
