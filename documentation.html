@@ -140,12 +140,12 @@
                     <tbody>
                         <tr>
                             <td>
-                                <form id="demo-form" data-validate="parsley">
+                                <form id="demo-form">
                                     <label for="fullname">Full Name * :</label>
                                     <input type="text" id="fullname" name="fullname" data-required="true" />
 
                                     <label for="email">Email * :</label>
-                                    <input type="text" id="email" name="email" data-trigger="change" data-required="true" data-type="email" />
+                                    <input type="text" id="email" name="email" data-trigger="change" data-remote="http://foo.bar" data-required="true" />
 
                                     <label for="website">Website :</label>
                                     <input type="text" id="website" name="website" data-trigger="change" data-type="url" />
@@ -205,6 +205,7 @@
                   <ol>
                       <li><a href="#basic-constraints">Basic constraints</a></li>
                       <li><a href="#type-constraints">Type constraints</a></li>
+                      <li><a href="#extra-constraints">Extra constraints</a></li>
                   </ol>
                 </li>
                 <li>
@@ -659,7 +660,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                             <code>data-regexp="&lt;regexp>"</code><br/><br/>
                             <span class="label label-info">HTML5</span><code>pattern="regexp"</code>
                         </td>
-                        <td>Validates that a value matches a specific regular expression. eg: validate a color hexadecimal code: <code>data-regexp="#[A-Fa-f0-9]{6}"</code>.</td>
+                        <td>Validates that a value matches a specific regular expression. eg: validate a color hexadecimal code: <code>data-regexp="#[A-Fa-f0-9]{6}"</code>.<br/><br/>Add a flag to <code>Regexp()</code> function: <code>data-regexp-flag="i"</code> for example to make regexp case unsensitive</td>
                         <td class="not-for-mobile">
                             <table>
                                 <tr>
@@ -989,8 +990,106 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
 
+                    <!-- Phone -->
+                    <tr>
+                        <td>Phone</td>
+                        <td>
+                            <code>data-type="phone"</code>
+                        </td>
+                        <td>Validates that a value is a valid phone number.</td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <form data-validate="parsley">
+                                            <input type="text" id="data-phone" data-type="phone" placeholder="(XXX) XXXX XXX" />
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#data-phone').parsley('validate');">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
+
+            <a name="extra-constraints"></a>
+            <h4>Extra Validators</h4>
+            <p>
+                There are some extra validators, not shipped along with default Parsley, because they're more specific and less common, and there is no need to add weight to Parsley instead of calling these validators only when needed. Just call <code>parsley.extend.js</code> or <code>dist/parsley.extend.min.js</code> like this:
+<pre><code>&lt;script type="text/javascript" src="parsley.extend.fr.js">&lt;/script>
+&lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
+                Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding some useful validators!
+            </p>
+            <br/>
+
+            <h5>Here is the list of parsley.extra validators</h5>
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Api</th>
+                      <th>Description</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Min Words</td>
+                      <td><code>data-minwords="6"</code></td>
+                      <td>Validate that a field has at least 6 words.</td>
+                  </tr>
+                  <tr>
+                    <td>Max Words</td>
+                    <td><code>data-maxwords="6"</code></td>
+                    <td>Validate that a field has 6 words maximum.</td>
+                  </tr>
+                  <tr>
+                    <td>Range Words</td>
+                    <td><code>data-rangewords="[6,10]"</code></td>
+                    <td>Validate that a field has between 6 and 10 words.</td>
+                  </tr>
+                  <tr>
+                    <td>Greater Than</td>
+                    <td><code>data-greaterthan="#elem"</code></td>
+                    <td>Validate that a field's value is greater than #elem's value.</td>
+                  </tr>
+                  <tr>
+                    <td>Less Than</td>
+                    <td><code>data-lessthan="#elem"</code></td>
+                    <td>Validate that a field's value is lower than #elem's value.</td>
+                  </tr>
+                  <tr>
+                    <td>Before date</td>
+                    <td><code>data-beforedate="#elem"</code></td>
+                    <td>Validate that a field's date is before #elem's date.</td>
+                  </tr>
+                  <tr>
+                    <td>After date</td>
+                    <td><code>data-afterdate="#elem"</code></td>
+                    <td>Validate that a field's date is after #elem's date.</td>
+                  </tr>
+                  <tr>
+                    <td>In list</td>
+                    <td><code>data-inlist="foo, bar, foo bar"</code></td>
+                    <td>
+                      Validates that a field's value is present within the value list. You can define the delimiter using <code>data-inlist-delimiter=","</code>. Delimiter defaults to <code>","</code>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Luhn</td>
+                    <td><code>data-luhn="true"</code></td>
+                    <td>
+                      Validates that a fields value passes the Luhn algorithm. Validates credit card numbers, as well as some other kinds of account numbers.
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+
             </section>
             <a href="#top" class="top pull-right">Top</a>
 
@@ -1279,77 +1378,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
 &lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
                     Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding your own translations messages in your language!
                 </p>
-                <br/><br/>
-                <h4>Extra Validators</h4>
-                <p>
-                    There are some extra validators, not shipped along with default Parsley, because they're more specific and less common, and there is no need to add weight to Parsley instead of calling these validators only when needed. Just call <code>parsley.extend.js</code> or <code>dist/parsley.extend.min.js</code> like this:
-<pre><code>&lt;script type="text/javascript" src="parsley.extend.fr.js">&lt;/script>
-&lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
-                    Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding some useful validators!
-                </p>
                 <br/>
-
-                <h5>Here is the list of parsley.extra validators</h5>
-                <table class="table table-striped table-bordered table-hover">
-                  <thead>
-                      <tr>
-                          <th>Name</th>
-                          <th>Api</th>
-                          <th>Description</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>Min Words</td>
-                          <td><code>data-minwords="6"</code></td>
-                          <td>Validate that a field has at least 6 words.</td>
-                      </tr>
-                      <tr>
-                        <td>Max Words</td>
-                        <td><code>data-maxwords="6"</code></td>
-                        <td>Validate that a field has 6 words maximum.</td>
-                      </tr>
-                      <tr>
-                        <td>Range Words</td>
-                        <td><code>data-rangewords="[6,10]"</code></td>
-                        <td>Validate that a field has between 6 and 10 words.</td>
-                      </tr>
-                      <tr>
-                        <td>Greater Than</td>
-                        <td><code>data-greaterthan="#elem"</code></td>
-                        <td>Validate that a field's value is greater than #elem's value.</td>
-                      </tr>
-                      <tr>
-                        <td>Less Than</td>
-                        <td><code>data-lessthan="#elem"</code></td>
-                        <td>Validate that a field's value is lower than #elem's value.</td>
-                      </tr>
-                      <tr>
-                        <td>Before date</td>
-                        <td><code>data-before-date="#elem"</code></td>
-                        <td>Validate that a field's date is before #elem's date.</td>
-                      </tr>
-                      <tr>
-                        <td>After date</td>
-                        <td><code>data-after-date="#elem"</code></td>
-                        <td>Validate that a field's date is after #elem's date.</td>
-                      </tr>
-                      <tr>
-                        <td>In list</td>
-                        <td><code>data-inlist="foo, bar, foo bar"</code></td>
-                        <td>
-                          Validates that a field's value is present within the value list. You can define the delimiter using <code>data-inlist-delimiter=","</code>. Delimiter defaults to <code>","</code>.
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Luhn</td>
-                        <td><code>data-luhn="true"</code></td>
-                        <td>
-                          Validates that a fields value passes the Luhn algorithm. Validates credit card numbers, as well as some other kinds of account numbers.
-                        </td>
-                      </tr>
-                  </tbody>
-                </table>
             </section>
             <section>
                 <a name="integrations"></a>
@@ -1359,10 +1388,10 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                 </div>
                 <ul>
                   <li><a href="https://github.com/agiliq/django-parsley">Django</a></li>
+                  <li><a href="https://github.com/mekishizufu/parsley-rails">Rails</a></li>
                 </ul>
             </section>
             <a href="#top" class="top pull-right">Top</a>
-
       <hr>
 
       <div class="footer">
@@ -1375,13 +1404,18 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
     <script type="text/javascript" src="parsley.js"></script>
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
     <script type="text/javascript">
-        hljs.initHighlightingOnLoad();
+        try {
+            hljs.initHighlightingOnLoad();
+        } catch ( err ) {}
 
         $( '#demo-form' ).parsley( { listeners: {
             onFormSubmit: function ( isFormValid, event ) {
                 if ( isFormValid && !$( '#good-to-go').length ) {
-                    $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Good to go!</span>' );
+                    $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Yay, good to go!</span>' );
                     $( '#demo-form-valid' ).hide();
+                    $( '#not-good-to-go' ).hide();
+                } else if ( !isFormValid && !$( '#not-good-to-go').length ) {
+                    $( '#demo-form-valid' ).after( '<span id="not-good-to-go" style="display:block;margin-top:5px;" class="alert alert-error">Oops! Seems there are some errors..</span>' );
                 }
             },
             onFieldError: function ( field, constraint ) {
