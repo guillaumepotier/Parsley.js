@@ -1058,7 +1058,7 @@
 
       this.$element.on( 'submit.' + this.type , false, $.proxy( this.validate, this ) );
 
-      this.$element.children().click(function(e){
+      this.$element.find('[data-button], [data-cause-validation]').click(function(e){
         self.$clickedElement = $(this);
       });
     }
