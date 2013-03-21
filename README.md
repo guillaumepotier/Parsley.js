@@ -30,7 +30,8 @@ IE 8+, FF 14+, Chrome
 
 You'll need ruby, and Google Closure compiler: `gem install closure-compiler`. Then, just call:
 
-`./bin/build.sh version` where version is the build release. eg: `./bin/build.sh 1.1.2`
+* Linux/Mac: `./bin/build.sh version` where version is the build release. eg: `./bin/build.sh 1.1.2`
+* Windows: `./bin/build.ps1 version` where version is the build release. eg: `./bin/build.ps1 1.1.2`
 
 They'll be created and dumped in the dist/ directory
 
