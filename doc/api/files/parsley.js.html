@@ -413,6 +413,12 @@
   var ParsleyField = function ( element, options, type ) {
     this.options = options;
     this.Validator = new Validator( options );
+
+    &#x2F;&#x2F; if type is ParsleyFieldMultiple, just return this. used for clone
+    if ( type === &#x27;ParsleyFieldMultiple&#x27; ) {
+      return this;
+    }
+
     this.init( element, type || &#x27;ParsleyField&#x27; );
   };
 
@@ -650,9 +656,7 @@
       this.$element.addClass( &#x27;parsley-validated&#x27; );
 
       &#x2F;&#x2F; remove eventually already binded events
-      if ( this.$element.data( &#x27;events&#x27; ) ) {
-        this.$element.off( &#x27;.&#x27; + this.type );
-      }
+      this.$element.off( &#x27;.&#x27; + this.type );
 
       &#x2F;&#x2F; force add &#x27;change&#x27; event if async remote validator here to have result before form submitting
       if ( this.options.remote &amp;&amp; !new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ) {
@@ -660,13 +664,16 @@
       }
 
       &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
-      var triggers = ( !this.options.trigger ? &#x27;&#x27; : this.options.trigger + &#x27; &#x27; )
-        + ( new RegExp( &#x27;key&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27;keyup&#x27; );
+      var triggers = ( !this.options.trigger ? &#x27;&#x27; : this.options.trigger )
+        + ( new RegExp( &#x27;key&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27; keyup&#x27; );
 
       &#x2F;&#x2F; alaways bind change event, for better UX when a select is invalid
       if ( this.$element.is( &#x27;select&#x27; ) ) {
         triggers += new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( triggers ) ? &#x27;&#x27; : &#x27; change&#x27;;
       }
+
+      &#x2F;&#x2F; trim triggers to bind them correctly with .on()
+      triggers = triggers.replace( &#x2F;^\s+&#x2F;g , &#x27;&#x27; ).replace( &#x2F;\s+$&#x2F;g , &#x27;&#x27; );
 
       this.$element.on( ( triggers + &#x27; &#x27; ).split( &#x27; &#x27; ).join( &#x27;.&#x27; + this.type + &#x27; &#x27; ), false, $.proxy( this.eventValidation, this ) );
     }
@@ -920,6 +927,7 @@
       this.removeErrors();
       this.validatedOnce = false;
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+
       return this;
     }
 
@@ -986,7 +994,6 @@
     *&#x2F;
     , destroy: function () {
       this.$element.removeClass( &#x27;parsley-validated&#x27; );
-      this.errorClassHandler.removeClass( this.options.errorClass ).removeClass( this.options.successClass );
       this.reset().$element.off( &#x27;.&#x27; + this.type ).removeData( this.type );
     }
   };
@@ -1039,7 +1046,7 @@
     * @param {Object} options
     *&#x2F;
     , inherit: function ( element, options ) {
-      var clone = new ParsleyField( element, options );
+      var clone = new ParsleyField( element, options, &#x27;ParsleyFieldMultiple&#x27; );
 
       for ( var property in clone ) {
         if ( &#x27;undefined&#x27; === typeof this[ property ] ) {
@@ -1101,18 +1108,19 @@
      this.$element.addClass( &#x27;parsley-validated&#x27; );
 
      &#x2F;&#x2F; remove eventually already binded events
-     if ( this.$element.data( &#x27;events&#x27; ) ) {
-       this.$element.off( &#x27;.&#x27; + this.type );
-     }
+     this.$element.off( &#x27;.&#x27; + this.type );
 
       &#x2F;&#x2F; alaways bind keyup event, for better UX when a field is invalid
       var self = this
-        , triggers = ( !this.options.trigger ? &#x27;&#x27; : this.options.trigger + &#x27; &#x27; )
-        + ( new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27;change&#x27; );
+        , triggers = ( !this.options.trigger ? &#x27;&#x27; : this.options.trigger )
+        + ( new RegExp( &#x27;change&#x27;, &#x27;i&#x27; ).test( this.options.trigger ) ? &#x27;&#x27; : &#x27; change&#x27; );
+
+      &#x2F;&#x2F; trim triggers to bind them correctly with .on()
+      triggers = triggers.replace( &#x2F;^\s+&#x2F;g , &#x27;&#x27; ).replace( &#x2F;\s+$&#x2F;g ,&#x27;&#x27; );
 
      &#x2F;&#x2F; bind trigger event on every siblings
      $( this.siblings ).each(function () {
-       $( this ).on( triggers.split( &#x27; &#x27; ).join( &#x27;.&#x27; + self.type + &#x27; &#x27; ), false, $.proxy( self.eventValidation, self ) );
+       $( this ).on( triggers.split( &#x27; &#x27; ).join( &#x27;.&#x27; + self.type + &#x27; &#x27; ) , false, $.proxy( self.eventValidation, self ) );
      } )
    }
   };
@@ -1233,6 +1241,16 @@
       this.options.listeners.onFormSubmit( isValid, event, this );
 
       return isValid;
+    }
+
+    , isValid: function () {
+      for ( var item = 0; item &lt; this.items.length; item++ ) {
+        if ( false === this.items[ item ].isFieldValid() ) {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     &#x2F;**
