@@ -72,7 +72,9 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
     return false;
   },
   onFieldError: function ( field, constraints ) {
-    $( field ).addClass( 'error-' + constraints[ 0 ].name + '_' + constraints[ 0 ].requirements );
+    for ( var i in constraints ) {
+      $( field ).addClass( 'error-' + constraints[ i ].name + '_' + constraints[ i ].requirements );
+    }
   },
   onFieldSuccess: function ( field ) {
     $( field ).addClass( 'success-foo-bar' );
@@ -234,7 +236,6 @@ var testSuite = function () {
       } )
       it ( 'required - select multiple', function () {
         expect( $( '#required-selectmultiple' ).parsley( 'validate' ) ).to.be( false );
-        $( '#required-selectmultiple' )
       } )
       it ( 'minlength', function () {
         triggerSubmitValidation( '#minlength', '12345' );
@@ -294,6 +295,18 @@ var testSuite = function () {
         expect( getErrorMessage( '#regexp', 'regexp') ).to.be( 'This value seems to be invalid.' );
         triggerSubmitValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'regexp with custom flag', function () {
+        triggerSubmitValidation( '#regexp-flag1', 'foo' );
+        expect( $( '#regexp-flag1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#regexp-flag1', 'Foo' );
+        expect( $( '#regexp-flag1' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        // passing 'i' flag, case unsensitive make allways regexp pass
+        triggerSubmitValidation( '#regexp-flag2', 'foo' );
+        expect( $( '#regexp-flag2' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerSubmitValidation( '#regexp-flag2', 'Foo' );
+        expect( $( '#regexp-flag2' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'pattern html5-regexp', function () {
         triggerSubmitValidation( '#regexp-html5', 'foo' );
@@ -375,6 +388,13 @@ var testSuite = function () {
         expect( getErrorMessage( '#typedateIso', 'type') ).to.be( 'This value should be a valid date (YYYY-MM-DD).' );
         triggerSubmitValidation( '#typedateIso', '2012-12-12' );
         expect( $( '#typedateIso' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'phone', function () {
+        triggerSubmitValidation( '#typephone', 'foo' );
+        expect( $( '#typephone' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typephone', 'type') ).to.be( 'This value should be a valid phone number.' );
+        triggerSubmitValidation( '#typephone', '(917) 5878 5457' );
+        expect( $( '#typephone' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'number', function () {
         triggerSubmitValidation( '#typenumber', 'foo' );
@@ -478,95 +498,63 @@ var testSuite = function () {
 
         // not passing on phantomJS yet..
         describe ( 'Test ASYNC ajax calls results', function () {
-          var calls = [
-              { statusCode: 'success', content: "true", expect: true }
-            , { statusCode: 'error', content: "", expect: false }
-            , { statusCode: 'success', content: "false", expect: false }
-            , { statusCode: 'success', content: "1", expect: true }
-            , { statusCode: 'success', content: "0", expect: false }
-            , { statusCode: 'success', content: "{\"success\": \"foo\"}", expect: true }
-            , { statusCode: 'success', content: "{\"error\": \"foobar\"}", expect: false }
-            , { statusCode: 'error', content: "{\"error\": \"foobarbaz\"}", expect: false }
-            , { statusCode: 'error', content: "{\"message\": \"foo\"}", expect: false }
-            ];
-
           it ( 'Test success true', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 0 ].statusCode , calls[ 0 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "true" );
             $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 0 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 0 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 0 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
             done();
           } )
           it ( 'Test error 404', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 1 ].statusCode , calls[ 1 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'error' , "" );
             $( '#remote2' ).val( 'bar' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 1 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 1 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 1 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             done();
           } )
           it ( 'Test success false', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 2 ].statusCode , calls[ 2 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "false" );
             $( '#remote2' ).val( 'baz' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 2 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 2 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 2 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             done();
           } )
           it ( 'Test success 1', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 3 ].statusCode , calls[ 3 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "1" );
             $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 3 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 3 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 3 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
             done();
           } )
           it ( 'Test success 0', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 4 ].statusCode , calls[ 4 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "0" );
             $( '#remote2' ).val( 'bar' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 4 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 4 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 4 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             done();
           } )
           it ( 'Test success with { success: "message" }', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 5 ].statusCode , calls[ 5 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "{\"success\": \"foo\"}" );
             $( '#remote2' ).val( 'baz' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 5 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 5 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 5 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
             done();
           } )
           it ( 'Test success with { error: "message" } + display message ', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 6 ].statusCode , calls[ 6 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "{\"error\": \"foobar\"}" );
             $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 6 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 6 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 6 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             expect( getErrorMessage( '#remote2', 'remote') ).to.be( 'foobar' );
             done();
           } )
           it ( 'Test error 500 + error', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 7 ].statusCode , calls[ 7 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'error' , "{\"error\": \"foobarbaz\"}" );
             $( '#remote2' ).val( 'bar' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 7 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 7 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 7 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             expect( getErrorMessage( '#remote2', 'remote') ).to.be( 'foobarbaz' );
             done();
           } )
-
           it ( 'Test error 500 + message', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 8 ].statusCode , calls[ 8 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'error' , "{\"message\": \"foo\"}" );
             $( '#remote2' ).val( 'baz' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 8 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 8 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 8 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             expect( getErrorMessage( '#remote2', 'remote') ).to.be( 'foo' );
             done();
           } )
-
           afterEach( function () {
             $.ajax.restore();
           } );
@@ -600,8 +588,10 @@ var testSuite = function () {
       } )
       it ( 'Change error messages with data-api', function () {
         triggerSubmitValidation( '#requiredchanged3', '' );
-        expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
         expect( getErrorMessage( '#requiredchanged3', 'required') ).to.be( 'custom required' );
+
+        triggerSubmitValidation( '#requiredchanged3', 'foo' );
+        expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
       } )
       it ( 'Change error handler', function () {
         $( '#errorsmanagement-form' ).parsley( {
@@ -631,6 +621,21 @@ var testSuite = function () {
          test field validation scenarios
     ***************************************/
     describe ( 'Test field validation scenarios', function () {
+      it ( 'Test multiple constraints/errors required field scenario', function () {
+        var fieldHash = $( '#scenario-multiple-errors-and-required' ).parsley( 'getHash' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( 'ul#' + fieldHash + ' li' ).eq( 0 ).hasClass( 'required' ) ).to.be( true );
+
+        $( '#scenario-multiple-errors-and-required' ).val( 'foo@bar.com' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );        
+        expect( $( 'ul#' + fieldHash + ' li' ).eq( 0 ).hasClass( 'rangelength' ) ).to.be( true );
+
+        $( '#scenario-multiple-errors-and-required' ).val( 'foo' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );        
+      } )
       it ( 'Test keyup scenario for non-required field', function () {
         // do not pass the 3 chars min trigger
         $( '#scenario-not-required' ).val( 'fo' );

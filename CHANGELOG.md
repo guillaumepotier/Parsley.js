@@ -1,8 +1,18 @@
 #Changelog
 
-**1.1.15 (next version)**
+**1.1.15 (current stable)**
 
-**1.1.14 (current stable)**
+  - **BC Break** removed `.parsley('isFieldValid');` in favor of `.parsley('isValid');`
+    (#177)
+  - added type="phone" validator
+  - this.constraints is now an object instead of an array. **BC Break** with onFieldError
+    listener.
+  - removed default 'i' flag with data-regex validator. Added data-regex-flag attribute
+    (#168)
+  - specific behavior when field have required constraint. Do not show required error
+    along another errors, and reciprocally (#142)
+
+**1.1.14**
 
   - added luhn validator in parsley.extra (#150)
   - added inlist validator in parsley.extra (#153)
