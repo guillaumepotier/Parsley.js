@@ -17,6 +17,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , digits:     "This value should be digits."
           , dateIso:    "This value should be a valid date (YYYY-MM-DD)."
           , alphanum:   "This value should be alphanumeric."
+          , phone:      "This value should be a valid phone number."
         }
       , notnull:        "This value should not be null."
       , notblank:       "This value should not be blank."

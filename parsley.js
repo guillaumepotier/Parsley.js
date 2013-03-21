@@ -32,6 +32,7 @@
           , digits:     "This value should be digits."
           , dateIso:    "This value should be a valid date (YYYY-MM-DD)."
           , alphanum:   "This value should be alphanumeric."
+          , phone:      "This value should be a valid phone number."
         }
       , notnull:        "This value should not be null."
       , notblank:       "This value should not be blank."
@@ -113,6 +114,9 @@
           case 'dateIso':
             regExp = /^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/;
             break;
+          case 'phone':
+            regExp = /^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/;
+            break;
           default:
             return false;
         }
@@ -172,7 +176,7 @@
             $( self.ulError + ' .remote' ).remove();
           }
 
-          self.updtConstraint( { name: 'remote', isValid: isConstraintValid }, message );
+          self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
           self.manageValidationResult();
         };
 
@@ -336,7 +340,7 @@
     */
     , init: function ( element, type ) {
       this.type = type;
-      this.isValid = true;
+      this.valid = true;
       this.element = element;
       this.validatedOnce = false;
       this.$element = $( element );
@@ -439,7 +443,7 @@
             this.constraints[ name ] = {
                 name: name
               , requirements: constraint[ name ]
-              , isValid: null
+              , valid: null
             }
 
             if ( name === 'required' ) {
@@ -465,13 +469,13 @@
     */
     , updateConstraint: function ( constraint, message ) {
       for ( var name in constraint ) {
-        this.updtConstraint( { name: name, requirements: constraint[ name ], isValid: null }, message );
+        this.updtConstraint( { name: name, requirements: constraint[ name ], valid: null }, message );
       }
     }
 
     /**
     * Dynamically update an existing constraint to a field.
-    * Complex API: { name: name, requirements: requirements, isValid: boolean }
+    * Complex API: { name: name, requirements: requirements, valid: boolean }
     *
     * @method updtConstraint
     * @param {Object} constraint
@@ -543,7 +547,7 @@
     */
     , bindValidationEvents: function () {
       // this field has validation events, that means it has to be validated
-      this.isValid = null;
+      this.valid = null;
       this.$element.addClass( 'parsley-validated' );
 
       // remove eventually already binded events
@@ -634,7 +638,7 @@
     * @method isValid
     * @return {Boolean} Is field valid or not
     */
-    , isFieldValid: function () {
+    , isValid: function () {
       return this.validate( false );
     }
 
@@ -656,12 +660,12 @@
     * Validate a field & display errors
     *
     * @method validate
-    * @param {Boolean} errorBubbling set to false if you just want isValid boolean without error bubbling next to fields
+    * @param {Boolean} errorBubbling set to false if you just want valid boolean without error bubbling next to fields
     * @return {Boolean} Is field valid or not
     */
     , validate: function ( errorBubbling ) {
       var val = this.getVal()
-        , isValid = null;
+        , valid = null;
 
       // do not even bother trying validating a field w/o constraints
       if ( !this.hasConstraints() ) {
@@ -676,18 +680,18 @@
 
       // do not validate a field already validated and unchanged !
       if ( !this.needsValidation( val ) ) {
-        return this.isValid;
+        return this.valid;
       }
 
       this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : true;
 
-      isValid = this.applyValidators();
+      valid = this.applyValidators();
 
       if ( this.errorBubbling ) {
         this.manageValidationResult();
       }
 
-      return isValid;
+      return valid;
     }
 
     /**
@@ -698,7 +702,7 @@
     * @return {Boolean}
     */
     , needsValidation: function ( val ) {
-      if ( !this.options.validateIfUnchanged && this.isValid !== null && this.val === val && this.validatedOnce ) {
+      if ( !this.options.validateIfUnchanged && this.valid !== null && this.val === val && this.validatedOnce ) {
         return false;
       }
 
@@ -714,21 +718,21 @@
     * @return {Mixed} {Boolean} If field valid or not, null if not validated
     */
     , applyValidators: function () {
-      var isValid = null;
+      var valid = null;
 
       for ( var constraint in this.constraints ) {
         var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
 
         if ( false === result ) {
-          isValid = false;
-          this.constraints[ constraint ].isValid = isValid;
+          valid = false;
+          this.constraints[ constraint ].valid = valid;
         } else if ( true === result ) {
-          this.constraints[ constraint ].isValid = true;
-          isValid = false !== isValid;
+          this.constraints[ constraint ].valid = true;
+          valid = false !== valid;
         }
       }
 
-      return isValid;
+      return valid;
     }
 
     /**
@@ -741,32 +745,32 @@
     * @return {Boolean} Is field valid or not
     */
     , manageValidationResult: function () {
-      var isValid = null;
+      var valid = null;
 
       for ( var constraint in this.constraints ) {
-        if ( false === this.constraints[ constraint ].isValid ) {
+        if ( false === this.constraints[ constraint ].valid ) {
           this.manageError( this.constraints[ constraint ] );
-          isValid = false;
-        } else if ( true === this.constraints[ constraint ].isValid ) {
+          valid = false;
+        } else if ( true === this.constraints[ constraint ].valid ) {
           this.removeError( this.constraints[ constraint ].name );
-          isValid = false !== isValid;
+          valid = false !== valid;
         }
       }
 
-      this.isValid = isValid;
+      this.valid = valid;
 
-      if ( true === this.isValid ) {
+      if ( true === this.valid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
         this.options.listeners.onFieldSuccess( this.element, this.constraints, this );
         return true;
-      } else if ( false === this.isValid ) {
+      } else if ( false === this.valid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
         this.options.listeners.onFieldError( this.element, this.constraints, this );
         return false;
       }
 
-      return isValid;
+      return valid;
     }
 
     /**
@@ -826,13 +830,13 @@
     * @method reset
     */
     , reset: function () {
-      this.isValid = null;
+      this.valid = null;
       this.removeErrors();
       this.validatedOnce = false;
       this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
 
       for ( var constraint in this.constraints ) {
-        this.constraints[ constraint ].isValid = null;
+        this.constraints[ constraint ].valid = null;
       }
 
       return this;
@@ -894,7 +898,7 @@
     /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( valid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -1020,7 +1024,7 @@
    */
    , bindValidationEvents: function () {
      // this field has validation events, that means it has to be validated
-     this.isValid = null;
+     this.valid = null;
      this.$element.addClass( 'parsley-validated' );
 
      // remove eventually already binded events
@@ -1074,7 +1078,7 @@
     /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( isValid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( valid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -1136,12 +1140,12 @@
     * @return {Boolean} Is form valid or not
     */
     , validate: function ( event ) {
-      var isValid = true;
+      var valid = true;
       this.focusedField = false;
 
       for ( var item = 0; item < this.items.length; item++ ) {
         if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
-          isValid = false;
+          valid = false;
 
           if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
             this.focusedField = this.items[ item ].$element;
@@ -1150,18 +1154,18 @@
       }
 
       // form is invalid, focus an error field depending on focus policy
-      if ( this.focusedField && !isValid ) {
+      if ( this.focusedField && !valid ) {
         this.focusedField.focus();
       }
 
-      this.options.listeners.onFormSubmit( isValid, event, this );
+      this.options.listeners.onFormSubmit( valid, event, this );
 
-      return isValid;
+      return valid;
     }
 
     , isValid: function () {
       for ( var item = 0; item < this.items.length; item++ ) {
-        if ( false === this.items[ item ].isFieldValid() ) {
+        if ( false === this.items[ item ].isValid() ) {
           return false;
         }
       }
