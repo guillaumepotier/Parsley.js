@@ -763,9 +763,13 @@ var testSuite = function () {
       } )
       it ( 'if a field is not valid, but novalidate button is clicked form is submitted', function () {
         $( '#validate1' ).val( '' );
-        $( '#dontvalidate-form-submit' ).click();
+        $( '#dont-validate-form-submit' ).click();
         expect( $( '#validate-form' ).hasClass( 'form-valid' ) ).to.be( true );
         expect( $( '#validate-form' ).hasClass( 'form-invalid' ) ).to.be( false );
+
+        $( '#validate-form-submit' ).click();
+        expect( $( '#validate-form' ).hasClass( 'form-invalid' ) ).to.be( true );
+        expect( $( '#validate-form' ).hasClass( 'form-valid' ) ).to.be( false );
       } )
       it ( 'test error focus', function () {
         $( '#focus-form' ).parsley( 'validate' );
