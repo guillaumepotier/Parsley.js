@@ -18,7 +18,7 @@
   var Validator = function ( options ) {
     /**
     * Error messages
-    * 
+    *
     * @property messages
     * @type {Object}
     */
@@ -59,7 +59,7 @@
 
     /**
     * Validator list. Built-in validators functions
-    * 
+    *
     * @property validators
     * @type {Object}
     */
@@ -601,7 +601,7 @@
     * @returns {String} val
     */
     , getVal: function () {
-      return this.$element.val();
+      return this.$element.data('value') || this.$element.val();
     }
 
     /**
@@ -1196,7 +1196,7 @@
 
       this.$element.off( '.' + this.type ).removeData( this.type );
     }
-    
+
     /**
     * reset Parsley binded on the form and its fields
     *
@@ -1272,7 +1272,7 @@
 
   /**
   * Parsley plugin configuration
-  * 
+  *
   * @property $.fn.parsley.defaults
   * @type {Object}
   */
