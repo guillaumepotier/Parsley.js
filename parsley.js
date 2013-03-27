@@ -1073,6 +1073,20 @@
       });
 
       this.$element.on( 'submit.' + this.type , false, $.proxy( this.validate, this ) );
+
+      var clickedElementEvent;
+      
+      this.$element.find('[data-button], [data-cause-validation]').click(function(e){
+        self.$clickedElement = $(this);
+        clickedElementEvent = e;
+      });
+
+      this.$element.find('*').click(function(e){
+        if(typeof clickedElementEvent !== 'undefined' && (e.timeStamp !== clickedElementEvent.timeStamp)){
+          self.$clickedElement = undefined;
+        }
+      });
+ 
     }
 
     /**
@@ -1140,22 +1154,32 @@
     * @return {Boolean} Is form valid or not
     */
     , validate: function ( event ) {
+
       var valid = true;
-      this.focusedField = false;
+      var causeValidation = true;
 
-      for ( var item = 0; item < this.items.length; item++ ) {
-        if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
-          valid = false;
-
-          if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
-            this.focusedField = this.items[ item ].$element;
-          }
-        }
+      if(typeof this.$clickedElement !== 'undefined' && this.$clickedElement.data('cause-validation') === false){
+        causeValidation = false;
       }
 
-      // form is invalid, focus an error field depending on focus policy
+
+      if(causeValidation){
+        this.focusedField = false;
+
+        for ( var item = 0; item < this.items.length; item++ ) {
+          if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
+            valid = false;
+
+            if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
+              this.focusedField = this.items[ item ].$element;
+            }
+          }
+        }
+
+        // form is invalid, focus an error field depending on focus policy
       if ( this.focusedField && !valid ) {
-        this.focusedField.focus();
+          this.focusedField.focus();
+        }
       }
 
       this.options.listeners.onFormSubmit( valid, event, this );
