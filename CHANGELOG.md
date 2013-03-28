@@ -1,5 +1,9 @@
 #Changelog
 
+**1.1.16-dev**
+
+  - Override value by using data-value attribute
+
 **1.1.15 (current stable)**
 
   - **BC Break** removed `.parsley('isFieldValid');` in favor of `.parsley('isValid');`
