@@ -564,6 +564,21 @@ var testSuite = function () {
     } )
 
     /***************************************
+         override value with data-value
+    ***************************************/
+    describe ( 'Override value with data-value' , function () {
+      it ( 'required - data-value is empty, value is empty', function () {
+        triggerSubmitValidation( '#datavalue1', '' );
+        expect( $( '#datavalue1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#datavalue1', 'required') ).to.be( 'This value is required.' );
+      } )
+      it ( 'required - data-value has value, value is empty', function () {
+        triggerSubmitValidation( '#datavalue2', '' );
+        expect( $( '#datavalue2' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+    } )
+
+    /***************************************
           test options changes
     ***************************************/
     describe ( 'Test options changes', function () {
