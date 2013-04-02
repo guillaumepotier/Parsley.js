@@ -604,7 +604,7 @@
     */
     , getVal: function () {
       if ( this.$element.is( 'select' ) && $( this.$element ).find( "option:selected:not([value])" ).get( 0 ) ) {
-        $( this.$element ).find( "option:selected" ).prop('value', '');
+        $( this.$element ).find( "option:selected" ).attr('value', '');
       }
       return this.$element.data('value') || this.$element.val();
     }
