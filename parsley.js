@@ -863,6 +863,13 @@
         return;
       }
 
+	  // check if multiple messages are allowed
+	  if ( false == this.options.multipleErrorMessages ) {
+		  if ( 'required' == constraint.name || 'type' == constraint.name || $( this.ulError ).find( '.type' ).length > 0 ) {
+			  $( this.ulError ).empty();
+		  }
+	  }
+
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
         , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
@@ -1288,6 +1295,7 @@
     , successClass: 'parsley-success'           // Class name on each valid input
     , errorClass: 'parsley-error'               // Class name on each invalid input
     , errorMessage: false                       // Customize an unique error message showed if one constraint fails
+	, multipleErrorMessages: true               // Display multiple error messages or most significant error message
     , validators: {}                            // Add your custom validators functions
     , messages: {}                              // Add your own error messages here
 
