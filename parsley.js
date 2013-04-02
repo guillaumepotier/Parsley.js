@@ -93,6 +93,8 @@
         var regExp;
 
         switch ( type ) {
+          case 'text': // allow fields having both: type="text" data-type="text"
+            return true;
           case 'number':
             regExp = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
             break;
