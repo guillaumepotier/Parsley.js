@@ -93,6 +93,8 @@
         var regExp;
 
         switch ( type ) {
+          case 'text': // allow fields having both: type="text" data-type="text"
+            return true;
           case 'number':
             regExp = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
             break;
@@ -601,6 +603,9 @@
     * @returns {String} val
     */
     , getVal: function () {
+      if ( this.$element.is( 'select' ) && $( this.$element ).find( "option:selected:not([value])" ).get( 0 ) ) {
+        $( this.$element ).find( "option:not([value])" ).attr('value', '');
+      }
       return this.$element.data('value') || this.$element.val();
     }
 
@@ -862,6 +867,13 @@
       } else if ( this.isRequired && 'required' !== constraint.name && ( null === this.getVal() || 0 === this.getVal().length ) ) {
         return;
       }
+
+	  // check if multiple messages are allowed
+	  if ( false == this.options.multipleErrorMessages ) {
+		  if ( 'required' == constraint.name || 'type' == constraint.name || $( this.ulError ).find( '.type' ).length > 0 ) {
+			  $( this.ulError ).empty();
+		  }
+	  }
 
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
@@ -1288,6 +1300,7 @@
     , successClass: 'parsley-success'           // Class name on each valid input
     , errorClass: 'parsley-error'               // Class name on each invalid input
     , errorMessage: false                       // Customize an unique error message showed if one constraint fails
+	, multipleErrorMessages: true               // Display multiple error messages or most significant error message
     , validators: {}                            // Add your custom validators functions
     , messages: {}                              // Add your own error messages here
 
