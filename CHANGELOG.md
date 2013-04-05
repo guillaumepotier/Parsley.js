@@ -3,6 +3,7 @@
 **1.1.16-dev**
 
   - Override value by using data-value attribute
+  - added americanDate validator in parsley.extend
 
 **1.1.15 (current stable)**
 
