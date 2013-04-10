@@ -873,6 +873,10 @@
 
       // add liError if not shown. Do not add more than once custom errorMessage if exist
       if ( !$( this.ulError + ' .' + liClass ).length ) {
+        if ( 'function' === typeof message ) {
+          message = message ( constraint, this );
+        }
+
         liError[ liClass ] = message;
         this.addError( liError );
       }
