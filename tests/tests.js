@@ -593,6 +593,15 @@ var testSuite = function () {
         triggerEventChangeValidation( '#minchar-change', 'foobarbaz' );
         expect( $( '#minchar-change' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
+      it ( 'Change showError option', function () {
+        $( '#change-show-errors-field' ).val( 'foo' );
+        $( '#change-show-errors-field' ).trigger( $.Event( 'keyup' ) );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-success' ) ).to.be( false );
+      } )
       it ( 'Change differently errors messages for two same validators on different forms', function () {
         $( '#requiredchanged1-form' ).parsley( { messages: { required: "required 1" } } );
         $( '#requiredchanged2-form' ).parsley( { messages: { required: "required 2" } } );

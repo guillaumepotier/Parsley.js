@@ -2,6 +2,8 @@
 
 **1.1.16-dev**
 
+  - added option to silence errors `data-show-errors="false"`
+  - added / modified some i18n localizations
   - Override value by using data-value attribute
 
 **1.1.15 (current stable)**

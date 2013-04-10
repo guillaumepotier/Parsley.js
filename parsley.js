@@ -629,7 +629,7 @@
         return true;
       }
 
-      this.validate( true );
+      this.validate( );
     }
 
     /**
@@ -683,7 +683,7 @@
         return this.valid;
       }
 
-      this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : true;
+      this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors;
 
       valid = this.applyValidators();
 
@@ -1289,6 +1289,7 @@
     , errorClass: 'parsley-error'               // Class name on each invalid input
     , errorMessage: false                       // Customize an unique error message showed if one constraint fails
     , validators: {}                            // Add your custom validators functions
+    , showErrors: true                          // Set to false if you don't want Parsley to display error messages
     , messages: {}                              // Add your own error messages here
 
     //some quite advanced configuration here..
