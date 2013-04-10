@@ -564,6 +564,21 @@ var testSuite = function () {
     } )
 
     /***************************************
+         override value with data-value
+    ***************************************/
+    describe ( 'Override value with data-value' , function () {
+      it ( 'required - data-value is empty, value is empty', function () {
+        triggerSubmitValidation( '#datavalue1', '' );
+        expect( $( '#datavalue1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#datavalue1', 'required') ).to.be( 'This value is required.' );
+      } )
+      it ( 'required - data-value has value, value is empty', function () {
+        triggerSubmitValidation( '#datavalue2', '' );
+        expect( $( '#datavalue2' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+    } )
+
+    /***************************************
           test options changes
     ***************************************/
     describe ( 'Test options changes', function () {
@@ -577,6 +592,15 @@ var testSuite = function () {
         // here we passed the 7 char length, throw error
         triggerEventChangeValidation( '#minchar-change', 'foobarbaz' );
         expect( $( '#minchar-change' ).hasClass( 'parsley-error' ) ).to.be( true );
+      } )
+      it ( 'Change showError option', function () {
+        $( '#change-show-errors-field' ).val( 'foo' );
+        $( '#change-show-errors-field' ).trigger( $.Event( 'keyup' ) );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field' ).hasClass( 'parsley-success' ) ).to.be( false );
       } )
       it ( 'Change differently errors messages for two same validators on different forms', function () {
         $( '#requiredchanged1-form' ).parsley( { messages: { required: "required 1" } } );

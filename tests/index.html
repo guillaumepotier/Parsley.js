@@ -127,6 +127,9 @@
             <input type="text" id="remote1" name="remote1" data-remote="http://foo.bar" data-remote-datatype="jsonp" />
             <input type="text" id="remote2" name="remote2" data-remote="http://foo.bar/baz" data-trigger="change" data-remote-method="POST" />
 
+            <input type="text" id="datavalue1" name="datavalue1" data-value="" value="" data-required="true" />
+            <input type="text" id="datavalue2" name="datavalue2" data-value="foo" value="" data-required="true" />
+
             <input type="submit" />
         </form>
         <form id="validate-form" data-validate="parsley">
@@ -136,6 +139,9 @@
         </form>
         <form id="change-validation" data-validate="parsley">
             <input type="text" id="minchar-change" data-type="email" data-trigger="keyup" data-validation-minlength="7" />
+        </form>
+        <form id="change-show-errors" data-validate="parsley" data-show-errors="false">
+            <input type="text" id="change-show-errors-field" data-type="email" data-trigger="keyup" data-validation-minlength="0" />
         </form>
         <form id="requiredchanged1-form">
             <input type="text" id="requiredchanged1" data-required="true" />

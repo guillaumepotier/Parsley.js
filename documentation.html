@@ -64,7 +64,7 @@
       ul.parsley-error-list {
           font-size: 11px;
           margin: 2px;
-          list-style-type:none; 
+          list-style-type:none;
       }
       ul.parsley-error-list li {
           line-height: 11px;
@@ -80,8 +80,8 @@
         margin:15px 0 0 0;
       }
 
-      @media only screen 
-      and (min-device-width : 320px) 
+      @media only screen
+      and (min-device-width : 320px)
       and (max-device-width : 480px) {
           .not-for-mobile {
               display: none;
@@ -145,7 +145,7 @@
                                     <input type="text" id="fullname" name="fullname" data-required="true" />
 
                                     <label for="email">Email * :</label>
-                                    <input type="text" id="email" name="email" data-trigger="change" data-remote="http://foo.bar" data-required="true" />
+                                    <input type="text" id="email" name="email" data-type="email" data-trigger="change" data-required="true" />
 
                                     <label for="website">Website :</label>
                                     <input type="text" id="website" name="website" data-trigger="change" data-type="url" />
@@ -271,6 +271,12 @@
                         <td  class="not-for-mobile"></td>
                     </tr>
                     <tr>
+                        <td><code>data-show-errors</code></td>
+                        <td>true</td>
+                        <td>Choose to show or not Parsley error messages & success / errors classes</td>
+                        <td  class="not-for-mobile"></td>
+                    </tr>
+                    <tr>
                         <td>
                             <code>data-focus</code>
                         </td>
@@ -298,7 +304,7 @@
                             </table>
                         </td>
                     </tr>
-                    
+
                 </tbody>
             </table>
             </section>
@@ -341,6 +347,21 @@
                     </tr>
                     <tr>
                         <td>
+                            <code>data-value</code>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            Override the value attribute of a form field. Useful for file inputs, where you're not allowed to
+                            set a value. <br/>
+                            eg: <code>data-value="uploadedfile.png"</code>
+                        </td>
+                        <td class="not-for-mobile">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <code>data-validation-minlength</code>
                         </td>
                         <td>
@@ -362,7 +383,7 @@
                             <code>data-error-message</code>
                         </td>
                         <td>
-                            
+
                         </td>
                         <td>
                             Customize a unique global message for this field. Shown if one constraint fails.
@@ -399,7 +420,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                             <code>data-type-`type`-message</code>
                         </td>
                         <td>
-                            
+
                         </td>
                         <td>
                             Customize the error message for the field constraint.<br/>
@@ -1131,6 +1152,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
   , successClass: 'parsley-success'
   , errorClass: 'parsley-error'
   , validators: {}
+  , showErrors: true
   , messages: {}
 
   //some quite advanced configuration here..
