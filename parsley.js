@@ -629,7 +629,7 @@
         return true;
       }
 
-      this.validate( );
+      this.validate();
     }
 
     /**
@@ -683,11 +683,9 @@
         return this.valid;
       }
 
-      this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors;
-
       valid = this.applyValidators();
 
-      if ( this.errorBubbling ) {
+      if ( 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors ) {
         this.manageValidationResult();
       }
 
@@ -726,9 +724,11 @@
         if ( false === result ) {
           valid = false;
           this.constraints[ constraint ].valid = valid;
+          this.options.listeners.onFieldError( this.element, this.constraints, this );
         } else if ( true === result ) {
           this.constraints[ constraint ].valid = true;
           valid = false !== valid;
+          this.options.listeners.onFieldSuccess( this.element, this.constraints, this );
         }
       }
 
@@ -762,11 +762,9 @@
       if ( true === this.valid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
-        this.options.listeners.onFieldSuccess( this.element, this.constraints, this );
         return true;
       } else if ( false === this.valid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
-        this.options.listeners.onFieldError( this.element, this.constraints, this );
         return false;
       }
 
