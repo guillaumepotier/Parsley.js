@@ -559,11 +559,12 @@
       }
 
       // alaways bind keyup event, for better UX when a field is invalid
-      var triggers = ( !this.options.trigger ? '' : this.options.trigger )
-        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
-
+      var triggers = ( !this.options.trigger ? '' : this.options.trigger );
+      if(this.options.validateOnError == true){
+        trigger+ ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
+      }
       // alaways bind change event, for better UX when a select is invalid
-      if ( this.$element.is( 'select' ) ) {
+      if ( this.$element.is( 'select' ) && this.options.validateOnError) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
 
@@ -884,7 +885,7 @@
     * @method manageErrorContainer
     */
     , manageErrorContainer: function () {
-      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox )
+      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox )
         , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
 
       if ( 'undefined' !== typeof errorContainer ) {
@@ -1300,6 +1301,7 @@
     , validators: {}                            // Add your custom validators functions
     , showErrors: true                          // Set to false if you don't want Parsley to display error messages
     , messages: {}                              // Add your own error messages here
+    , validateOnError: false					// Add Keyup event if the field already failed to validate
 
     //some quite advanced configuration here..
     , validateIfUnchanged: false                                          // false: validate once by field value change
