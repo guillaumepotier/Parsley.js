@@ -789,9 +789,16 @@
     * @param {String} constraintName Method Name
     */
     , removeError: function ( constraintName ) {
-      var liError = this.ulError + ' .' + constraintName;
+      var liError = this.ulError + ' .' + constraintName
+        , that = this;
 
-      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () { $( this ).remove() } ) : $( liError ).remove();
+      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () { 
+        $( this ).remove(); 
+        
+        if ( that.ulError && $( that.ulError ).children().length === 0 ) 
+        { 
+          that.removeErrors();
+        } } ) : $( liError ).remove();
 
       // remove li error, and ul error if no more li inside
       if ( this.ulError && $( this.ulError ).children().length === 0 ) {
