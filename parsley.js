@@ -792,11 +792,10 @@
       var liError = this.ulError + ' .' + constraintName
         , that = this;
 
-      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () { 
-        $( this ).remove(); 
-        
-        if ( that.ulError && $( that.ulError ).children().length === 0 ) 
-        { 
+      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
+        $( this ).remove();
+
+        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
           that.removeErrors();
         } } ) : $( liError ).remove();
 
