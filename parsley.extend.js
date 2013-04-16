@@ -80,8 +80,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       }
 
       , americandate: function ( val, elem, self) {
-        if(!/^([01]?[1-9])[.\/-]([0-3]?[0-9])[.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
-        	console.error(val)
+        if(!/^([01]?[1-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
         	return false;
         }
         var parts = val.split(/[.\/-]+/);
