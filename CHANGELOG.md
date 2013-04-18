@@ -6,6 +6,7 @@
   - added option to silence errors `data-show-errors="false"`
   - added / modified some i18n localizations
   - Override value by using data-value attribute
+  - added americanDate validator in parsley.extend
 
 **1.1.15 (current stable)**
 
