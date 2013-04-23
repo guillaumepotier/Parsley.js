@@ -275,7 +275,7 @@ var testSuite = function () {
       it ( 'min', function () {
         triggerSubmitValidation( '#min', '8' );
         expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than 10.' );
+        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than or equal to 10.' );
         triggerSubmitValidation( '#min', '12' );
         expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
