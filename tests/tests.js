@@ -275,7 +275,7 @@ var testSuite = function () {
       it ( 'min', function () {
         triggerSubmitValidation( '#min', '8' );
         expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than 10.' );
+        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than or equal to 10.' );
         triggerSubmitValidation( '#min', '12' );
         expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -290,7 +290,7 @@ var testSuite = function () {
       it ( 'max', function () {
         triggerSubmitValidation( '#max', '12' );
         expect( $( '#max' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#max', 'max') ).to.be( 'This value should be lower than 10.' );
+        expect( getErrorMessage( '#max', 'max') ).to.be( 'This value should be lower than or equal to 10.' );
         triggerSubmitValidation( '#max', '10' );
         expect( $( '#max' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
