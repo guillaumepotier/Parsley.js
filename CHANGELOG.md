@@ -2,6 +2,7 @@
 
 **1.1.16-dev**
 
+  - html error messages could be used (#220)
   - fixed show / remove error with data-remote validator (#200)
   - added option to silence errors `data-show-errors="false"`
   - added / modified some i18n localizations

@@ -199,6 +199,10 @@ var testSuite = function () {
         expect( $( '#errorMessage' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
       } )
+      it ( 'Test that error messages could be html', function () {
+        $( '#errorMessage' ).val( 'foobar' ).parsley( 'validate' );
+        expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).text() ).to.be( 'This is my custom message' );
+      })
     } )
 
     /***************************************
