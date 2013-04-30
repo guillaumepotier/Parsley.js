@@ -54,6 +54,7 @@ Some integrations are
 
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
+* [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
 
 ## Global
 
