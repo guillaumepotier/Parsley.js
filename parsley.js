@@ -738,7 +738,7 @@
     /**
     * Fired when all validators have be executed
     * Returns true or false if field is valid or not
-    * Display errors messages below faild fields
+    * Display errors messages below failed fields
     * Adds parsley-success or parsley-error class on fields
     *
     * @method manageValidationResult
