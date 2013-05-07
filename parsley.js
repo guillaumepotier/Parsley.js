@@ -69,7 +69,7 @@
       }
 
       , notblank: function ( val ) {
-        return null !== val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
+        return 'string' === typeof val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
       }
 
       // Works on all inputs. val is object for checkboxes
@@ -386,7 +386,7 @@
     */
     , bindHtml5Constraints: function () {
       // add html5 required support + class required support
-      if ( this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) ) {
+      if ( this.$element.hasClass( 'required' ) || this.$element.prop( 'required' ) ) {
         this.options.required = true;
       }
 
