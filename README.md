@@ -10,11 +10,18 @@ See TODO.md
 
 #Curent Stable Version
 
-1.1.14
+1.1.16
 
 # Browser compatibility
 
-IE 8+, FF 14+, Chrome
+  - IE 7/8 with jQuery < 1.9 and parsley.min, not parsley.standalone
+  - IE 9+
+  - FF 14+
+  - Chrome
+
+# Requirements
+
+jQuery 1.6+
 
 #Install dependencies for documentation and tests
 
@@ -54,6 +61,7 @@ Some integrations are
 
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
+* [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
 
 ## Global
 

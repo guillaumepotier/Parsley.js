@@ -54,7 +54,7 @@
         </form>
         <form data-validate="parsley">
             <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum" />
-            <input type="text" id="errorMessage" data-error-message="This is my custom message" data-minlength="20" data-type="email" />
+            <input type="text" id="errorMessage" data-error-message="This is my <strong>custom</strong> message" data-minlength="20" data-type="email" />
         </form>
         <form id="validator-tests" data-validate="parsley">
             <input type="text" id="notnull" data-notnull="true" />
@@ -139,6 +139,10 @@
         </form>
         <form id="change-validation" data-validate="parsley">
             <input type="text" id="minchar-change" data-type="email" data-trigger="keyup" data-validation-minlength="7" />
+        </form>
+        <form id="change-show-errors" data-show-errors="false">
+            <input type="text" id="change-show-errors-field1" data-type="email" data-trigger="keyup" data-validation-minlength="0" />
+            <input type="text" id="change-show-errors-field2" data-type="url" />
         </form>
         <form id="requiredchanged1-form">
             <input type="text" id="requiredchanged1" data-required="true" />
@@ -244,6 +248,7 @@
             <input type="text" id="inListCustomDelimiter" data-inlist="foo | bar | foo bar" data-inlist-delimiter="|" />
 
             <input type="text" id="luhn" data-luhn="true" />
+            <input type="text" id="americanDate" data-americandate="true" />
         </form>
     </div>
 

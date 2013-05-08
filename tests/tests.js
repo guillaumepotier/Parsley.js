@@ -84,6 +84,20 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
   }
 } } );
 
+$( '#change-show-errors' ).parsley( {
+  listeners: {
+    onFieldValidate: function ( elem ) {
+      $( elem ).addClass( 'onFieldValidate' );
+    },
+    onFieldError: function ( elem, constraints ) {
+      $( elem ).addClass( 'onFieldError' );
+    },
+    onFieldSuccess: function ( elem ) {
+      $( elem ).addClass( 'onFieldSuccess' );
+    }
+  }
+} );
+
 $( '#listeners-form' ).parsley( 'addListener', {
   onFormSubmit: function ( isFormValid, event, focusField ) {
     $( '#listeners-form' ).addClass( 'onFormSubmit-ok' );
@@ -185,6 +199,10 @@ var testSuite = function () {
         expect( $( '#errorMessage' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
       } )
+      it ( 'Test that error messages could be html', function () {
+        $( '#errorMessage' ).val( 'foobar' ).parsley( 'validate' );
+        expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).text() ).to.be( 'This is my custom message' );
+      })
     } )
 
     /***************************************
@@ -261,7 +279,7 @@ var testSuite = function () {
       it ( 'min', function () {
         triggerSubmitValidation( '#min', '8' );
         expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than 10.' );
+        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than or equal to 10.' );
         triggerSubmitValidation( '#min', '12' );
         expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -276,7 +294,7 @@ var testSuite = function () {
       it ( 'max', function () {
         triggerSubmitValidation( '#max', '12' );
         expect( $( '#max' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#max', 'max') ).to.be( 'This value should be lower than 10.' );
+        expect( getErrorMessage( '#max', 'max') ).to.be( 'This value should be lower than or equal to 10.' );
         triggerSubmitValidation( '#max', '10' );
         expect( $( '#max' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -592,6 +610,44 @@ var testSuite = function () {
         // here we passed the 7 char length, throw error
         triggerEventChangeValidation( '#minchar-change', 'foobarbaz' );
         expect( $( '#minchar-change' ).hasClass( 'parsley-error' ) ).to.be( true );
+      } )
+      it ( 'Change showError option', function () {
+        // first field is wrong, but no errors/messages shown in dom
+        $( '#change-show-errors-field1' ).val( 'foo' );
+        $( '#change-show-errors-field1' ).trigger( $.Event( 'keyup' ) );
+        expect( $( '#change-show-errors-field1' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field1' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field1' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldValidate') ).to.be( true );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldError') ).to.be( true );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldSuccess') ).to.be( false );
+        // isValid for this field returns false
+        expect( $( '#change-show-errors-field1' ).parsley( 'isValid' ) ).to.be( false );
+        // second field is false too and nothing is shown in dom too
+        $( '#change-show-errors-field2' ).val( 'foo' );
+        expect( $( '#change-show-errors-field2' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-success' ) ).to.be( false );
+        // so form is false
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( false );
+        // first field is valid now, but still nothing is shown
+        $( '#change-show-errors-field1' ).val( 'foo@bar.baz' );
+        expect( $( '#change-show-errors-field1' ).parsley( 'validate' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldSuccess') ).to.be( true );
+        // form is still not valid
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( false );
+        // second field finaly is valid
+        $( '#change-show-errors-field2' ).val( 'foo.bar' );
+        expect( $( '#change-show-errors-field2' ).parsley( 'validate' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-success' ) ).to.be( false );
+        // and form is now valid
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( true );
       } )
       it ( 'Change differently errors messages for two same validators on different forms', function () {
         $( '#requiredchanged1-form' ).parsley( { messages: { required: "required 1" } } );
@@ -1051,6 +1107,23 @@ var testSuite = function () {
          expect( getErrorMessage( '#luhn', 'luhn') ).to.be( 'This value should pass the luhn test.' );
          triggerSubmitValidation( '#luhn', '4000000000000002' );
          expect( $( '#luhn' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'americanDate', function () {
+    	 triggerSubmitValidation( '#americanDate', '28/02/2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+    	 expect( getErrorMessage( '#americanDate', 'americanDate') ).to.be( 'This value should be a valid date (MM/DD/YYYY).' );
+    	 triggerSubmitValidation( '#americanDate', '02/08/2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '2/8/12' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '02-08-2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '2-8-12' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '02.08.2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '2.8.12' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
      } )
 
