@@ -678,11 +678,6 @@
         return null;
       }
 
-      // do not validate a field already validated and unchanged !
-      if ( !this.needsValidation( val ) ) {
-        return this.valid;
-      }
-
       valid = this.applyValidators();
 
       if ( 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors ) {
