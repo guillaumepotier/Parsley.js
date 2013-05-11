@@ -13,6 +13,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , digits:     "Die Eingabe darf nur Ziffern enthalten."
           , dateIso:    "Die Eingabe muss ein gültiges Datum im Format YYYY-MM-DD sein."
           , alphanum:   "Die Eingabe muss alphanumerisch sein."
+          , phone:      "Die Eingabe muss eine gültige Telefonnummer sein."
         }
       , notnull:        "Die Eingabe darf nicht leer sein."
       , notblank:       "Die Eingabe darf nicht leer sein."
