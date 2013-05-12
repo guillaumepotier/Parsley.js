@@ -36,6 +36,9 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , rangewords:     "Deze waarde moet tussen de %s en %s woorden bevatten."
       , greaterthan:    "Deze waarde moet groter dan %s zijn."
       , lessthan:       "Deze waarde moet kleiner dan %s zijn."
+      , beforedate:     "Deze datum moet voor %s liggne."
+      , afterdate:      "Deze datum moet na %s liggen."
+      , americandate:  "Dit moet een geldige datum zijn (MM/DD/YYYY)."
     }
   });
 }(window.jQuery || window.Zepto));
