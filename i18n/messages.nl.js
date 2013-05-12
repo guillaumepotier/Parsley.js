@@ -13,6 +13,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , digits:     "Deze waarde moet numeriek zijn."
           , dateIso:    "Deze waarde moet een datum in het volgende formaat zijn: (YYYY-MM-DD)."
           , alphanum:   "Deze waarde moet alfanumeriek zijn."
+          , phone:      "Deze waarde moet een geldig telefoonnummer zijn."
         }
       , notnull:        "Deze waarde mag niet leeg zijn."
       , notblank:       "Deze waarde mag niet leeg zijn."
@@ -23,6 +24,9 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , range:          "Deze waarde moet tussen %s en %s liggen."
       , minlength:      "Deze tekst is te kort. Deze moet uit minimaal %s karakters bestaan."
       , maxlength:      "Deze waarde is te lang. Deze mag maximaal %s karakters lang zijn."
+      , mincheck:       "Je moet minstens %s opties selecteren."
+      , maxcheck:       "Je moet %s of minder opties selecteren."
+      , rangecheck:     "Je moet tussen de %s en %s opties selecteren."
       , rangelength:    "Deze waarde moet tussen %s en %s karakters lang zijn."
       , equalto:        "Deze waardes moeten identiek zijn."
 
