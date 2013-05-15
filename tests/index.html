@@ -250,6 +250,10 @@
             <input type="text" id="luhn" data-luhn="true" />
             <input type="text" id="americanDate" data-americandate="true" />
         </form>
+
+        <div data-validate="parsley" data-bind="true">
+            <input type="text" id="bindNonFormInput" data-required="true" value="" />
+        </div>
     </div>
 
     <script type="text/javascript">
