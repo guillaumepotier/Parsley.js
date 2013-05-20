@@ -561,7 +561,7 @@
       // alaways bind keyup event, for better UX when a field is invalid
       var triggers = ( !this.options.trigger ? '' : this.options.trigger );
       if(this.options.validateOnError == true){
-        trigger+ ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
+        trigger += ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
       }
       // alaways bind change event, for better UX when a select is invalid
       if ( this.$element.is( 'select' ) && this.options.validateOnError) {
