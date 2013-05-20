@@ -304,7 +304,12 @@
                             </table>
                         </td>
                     </tr>
-
+                    <tr>
+                        <td><code>data-bind</code></td>
+                        <td></td>
+                        <td>The attribute data-validate must be used on a form. However, if you want to bind the validation to another DOM element, just add this attribute and set it to <code>true</code></td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
             </section>
@@ -388,7 +393,7 @@
                         <td>
                             Customize a unique global message for this field. Shown if one constraint fails.
                             <br/>eg: <pre><code>data-type="alphanum" data-rangelength="[10,10]"
-data-message="You must enter a 10 characters alphanumeric value"</code></pre>
+data-error-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                         <td class="not-for-mobile">
                             <form data-validate="parsley">
@@ -1108,6 +1113,13 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                       Validates that a fields value passes the Luhn algorithm. Validates credit card numbers, as well as some other kinds of account numbers.
                     </td>
                   </tr>
+                  <tr>
+                    <td>American Date</td>
+                    <td><code>data-americandate="true"</code></td>
+                    <td>
+                      Validates that a value is a valid American Date. Allows for slash, dot and hyphen delimiters and condensed dates (e.g., M/D/YY MM.DD.YYYY MM-DD-YY).
+                    </td>
+                  </tr>
               </tbody>
             </table>
 
@@ -1411,6 +1423,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                 <ul>
                   <li><a href="https://github.com/agiliq/django-parsley">Django</a></li>
                   <li><a href="https://github.com/mekishizufu/parsley-rails">Rails</a></li>
+                  <li><a href="https://github.com/code-troopers/wicket-jsr303-parsley">Wicket</a></li>
                 </ul>
             </section>
             <a href="#top" class="top pull-right">Top</a>

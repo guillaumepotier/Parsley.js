@@ -1,12 +1,16 @@
 #Changelog
 
-**1.1.16-dev**
+**1.1.16 (current stable)**
 
+  - fixed IE7 bug with checkboxes / radio buttons that were always required.
+  - html error messages could be used (#220)
+  - fixed show / remove error with data-remote validator (#200)
   - added option to silence errors `data-show-errors="false"`
   - added / modified some i18n localizations
   - Override value by using data-value attribute
+  - added americanDate validator in parsley.extend
 
-**1.1.15 (current stable)**
+**1.1.15**
 
   - **BC Break** removed `.parsley('isFieldValid');` in favor of `.parsley('isValid');`
     (#177)

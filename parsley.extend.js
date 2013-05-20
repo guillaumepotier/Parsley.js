@@ -78,6 +78,24 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         }
         return sum % 10 === 0;
       }
+
+      , americandate: function ( val, elem, self) {
+        if(!/^([01]?[1-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
+        	return false;
+        }
+        var parts = val.split(/[.\/-]+/);
+        var day = parseInt(parts[1], 10);
+        var month = parseInt(parts[0], 10);
+        var year = parseInt(parts[2], 10);
+        if(year == 0 || month == 0 || month > 12) {
+          return false;
+        }
+        var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+        if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
+          monthLength[1] = 29;
+        }
+        return day > 0 && day <= monthLength[month - 1];
+      }
     }
     , messages: {
         minwords:       "This value should have %s words at least."
@@ -88,6 +106,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , beforedate:     "This date should be before %s."
       , afterdate:      "This date should be after %s."
       , luhn:           "This value should pass the luhn test."
+      , americandate:	"This value should be a valid date (MM/DD/YYYY)."
     }
   });
 }(window.jQuery || window.Zepto));

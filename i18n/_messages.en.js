@@ -23,8 +23,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , notblank:       "This value should not be blank."
       , required:       "This value is required."
       , regexp:         "This value seems to be invalid."
-      , min:            "This value should be greater than %s."
-      , max:            "This value should be lower than %s."
+      , min:            "This value should be greater than or equal to %s."
+      , max:            "This value should be lower than or equal to %s."
       , range:          "This value should be between %s and %s."
       , minlength:      "This value is too short. It should have %s characters or more."
       , maxlength:      "This value is too long. It should have %s characters or less."
@@ -42,6 +42,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , lessthan:       "This value should be less than %s."
       , beforedate:     "This date should be before %s."
       , afterdate:      "This date should be after %s."
+      , americandate:	"This value should be a valid date (MM/DD/YYYY)."
     }
   });
 }(window.jQuery || window.Zepto));
