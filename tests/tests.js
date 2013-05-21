@@ -131,6 +131,9 @@ var testSuite = function () {
         expect( $( '#hidden' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#hidden' ).parsley( 'validate' ) ).to.be( null );
       } )
+      it ( 'Should bind a DOM element with data-bind value set to true', function () {
+        expect( $( '#bindNonFormInput' ).hasClass( 'parsley-validated' ) ).to.be( true );
+      } )
     } )
 
     /***************************************
@@ -700,12 +703,12 @@ var testSuite = function () {
 
         $( '#scenario-multiple-errors-and-required' ).val( 'foo@bar.com' );
         expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
-        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );        
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
         expect( $( 'ul#' + fieldHash + ' li' ).eq( 0 ).hasClass( 'rangelength' ) ).to.be( true );
 
         $( '#scenario-multiple-errors-and-required' ).val( 'foo' );
         expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
-        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );        
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );
       } )
       it ( 'Test keyup scenario for non-required field', function () {
         // do not pass the 3 chars min trigger
