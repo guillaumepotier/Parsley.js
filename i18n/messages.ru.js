@@ -33,3 +33,4 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       // parsley.extend ///////////////////////////////
     }
   });
+}(window.jQuery || window.Zepto)); 
