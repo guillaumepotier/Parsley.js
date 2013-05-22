@@ -13,6 +13,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , digits:     "Поле должно содержать только цифры."
           , dateIso:    "Поле должно быть датой в формате (ГГГГ-ММ-ДД)."
           , alphanum:   "Поле должно содержать только  цифры и буквы"
+          , phone:      "Поле должно содержать корректный номер телефона"
         }
       , notnull:        "Поле должно быть не нулевым."
       , notblank:       "Поле не должно быть пустым."
@@ -32,4 +33,3 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       // parsley.extend ///////////////////////////////
     }
   });
-}(window.jQuery || window.Zepto));
