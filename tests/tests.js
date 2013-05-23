@@ -72,7 +72,9 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
     return false;
   },
   onFieldError: function ( field, constraints ) {
-    $( field ).addClass( 'error-' + constraints[ 0 ].name + '_' + constraints[ 0 ].requirements );
+    for ( var i in constraints ) {
+      $( field ).addClass( 'error-' + constraints[ i ].name + '_' + constraints[ i ].requirements );
+    }
   },
   onFieldSuccess: function ( field ) {
     $( field ).addClass( 'success-foo-bar' );
@@ -81,6 +83,20 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
   }
 } } );
+
+$( '#change-show-errors' ).parsley( {
+  listeners: {
+    onFieldValidate: function ( elem ) {
+      $( elem ).addClass( 'onFieldValidate' );
+    },
+    onFieldError: function ( elem, constraints ) {
+      $( elem ).addClass( 'onFieldError' );
+    },
+    onFieldSuccess: function ( elem ) {
+      $( elem ).addClass( 'onFieldSuccess' );
+    }
+  }
+} );
 
 $( '#listeners-form' ).parsley( 'addListener', {
   onFormSubmit: function ( isFormValid, event, focusField ) {
@@ -114,6 +130,9 @@ var testSuite = function () {
       it ( 'Do not bind an input that type is hidden', function () {
         expect( $( '#hidden' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#hidden' ).parsley( 'validate' ) ).to.be( null );
+      } )
+      it ( 'Should bind a DOM element with data-bind value set to true', function () {
+        expect( $( '#bindNonFormInput' ).hasClass( 'parsley-validated' ) ).to.be( true );
       } )
     } )
 
@@ -183,6 +202,10 @@ var testSuite = function () {
         expect( $( '#errorMessage' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
       } )
+      it ( 'Test that error messages could be html', function () {
+        $( '#errorMessage' ).val( 'foobar' ).parsley( 'validate' );
+        expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).text() ).to.be( 'This is my custom message' );
+      })
     } )
 
     /***************************************
@@ -234,7 +257,6 @@ var testSuite = function () {
       } )
       it ( 'required - select multiple', function () {
         expect( $( '#required-selectmultiple' ).parsley( 'validate' ) ).to.be( false );
-        $( '#required-selectmultiple' )
       } )
       it ( 'minlength', function () {
         triggerSubmitValidation( '#minlength', '12345' );
@@ -260,7 +282,7 @@ var testSuite = function () {
       it ( 'min', function () {
         triggerSubmitValidation( '#min', '8' );
         expect( $( '#min' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than 10.' );
+        expect( getErrorMessage( '#min', 'min') ).to.be( 'This value should be greater than or equal to 10.' );
         triggerSubmitValidation( '#min', '12' );
         expect( $( '#min' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -275,7 +297,7 @@ var testSuite = function () {
       it ( 'max', function () {
         triggerSubmitValidation( '#max', '12' );
         expect( $( '#max' ).hasClass( 'parsley-error' ) ).to.be( true );
-        expect( getErrorMessage( '#max', 'max') ).to.be( 'This value should be lower than 10.' );
+        expect( getErrorMessage( '#max', 'max') ).to.be( 'This value should be lower than or equal to 10.' );
         triggerSubmitValidation( '#max', '10' );
         expect( $( '#max' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -294,6 +316,25 @@ var testSuite = function () {
         expect( getErrorMessage( '#regexp', 'regexp') ).to.be( 'This value seems to be invalid.' );
         triggerSubmitValidation( '#regexp', '42' );
         expect( $( '#regexp' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'regexp with custom flag', function () {
+        triggerSubmitValidation( '#regexp-flag1', 'foo' );
+        expect( $( '#regexp-flag1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#regexp-flag1', 'Foo' );
+        expect( $( '#regexp-flag1' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        // passing 'i' flag, case unsensitive make allways regexp pass
+        triggerSubmitValidation( '#regexp-flag2', 'foo' );
+        expect( $( '#regexp-flag2' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerSubmitValidation( '#regexp-flag2', 'Foo' );
+        expect( $( '#regexp-flag2' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'pattern html5-regexp', function () {
+        triggerSubmitValidation( '#regexp-html5', 'foo' );
+        expect( $( '#regexp-html5' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#regexp-html5', 'regexp') ).to.be( 'This value seems to be invalid.' );
+        triggerSubmitValidation( '#regexp-html5', '42');
+        expect( $( '#regexp-html5' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
 
       var urls = [
@@ -369,6 +410,13 @@ var testSuite = function () {
         triggerSubmitValidation( '#typedateIso', '2012-12-12' );
         expect( $( '#typedateIso' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'phone', function () {
+        triggerSubmitValidation( '#typephone', 'foo' );
+        expect( $( '#typephone' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typephone', 'type') ).to.be( 'This value should be a valid phone number.' );
+        triggerSubmitValidation( '#typephone', '(917) 5878 5457' );
+        expect( $( '#typephone' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'number', function () {
         triggerSubmitValidation( '#typenumber', 'foo' );
         expect( $( '#typenumber' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -416,6 +464,13 @@ var testSuite = function () {
           $( '#checkbox-mincheck2' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-mincheck1' ).parsley( 'validate' ) ).to.be( true );
         } )
+        it ( 'mincheck data-group', function () {
+          $( '#checkbox-mincheckgroup1' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-mincheckgroup1' ).parsley( 'validate' ) ).to.be( false );
+          expect( getErrorMessage( '#checkbox-mincheckgroup1', 'mincheck') ).to.be( 'You must select at least 2 choices.' );
+          $( '#checkbox-mincheckgroup2' ).attr( 'checked', 'checked' );
+          expect( $( '#checkbox-mincheckgroup1' ).parsley( 'validate' ) ).to.be( true );
+        } )
         it ( 'maxcheck', function () {
           $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-maxcheck1' ).parsley( 'validate' ) ).to.be( true );
@@ -446,7 +501,7 @@ var testSuite = function () {
           it ( 'Make an ajax request when remote-validator is used to passed url', function () {
             $( '#remote1' ).val( 'foobar' );
             $( '#remote1' ).parsley( 'validate' );
-            expect( $.ajax.calledWithMatch( { method: "GET" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { type: "GET" } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { url: "http://foo.bar" } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { data: { remote1: "foobar" } } ) ).to.be( true );
             expect( $.ajax.calledWithMatch( { dataType: "jsonp" } ) ).to.be( true );
@@ -454,7 +509,7 @@ var testSuite = function () {
           it ( 'Test ajax call parameters overriding', function () {
             $( '#remote2' ).val( 'foo' );
             $( '#remote2' ).parsley( 'validate' );
-            expect( $.ajax.calledWithMatch( { method: "POST" } ) ).to.be( true );
+            expect( $.ajax.calledWithMatch( { type: "POST" } ) ).to.be( true );
           } )
 
           after( function () {
@@ -464,100 +519,83 @@ var testSuite = function () {
 
         // not passing on phantomJS yet..
         describe ( 'Test ASYNC ajax calls results', function () {
-          var calls = [
-              { statusCode: 'success', content: "true", expect: true }
-            , { statusCode: 'error', content: "", expect: false }
-            , { statusCode: 'success', content: "false", expect: false }
-            , { statusCode: 'success', content: "1", expect: true }
-            , { statusCode: 'success', content: "0", expect: false }
-            , { statusCode: 'success', content: "{\"success\": \"foo\"}", expect: true }
-            , { statusCode: 'success', content: "{\"error\": \"foobar\"}", expect: false }
-            , { statusCode: 'error', content: "{\"error\": \"foobarbaz\"}", expect: false }
-            , { statusCode: 'error', content: "{\"message\": \"foo\"}", expect: false }
-            ];
-
           it ( 'Test success true', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 0 ].statusCode , calls[ 0 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "true" );
             $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 0 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 0 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 0 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
             done();
           } )
           it ( 'Test error 404', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 1 ].statusCode , calls[ 1 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'error' , "" );
             $( '#remote2' ).val( 'bar' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 1 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 1 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 1 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             done();
           } )
           it ( 'Test success false', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 2 ].statusCode , calls[ 2 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "false" );
             $( '#remote2' ).val( 'baz' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 2 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 2 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 2 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             done();
           } )
           it ( 'Test success 1', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 3 ].statusCode , calls[ 3 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "1" );
             $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 3 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 3 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 3 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
             done();
           } )
           it ( 'Test success 0', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 4 ].statusCode , calls[ 4 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "0" );
             $( '#remote2' ).val( 'bar' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 4 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 4 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 4 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             done();
           } )
           it ( 'Test success with { success: "message" }', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 5 ].statusCode , calls[ 5 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "{\"success\": \"foo\"}" );
             $( '#remote2' ).val( 'baz' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 5 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 5 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 5 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
             done();
           } )
           it ( 'Test success with { error: "message" } + display message ', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 6 ].statusCode , calls[ 6 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'success' , "{\"error\": \"foobar\"}" );
             $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 6 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 6 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 6 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             expect( getErrorMessage( '#remote2', 'remote') ).to.be( 'foobar' );
             done();
           } )
           it ( 'Test error 500 + error', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 7 ].statusCode , calls[ 7 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'error' , "{\"error\": \"foobarbaz\"}" );
             $( '#remote2' ).val( 'bar' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 7 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 7 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 7 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             expect( getErrorMessage( '#remote2', 'remote') ).to.be( 'foobarbaz' );
             done();
           } )
-
           it ( 'Test error 500 + message', function ( done ) {
-            sinon.stub( $, "ajax" ).yieldsTo( calls[ 8 ].statusCode , calls[ 8 ].content );
+            sinon.stub( $, "ajax" ).yieldsTo( 'error' , "{\"message\": \"foo\"}" );
             $( '#remote2' ).val( 'baz' ).trigger( $.Event( 'change' ) );
-            expect( $( '#remote2' ).parsley( 'isFieldValid' ) ).to.be( calls[ 8 ].expect )
-            expect( $( '#remote2' ).hasClass( 'parsley-error' ) ).to.be( !calls[ 8 ].expect );
-            expect( $( '#remote2' ).hasClass( 'parsley-success' ) ).to.be( calls[ 8 ].expect );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( false )
             expect( getErrorMessage( '#remote2', 'remote') ).to.be( 'foo' );
             done();
           } )
-
           afterEach( function () {
             $.ajax.restore();
           } );
         } )
 
+      } )
+    } )
+
+    /***************************************
+         override value with data-value
+    ***************************************/
+    describe ( 'Override value with data-value' , function () {
+      it ( 'required - data-value is empty, value is empty', function () {
+        triggerSubmitValidation( '#datavalue1', '' );
+        expect( $( '#datavalue1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#datavalue1', 'required') ).to.be( 'This value is required.' );
+      } )
+      it ( 'required - data-value has value, value is empty', function () {
+        triggerSubmitValidation( '#datavalue2', '' );
+        expect( $( '#datavalue2' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
     } )
 
@@ -576,6 +614,44 @@ var testSuite = function () {
         triggerEventChangeValidation( '#minchar-change', 'foobarbaz' );
         expect( $( '#minchar-change' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
+      it ( 'Change showError option', function () {
+        // first field is wrong, but no errors/messages shown in dom
+        $( '#change-show-errors-field1' ).val( 'foo' );
+        $( '#change-show-errors-field1' ).trigger( $.Event( 'keyup' ) );
+        expect( $( '#change-show-errors-field1' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field1' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field1' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldValidate') ).to.be( true );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldError') ).to.be( true );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldSuccess') ).to.be( false );
+        // isValid for this field returns false
+        expect( $( '#change-show-errors-field1' ).parsley( 'isValid' ) ).to.be( false );
+        // second field is false too and nothing is shown in dom too
+        $( '#change-show-errors-field2' ).val( 'foo' );
+        expect( $( '#change-show-errors-field2' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-success' ) ).to.be( false );
+        // so form is false
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( false );
+        // first field is valid now, but still nothing is shown
+        $( '#change-show-errors-field1' ).val( 'foo@bar.baz' );
+        expect( $( '#change-show-errors-field1' ).parsley( 'validate' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#change-show-errors-field1').hasClass( 'onFieldSuccess') ).to.be( true );
+        // form is still not valid
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( false );
+        // second field finaly is valid
+        $( '#change-show-errors-field2' ).val( 'foo.bar' );
+        expect( $( '#change-show-errors-field2' ).parsley( 'validate' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#change-show-errors-field2' ).hasClass( 'parsley-success' ) ).to.be( false );
+        // and form is now valid
+        expect( $( '#change-show-errors' ).parsley( 'validate' ) ).to.be( true );
+      } )
       it ( 'Change differently errors messages for two same validators on different forms', function () {
         $( '#requiredchanged1-form' ).parsley( { messages: { required: "required 1" } } );
         $( '#requiredchanged2-form' ).parsley( { messages: { required: "required 2" } } );
@@ -586,8 +662,10 @@ var testSuite = function () {
       } )
       it ( 'Change error messages with data-api', function () {
         triggerSubmitValidation( '#requiredchanged3', '' );
-        expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
         expect( getErrorMessage( '#requiredchanged3', 'required') ).to.be( 'custom required' );
+
+        triggerSubmitValidation( '#requiredchanged3', 'foo' );
+        expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
       } )
       it ( 'Change error handler', function () {
         $( '#errorsmanagement-form' ).parsley( {
@@ -617,6 +695,21 @@ var testSuite = function () {
          test field validation scenarios
     ***************************************/
     describe ( 'Test field validation scenarios', function () {
+      it ( 'Test multiple constraints/errors required field scenario', function () {
+        var fieldHash = $( '#scenario-multiple-errors-and-required' ).parsley( 'getHash' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( 'ul#' + fieldHash + ' li' ).eq( 0 ).hasClass( 'required' ) ).to.be( true );
+
+        $( '#scenario-multiple-errors-and-required' ).val( 'foo@bar.com' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 1 );
+        expect( $( 'ul#' + fieldHash + ' li' ).eq( 0 ).hasClass( 'rangelength' ) ).to.be( true );
+
+        $( '#scenario-multiple-errors-and-required' ).val( 'foo' );
+        expect( $( '#scenario-multiple-errors-and-required' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( 'ul#' + fieldHash + ' li' ).length ).to.be( 2 );
+      } )
       it ( 'Test keyup scenario for non-required field', function () {
         // do not pass the 3 chars min trigger
         $( '#scenario-not-required' ).val( 'fo' );
@@ -666,6 +759,12 @@ var testSuite = function () {
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
       } )
+      it ( 'Test auto-change binding when select has errors', function () {
+        expect( $( '#scenario-validation-change-select' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#scenario-validation-change-select' ).hasClass( 'parsley-error' ) ).to.be( true );
+        $( '#scenario-validation-change-select' ).val( 'foo' ).trigger( $.Event( 'change' ) );
+        expect( $( '#scenario-validation-change-select' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
       it ( 'Test validation of unchanged fields after reset() has been called on them', function () {
         $( '#scenario-validation-after-field-reset' ).val( '' );
 
@@ -676,8 +775,7 @@ var testSuite = function () {
         $( '#scenario-validation-after-field-reset' ).parsley( 'reset' );
         $( '#scenario-validation-after-field-reset' ).trigger( $.Event( 'keyup' ) );
 
-        // The field has not changed, but since the field was reset, the call count should now be 2.
-        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 2 );
+        expect( $( '#scenario-validation-after-field-reset' ).data( 'callCount' ) ).to.be( 1 );
       } )
       it ( 'Test always validate field', function () {
         $( '#alwaysValidate-form' ).parsley( { validateIfUnchanged: true, listeners: { onFieldError: function ( elem ) {
@@ -703,6 +801,7 @@ var testSuite = function () {
         expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
       } )
       it ( 'Test change validation for checkboxes', function () {
+        // test on change auto triggered event to correct mistakes
         $( '#checkbox-maxcheckchange1' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheckchange2' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheckchange3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
@@ -711,6 +810,17 @@ var testSuite = function () {
         expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
         $( '#checkbox-maxcheckchange2' ).attr( 'checked', null ).trigger( $.Event( 'change' ) );
         expect( $( 'ul#' + $( '#checkbox-maxcheckchange1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+
+        // test explicitely change trigger
+        $( '#checkbox-maxcheck3' ).parsley( 'destroy' );
+        $( '#checkbox-maxcheck2' ).parsley( 'destroy' );
+        $( '#checkbox-maxcheck1' ).parsley( 'destroy' ).parsley();
+        $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+        $( '#checkbox-maxcheck2' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
+        $( '#checkbox-maxcheck3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
+        expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
       } )
     } )
 
@@ -762,16 +872,28 @@ var testSuite = function () {
         expect( $( '#destroy-email' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#destroy-multiple' ).hasClass( 'parsley-error' ) ).to.be( false );
       } )
+      it ( 'test parsley(\'reset\')', function () {
+          $('#reset').parsley('validate');
+          expect( $('#reset-email').hasClass('parsley-error') ).to.be( true );
+          expect( $('#reset-textarea').hasClass('parsley-error') ).to.be( true );
+          $('#reset').parsley('reset');
+          expect( $('#reset-email').hasClass('parsley-error')).to.be( false );
+          expect( $('#reset-textarea').hasClass('parsley-error')).to.be( false );
+      })
       it ( 'test parsley dynamic add item', function () {
-        $( '#dynamic-form' ).append( '<input type="text" data-type="email" id="dynamic-email" data-trigger="change" value="foo" />' );
+        $( '#dynamic-form' ).append( '<input type="text" data-type="email" class="dynamic-email" data-trigger="change" value="foo" />' );
+        var ParsleyForm = $( '#dynamic-form' ).parsley();
+        expect( ParsleyForm.items.length ).to.be( 0 );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
-        $( '#dynamic-form' ).parsley( 'addItem', '#dynamic-email' );
+        $( '#dynamic-form' ).parsley( 'addItem', '.dynamic-email' );
+        expect( ParsleyForm.items.length ).to.be( 1 );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( false );
-        $( '#dynamic-email' ).val( 'foo@bar.baz' );
+        $( '.dynamic-email' ).val( 'foo@bar.baz' );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
-        $( '#dynamic-email' ).val( 'foo' );
-        $( '#dynamic-form' ).parsley( 'removeItem', '#dynamic-email' );
-        expect( $( '#dynamic-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        $( '.dynamic-email' ).val( 'foo' );
+        $( '#dynamic-form' ).parsley( 'removeItem', '.dynamic-email' );
+        expect( ParsleyForm.items.length ).to.be( 0 );
+        expect( $( '.dynamic-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
       } )
       it ( 'test adding constraint on the fly', function () {
@@ -795,6 +917,22 @@ var testSuite = function () {
         $( '#onthefly-form' ).parsley( 'validate' );
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
+      } )
+      it ( 'test setting custom error container within data-attributes', function () {
+        expect( $( '#dataerrorcontainer-form' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#mycustomerrorcontainer ul.parsley-error-list' ).length ).to.be( 1 );
+      } )
+      it ( 'test isValid', function () {
+        expect( $( '#isValid-form' ).parsley( 'isValid' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        $( '#isValid-field' ).val( 'foo' );
+        expect( $( '#isValid-form' ).parsley( 'isValid' ) ).to.be( true );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-success' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-error' ) ).to.be( false );
+        $( '#isValid-field' ).val( '' );
+        expect( $( '#isValid-form' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#isValid-field' ).hasClass( 'parsley-error' ) ).to.be( true );
       } )
     } )
 
@@ -910,6 +1048,30 @@ var testSuite = function () {
           triggerSubmitValidation( '#rangewords', 'foo bar baz foo bar baz foo' );
           expect( $( '#rangewords' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
+       it ( 'inlist validation', function () {
+          triggerSubmitValidation( '#inList', 'invalid' );
+          expect( $( '#inList' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'false' );
+          expect( $( '#inList' ).hasClass( 'parsley-error' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'true' );
+          expect( $( '#inList' ).hasClass( 'parsley-success' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'one' );
+          expect( $( '#inList' ).hasClass( 'parsley-success' ) ).to.be( true );
+          triggerSubmitValidation( '#inList', 'value with spaces' );
+          expect( $( '#inList' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListSingleValue', 'true' );
+          expect( $( '#inListSingleValue' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListEmpty', 'foo' );
+          expect( $( '#inListEmpty' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListSingleComma', 'value' );
+          expect( $( '#inListSingleComma' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+          triggerSubmitValidation( '#inListCustomDelimiter', 'foo bar' );
+          expect( $( '#inListCustomDelimiter' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
        it ( 'greaterThan', function () {
          triggerSubmitValidation( '#greaterThan', '1' );
          expect( $( '#greaterThan' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -927,6 +1089,44 @@ var testSuite = function () {
          expect( $( '#lessThan' ).hasClass( 'parsley-success' ) ).to.be( true );
          $( '#lessThan-model' ).val( '1' );
          expect( $( '#lessThan' ).parsley( 'validate' ) ).to.be( false );
+       } )
+       it ( 'beforeDate', function () {
+         triggerSubmitValidation( '#beforeDate', '04/15/2015' );
+         expect( $( '#beforeDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#beforeDate', 'beforeDate') ).to.be( 'This date should be before #beforeDate-model.' );
+         triggerSubmitValidation( '#beforeDate', '4/15/1990' );
+         expect( $( '#beforeDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'afterDate', function () {
+         triggerSubmitValidation( '#afterDate', '4/15/1990' );
+         expect( $( '#afterDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#afterDate', 'afterDate') ).to.be( 'This date should be after #afterDate-model.' );
+         triggerSubmitValidation( '#afterDate', '04/15/2015' );
+         expect( $( '#afterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'luhn', function () {
+         triggerSubmitValidation( '#luhn', '4000000000000000' );
+         expect( $( '#luhn' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#luhn', 'luhn') ).to.be( 'This value should pass the luhn test.' );
+         triggerSubmitValidation( '#luhn', '4000000000000002' );
+         expect( $( '#luhn' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
+       it ( 'americanDate', function () {
+    	 triggerSubmitValidation( '#americanDate', '28/02/2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+    	 expect( getErrorMessage( '#americanDate', 'americanDate') ).to.be( 'This value should be a valid date (MM/DD/YYYY).' );
+    	 triggerSubmitValidation( '#americanDate', '02/08/2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '2/8/12' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '02-08-2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '2-8-12' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '02.08.2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '2.8.12' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
      } )
 

@@ -54,7 +54,7 @@
         </form>
         <form data-validate="parsley">
             <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum" />
-            <input type="text" id="errorMessage" data-error-message="This is my custom message" data-minlength="20" data-type="email" />
+            <input type="text" id="errorMessage" data-error-message="This is my <strong>custom</strong> message" data-minlength="20" data-type="email" />
         </form>
         <form id="validator-tests" data-validate="parsley">
             <input type="text" id="notnull" data-notnull="true" />
@@ -79,7 +79,11 @@
             <input type="number" id="max-html5" max="10" />
 
             <input type="text" id="range" data-range="[6,10]" />
+
             <input type="text" id="regexp" data-regexp="\d+" />
+            <input type="text" id="regexp-html5" pattern="\d+" />
+            <input type="text" id="regexp-flag1" data-regexp="^[A-Z]" />
+            <input type="text" id="regexp-flag2" data-regexp="^[A-Z]" data-regexp-flag="i" />
 
             <input type="text" id="typeemail" data-type="email" />
             <input type="email" id="typeemail-html5" />
@@ -94,6 +98,7 @@
             <input type="text" id="typenumber" data-type="number" />
             <input type="text" id="typedateIso" data-type="dateIso" />
             <input type="text" id="typealphanum" data-type="alphanum" />
+            <input type="text" id="typephone" data-type="phone" />
 
             <input type="text" id="customvalidator" data-multiple="9" />
 
@@ -102,6 +107,9 @@
 
             <input type="checkbox" id="checkbox-mincheck1" name="mincheck[]" value="foo" data-mincheck="2" />
             <input type="checkbox" id="checkbox-mincheck2" name="mincheck[]" value="bar" />
+
+            <input type="checkbox" id="checkbox-mincheckgroup1" value="foo" data-group="foo" data-mincheck="2" />
+            <input type="checkbox" id="checkbox-mincheckgroup2" value="bar" data-group="foo" />
 
             <input type="checkbox" id="checkbox-maxcheck1" name="maxcheck[]" value="foo" data-maxcheck="2" data-trigger="change"/>
             <input type="checkbox" id="checkbox-maxcheck2" name="maxcheck[]" value="bar" />
@@ -119,6 +127,9 @@
             <input type="text" id="remote1" name="remote1" data-remote="http://foo.bar" data-remote-datatype="jsonp" />
             <input type="text" id="remote2" name="remote2" data-remote="http://foo.bar/baz" data-trigger="change" data-remote-method="POST" />
 
+            <input type="text" id="datavalue1" name="datavalue1" data-value="" value="" data-required="true" />
+            <input type="text" id="datavalue2" name="datavalue2" data-value="foo" value="" data-required="true" />
+
             <input type="submit" />
         </form>
         <form id="validate-form" data-validate="parsley">
@@ -128,6 +139,10 @@
         </form>
         <form id="change-validation" data-validate="parsley">
             <input type="text" id="minchar-change" data-type="email" data-trigger="keyup" data-validation-minlength="7" />
+        </form>
+        <form id="change-show-errors" data-show-errors="false">
+            <input type="text" id="change-show-errors-field1" data-type="email" data-trigger="keyup" data-validation-minlength="0" />
+            <input type="text" id="change-show-errors-field2" data-type="url" />
         </form>
         <form id="requiredchanged1-form">
             <input type="text" id="requiredchanged1" data-required="true" />
@@ -144,9 +159,15 @@
         </form>
 
         <form id="validation-scenarios" data-validate="parsley">
+            <input type="text" id="scenario-multiple-errors-and-required" data-required="true" data-type="email" data-rangelength="[20,50]" >
             <input type="text" id="scenario-not-required" data-trigger="keyup" data-minlength="6" />
             <input type="text" id="scenario-keyup-when-notvalid" data-trigger="change" data-type="email" />
             <input type="text" id="scenario-validation-after-field-reset" data-trigger="keyup" data-required="true" />
+            <select id="scenario-validation-change-select" data-required="true">
+                <option value="">Chose</option>
+                <option value="foo">foo</option>
+                <option value="bar">bar</option>
+            </select>
         </form>
         <form data-validate="parsley" id="focus-form" data-focus="last">
             <input type="text" id="focus1" data-type="email" data-required="true" />
@@ -164,11 +185,22 @@
             <input type="text" data-type="email" id="destroy-email" data-trigger="change" />
             <input type="select" id="destroy-multiple" data-required="true"></input>
         </form>
-        <form data-validate="parsley" id="dynamic-form">
+        <form data-validate="parsley" id="reset">
+            <input type="text" id="reset-email" data-required="true" />
+            <textarea id="reset-textarea" data-required="true"></textarea>
+        </form>
+        <form data-validate="parsley" id="dynamic-form" data-triggers="keyup change">
         </form>
         <form data-validate="parsley" id="onthefly-form">
             <input type="text" id="onthefly" />
         </form>
+        <form dat-validate="parsley" id="dataerrorcontainer-form">
+            <input id="dataerrorcontainer" type="text" required data-error-container="#mycustomerrorcontainer" />
+        </form>
+        <form dat-validate="parsley" id="isValid-form">
+            <input id="isValid-field" type="text" required />
+        </form>
+        <div id="mycustomerrorcontainer"></div>
         <form data-validate="parsley" id="onFieldValidate-form">
             <input type="text" id="onFieldValidate1" data-type="email" data-required="true" />
             <input type="text" id="onFieldValidate2" data-type="email" data-required="true" />
@@ -202,15 +234,31 @@
             <input type="text" id="maxwords" data-maxwords="6" />
             <input type="text" id="rangewords" data-rangewords="[6, 10]" />
             <input type="text" id="greaterThan-model" value="1" />
-            <input type="text" id="greaterThan" data-greaterThan="#greaterThan-model" />
+            <input type="text" id="greaterThan" data-greaterthan="#greaterThan-model" />
             <input type="text" id="lessThan-model" value="2" />
-            <input type="text" id="lessThan" data-lessThan="#lessThan-model" />
+            <input type="text" id="lessThan" data-lessthan="#lessThan-model" />
+            <input type="text" id="beforeDate-model" value="1/1/2014" />
+            <input type="text" id="beforeDate" data-beforedate="#beforeDate-model" />
+            <input type="text" id="afterDate-model" value="1/1/2014" />
+            <input type="text" id="afterDate" data-afterdate="#afterDate-model" />
+            <input type="text" id="inList" data-inlist="true, 1, valid, value with spaces, yes, one" />
+            <input type="text" id="inListSingleValue" data-inlist="true" />
+            <input type="text" id="inListEmpty" data-inlist="" />
+            <input type="text" id="inListSingleComma" data-inlist="," />
+            <input type="text" id="inListCustomDelimiter" data-inlist="foo | bar | foo bar" data-inlist-delimiter="|" />
+
+            <input type="text" id="luhn" data-luhn="true" />
+            <input type="text" id="americanDate" data-americandate="true" />
         </form>
+
+        <div data-validate="parsley" data-bind="true">
+            <input type="text" id="bindNonFormInput" data-required="true" value="" />
+        </div>
     </div>
 
     <script type="text/javascript">
         var jquery = 'resources/jquery.min.js'
-          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax].min.js';
+          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js';
 
         switch ( location.hash ) {
             case '#jquery':

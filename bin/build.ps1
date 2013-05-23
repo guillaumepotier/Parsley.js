@@ -1,9 +1,11 @@
-#!/usr/bin/env bash
 
-if [[ -z "$1" ]]
-then
+$1 = $Args[0]
+$2 = $Args[1]
+
+if($1 -eq $null) {
   echo "You must give a version number. eg: ./bin/build.sh 1.0.0"
-else
+}
+else {
   echo "** building parsley.min.js version " $1
   ruby ./bin/minify parsley.js dist/parsley.min.js $1 --force
   echo "  done!"
@@ -15,11 +17,10 @@ else
   echo "** building parsley.extend.min.js version " $1
   ruby ./bin/minify parsley.extend.js dist/parsley.extend.min.js $1 --force
   echo "  done!"
-fi
+}
 
-if [[ "$2" == "doc" ]]
-then
+if($2 -eq "doc") {
   echo "** generating API doc "
   ./bin/doc.sh $1
   echo "  done!"
-fi
+}

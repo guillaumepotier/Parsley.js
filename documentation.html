@@ -64,7 +64,7 @@
       ul.parsley-error-list {
           font-size: 11px;
           margin: 2px;
-          list-style-type:none; 
+          list-style-type:none;
       }
       ul.parsley-error-list li {
           line-height: 11px;
@@ -80,8 +80,8 @@
         margin:15px 0 0 0;
       }
 
-      @media only screen 
-      and (min-device-width : 320px) 
+      @media only screen
+      and (min-device-width : 320px)
       and (max-device-width : 480px) {
           .not-for-mobile {
               display: none;
@@ -140,12 +140,12 @@
                     <tbody>
                         <tr>
                             <td>
-                                <form id="demo-form" data-validate="parsley">
+                                <form id="demo-form">
                                     <label for="fullname">Full Name * :</label>
                                     <input type="text" id="fullname" name="fullname" data-required="true" />
 
                                     <label for="email">Email * :</label>
-                                    <input type="text" id="email" name="email" data-trigger="change" data-required="true" data-type="email" />
+                                    <input type="text" id="email" name="email" data-type="email" data-trigger="change" data-required="true" />
 
                                     <label for="website">Website :</label>
                                     <input type="text" id="website" name="website" data-trigger="change" data-type="url" />
@@ -205,6 +205,7 @@
                   <ol>
                       <li><a href="#basic-constraints">Basic constraints</a></li>
                       <li><a href="#type-constraints">Type constraints</a></li>
+                      <li><a href="#extra-constraints">Extra constraints</a></li>
                   </ol>
                 </li>
                 <li>
@@ -232,7 +233,7 @@
             <section>
               <a name="installation"></a>
               <h3>Parsley Installation</h3>
-              <p>Just include the <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley.min.js">Parsley.js</a> file (with <a href="http://jquery.com/">jQuery</a> or <a href="http://zeptojs.com/">Zepto</a> loaded) or use <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley-standalone.min.js">Parsley standalone</a> (with Zepto bundled inside)</p>
+              <p>Just include the <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley.min.js">Parsley.js</a> file (with <a href="http://jquery.com/">jQuery</a> or <a href="http://zeptojs.com/">Zepto</a> with <strong><a href="https://github.com/madrobby/zepto#building">data and fx_methods modules</a></strong> added) or use <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/dist/parsley-standalone.min.js">Parsley standalone</a> (with Zepto bundled inside)</p>
 <pre><code>&lt;script type="text/javascript" src="jquery.js">&lt;/script>
 &lt;script type="text/javascript" src="parsley.js">&lt;/script>
 
@@ -248,6 +249,10 @@
                 <h3>Parsley Form</h3>
                 <p>This is the main Parsley form validation factory, where you decide if a form is validated, and set some extra options.</p>
                 <pre><code>&lt;form data-validate="parsley">&lt;/form></code></pre>
+                 <div class="alert alert-block alert-info">
+                <span class="label label-important">Heads up!</span> <strong>HTML5</strong>:
+                If you use HTML5 validation feature, add: <code>novalidate</code> attribute to <code>form</code> tag.
+                </div>
                 <h4>Properties</h4>
                 <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -263,6 +268,12 @@
                         <td><code>data-validate</code></td>
                         <td></td>
                         <td>Bind Parsley validation to the form and its items with validation constraints</td>
+                        <td  class="not-for-mobile"></td>
+                    </tr>
+                    <tr>
+                        <td><code>data-show-errors</code></td>
+                        <td>true</td>
+                        <td>Choose to show or not Parsley error messages & success / errors classes</td>
                         <td  class="not-for-mobile"></td>
                     </tr>
                     <tr>
@@ -293,7 +304,12 @@
                             </table>
                         </td>
                     </tr>
-                    
+                    <tr>
+                        <td><code>data-bind</code></td>
+                        <td></td>
+                        <td>The attribute data-validate must be used on a form. However, if you want to bind the validation to another DOM element, just add this attribute and set it to <code>true</code></td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
             </section>
@@ -336,6 +352,21 @@
                     </tr>
                     <tr>
                         <td>
+                            <code>data-value</code>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            Override the value attribute of a form field. Useful for file inputs, where you're not allowed to
+                            set a value. <br/>
+                            eg: <code>data-value="uploadedfile.png"</code>
+                        </td>
+                        <td class="not-for-mobile">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <code>data-validation-minlength</code>
                         </td>
                         <td>
@@ -357,12 +388,12 @@
                             <code>data-error-message</code>
                         </td>
                         <td>
-                            
+
                         </td>
                         <td>
                             Customize a unique global message for this field. Shown if one constraint fails.
                             <br/>eg: <pre><code>data-type="alphanum" data-rangelength="[10,10]"
-data-message="You must enter a 10 characters alphanumeric value"</code></pre>
+data-error-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                         <td class="not-for-mobile">
                             <form data-validate="parsley">
@@ -372,11 +403,29 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     </tr>
                     <tr>
                         <td>
+                            <code>data-error-container</code>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            <span style="color:red; !important" id="demoerrorcontainer"></span>
+                            Specify here the container where Parsley should set the errors.
+                            <br/>eg: <pre><code>data-error-container="ul#myproperlabel li.someclass"</code></pre>
+                        </td>
+                        <td class="not-for-mobile">
+                            <form data-validate="parsley">
+                                <p><input type="text" data-type="email" data-trigger="keyup" data-validation-minlength="0" data-error-container="#demoerrorcontainer" placeholder="error will pop above text on the left" /><p>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <code>data-`constraintName`-message</code><br/><br/>
                             <code>data-type-`type`-message</code>
                         </td>
                         <td>
-                            
+
                         </td>
                         <td>
                             Customize the error message for the field constraint.<br/>
@@ -431,12 +480,19 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                             <table>
                                 <tr>
                                     <td>
-                                        <form data-validate="parsley">
-                                            <input type="text" id="data-required" data-required="true" placeholder="required field" />
+                                        <form data-validate="parsley" id="form-required">
+                                            <input type="text" id="data-required" data-required="true" placeholder="required field" /><br/><br/>
+                                            <select id="select-required" data-required="true">
+                                                <option value="">Please choose</option>
+                                                <option value="foo">Foo</option>
+                                                <option value="bar">Bar</option>
+                                            </select><br/>
+                                            Radio: <input type="radio" name="radiorequired" value="foo" id="radio-required" data-required="true"/>
+                                            <input type="radio" name="radiorequired" id="radio-required2" value="bar" />
                                         </form>
                                     </td>
                                     <td>
-                                        <span class="btn btn-small" onclick="javascript:$('#data-required').parsley('validate');">
+                                        <span class="btn btn-small" onclick="javascript:$('#form-required').parsley('validate');">
                                             <i class="icon-ok"></i>
                                         </span>
                                     </td>
@@ -627,9 +683,10 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     <tr>
                         <td>RegExp</td>
                         <td>
-                            <code>data-regexp="&lt;regexp>"</code>
+                            <code>data-regexp="&lt;regexp>"</code><br/><br/>
+                            <span class="label label-info">HTML5</span><code>pattern="regexp"</code>
                         </td>
-                        <td>Validates that a value matches a specific regular expression. eg: validate a color hexadecimal code: <code>data-regexp="#[A-Fa-f0-9]{6}"</code>.</td>
+                        <td>Validates that a value matches a specific regular expression. eg: validate a color hexadecimal code: <code>data-regexp="#[A-Fa-f0-9]{6}"</code>.<br/><br/>Add a flag to <code>Regexp()</code> function: <code>data-regexp-flag="i"</code> for example to make regexp case unsensitive</td>
                         <td class="not-for-mobile">
                             <table>
                                 <tr>
@@ -652,7 +709,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                     <tr>
                         <td>Equal To</td>
                         <td>
-                            <code>data-equalTo="#elem"</code>
+                            <code>data-equalto="#elem"</code>
                         </td>
                         <td>Validates that a value is identical to #elem value. Useful for password repeat validation.</td>
                         <td class="not-for-mobile">
@@ -680,7 +737,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>
                             <code>data-mincheck="2"</code>
                         </td>
-                        <td>Validates that a certain minimum number of checkboxes in a group are checked.</td>
+                        <td>Validates that a certain minimum number of checkboxes in a group are checked. You can define a group by giving the same name to radio / checkboxes elements or add a <code>data-group="mygroup"</code> property to each one of them</td>
                         <td class="not-for-mobile">
                             <table>
                                 <tr>
@@ -708,7 +765,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>
                             <code>data-maxcheck="2"</code>
                         </td>
-                        <td>Validates that a certain maximum number of checkboxes in a group are checked.</td>
+                        <td>Validates that a certain maximum number of checkboxes in a group are checked. You can define a group by giving the same name to radio / checkboxes elements or add a <code>data-group="mygroup"</code> property to each one of them</td>
                         <td class="not-for-mobile">
                             <table>
                                 <tr>
@@ -736,7 +793,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>
                             <code>data-rangecheck="[1,2]"</code>
                         </td>
-                        <td>Validates that the number of checked checkboxes in a group is with a certain range.</td>
+                        <td>Validates that the number of checked checkboxes in a group is with a certain range. You can define a group by giving the same name to radio / checkboxes elements or add a <code>data-group="mygroup"</code> property to each one of them</td>
                         <td class="not-for-mobile">
                             <table>
                                 <tr>
@@ -959,8 +1016,113 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         </td>
                     </tr>
 
+                    <!-- Phone -->
+                    <tr>
+                        <td>Phone</td>
+                        <td>
+                            <code>data-type="phone"</code>
+                        </td>
+                        <td>Validates that a value is a valid phone number.</td>
+                        <td class="not-for-mobile">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <form data-validate="parsley">
+                                            <input type="text" id="data-phone" data-type="phone" placeholder="(XXX) XXXX XXX" />
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span class="btn btn-small" onclick="javascript:$('#data-phone').parsley('validate');">
+                                            <i class="icon-ok"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
+
+            <a name="extra-constraints"></a>
+            <h4>Extra Validators</h4>
+            <p>
+                There are some extra validators, not shipped along with default Parsley, because they're more specific and less common, and there is no need to add weight to Parsley instead of calling these validators only when needed. Just call <code>parsley.extend.js</code> or <code>dist/parsley.extend.min.js</code> like this:
+<pre><code>&lt;script type="text/javascript" src="parsley.extend.fr.js">&lt;/script>
+&lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
+                Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding some useful validators!
+            </p>
+            <br/>
+
+            <h5>Here is the list of parsley.extra validators</h5>
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Api</th>
+                      <th>Description</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Min Words</td>
+                      <td><code>data-minwords="6"</code></td>
+                      <td>Validate that a field has at least 6 words.</td>
+                  </tr>
+                  <tr>
+                    <td>Max Words</td>
+                    <td><code>data-maxwords="6"</code></td>
+                    <td>Validate that a field has 6 words maximum.</td>
+                  </tr>
+                  <tr>
+                    <td>Range Words</td>
+                    <td><code>data-rangewords="[6,10]"</code></td>
+                    <td>Validate that a field has between 6 and 10 words.</td>
+                  </tr>
+                  <tr>
+                    <td>Greater Than</td>
+                    <td><code>data-greaterthan="#elem"</code></td>
+                    <td>Validate that a field's value is greater than #elem's value.</td>
+                  </tr>
+                  <tr>
+                    <td>Less Than</td>
+                    <td><code>data-lessthan="#elem"</code></td>
+                    <td>Validate that a field's value is lower than #elem's value.</td>
+                  </tr>
+                  <tr>
+                    <td>Before date</td>
+                    <td><code>data-beforedate="#elem"</code></td>
+                    <td>Validate that a field's date is before #elem's date.</td>
+                  </tr>
+                  <tr>
+                    <td>After date</td>
+                    <td><code>data-afterdate="#elem"</code></td>
+                    <td>Validate that a field's date is after #elem's date.</td>
+                  </tr>
+                  <tr>
+                    <td>In list</td>
+                    <td><code>data-inlist="foo, bar, foo bar"</code></td>
+                    <td>
+                      Validates that a field's value is present within the value list. You can define the delimiter using <code>data-inlist-delimiter=","</code>. Delimiter defaults to <code>","</code>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Luhn</td>
+                    <td><code>data-luhn="true"</code></td>
+                    <td>
+                      Validates that a fields value passes the Luhn algorithm. Validates credit card numbers, as well as some other kinds of account numbers.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>American Date</td>
+                    <td><code>data-americandate="true"</code></td>
+                    <td>
+                      Validates that a value is a valid American Date. Allows for slash, dot and hyphen delimiters and condensed dates (e.g., M/D/YY MM.DD.YYYY MM-DD-YY).
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+
             </section>
             <a href="#top" class="top pull-right">Top</a>
 
@@ -1002,13 +1164,14 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
   , successClass: 'parsley-success'
   , errorClass: 'parsley-error'
   , validators: {}
+  , showErrors: true
   , messages: {}
 
   //some quite advanced configuration here..
   , validateIfUnchanged: false
-  , errors: {
-    classHandler: function ( elem ) {}
-  , container: function ( elem, template, isRadioOrCheckbox ) {}
+  , errors: {                     // specify where parsley error-success classes are set
+    classHandler: function ( elem, isRadioOrCheckbox ) {}
+  , container: function ( elem, isRadioOrCheckbox ) {}
   , errorsWrapper: '&lt;ul>&lt;/ul>'
   , errorElem: '&lt;li>&lt;/li>'
   }
@@ -1075,6 +1238,14 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>Useful if you want to integrate the form validation process inside custom functions.</td>
                         <td  class="not-for-mobile">
 <pre><code>$( '#form' ).parsley( 'validate' );</code></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Test if form valid</td>
+                        <td>Boolean</td>
+                        <td>Useful if you want to integrate the form validation process inside custom functions, without triggering error messages.</td>
+                        <td  class="not-for-mobile">
+<pre><code>$( '#form' ).parsley( 'isValid' );</code></pre>
                         </td>
                     </tr>
                     <tr>
@@ -1199,15 +1370,28 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                         <td>Add parsley-success and parsley-error to direct parent:
 <pre><code>$('#form').parsley( {
     errors: {
-        classHandler: function ( elem ) {
+        classHandler: function ( elem, isRadioOrCheckbox ) {
             return $( elem ).parent();
         }
     }
 } );</code></pre></td>
                     </tr>
                     <tr>
+                      <td>Change error container</td>
+                      <td><p>Override the container that the <code>errorWrapper</code> (ie. by default the <code>&lt;ul&gt;&lt;/ul&gt;</code> containing the errors) is inserted into.</p>
+                      <p>By default this function does not return anything and so the <code>errorWrapper</code> is added to the DOM directly after the element containing the error, however if you override this function in your options you can return an alternative container where the <code>errorWrapper</code> will be appended</p>
+                      <p>For example, to have the error messages appear before the field with the error in a <code>div</code> with the class <code>.parsley-container</code>:<pre><code>errors: {
+    container: function (element, isRadioOrCheckbox) {
+        var $container = element.parent().find(".parsley-container");
+        if ($container.length === 0) {
+            $container = $("&lt;div class='parsley-container'&gt;&lt;/div&gt;").insertBefore(element);
+        }
+        return $container;
+    }
+}</code></pre></p></td></tr>
+                    <tr>
                         <td>Advanced changes</td>
-                        <td>See <code>errorsWrapper</code>, <code>errorElem</code> and <code>container</code> errors properties in Parsley default options.</td>
+                        <td>See <code>errorsWrapper</code>, <code>errorElem</code> errors properties in Parsley default options.</td>
                     </tr>
                 </tbody>
               </table>
@@ -1228,53 +1412,7 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
 &lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
                     Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding your own translations messages in your language!
                 </p>
-                <br/><br/>
-                <h4>Extra Validators</h4>
-                <p>
-                    There are some extra validators, not shipped along with default Parsley, because they're more specific and less common, and there is no need to add weight to Parsley instead of calling these validators only when needed. Just call <code>parsley.extend.js</code> or <code>dist/parsley.extend.min.js</code> like this:
-<pre><code>&lt;script type="text/javascript" src="parsley.extend.fr.js">&lt;/script>
-&lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
-                    Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding some useful validators!
-                </p>
                 <br/>
-
-                <h5>Here is the list of parsley.extra validators</h5>
-                <table class="table table-striped table-bordered table-hover">
-                  <thead>
-                      <tr>
-                          <th>Name</th>
-                          <th>Api</th>
-                          <th>Description</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>Min Words</td>
-                          <td><code>data-minwords="6"</code></td>
-                          <td>Validate that a field has at least 6 words.</td>
-                      </tr>
-                      <tr>
-                        <td>Max Words</td>
-                        <td><code>data-maxwords="6"</code></td>
-                        <td>Validate that a field has 6 words maximum.</td>
-                      </tr>
-                      <tr>
-                        <td>Range Words</td>
-                        <td><code>data-rangewords="[6,10]"</code></td>
-                        <td>Validate that a field has between 6 and 10 words.</td>
-                      </tr>
-                      <tr>
-                        <td>Greater Than</td>
-                        <td><code>data-greaterthan="#elem"</code></td>
-                        <td>Validate that a field's value is greater than #elem's value.</td>
-                      </tr>
-                      <tr>
-                        <td>Less Than</td>
-                        <td><code>data-lessthan="#elem"</code></td>
-                        <td>Validate that a field's value is lower than #elem's value.</td>
-                      </tr>
-                  </tbody>
-                </table>
             </section>
             <section>
                 <a name="integrations"></a>
@@ -1284,10 +1422,11 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
                 </div>
                 <ul>
                   <li><a href="https://github.com/agiliq/django-parsley">Django</a></li>
+                  <li><a href="https://github.com/mekishizufu/parsley-rails">Rails</a></li>
+                  <li><a href="https://github.com/code-troopers/wicket-jsr303-parsley">Wicket</a></li>
                 </ul>
             </section>
             <a href="#top" class="top pull-right">Top</a>
-
       <hr>
 
       <div class="footer">
@@ -1300,13 +1439,18 @@ data-message="You must enter a 10 characters alphanumeric value"</code></pre>
     <script type="text/javascript" src="parsley.js"></script>
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
     <script type="text/javascript">
-        hljs.initHighlightingOnLoad();
+        try {
+            hljs.initHighlightingOnLoad();
+        } catch ( err ) {}
 
         $( '#demo-form' ).parsley( { listeners: {
             onFormSubmit: function ( isFormValid, event ) {
                 if ( isFormValid && !$( '#good-to-go').length ) {
-                    $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Good to go!</span>' );
+                    $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Yay, good to go!</span>' );
                     $( '#demo-form-valid' ).hide();
+                    $( '#not-good-to-go' ).hide();
+                } else if ( !isFormValid && !$( '#not-good-to-go').length ) {
+                    $( '#demo-form-valid' ).after( '<span id="not-good-to-go" style="display:block;margin-top:5px;" class="alert alert-error">Oops! Seems there are some errors..</span>' );
                 }
             },
             onFieldError: function ( field, constraint ) {

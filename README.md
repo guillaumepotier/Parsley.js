@@ -8,13 +8,20 @@ Javascript form validation, without actually writing a single line of javascript
 
 See TODO.md
 
-#Version
+#Curent Stable Version
 
-1.1.9
+1.1.16
 
 # Browser compatibility
 
-No idea yet.. You tell me !
+  - IE 7/8 with jQuery < 1.9 and parsley.min, not parsley.standalone
+  - IE 9+
+  - FF 14+
+  - Chrome
+
+# Requirements
+
+jQuery 1.6+
 
 #Install dependencies for documentation and tests
 
@@ -30,7 +37,8 @@ No idea yet.. You tell me !
 
 You'll need ruby, and Google Closure compiler: `gem install closure-compiler`. Then, just call:
 
-`./bin/build.sh version` where version is the build release. eg: `./bin/build.sh 1.1.2`
+* Linux/Mac: `./bin/build.sh version` where version is the build release. eg: `./bin/build.sh 1.1.2`
+* Windows: `./bin/build.ps1 version` where version is the build release. eg: `./bin/build.ps1 1.1.2`
 
 They'll be created and dumped in the dist/ directory
 
@@ -44,7 +52,7 @@ Add new validators in `parsley.extend.js` and minify it. No validators will be a
 ##Localization
 
 If file does not exist, create it into `ì18n/` directory with same syntax as others.  
-Reference file is French one! ;)
+Reference file is _messages.en.fr
 
 ##Integrations
 
@@ -52,6 +60,8 @@ Create integration with other framework as a separate Github repo and send a pul
 Some integrations are
 
 * [Django](https://github.com/agiliq/django-parsley)
+* [Rails](https://github.com/mekishizufu/parsley-rails)
+* [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
 
 ## Global
 
