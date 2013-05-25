@@ -36,10 +36,22 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         return new Number(val) > new Number($( elem ).val());
       }
 
+      , greaterthanorequal: function ( val, elem, self ) {
+        self.options.validateIfUnchanged = true;
+
+        return new Number(val) >= new Number($( elem ).val());
+      }
+
       , lessthan: function ( val, elem, self ) {
         self.options.validateIfUnchanged = true;
 
         return new Number(val) < new Number($( elem ).val());
+      }
+
+      , lessthanorequal: function ( val, elem, self ) {
+        self.options.validateIfUnchanged = true;
+
+        return new Number(val) <= new Number($( elem ).val());
       }
 
       , beforedate: function ( val, elem, self) {
@@ -102,7 +114,9 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , maxwords:       "This value should have %s words maximum."
       , rangewords:     "This value should have between %s and %s words."
       , greaterthan:    "This value should be greater than %s."
+      , greaterthanorequal:    "This value should be greater than or euqal to %s."
       , lessthan:       "This value should be less than %s."
+      , lessthanorequal:       "This value should be less than or euqal to %s."
       , beforedate:     "This date should be before %s."
       , afterdate:      "This date should be after %s."
       , luhn:           "This value should pass the luhn test."
