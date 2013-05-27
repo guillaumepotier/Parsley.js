@@ -12,7 +12,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , number:     "Поле должно быть числом."
           , digits:     "Поле должно содержать только цифры."
           , dateIso:    "Поле должно быть датой в формате (ГГГГ-ММ-ДД)."
-          , alphanum:   "Поле должно содержать только  цифры и буквы"
+          , alphanum:   "Поле должно содержать только цифры и буквы"
           , phone:      "Поле должно содержать корректный номер телефона"
         }
       , notnull:        "Поле должно быть не нулевым."
@@ -41,4 +41,4 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , americandate:   "В поле должна быть корректная дата в формате MM/DD/YYYY."
     }
   });
-}(window.jQuery || window.Zepto)); 
+}(window.jQuery || window.Zepto));
