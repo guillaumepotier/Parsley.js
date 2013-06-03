@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Parsleyjs Mocha Tests</title>
-    <link rel="stylesheet" href="mocha.css" />
+    <link rel="stylesheet" href="resources/mocha.css" />
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -22,15 +22,17 @@
             while ( new Date() < ms ){}
         }
 
-        function jsAppend ( js_file, fn ) {
-          if ( 'string' === typeof js_file ) {
+        function jsAppend ( js_file, path, fn ) {
+          if ( 'string' === typeof js_file )
               js_file = [ js_file ];
-          }
+
+          if ( 'undefined' === typeof path )
+              path = '';
 
           for ( var i in js_file ) {
               var js_script = document.createElement( 'script' );
               js_script.type = "text/javascript";
-              js_script.src = js_file[ i ];
+              js_script.src = path + js_file[ i ];
               document.getElementsByTagName( 'head' )[ 0 ].appendChild( js_script );
           }
 
@@ -288,7 +290,9 @@
                 break;
         }
 
-        jsAppend( [ 'mocha.js', 'expect.js', 'sinon.js', 'tests.js' ] );
+        jsAppend( [ 'mocha.js', 'expect.js', 'sinon.js' ], 'resources/', function () {
+            jsAppend( 'tests.js' );
+        } );
 
         window.onload = function() {
 
