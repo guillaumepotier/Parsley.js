@@ -14,7 +14,7 @@ See TODO.md
 
 # Browser compatibility
 
-  - IE 7/8 with jQuery < 1.9 and parsley.min, not parsley.standalone
+  - IE 7/8 (with jQuery < 1.9, not Zepto)
   - IE 9+
   - FF 14+
   - Chrome
