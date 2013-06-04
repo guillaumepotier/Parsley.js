@@ -260,7 +260,10 @@
 
     <script type="text/javascript">
         var jquery = 'resources/jquery.min.js'
-          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js';
+          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js'
+          , validatorjs = '../resources/validator-0.3.1.js';
+
+        jsAppend( validatorjs );
 
         switch ( location.hash ) {
             case '#zepto':

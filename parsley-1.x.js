@@ -15,7 +15,7 @@
   * @class Validator
   * @constructor
   */
-  var Validatorjs = function ( options ) {
+  var Validator = function ( options ) {
     /**
     * Error messages
     *
@@ -53,12 +53,12 @@
     this.init( options );
   };
 
-  Validatorjs.prototype = {
+  Validator.prototype = {
 
-    constructor: Validatorjs
+    constructor: Validator
 
     /**
-    * Validatorjs list. Built-in validators functions
+    * Validator list. Built-in validators functions
     *
     * @property validators
     * @type {Object}
@@ -172,18 +172,19 @@
 
         var manage = function ( isConstraintValid, message ) {
           // remove error message if we got a server message, different from previous message
-          if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validatorjs.messages.remote && message !== self.Validatorjs.messages.remote ) {
-            $( self.errorHandler.ulError + ' .remote' ).remove();
+          if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
+            $( self.ulError + ' .remote' ).remove();
           }
 
           self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
-          self.errorHandler.manageValidationResult();
+          self.manageValidationResult();
         };
 
         // transform string response into object
         var handleResponse = function ( response ) {
-          if ( 'object' === typeof response )
+          if ( 'object' === typeof response ) {
             return response;
+          }
 
           try {
             response = $.parseJSON( response );
@@ -272,8 +273,8 @@
     * Add / override a validator in validators list
     *
     * @method addValidator
-    * @param {String} name Validatorjs name. Will automatically bindable through data-name=''
-    * @param {Function} fn Validatorjs function. Must return {Boolean}
+    * @param {String} name Validator name. Will automatically bindable through data-name=''
+    * @param {Function} fn Validator function. Must return {Boolean}
     */
     , addValidator: function ( name, fn ) {
       this.validators[ name ] = fn;
@@ -306,185 +307,6 @@
     }
   };
 
-  var ErrorHandler = function ( parsleyField ) {
-    this.init( parsleyField );
-  };
-
-  ErrorHandler.prototype = {
-
-    constructor: ErrorHandler
-
-    , init: function ( parsleyField ) {
-      this.parsleyField = parsleyField;
-      this.options= parsleyField.options;
-      this.ulErrorManagement();
-    }
-
-    /**
-    * Manage ul error Container
-    *
-    * @private
-    * @method ulErrorManagement
-    */
-    , ulErrorManagement: function () {
-      this.ulError = '#' + this.parsleyField.getHash();
-      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.parsleyField.getHash() ).addClass( 'parsley-error-list' );
-    }
-
-    /**
-    * Fired when all validators have be executed
-    * Returns true or false if field is valid or not
-    * Display errors messages below failed fields
-    * Adds parsley-success or parsley-error class on fields
-    *
-    * @method manageValidationResult
-    * @return {Boolean} Is field valid or not
-    */
-    , manageValidationResult: function () {
-      var valid = null;
-
-      for ( var constraint in this.parsleyField.constraints ) {
-        if ( false === this.parsleyField.constraints[ constraint ].valid ) {
-          this.manageError( this.parsleyField.constraints[ constraint ] );
-          valid = false;
-        } else if ( true === this.parsleyField.constraints[ constraint ].valid ) {
-          this.removeError( this.parsleyField.constraints[ constraint ].name );
-          valid = false !== valid;
-        }
-      }
-
-      this.parsleyField.valid = valid;
-
-      if ( true === this.parsleyField.valid ) {
-        this.removeErrors();
-        this.parsleyField.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
-        return true;
-      } else if ( false === this.parsleyField.valid ) {
-        this.parsleyField.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
-        return false;
-      }
-
-      return valid;
-    }
-
-    /**
-    * Remove li / ul error
-    *
-    * @method removeError
-    * @param {String} constraintName Method Name
-    */
-    , removeError: function ( constraintName ) {
-      var liError = this.ulError + ' .' + constraintName
-        , that = this;
-
-      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
-        $( this ).remove();
-
-        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
-          that.removeErrors();
-        } } ) : $( liError ).remove();
-
-      // remove li error, and ul error if no more li inside
-      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
-        this.removeErrors();
-      }
-    }
-
-    /**
-    * Add li error
-    *
-    * @method addError
-    * @param {Object} { minlength: "error message for minlength constraint" }
-    */
-    , addError: function ( error ) {
-      for ( var constraint in error ) {
-        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
-
-        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
-      }
-    }
-
-    /**
-    * Remove all ul / li errors
-    *
-    * @method removeErrors
-    */
-    , removeErrors: function () {
-      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
-    }
-
-    /**
-    * Remove ul errors and parsley error or success classes
-    *
-    * @method reset
-    */
-    , reset: function () {
-      this.parsleyField.valid = null;
-      this.removeErrors();
-      this.parsleyField.validatedOnce = false;
-      this.parsleyField.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
-
-      for ( var constraint in this.parsleyField.constraints ) {
-        this.parsleyField.constraints[ constraint ].valid = null;
-      }
-
-      return this.parsleyField;
-    }
-
-    /**
-    * Add li / ul errors messages
-    *
-    * @method manageError
-    * @param {Object} constraint
-    */
-    , manageError: function ( constraint ) {
-      // display ulError container if it has been removed previously (or never shown)
-      if ( !$( this.ulError ).length )
-        this.manageErrorContainer();
-
-      // TODO: refacto properly
-      // if required constraint but field is not null, do not display
-      if ( 'required' === constraint.name && null !== this.parsleyField.getVal() && this.parsleyField.getVal().length > 0 ) {
-        return;
-      // if empty required field and non required constraint fails, do not display
-      } else if ( this.parsleyField.isRequired && 'required' !== constraint.name && ( null === this.parsleyField.getVal() || 0 === this.parsleyField.getVal().length ) ) {
-        return;
-      }
-
-      // TODO: refacto error name w/ proper & readable function
-      var constraintName = constraint.name
-        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
-        , liError = {}
-        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
-            this.parsleyField.Validatorjs.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.parsleyField.Validatorjs.messages[ constraintName ] ?
-              this.parsleyField.Validatorjs.messages.defaultMessage : this.parsleyField.Validatorjs.formatMesssage( this.parsleyField.Validatorjs.messages[ constraintName ], constraint.requirements ) ) );
-
-      // add liError if not shown. Do not add more than once custom errorMessage if exist
-      if ( !$( this.ulError + ' .' + liClass ).length ) {
-        liError[ liClass ] = message;
-        this.addError( liError );
-      }
-    }
-
-    /**
-    * Create ul error container
-    *
-    * @method manageErrorContainer
-    */
-    , manageErrorContainer: function () {
-      var errorContainer = this.options.errorContainer || this.options.errors.container( this.parsleyField.element, this.parsleyField.isRadioOrCheckbox )
-        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
-
-      if ( 'undefined' !== typeof errorContainer ) {
-        $( errorContainer ).append( ulTemplate );
-        return;
-      }
-
-      !this.parsleyField.isRadioOrCheckbox ? this.parsleyField.$element.after( ulTemplate ) : this.parsleyField.$element.parent().after( ulTemplate );
-    }
-
-  };
-
   /**
   * ParsleyField class manage each form field inside a validated Parsley form.
   * Returns if field valid or not depending on its value and constraints
@@ -495,11 +317,12 @@
   */
   var ParsleyField = function ( element, options, type ) {
     this.options = options;
-    this.Validatorjs = new Validatorjs( options );
+    this.Validator = new Validator( options );
 
     // if type is ParsleyFieldMultiple, just return this. used for clone
-    if ( 'ParsleyFieldMultiple' === type )
+    if ( type === 'ParsleyFieldMultiple' ) {
       return this;
+    }
 
     this.init( element, type || 'ParsleyField' );
   };
@@ -532,7 +355,8 @@
         this.errorClassHandler = this.options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element;
       }
 
-      this.errorHandler = new ErrorHandler( this );
+      // error ul dom management done only once at init
+      this.ulErrorManagement();
 
       // bind some html5 properties
       this.bindHtml5Constraints();
@@ -541,8 +365,9 @@
       this.addConstraints();
 
       // bind parsley events if validators have been registered
-      if ( this.hasConstraints() )
+      if ( this.hasConstraints() ) {
         this.bindValidationEvents();
+      }
     }
 
     , setParent: function ( elem ) {
@@ -614,7 +439,7 @@
         for ( var name in constraint ) {
           name = name.toLowerCase();
 
-          if ( 'function' === typeof this.Validatorjs.validators[ name ] ) {
+          if ( 'function' === typeof this.Validator.validators[ name ] ) {
             this.constraints[ name ] = {
                 name: name
               , requirements: constraint[ name ]
@@ -659,7 +484,7 @@
       this.constraints[ constraint.name ] = $.extend( true, this.constraints[ constraint.name ], constraint );
 
       if ( 'string' === typeof message ) {
-        this.Validatorjs.messages[ constraint.name ] = message ;
+        this.Validator.messages[ constraint.name ] = message ;
       }
 
       // force field validation next check and reset validation events
@@ -710,7 +535,7 @@
         + 'Message';
 
       if ( 'undefined' !== typeof this.options[ customMessage ] ) {
-        this.Validatorjs.addMessage( 'type' === constraint ? this.options[ constraint ] : constraint, this.options[ customMessage ], 'type' === constraint );
+        this.Validator.addMessage( 'type' === constraint ? this.options[ constraint ] : constraint, this.options[ customMessage ], 'type' === constraint );
       }
     }
 
@@ -849,7 +674,7 @@
 
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
       if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
-        this.errorHandler.reset();
+        this.reset();
         return null;
       }
 
@@ -861,7 +686,7 @@
       valid = this.applyValidators();
 
       if ( 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors ) {
-        this.errorHandler.manageValidationResult();
+        this.manageValidationResult();
       }
 
       return valid;
@@ -894,7 +719,7 @@
       var valid = null;
 
       for ( var constraint in this.constraints ) {
-        var result = this.Validatorjs.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
+        var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
 
         if ( false === result ) {
           valid = false;
@@ -908,6 +733,170 @@
       }
 
       return valid;
+    }
+
+    /**
+    * Fired when all validators have be executed
+    * Returns true or false if field is valid or not
+    * Display errors messages below failed fields
+    * Adds parsley-success or parsley-error class on fields
+    *
+    * @method manageValidationResult
+    * @return {Boolean} Is field valid or not
+    */
+    , manageValidationResult: function () {
+      var valid = null;
+
+      for ( var constraint in this.constraints ) {
+        if ( false === this.constraints[ constraint ].valid ) {
+          this.manageError( this.constraints[ constraint ] );
+          valid = false;
+        } else if ( true === this.constraints[ constraint ].valid ) {
+          this.removeError( this.constraints[ constraint ].name );
+          valid = false !== valid;
+        }
+      }
+
+      this.valid = valid;
+
+      if ( true === this.valid ) {
+        this.removeErrors();
+        this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+        return true;
+      } else if ( false === this.valid ) {
+        this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
+        return false;
+      }
+
+      return valid;
+    }
+
+    /**
+    * Manage ul error Container
+    *
+    * @private
+    * @method ulErrorManagement
+    */
+    , ulErrorManagement: function () {
+      this.ulError = '#' + this.hash;
+      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+    }
+
+    /**
+    * Remove li / ul error
+    *
+    * @method removeError
+    * @param {String} constraintName Method Name
+    */
+    , removeError: function ( constraintName ) {
+      var liError = this.ulError + ' .' + constraintName
+        , that = this;
+
+      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
+        $( this ).remove();
+
+        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
+          that.removeErrors();
+        } } ) : $( liError ).remove();
+
+      // remove li error, and ul error if no more li inside
+      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
+        this.removeErrors();
+      }
+    }
+
+    /**
+    * Add li error
+    *
+    * @method addError
+    * @param {Object} { minlength: "error message for minlength constraint" }
+    */
+    , addError: function ( error ) {
+      for ( var constraint in error ) {
+        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
+
+        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
+      }
+    }
+
+    /**
+    * Remove all ul / li errors
+    *
+    * @method removeErrors
+    */
+    , removeErrors: function () {
+      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
+    }
+
+    /**
+    * Remove ul errors and parsley error or success classes
+    *
+    * @method reset
+    */
+    , reset: function () {
+      this.valid = null;
+      this.removeErrors();
+      this.validatedOnce = false;
+      this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+
+      for ( var constraint in this.constraints ) {
+        this.constraints[ constraint ].valid = null;
+      }
+
+      return this;
+    }
+
+    /**
+    * Add li / ul errors messages
+    *
+    * @method manageError
+    * @param {Object} constraint
+    */
+    , manageError: function ( constraint ) {
+      // display ulError container if it has been removed previously (or never shown)
+      if ( !$( this.ulError ).length ) {
+        this.manageErrorContainer();
+      }
+
+      // TODO: refacto properly
+      // if required constraint but field is not null, do not display
+      if ( 'required' === constraint.name && null !== this.getVal() && this.getVal().length > 0 ) {
+        return;
+      // if empty required field and non required constraint fails, do not display
+      } else if ( this.isRequired && 'required' !== constraint.name && ( null === this.getVal() || 0 === this.getVal().length ) ) {
+        return;
+      }
+
+      // TODO: refacto error name w/ proper & readable function
+      var constraintName = constraint.name
+        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
+        , liError = {}
+        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
+            this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
+              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
+
+      // add liError if not shown. Do not add more than once custom errorMessage if exist
+      if ( !$( this.ulError + ' .' + liClass ).length ) {
+        liError[ liClass ] = message;
+        this.addError( liError );
+      }
+    }
+
+    /**
+    * Create ul error container
+    *
+    * @method manageErrorContainer
+    */
+    , manageErrorContainer: function () {
+      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox )
+        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
+
+      if ( 'undefined' !== typeof errorContainer ) {
+        $( errorContainer ).append( ulTemplate );
+        return;
+      }
+
+      !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
     }
 
     /**
@@ -929,7 +918,7 @@
     */
     , destroy: function () {
       this.$element.removeClass( 'parsley-validated' );
-      this.errorHandler.reset().$element.off( '.' + this.type ).removeData( this.type );
+      this.reset().$element.off( '.' + this.type ).removeData( this.type );
     }
   };
 
@@ -943,7 +932,7 @@
   var ParsleyFieldMultiple = function ( element, options, type ) {
     this.initMultiple( element, options );
     this.inherit( element, options );
-    this.Validatorjs = new Validatorjs( options );
+    this.Validator = new Validator( options );
 
     // call ParsleyField constructor
     this.init( element, type || 'ParsleyFieldMultiple' );
@@ -1219,14 +1208,14 @@
     */
     , reset: function () {
       for ( var item = 0; item < this.items.length; item++ ) {
-        this.items[ item ].errorHandler.reset();
+        this.items[ item ].reset();
       }
     }
   };
 
   /**
   * Parsley plugin definition
-  * Provides an interface to access public Validatorjs, ParsleyForm and ParsleyField functions
+  * Provides an interface to access public Validator, ParsleyForm and ParsleyField functions
   *
   * @class Parsley
   * @constructor
