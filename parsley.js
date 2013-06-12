@@ -792,16 +792,19 @@
       var liError = this.ulError + ' .' + constraintName
         , that = this;
 
-      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
-        $( this ).remove();
-
-        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
-          that.removeErrors();
-        } } ) : $( liError ).remove();
-
-      // remove li error, and ul error if no more li inside
-      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
-        this.removeErrors();
+      if ( this.options.animate ) {
+        $( liError ).fadeOut( this.options.animateDuration, function () {
+          $( this ).remove();
+          if ( that.ulError && $( that.ulError ).children().length === 0 ) {
+            that.removeErrors();
+          }
+        } )
+      } else {
+        // remove li error, and ul error if no more li inside
+        $( liError ).remove();
+        if ( this.ulError && $( this.ulError ).children().length === 0 ) {
+          this.removeErrors();
+        }
       }
     }
 
