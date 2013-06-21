@@ -80,14 +80,24 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       }
 
       , americandate: function ( val, elem, self) {
-        if(!/^([01]?[1-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
-        	return false;
+        var delimiter = self.options.americandateDelimiter;
+        if( delimiter === undefined && !/^([01]?[1-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
+          return false;
         }
         var parts = val.split(/[.\/-]+/);
+        if (delimiter !== undefined) parts = val.split(delimiter);   
+        if (self.options.americandate === "strict"){
+          if( parts.length === 1 ||
+              parts[2].length !== 4 ||
+              parts[0].length !== 2 ||
+              parts[1].length !== 2) {
+            return false;
+          }
+        }
         var day = parseInt(parts[1], 10);
         var month = parseInt(parts[0], 10);
         var year = parseInt(parts[2], 10);
-        if(year == 0 || month == 0 || month > 12) {
+        if(year === 0 || month === 0 || month > 12) {
           return false;
         }
         var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
@@ -96,6 +106,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         }
         return day > 0 && day <= monthLength[month - 1];
       }
+
     }
     , messages: {
         minwords:       "This value should have %s words at least."
