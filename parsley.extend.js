@@ -81,11 +81,11 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 
       , americandate: function ( val, elem, self) {
         var delimiter = self.options.americandateDelimiter;
-        if( delimiter === undefined && !/^([01]?[1-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
+        var parts = val.split(/[.\/-]+/);
+        if(typeof delimiter === "undefined" && !/^([01]?[1-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
           return false;
         }
-        var parts = val.split(/[.\/-]+/);
-        if (delimiter !== undefined) parts = val.split(delimiter);   
+        if (typeof delimiter !== "undefined") parts = val.split(delimiter);
         if (self.options.americandate === "strict"){
           if( parts.length === 1 ||
               parts[2].length !== 4 ||
