@@ -82,7 +82,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , americandate: function ( val, elem, self) {
         var delimiter = self.options.americandateDelimiter;
         var parts = val.split(/[.\/-]+/);
-        if(typeof delimiter === "undefined" && !/^([01]?[1-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
+        if(typeof delimiter === "undefined" && !/^([01]?[0-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
           return false;
         }
         if (typeof delimiter !== "undefined") parts = val.split(delimiter);

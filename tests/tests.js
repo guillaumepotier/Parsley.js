@@ -1117,6 +1117,8 @@ var testSuite = function () {
     	 expect( getErrorMessage( '#americanDate', 'americanDate') ).to.be( 'This value should be a valid date (MM/DD/YYYY).' );
     	 triggerSubmitValidation( '#americanDate', '02/08/2012' );
     	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+    	 triggerSubmitValidation( '#americanDate', '10/08/2012' );
+    	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
     	 triggerSubmitValidation( '#americanDate', '2/8/12' );
     	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
     	 triggerSubmitValidation( '#americanDate', '02-08-2012' );
