@@ -35,6 +35,10 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , rangewords:     "Cette valeur doit comprendre %s à %s mots."
       , greaterthan:    "Cette valeur doit être plus grande que %s."
       , lessthan:       "Cette valeur doit être plus petite que %s."
+      , beforedate:     "Cette date doit être inferieure à celle de %s."
+      , afterdate:      "Cette date doit être supérieure à celle de %s."
+      , luhn:           "Cette valeur doit passer l'algorithme de Luhn."
+      , americandate:   "Cette valeur doit être une date valide (MM/DD/YYYY)."
     }
   });
 }(window.jQuery || window.Zepto));
