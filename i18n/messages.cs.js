@@ -13,6 +13,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 				, digits:     "Tato položka musí být číslice."
 				, dateIso:    "Tato položka musí být datum ve formátu YYYY-MM-DD."
 				, alphanum:   "Tato položka musí být alfanumerická."
+				, phone:      "Tato položka musí být platné telefonní číslo."
 			}
 			, notnull:        "Tato položka nesmí být null."
 			, notblank:       "Tato položka nesmí být prázdná."
