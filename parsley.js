@@ -347,6 +347,10 @@
       this.val = this.$element.val();
       this.isRequired = false;
       this.constraints = {};
+      this.valueLengthUseful = true;
+
+      if (this.$element.is("select, input[type=range], input[type=number]"))
+          this.valueLengthUseful = false;
 
       // overriden by ParsleyItemMultiple if radio or checkbox input
       if ( 'undefined' === typeof this.isRadioOrCheckbox ) {
@@ -625,7 +629,7 @@
       }
 
       // start validation process only if field has enough chars and validation never started
-      if ( !this.isRadioOrCheckbox && val.length < this.options.validationMinlength && !this.validatedOnce ) {
+      if ( this.valueLengthUseful && val.length < this.options.validationMinlength && !this.validatedOnce ) {
         return true;
       }
 
@@ -956,6 +960,7 @@
       this.hash = this.getName();
       this.siblings = this.group ? '[data-group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.isRadioOrCheckbox = true;
+      this.valueLengthUseful = false;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
       this.errorClassHandler = options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element.parent();
