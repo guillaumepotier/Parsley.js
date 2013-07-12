@@ -52,7 +52,7 @@ Add new validators in `parsley.extend.js` and minify it. No validators will be a
 ##Localization
 
 If file does not exist, create it into `ì18n/` directory with same syntax as others.  
-Reference file is _messages.en.fr
+Reference file is _messages.en.js
 
 ##Integrations
 
