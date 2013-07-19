@@ -1,4 +1,3 @@
-
 window.ParsleyConfig = window.ParsleyConfig || {};
 
 (function ($) {
@@ -20,8 +19,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , notblank:       "A mező nem lehet üres."
       , required:       "A mező kitöltése kötelező."
       , regexp:         "A megadott érték érvénytelen."
-      , min:            "A megadott érték nem lehet kisebb mint %s."
-      , max:            "A megadott érték nem lehet nagyobb mint %s."
+      , min:            "A megadott érték nem lehet kisebb, mint %s."
+      , max:            "A megadott érték nem lehet nagyobb, mint %s."
       , range:          "A megadott értéknek %s és %s között kell lennie."
       , minlength:      "A megadott szöveg túl rövid! Legalább %s karakter legyen."
       , maxlength:      "A megadott szöveg túl hosszú. Maximum %s karakter legyen."
@@ -32,11 +31,11 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , equalto:        "A megadott értékeknek egyezniük kell!"
 
       // parsley.extend ///////////////////////////////
-      , minwords:       "A mezőben a szavak számának el kell érnie a %s-t."
-      , maxwords:       "A mezőben a szavak száma maxium %s lehet."
+      , minwords:       "A mezőben a szavak száma nem érni el a %s-t."
+      , maxwords:       "A mezőben a szavak száma maximum %s lehet."
       , rangewords:     "A mezőben a szavak számának %s és %s között kell lennie."
       , greaterthan:    "A megadott érték több mint a %s."
-      , lessthan:       "A megadott érték kevesebb mint a %s."
+      , lessthan:       "A megadott érték kevesebb, mint a %s."
       , beforedate:     "A megadott dátum nem lehet %s vagy ez után."
       , afterdate:      "A megadott dátum nem lehet %s vagy ez elött."
       , americandate:  "A megadott érték nem dátum! (HH/NN/ÉÉÉÉ)."
