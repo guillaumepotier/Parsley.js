@@ -393,8 +393,6 @@ var testSuite = function () {
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
 	triggerSubmitValidation( '#typeemail', '"Abc@def"@example.com' );
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', 'customer/department=shipping@example.com' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
 	triggerSubmitValidation( '#typeemail', '$A12345@example.com' );
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
 	triggerSubmitValidation( '#typeemail', '!def!xyz%abc@example.com' );
