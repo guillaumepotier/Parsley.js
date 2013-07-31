@@ -27,7 +27,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , range:          "字段值应该大于 %s 并小于 %s."
       , minlength:      "字段值太短了，长度应该大于等于 %s 个字符"
       , maxlength:      "字段值太长了，长度应该小于等于 %s 个字符"
-      , rangelength:    "字段值长度错醋，长度应该在 %s 和 %s 个字符之间"
+      , rangelength:    "字段值长度错了，长度应该在 %s 和 %s 个字符之间"
       , mincheck:       "你至少要选择 %s 个选项"
       , maxcheck:       "你最多只能选择 %s 个选项"
       , rangecheck:     "你只能选择 %s 到 %s 个选项"
