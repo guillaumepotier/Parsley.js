@@ -73,7 +73,7 @@
       }
 
       // Works on all inputs. val is object for checkboxes
-      , required: function ( val ) {
+      , required: function ( val, elem, self ) {
 
         // for checkboxes and select multiples. Check there is at least one required value
         if ( 'object' === typeof val ) {
@@ -86,7 +86,7 @@
           return false;
         }
 
-        return this.notnull( val ) && this.notblank( val );
+        return self.$element.attr( 'required' ) || self.$element.data( 'required' ) || self.$element.hasClass( 'required' ) ? this.notnull( val ) && this.notblank( val ) : true;
       }
 
       , type: function ( val, type ) {
