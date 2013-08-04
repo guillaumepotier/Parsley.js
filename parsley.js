@@ -122,7 +122,7 @@
         }
 
         // test regExp if not null
-        return '' !== val ? regExp.test( val ) : false;
+        return '' !== val ? regExp.test( val ) : true;
       }
 
       , regexp: function ( val, regExp, self ) {
