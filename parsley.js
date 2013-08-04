@@ -160,6 +160,9 @@
       }
 
       , remote: function ( val, url, self ) {
+        if (!self.options.remoteValidation)
+          return null
+
         var result = null
           , data = {}
           , dataType = {};
@@ -1288,6 +1291,7 @@
     , animate: true                             // fade in / fade out error messages
     , animateDuration: 300                      // fadein/fadout ms time
     , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
+    , remoteValidation: true                    // whether or not to let parsley auto-try remote validation
     , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
     , successClass: 'parsley-success'           // Class name on each valid input
     , errorClass: 'parsley-error'               // Class name on each invalid input
