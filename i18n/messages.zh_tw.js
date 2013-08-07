@@ -31,7 +31,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , mincheck:       "至少要選擇 %s 個選項"
       , maxcheck:       "最多只能選擇 %s 個選項"
       , rangecheck:     "你只能選擇 %s 到 %s 個選項"
-      , equalto:        "字段值应该和给定的值一样"
+      , equalto:        "欄位的值不一致"
 
       // parsley.extend ///////////////////////////////
     }
