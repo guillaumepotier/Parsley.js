@@ -112,8 +112,10 @@ $( '#scenario-validation-after-field-reset' ).parsley( 'addListener', {
   }
 } );
 
+var suiteVersion = $( '#info' ).text();
+
 var testSuite = function () {
-  describe ( 'Parsley.js test suite', function () {
+  describe ( suiteVersion, function () {
 
     /***************************************
             Fields validators binding
@@ -383,21 +385,9 @@ var testSuite = function () {
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
         triggerSubmitValidation( '#typeemail', 'foo+baz@bar.com' );
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
+        triggerSubmitValidation( '#typeemail', 'foo.bar@gmail.com' );
+        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
         triggerSubmitValidation( '#typeemail', 'foo.bar@bar.com.ext' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', '"Abc\\@def"@example.com' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', '"Fake Name"@example.com' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', '"Joe\\\\Blow"@example.com' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', '"Abc@def"@example.com' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', '$A12345@example.com' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', '!def!xyz%abc@example.com' );
-        expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
-	triggerSubmitValidation( '#typeemail', '_somename@example.com' );
         expect( $( '#typeemail' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'email html5', function () {
