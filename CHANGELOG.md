@@ -1,6 +1,13 @@
 #Changelog
 
-**1.1.16 (current stable)**
+**1.1.17 (current stable)**
+
+  - various localizations updates + new localizations
+  - Ability to bind Parsley on a DOM elem, not only form (#245)
+  - accept higher jquery versions in bower.json
+  - added spanish codes validation in i10n/
+
+**1.1.16**
 
   - fixed IE7 bug with checkboxes / radio buttons that were always required.
   - html error messages could be used (#220)

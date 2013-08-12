@@ -180,7 +180,7 @@
                 <span class="label label-important">Heads up!</span> <strong>Le #UX touch</strong>:
                 <ul>
                     <li>
-                        <strong>Min char validation</strong>: Parsley by default <strong>does not proceed with field validation when less than 3 chars have been input</strong>. Do not assault your users with error messages to soon! <i>(this behavior is configurable)</i>.
+                        <strong>Min char validation</strong>: Parsley by default <strong>does not proceed with field validation when less than 3 chars have been input</strong>. Do not assault your users with error messages too soon! <i>(this behavior is configurable)</i>.
                     </li>
                     <li>
                         <strong>Quick error removal</strong>: when a field is detected and shown as invalid, further checks are done on each keypress to try to <strong>quickly remove error messages once the field is ok</strong>.
@@ -304,7 +304,12 @@
                             </table>
                         </td>
                     </tr>
-
+                    <tr>
+                        <td><code>data-bind</code></td>
+                        <td></td>
+                        <td>The attribute data-validate must be used on a form. However, if you want to bind the validation to another DOM element, just add this attribute and set it to <code>true</code></td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
             </section>
@@ -1419,6 +1424,7 @@ data-error-message="You must enter a 10 characters alphanumeric value"</code></p
                   <li><a href="https://github.com/agiliq/django-parsley">Django</a></li>
                   <li><a href="https://github.com/mekishizufu/parsley-rails">Rails</a></li>
                   <li><a href="https://github.com/code-troopers/wicket-jsr303-parsley">Wicket</a></li>
+                  <li><a href="https://github.com/johannes-gehrs/wtforms-parsleyjs">WTForms</a></li>
                 </ul>
             </section>
             <a href="#top" class="top pull-right">Top</a>

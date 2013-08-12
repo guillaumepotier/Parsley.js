@@ -103,7 +103,7 @@
             regExp = /^\w+$/;
             break;
           case 'email':
-            regExp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i;
+            regExp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))){2,6}$/i;
             break;
           case 'url':
             val = new RegExp( '(https?|s?ftp|git)', 'i' ).test( val ) ? val : 'http://' + val;
@@ -625,11 +625,22 @@
       }
 
       // start validation process only if field has enough chars and validation never started
-      if ( !this.isRadioOrCheckbox && val.length < this.options.validationMinlength && !this.validatedOnce ) {
+      if ( !this.isRadioOrCheckbox && this.getLength(val) < this.options.validationMinlength && !this.validatedOnce ) {
         return true;
       }
 
       this.validate();
+    }
+
+    /**
+     * Get the length of a given value
+     *
+     * @method getLength
+     * @return {int} The length of the value
+     */
+    , getLength: function(val) {
+      if (!val || !val.hasOwnProperty('length')) return 0;
+      return val.length;
     }
 
     /**
@@ -768,6 +779,11 @@
         return false;
       }
 
+      // remove li error, and ul error if no more li inside
+      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
+        this.removeErrors();
+      }
+
       return valid;
     }
 
@@ -798,11 +814,6 @@
         if ( that.ulError && $( that.ulError ).children().length === 0 ) {
           that.removeErrors();
         } } ) : $( liError ).remove();
-
-      // remove li error, and ul error if no more li inside
-      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
-        this.removeErrors();
-      }
     }
 
     /**
@@ -1260,7 +1271,7 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) ) {
+    if ( $( this ).is( 'form' ) || true === $( this ).data( 'bind' ) ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
@@ -1283,7 +1294,7 @@
   $.fn.parsley.defaults = {
     // basic data-api overridable properties here..
     inputs: 'input, textarea, select'           // Default supported inputs.
-    , excluded: 'input[type=hidden], :disabled' // Do not validate input[type=hidden] & :disabled.
+    , excluded: 'input[type=hidden], input[type=file], :disabled' // Do not validate input[type=hidden] & :disabled.
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
     , animate: true                             // fade in / fade out error messages
     , animateDuration: 300                      // fadein/fadout ms time

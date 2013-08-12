@@ -10,12 +10,12 @@ See TODO.md
 
 #Curent Stable Version
 
-1.1.16
+1.1.17
 
 # Browser compatibility
 
-  - IE 7/8 with jQuery < 1.9 and parsley.min, not parsley.standalone
-  - IE 9+
+  - IE 7/8 (with jQuery < 2.x.x, parsley.min, not parsley.standalone)
+  - IE 9+ (latest jQuery and Zepto)
   - FF 14+
   - Chrome
 
@@ -52,7 +52,7 @@ Add new validators in `parsley.extend.js` and minify it. No validators will be a
 ##Localization
 
 If file does not exist, create it into `ì18n/` directory with same syntax as others.  
-Reference file is _messages.en.fr
+Reference file is _messages.en.js
 
 ##Integrations
 
@@ -62,6 +62,7 @@ Some integrations are
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
 * [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
+* [WTForms](https://github.com/johannes-gehrs/wtforms-parsleyjs)
 
 ## Global
 
