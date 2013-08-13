@@ -114,7 +114,7 @@
           case 'dateIso':
             regExp = /^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/;
             break;
-          case 'phone':
+          case 'phone': case 'tel':
             regExp = /^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/;
             break;
           default:
@@ -391,7 +391,7 @@
       }
 
       // add html5 supported types & options
-      if ( 'undefined' !== typeof this.$element.attr( 'type' ) && new RegExp( this.$element.attr( 'type' ), 'i' ).test( 'email url number range' ) ) {
+      if ( 'undefined' !== typeof this.$element.attr( 'type' ) && new RegExp( this.$element.attr( 'type' ), 'i' ).test( 'email url number range tel' ) ) {
         this.options.type = this.$element.attr( 'type' );
 
         // number and range types could have min and/or max values
