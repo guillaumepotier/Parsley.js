@@ -89,12 +89,14 @@
         return this.notnull( val ) && this.notblank( val );
       }
 
-      , type: function ( val, type ) {
+      , type: function ( val, type, self ) {
         var regExp;
 
         switch ( type ) {
           case 'number':
-            regExp = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
+            regExp = new RegExp('^-?(?:\\d+|\\d{1,3}(?:' + 
+              (self.options.thousandsSeparator === '.' ? '\\.' : self.options.thousandsSeparator) + '\\d{3})+)?(?:' +
+              (self.options.decimalMark === '.' ? '\\.' : self.options.decimalMark) + '\\d+)?$');
             break;
           case 'digits':
             regExp = /^\d+$/;
@@ -1321,6 +1323,9 @@
       , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
       , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
     }
+
+    , decimalMark: '.'
+    , thousandsSeparator: ','
   };
 
   /* PARSLEY auto-bind DATA-API + Global config retrieving
