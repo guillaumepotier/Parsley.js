@@ -1181,6 +1181,8 @@ data-error-message="You must enter a 10 characters alphanumeric value"</code></p
     , onFieldError: function ( elem, constraints, ParsleyField ) {}
     , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}
   }
+  , thousandsSeparator: ','
+  , decimalMark: '.'
 }</code></pre>
                         </td>
                         <td  class="not-for-mobile"><p>Add a custom validator that checks if number is a multiple of another:</p>
@@ -1411,6 +1413,15 @@ data-error-message="You must enter a 10 characters alphanumeric value"</code></p
 <pre><code>&lt;script type="text/javascript" src="/i18n/messages.fr.js">&lt;/script>
 &lt;script type="text/javascript" src="parsley.js">&lt;/script></code></pre>
                     Please, feel free to <a href="http://github.com/guillaumepotier/Parsley.js">fork and contribute</a> by adding your own translations messages in your language!
+                </p>
+                <br/>
+                <h4>Number format localizations</h4>
+                <p>
+                    The decimal mark and thousand separator defaults can be overwritten.
+                    <pre><code>$.extend($.fn.parsley.defaults, {
+  thousandsSeparator: '.'
+  , decimalMark: ','
+} );</code></pre>
                 </p>
                 <br/>
             </section>
