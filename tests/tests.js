@@ -63,6 +63,16 @@ $( '#validator-tests' ).parsley( {
   }
 } );
 
+$( '#validator-i18n-tests' ).parsley( {
+  thousandsSeparator: '.',
+  decimalMark: ','
+} );
+
+$( '#validator-i18n-tests2' ).parsley( {
+  thousandsSeparator: '',
+  decimalMark: ','
+} );
+
 $( '#onFieldValidate-form' ).parsley( { listeners: {
   onFieldValidate: function ( elem ) {
     if ( $( elem ).val() === "foo" || $( elem ).val() === "bar" ) {
@@ -429,6 +439,21 @@ var testSuite = function () {
         expect( $( '#typenumber' ).hasClass( 'parsley-success' ) ).to.be( true );
         triggerSubmitValidation( '#typenumber', '42.5' );
         expect( $( '#typenumber' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+      it ( 'i18n number', function () {
+        // thousands separator = '.', decimal mark = ','
+        triggerSubmitValidation( '#typei18nnumber', '42.5' );
+        expect( $( '#typei18nnumber' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#typei18nnumber', '1,042.5' );
+        expect( $( '#typei18nnumber' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#typei18nnumber', '1.042,5' );
+        expect( $( '#typei18nnumber' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        // thousands separator = '', decimal mark = ','
+        triggerSubmitValidation( '#typei18nnumber2', '1.042,5' );
+        expect( $( '#typei18nnumber2' ).hasClass( 'parsley-error' ) ).to.be( true );
+        triggerSubmitValidation( '#typei18nnumber2', '1042,5' );
+        expect( $( '#typei18nnumber2' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
       it ( 'aphanum', function () {
         triggerSubmitValidation( '#typealphanum', '@&' );

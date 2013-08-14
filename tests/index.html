@@ -4,19 +4,6 @@
     <title>Parsleyjs Mocha Tests</title>
     <link rel="stylesheet" href="mocha.css" />
     <script type="text/javascript">
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-XXXXXXXXX-X']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
-    </script>
-    <script type="text/javascript">
         function pause ( ms ) {
             ms += new Date().getTime();
             while ( new Date() < ms ){}
@@ -131,6 +118,12 @@
             <input type="text" id="datavalue2" name="datavalue2" data-value="foo" value="" data-required="true" />
 
             <input type="submit" />
+        </form>
+        <form id="validator-i18n-tests" data-validate="parsley">
+            <input type="text" id="typei18nnumber" data-type="number" />
+        </form>
+        <form id="validator-i18n-tests2" data-validate="parsley">
+            <input type="text" id="typei18nnumber2" data-type="number" />
         </form>
         <form id="validate-form" data-validate="parsley">
             <input type="text" id="validate1" data-required="true" />
