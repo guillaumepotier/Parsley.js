@@ -1107,7 +1107,7 @@
           
         } );
 
-        this.$element.find('input[type=button],[type=submit], button').on( 'click' , false, function(){
+        this.$element.find('input[type=submit], button').on( 'click' , false, function(){
           trackControl(this);
         } );
 
