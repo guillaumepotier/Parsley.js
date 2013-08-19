@@ -1094,27 +1094,34 @@
         this.$form = this.$element.parents('form').first();
 
         //monkey buisness so that we can track which element submitted the form.
-        // zepto does not support jquery psuedo css selectors, so we cant use 'input:text' as our selector.
-        this.$element.find('input,textarea').on( 'keypress' , false, function(e){
+        // zepto does not support jquery psuedo css selectors, so we cant use 'input:text' as our selector. 
+        this.$element.on( 'keypress', 'input', function(e) {
           var $this = $(this);
 
           if ($this.attr('type') == '' ||  $this.attr('type') === 'text'){
             var code = (e.keyCode ? e.keyCode : e.which);
             if(code == 13) { //Enter keycode
-              trackControl(this);
+              trackControl(this, e);
             }  
           }
           
         } );
 
-        this.$element.find('input[type=submit], button').on( 'click' , false, function(){
-          trackControl(this);
-        } );
+        this.$element.on( 'click', 'input[type=submit], button', function(e) {
+          trackControl(this, e);
+        });
 
         //dont know if we should move this out to a function on ParsleyForm, leaving it here for now.
-        var trackControl= function(control){
-          var $control = $(control);
-          $control.attr('data-causedsubmit', true);
+        var trackControl= function(control, event){
+          
+          //zepto doesnt have isDefaultPrevented
+          var defaultPrevented = event.originalEvent ? event.originalEvent.defaultPrevented : event.isDefaultPrevented();
+          if(!defaultPrevented){
+            var $control = $(control);
+
+            $control.attr('data-causedsubmit', true);
+          }
+          
         };
 
       }

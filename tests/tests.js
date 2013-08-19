@@ -77,6 +77,11 @@ $( '#div-validate2' ).parsley( { listeners: {
   }
 } } );
 
+$( '#submit-stopped' ).click( function(e) { 
+  //return false;
+  e.preventDefault();
+} );
+
 $( '#focus-form' ).parsley( { listeners: {
   onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
     $( ParsleyForm.focusedField ).addClass( 'on-focus' );
@@ -892,6 +897,12 @@ var testSuite = function () {
         expect( submitted ).to.be( true );
         submitted = false;
 
+        $('#submit-stopped').click();
+        expect( submitted ).to.be( false );
+        $( '#submit-novalidateform' ).click();
+        expect( submitted ).to.be( true );
+        submitted = false;
+
         $('#input-validate1').val('');
         $( '#submit-div1' ).click();
         expect( $( '#input-validate1' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -923,7 +934,7 @@ var testSuite = function () {
         $('#input-validate1').val('');
         $( '#submit-novalidateform' ).click();
         expect( submitted ).to.be( true );
-        
+
 
       } )
       it ( 'test error focus', function () {
