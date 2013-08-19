@@ -1087,7 +1087,46 @@
         self.addItem( this );
       });
 
-      this.$element.on( 'submit.' + this.type , false, $.proxy( this.validate, this ) );
+      if(this.$element.is('form')){
+        this.$form = this.$element;
+      }else{
+        
+        this.$form = this.$element.parents('form').first();
+
+        //monkey buisness so that we can track which element submitted the form.
+        // zepto does not support jquery psuedo css selectors, so we cant use 'input:text' as our selector. 
+        this.$element.on( 'keypress', 'input', function(e) {
+          var $this = $(this);
+
+          if ($this.attr('type') == '' ||  $this.attr('type') === 'text'){
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if(code == 13) { //Enter keycode
+              trackControl(this, e);
+            }  
+          }
+          
+        } );
+
+        this.$element.on( 'click', 'input[type=submit], button', function(e) {
+          trackControl(this, e);
+        });
+
+        //dont know if we should move this out to a function on ParsleyForm, leaving it here for now.
+        var trackControl= function(control, event){
+          
+          //zepto doesnt have isDefaultPrevented
+          var defaultPrevented = event.originalEvent ? event.originalEvent.defaultPrevented : event.isDefaultPrevented();
+          if(!defaultPrevented){
+            var $control = $(control);
+
+            $control.attr('data-causedsubmit', true);
+          }
+          
+        };
+
+      }
+
+      this.$form.on( 'submit.' + this.type , false, $.proxy( this.onSubmit, this ) );
     }
 
     /**
@@ -1173,9 +1212,34 @@
         this.focusedField.focus();
       }
 
+      // if(typeof event !== 'undefined'){
+      //   event.srcElement = this.$element;
+      //   event.target = this.$element;
+      // };
+      
       this.options.listeners.onFormSubmit( valid, event, this );
 
       return valid;
+    }
+
+    /**
+    * Handels form being submitted. Processes each field for validation.
+    * Display errors, call custom onFormSubmit() function
+    *
+    * @method onSubmit
+    * @param {Object} event jQuery Event
+    * @return {Boolean} Is form valid or not
+    */
+    , onSubmit: function ( event ){
+
+      var $causedSubmit = this.$element.find('[data-causedsubmit]');
+      if(this.$element.is('form') || $causedSubmit.length > 0 ){
+        $causedSubmit.removeAttr('data-causedsubmit');
+        return this.validate(event);
+      } else { 
+        return true; //were going to return true, because we are dealing with an unvalidated part of the form
+      }
+
     }
 
     , isValid: function () {
