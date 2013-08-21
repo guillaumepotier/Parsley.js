@@ -1005,7 +1005,24 @@ var testSuite = function () {
 
            // even with #onFieldValidatefalse invalid, validation is ok
            expect( $( '#onFieldValidatetrue-form' ).parsley( 'validate' ) ).to.be( true );
-         } )
+        } )
+        it( 'Do not submit a form even if Parsley valid, with custom onFormValidate callback', function () {
+          var global;
+
+          $( '#onFormValidateCustom' ).parsley( {
+            listeners: {
+              onFormSubmit: function () {
+                return global;
+              }
+            }
+          } );
+
+          $( '#onFormValidateCustom-field' ).val( 'correct@email.ext' );
+          expect( $( '#onFormValidateCustom' ).parsley( 'validate' ) ).to.be( true );
+
+          global = false;
+          expect( $( '#onFormValidateCustom' ).parsley( 'validate' ) ).to.be( false );
+        } )
       } )
     } )
 
