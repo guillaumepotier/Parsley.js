@@ -1203,7 +1203,7 @@ data-error-message="You must enter a 10 characters alphanumeric value"</code></p
                     <tr>
                         <td>Add a listener</td>
                         <td></td>
-                        <td>Allows you, even after Parsleys initial form binding, to add a custom listener. Available listeners currently are: <code>onFieldValidate</code>, <code>onFieldError</code>, <code>onFieldSuccess</code> and <code>onFormSubmit</code>. Their passed arguments are listed above in Default Plugin config.</td>
+                        <td>Allows you, even after Parsleys initial form binding, to add a custom listener. Available listeners currently are: <code>onFieldValidate</code>, <code>onFieldError</code>, <code>onFieldSuccess</code> and <code>onFormSubmit</code>. Their passed arguments are listed above in Default Plugin config. Note that if onFormSubmit callback returns <code>false</code>, form won't be submitted, even if Parsley valid. It allows you to add another custom check on top of Parsley.</td>
                         <td class="not-for-mobile">
 <pre><code>$( '#form' ).parsley( 'addListener', {
     onFieldValidate: function ( elem ) {

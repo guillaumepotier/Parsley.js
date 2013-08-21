@@ -1,5 +1,10 @@
 #Changelog
 
+**1.1.18**
+
+  - onFormSubmit now prevent form submission if returns (bool) false.
+    It allows adding another custom check on top of Parsley.
+
 **1.1.17 (current stable)**
 
   - various localizations updates + new localizations
