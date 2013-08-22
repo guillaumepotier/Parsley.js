@@ -64,6 +64,12 @@ Some integrations are
 * [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
 * [WTForms](https://github.com/johannes-gehrs/wtforms-parsleyjs)
 
+##Conditional Logic
+
+If you want to show and hide form elements based on answers to certain fields, the library below extends parsely.js adding conditional logic.
+
+* [Parsely-conditions](http://themonk.github.io/parsely-conditions/)
+
 ## Global
 
 * fork repository
