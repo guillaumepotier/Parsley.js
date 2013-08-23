@@ -861,7 +861,7 @@
       this.options.animate ? $liError.fadeOut( this.options.animateDuration, function () {
         $( this ).remove();
 
-        if ( !this.errorWrapperIsParent && this.getErrorWrapper().children().length === 0 ) {
+        if ( !that.errorWrapperIsParent && that.getErrorWrapper().children().length === 0 ) {
           that.removeErrors();
         } } ) : $liError.remove();
     }
