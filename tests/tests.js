@@ -31,10 +31,56 @@ var getErrorMessage = function ( idOrClass, constraintName ) {
 
 $( '#validate-form' ).parsley( { listeners: {
   onFormSubmit: function ( isFormValid, event ) {
-    $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
+    $( event.srcElement ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
     event.preventDefault();
   }
 } } );
+
+var submitted = true;
+
+$( document ).on('submit', function(e){
+  submitted = true;
+  e.preventDefault();
+});
+
+$( '#div-validate1' ).parsley( { listeners: {
+  onFormSubmit: function ( isFormValid, event ) {
+    var $div = $( '#div-validate1' );
+    if (isFormValid){
+      $div
+        .addClass('form-valid')
+        .removeClass('form-invalid');
+    } else{
+      $div
+        .removeClass('form-valid')
+        .addClass('form-invalid');
+    }
+
+    event.preventDefault();
+  }
+} } );
+
+$( '#div-validate2' ).parsley( { listeners: {
+  onFormSubmit: function ( isFormValid, event ) {
+    var $div = $( '#div-validate2' );
+    if (isFormValid){
+      $div
+        .addClass('form-valid')
+        .removeClass('form-invalid');
+    } else{
+      $div
+        .removeClass('form-valid')
+        .addClass('form-invalid');
+    }
+
+    event.preventDefault();
+  }
+} } );
+
+$( '#submit-stopped' ).click( function(e) { 
+  //return false;
+  e.preventDefault();
+} );
 
 $( '#focus-form' ).parsley( { listeners: {
   onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
@@ -875,6 +921,55 @@ var testSuite = function () {
         $( '#validate1' ).val( 'foo' );
         $( '#validate-form-submit' ).click();
         expect( $( '#validate-form' ).hasClass( 'form-valid' ) ).to.be( true );
+      } )
+      it ( 'non validated form', function () {
+         
+        submitted = false;
+
+        $('#input-novalidate').val('');
+        $( '#submit-novalidateform' ).click();
+        expect( submitted ).to.be( true );
+        submitted = false;
+
+        $('#submit-stopped').click();
+        expect( submitted ).to.be( false );
+        $( '#submit-novalidateform' ).click();
+        expect( submitted ).to.be( true );
+        submitted = false;
+
+        $('#input-validate1').val('');
+        $( '#submit-div1' ).click();
+        expect( $( '#input-validate1' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( submitted ).to.be( false );
+        expect( $( '#div-validate1' ).hasClass( 'form-invalid' ) ).to.be( true );
+        $('#input-validate1').val('foo');
+        $( '#submit-div1' ).click();
+        expect( $( '#input-validate1' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#div-validate1' ).hasClass( 'form-invalid' ) ).to.be( false );
+        expect( $( '#div-validate1' ).hasClass( 'form-valid' ) ).to.be( true );
+        expect( submitted ).to.be( true );
+
+        submitted = false;
+
+        $('#textarea-validate2').val('');
+        $( '#submit-div2' ).click();
+        expect( $( '#textarea-validate2' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( submitted ).to.be( false );
+        expect( $( '#div-validate2' ).hasClass( 'form-invalid' ) ).to.be( true );
+        $('#textarea-validate2').val('foo');
+        $( '#submit-div2' ).click();
+        expect( $( '#textarea-validate2' ).hasClass( 'parsley-error' ) ).to.be( false );
+        expect( $( '#div-validate2' ).hasClass( 'form-invalid' ) ).to.be( false );
+        expect( $( '#div-validate2' ).hasClass( 'form-valid' ) ).to.be( true );
+        expect( submitted ).to.be( true );
+
+        submitted = false;
+
+        $('#input-validate1').val('');
+        $( '#submit-novalidateform' ).click();
+        expect( submitted ).to.be( true );
+
+
       } )
       it ( 'test error focus', function () {
         $( '#focus-form' ).parsley( 'validate' );

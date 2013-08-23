@@ -266,6 +266,25 @@
         <div data-validate="parsley" data-bind="true">
             <input type="text" id="bindNonFormInput" data-required="true" value="" />
         </div>
+
+        <form id="form-novalidate">
+            <input type="text" id="input-novalidate" data-required="true" value="" />
+
+            <input type="submit" id="submit-novalidateform"/>
+
+            <div data-validate="parsley" id="div-validate1" data-bind="true">
+                <input type="text" id="input-validate1" data-required="true" value="" />
+                <input type="submit" id="submit-div1"/>
+                <input type="submit" id="submit-stopped"/>
+            </div>
+
+            <div data-validate="parsley" id="div-validate2" data-bind="true">
+                <textarea id="textarea-validate2" data-required="true">
+                </textarea>
+                <input type="submit" id="submit-div2"/>
+            </div>
+
+        </form>
     </div>
 
     <script type="text/javascript">
