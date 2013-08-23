@@ -1,4 +1,4 @@
-#Parsley.js
+﻿#Parsley.js
 
 [![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
 
@@ -63,6 +63,7 @@ Some integrations are
 * [Rails](https://github.com/mekishizufu/parsley-rails)
 * [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
 * [WTForms](https://github.com/johannes-gehrs/wtforms-parsleyjs)
+* [Cascade Framework](https://github.com/jslegers/cascadeframework/)
 
 ## Global
 
