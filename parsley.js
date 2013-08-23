@@ -798,12 +798,32 @@
     */
     , wrapperManagement: function () {
       if(this.options.errors.errorsWrapper !== ''){
-        this.$errorWrapper = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+        //this.$errorWrapper = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
         this.errorWrapperIsParent = false;
       } else {
-        this.$errorWrapper = this.$element.parent();
+        //this.$errorWrapper = this.$element.parent();
         this.errorWrapperIsParent = true;
       }
+    }
+
+    /**
+    * Manage error wrapper
+    *
+    * @private
+    * @method wrapperManagement
+    */
+    , getErrorWrapper: function () {
+      var $wrapper;
+      if( !this.errorWrapperIsParent ) {
+        $wrapper = $( '#' + this.hash );
+
+        if( $wrapper.length === 0 ) {
+          $wrapper = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+        }
+      } else {
+        $wrapper = this.$element.parent();
+      }
+      return $wrapper;      
     }
 
     /**
@@ -823,7 +843,9 @@
     * @param {String} constraintName Method Name
     */
     , getError: function ( constraintName ) {
-      return this.$errorWrapper.find( '.' + this.hash + '.' + constraintName);
+      var $container = this.isRadioOrCheckbox ? this.$element.parent().parent() : this.getErrorWrapper();
+
+      return $container.find( '.' + this.hash + '.' + constraintName);
     }
 
     /**
@@ -839,7 +861,7 @@
       this.options.animate ? $liError.fadeOut( this.options.animateDuration, function () {
         $( this ).remove();
 
-        if ( !this.errorWrapperIsParent && this.$errorWrapper.children().length === 0 ) {
+        if ( !this.errorWrapperIsParent && this.getErrorWrapper().children().length === 0 ) {
           that.removeErrors();
         } } ) : $liError.remove();
     }
@@ -863,7 +885,7 @@
         if(this.errorWrapperIsParent){
           this.$element.after( $liTemplate );
         } else{
-          this.$errorWrapper.append( $liTemplate );
+          this.getErrorWrapper().append( $liTemplate );
         }
 
       }
@@ -875,12 +897,14 @@
     * @method removeErrors
     */
     , removeErrors: function () {
-      if( this.options.animate ){
-        this.$errorWrapper.fadeOut( this.options.animateDuration, function () { 
-          $( this ).remove(); 
-        } );
-      } else { 
-        this.$errorWrapper.remove();
+      if( !this.errorWrapperIsParent ){
+        if( this.options.animate ){
+          this.getErrorWrapper().fadeOut( this.options.animateDuration, function () { 
+            $( this ).remove(); 
+          } );
+        } else { 
+          this.getErrorWrapper().remove();
+        }
       }
     }
 
@@ -910,7 +934,7 @@
     */
     , manageError: function ( constraint ) {
       // display ulError container if it has been removed previously (or never shown)
-      if ( typeof this.$errorWrapper === 'undefined' || this.$errorWrapper.length === 0 || !this.$errorWrapper.closest('body').length > 0) {
+      if ( typeof this.getErrorWrapper() === 'undefined' || this.getErrorWrapper().length === 0 || !this.getErrorWrapper().closest('body').length > 0) {
         this.manageErrorContainer();
       }
 
@@ -947,16 +971,16 @@
       var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox );
 
       if(this.options.animate){
-        this.$errorWrapper.show();
+        this.getErrorWrapper().show();
       }
 
       if ( 'undefined' !== typeof errorContainer ) {
-        $( errorContainer ).append( this.$errorWrapper );
+        $( errorContainer ).append( this.getErrorWrapper() );
         return;
       }
 
       if(!this.errorWrapperIsParent){
-        !this.isRadioOrCheckbox ? this.$element.after( this.$errorWrapper ) : this.$element.parent().after( this.$errorWrapper );
+        !this.isRadioOrCheckbox ? this.$element.after( this.getErrorWrapper() ) : this.$element.parent().after( this.getErrorWrapper() );
       }
     }
 
