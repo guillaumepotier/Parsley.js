@@ -892,6 +892,25 @@
     }
 
     /**
+    * Update existing li error
+    *
+    * @method updateError
+    * @param {Object} { minlength: "error message for minlength constraint" }
+    */
+    , updateError: function ( element, error ) {
+      var $element = $(element);
+      for ( var constraint in error ) {
+        
+        if( this.options.animate ) {
+          $element.html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration );
+        } else { 
+          $element.html( error[ constraint ] );
+        }
+
+      }
+    }
+
+    /**
     * Remove all ul / li errors
     *
     * @method removeErrors
@@ -934,7 +953,7 @@
     */
     , manageError: function ( constraint ) {
       // display ulError container if it has been removed previously (or never shown)
-      if ( typeof this.getErrorWrapper() === 'undefined' || this.getErrorWrapper().length === 0 || !this.getErrorWrapper().closest('body').length > 0) {
+      if ( !this.getErrorWrapper().closest('body').length > 0) {
         this.manageErrorContainer();
       }
 
@@ -955,10 +974,14 @@
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
-      // add liError if not shown. Do not add more than once custom errorMessage if exist
-      if ( !this.getError( liClass ).length ) {
-        liError[ liClass ] = message;
+      // add liError if not shown. Do not add more than once custom errorMessage if exist. 
+      liError[ liClass ] = message;
+
+      var $errorElement = this.getError( liClass );
+      if ( !$errorElement.length ) {
         this.addError( liError );
+      } else { 
+        this.updateError( $errorElement, liError );
       }
     }
 
