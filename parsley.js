@@ -735,16 +735,18 @@
         if ( false === result ) {
           valid = false;
           this.constraints[ constraint ].valid = valid;
-          this.options.listeners.onFieldError( this.element, this.constraints, this );
         } else if ( true === result ) {
           this.constraints[ constraint ].valid = true;
           valid = false !== valid;
-
-          // if onFieldSuccess returns (bool) false, consider that field si invalid
-          if (false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
-            valid = false;
-          }
         }
+      }
+
+      // listeners' ballet
+      if (false === valid) {
+        this.options.listeners.onFieldError( this.element, this.constraints, this );
+      } else if (true === valid && false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
+        // if onFieldSuccess returns (bool) false, consider that field si invalid
+        valid = false;
       }
 
       return valid;

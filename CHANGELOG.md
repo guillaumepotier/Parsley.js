@@ -1,5 +1,10 @@
 #Changelog
 
+**1.1.19**
+
+  - `onFieldSuccess` and onFieldError` are now called once by validation
+    and not on each validator check
+
 **1.1.18 (current stable)**
 
   - `onFormSubmit` now prevent form submission if returns (bool) false.
