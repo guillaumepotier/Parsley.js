@@ -77,6 +77,10 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
     }
   },
   onFieldSuccess: function ( field ) {
+    if ('foo@foo.foo' === field.val()) {
+      return false;
+    }
+
     $( field ).addClass( 'success-foo-bar' );
   },
   onFormSubmit: function ( isFormValid, event, focusField ) {
@@ -962,6 +966,11 @@ var testSuite = function () {
           expect( $( '#onFieldValidate2' ).hasClass( 'error-type_email' ) ).to.be( true );
         } )
         it ( 'test onFieldSuccess()', function () {
+          // if onFieldSuccess returns false, consider field as invalid
+          $( '#onFieldValidate2' ).val( 'foo@foo.foo' );
+          expect( $( '#onFieldValidate-form' ).parsley( 'validate' ) ).to.be( false );
+          expect( $( '#onFieldValidate2' ).hasClass( 'success-foo-bar' ) ).to.be( false );
+
           $( '#onFieldValidate2' ).val( 'foo@baz.baz' );
           $( '#onFieldValidate-form' ).parsley( 'validate' );
           expect( $( '#onFieldValidate2' ).hasClass( 'success-foo-bar' ) ).to.be( true );

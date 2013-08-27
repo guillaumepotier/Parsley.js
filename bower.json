@@ -1,7 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "1.1.17",
-  "main": "parsley.js",
+  "version": "1.1.18",
   "dependencies": {
     "jquery": ">=1.8"
   }

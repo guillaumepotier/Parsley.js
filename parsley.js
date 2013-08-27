@@ -739,7 +739,11 @@
         } else if ( true === result ) {
           this.constraints[ constraint ].valid = true;
           valid = false !== valid;
-          this.options.listeners.onFieldSuccess( this.element, this.constraints, this );
+
+          // if onFieldSuccess returns (bool) false, consider that field si invalid
+          if (false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
+            valid = false;
+          }
         }
       }
 
