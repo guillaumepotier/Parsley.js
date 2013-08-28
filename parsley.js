@@ -215,6 +215,37 @@
         return result;
       }
 
+      , callback: function ( val, callbackKey, self ) {
+
+        var success = function(){
+          for ( var key in self.constraints){
+            if( key.indexOf(callbackKey) !== -1 ){
+              self.updtConstraint( { name: key, valid: true }, '' );
+            }
+          }
+          self.updtConstraint( { name: callbackKey, valid: true }, '' );
+          self.manageValidationResult(); // we need to add a constraint before calling this, otherwise it thinks its an unvalidated field.
+        }
+
+        var error = function(errors){
+          
+          if( typeof errors === 'object' ) {
+            for ( var key in errors) {
+              var error = errors[key];
+              self.updtConstraint( { name: callbackKey + '-' + key, valid: false }, error );
+            }
+          } else {
+            self.updtConstraint( { name: callbackKey , valid: false }, errors );
+          }
+          
+          self.manageValidationResult();
+        }
+
+        self.Validator.callbacks[callbackKey]( val, success, error );
+
+        return null;
+      }
+
       /**
       * Aliases for checkboxes constraints
       */
@@ -230,17 +261,30 @@
         return this.rangelength( obj, arrayRange );
       }
     }
+    /**
+    * Callback list.
+    *
+    * @property callbacks
+    * @type {Object}
+    */
+    , callbacks: {}
+
 
     /*
-    * Register custom validators and messages
+    * Register custom validators, messages, and callback validators
     */
     , init: function ( options ) {
       var customValidators = options.validators
-        , customMessages = options.messages;
+        , customMessages = options.messages
+        , callbacks = options.callbacks;
 
       var key;
       for ( key in customValidators ) {
         this.addValidator(key, customValidators[ key ]);
+      }
+
+      for ( key in callbacks ) {
+        this.addCallback(key, callbacks[ key ]);
       }
 
       for ( key in customMessages ) {
@@ -278,6 +322,17 @@
     */
     , addValidator: function ( name, fn ) {
       this.validators[ name ] = fn;
+    }
+
+    /**
+    * Registers a reusable callback validator
+    *
+    * @method addCallback
+    * @param {String} name Callback name.
+    * @param {Function} fn Validator function. Must have signature function( val, success, error). Call success and error functions based on results.
+    */
+    , addCallback: function ( name, fn ) {
+      this.callbacks[ name ] = fn;
     }
 
     /**
@@ -481,7 +536,11 @@
     * @param {Object} constraint
     */
     , updtConstraint: function ( constraint, message ) {
-      this.constraints[ constraint.name ] = $.extend( true, this.constraints[ constraint.name ], constraint );
+
+      //zepto doesnt handle this.constraints[ constraint.name ] being undefined, were going to hand in {} if its nothing
+      var source = typeof this.constraints[ constraint.name ]  === 'undefined' ? {} : this.constraints[ constraint.name ];
+
+      this.constraints[ constraint.name ] = $.extend( true, source, constraint );
 
       if ( 'string' === typeof message ) {
         this.Validator.messages[ constraint.name ] = message ;
@@ -730,7 +789,29 @@
       var valid = null;
 
       for ( var constraint in this.constraints ) {
-        var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
+        
+        var result;
+        var name = this.constraints[ constraint ].name;
+
+        var callbackName;
+        var isCallback = false;
+
+        for ( var key in this.Validator.callbacks ) {
+          if( name === key ){
+            isCallback = true;
+            callbackName = name;
+          } else if( name.indexOf(key) === 0 ){
+            isCallback = true;
+            callbackName = key;
+            break;
+          }
+        }
+
+        if( !isCallback ) {
+          result = this.Validator.validators[ name ]( this.val, this.constraints[ constraint ].requirements, this );
+        } else {
+          result = this.Validator.validators[ 'callback' ]( this.val, callbackName, this );
+        }
 
         if ( false === result ) {
           valid = false;
