@@ -1233,9 +1233,13 @@
     , onSubmit: function ( event ){
 
       var $causedSubmit = this.$element.find('[data-causedsubmit]');
-      if(this.$element.is('form') || $causedSubmit.length > 0 ){
+      if( this.$element.is('form') || $causedSubmit.length > 0 ){
         $causedSubmit.removeAttr('data-causedsubmit');
-        return this.validate(event);
+        if( $causedSubmit.data('validate') === false ){
+          return true;
+        } else {
+          return this.validate(event);
+        }
       } else { 
         return true; //were going to return true, because we are dealing with an unvalidated part of the form
       }

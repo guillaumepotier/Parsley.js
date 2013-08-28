@@ -935,6 +935,12 @@ var testSuite = function () {
         $( '#submit-novalidateform' ).click();
         expect( submitted ).to.be( true );
 
+        submitted = false;
+        
+        $('#input-validate1').val('');
+        $( '#submit-novalidate' ).click();
+        expect( submitted ).to.be( true );
+
 
       } )
       it ( 'test error focus', function () {
