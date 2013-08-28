@@ -1221,7 +1221,7 @@ data-error-message="You must enter a 10 characters alphanumeric value"</code></p
                     <tr>
                         <td>Custom callback</td>
                         <td>Object</td>
-                        <td>If you have more complicated server side logic, or need to fire another custom long running error checking proccess, use the callback system to handle your errors. Declare the call back by calling into through the javascript api, then add <code>data-callback="yourcallback"</code> to any field you want validated with that function. The error function can be called with either a single error message, or an object with multiple errors.
+                        <td>If you have more complicated server side logic, or need to fire another custom long running error checking proccess, use the callback system to handle your errors. Declare the call back by parsley through the javascript api, then add <code>data-callback="yourcallback"</code> to any field you want validated with that function. The error function can be called with either a single error message, or an object with multiple errors.
                         </td>
                         <td class="not-for-mobile">
 <pre><code>$( '#form' ).parsley( {
