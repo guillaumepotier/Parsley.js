@@ -77,7 +77,6 @@ $( '#validator-tests' ).parsley( {
           });
         } else if( val === 'error3' ){
           error( 'Single error.' );
-        }
         } else if( val === 'foo' || val === 'bar' || val === '' ){
           success();
         }

@@ -160,8 +160,7 @@
       }
 
       , remote: function ( val, url, self ) {
-        var result = null
-          , data = {}
+        var data = {}
           , dataType = {};
 
         data[ self.$element.attr( 'name' ) ] = val;
@@ -170,52 +169,48 @@
           dataType = { dataType: self.options.remoteDatatype };
         }
 
-        var manage = function ( isConstraintValid, message ) {
-          // remove error message if we got a server message, different from previous message
-          if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
-            $( self.ulError + ' .remote' ).remove();
-          }
+        var callback = function( val, success, error ){
+          // transform string response into object
+          var handleResponse = function ( response ) {
+            if ( 'object' === typeof response ) {
+              return response;
+            }
 
-          self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
-          self.manageValidationResult();
-        };
+            try {
+              response = $.parseJSON( response );
+            } catch ( err ) {}
 
-        // transform string response into object
-        var handleResponse = function ( response ) {
-          if ( 'object' === typeof response ) {
             return response;
           }
 
-          try {
-            response = $.parseJSON( response );
-          } catch ( err ) {}
+          var manageErrorMessage = function ( response ) {
+            return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null ) ) : null;
+          }
 
-          return response;
+          $.ajax( $.extend( {}, {
+              url: url
+            , data: data
+            , type: self.options.remoteMethod || 'GET'
+            , success: function ( response ) {
+              response = handleResponse( response );
+              if(1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success )){
+                success();
+              } else {
+                error(manageErrorMessage( response ));
+              }
+            }
+            , error: function ( response ) {
+              response = handleResponse( response );
+              error( manageErrorMessage( response ) );
+            }
+          }, dataType ) );
+
         }
 
-        var manageErrorMessage = function ( response ) {
-          return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null ) ) : null;
-        }
-
-        $.ajax( $.extend( {}, {
-            url: url
-          , data: data
-          , type: self.options.remoteMethod || 'GET'
-          , success: function ( response ) {
-            response = handleResponse( response );
-            manage( 1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success ), manageErrorMessage( response )
-            );
-          }
-          , error: function ( response ) {
-            response = handleResponse( response );
-            manage( false, manageErrorMessage( response ) );
-          }
-        }, dataType ) );
-
-        return result;
+        return self.Validator.validators.callback( val, callback, 'remote', self );
       }
 
-      , callback: function ( val, callbackKey, self ) {
+      , callback: function ( val, callback, callbackKey, self ) {
 
         var success = function(){
           for ( var key in self.constraints){
@@ -229,7 +224,7 @@
 
         var error = function(errors){
           
-          if( typeof errors === 'object' ) {
+          if( typeof errors === 'object' && errors !== null) {
             for ( var key in errors) {
               var error = errors[key];
               self.updtConstraint( { name: callbackKey + '-' + key, valid: false }, error );
@@ -241,7 +236,7 @@
           self.manageValidationResult();
         }
 
-        self.Validator.callbacks[callbackKey]( val, success, error );
+        callback( val, success, error );
 
         return null;
       }
@@ -796,21 +791,27 @@
         var callbackName;
         var isCallback = false;
 
-        for ( var key in this.Validator.callbacks ) {
-          if( name === key ){
-            isCallback = true;
-            callbackName = name;
-          } else if( name.indexOf(key) === 0 ){
-            isCallback = true;
-            callbackName = key;
-            break;
+        if( name === 'callback' ){
+          isCallback = true;
+          callbackName = this.constraints[ constraint ].requirements;
+        } else { // if( name.indexOf('callback') !== -1 ){
+          for ( var key in this.Validator.callbacks ) {
+            if( name === key ){
+              isCallback = true;
+              callbackName = name;
+              break;
+            } else if( name.indexOf(key) === 0 ){
+              isCallback = true;
+              callbackName = key;
+              break;
+            }
           }
         }
 
         if( !isCallback ) {
           result = this.Validator.validators[ name ]( this.val, this.constraints[ constraint ].requirements, this );
         } else {
-          result = this.Validator.validators[ 'callback' ]( this.val, callbackName, this );
+          result = this.Validator.validators[ 'callback' ]( this.val, this.Validator.callbacks[callbackName], callbackName, this );
         }
 
         if ( false === result ) {
@@ -975,6 +976,8 @@
       if ( !$( this.ulError + ' .' + liClass ).length ) {
         liError[ liClass ] = message;
         this.addError( liError );
+      } else { //update the message
+        $( this.ulError + ' .' + liClass).html(message);
       }
     }
 
