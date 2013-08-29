@@ -236,7 +236,7 @@
           self.manageValidationResult();
         }
 
-        callback( val, success, error );
+        callback.call(self, val, success, error );
 
         return null;
       }
