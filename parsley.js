@@ -1194,7 +1194,11 @@
         }
       }
 
-      this.options.listeners.onFormSubmit( valid, event, this );
+      // if onFormSubmit returns (bool) false, form won't be submitted, even if valid
+      var onFormSubmit = this.options.listeners.onFormSubmit( valid, event, this );
+      if ('undefined' !== typeof onFormSubmit) {
+        return onFormSubmit;
+      }
 
       return valid;
     }
