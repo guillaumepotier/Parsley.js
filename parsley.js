@@ -1176,7 +1176,22 @@
 
       // form is invalid, focus an error field depending on focus policy
       if ( this.focusedField && !valid ) {
-        this.focusedField.focus();
+        // Scroll smoothly
+        if( this.options.scrollDuration > 0 ) {
+          var that = this,
+              top = this.focusedField.offset().top - $(window).height()/2; // Center the window on the field
+
+          $('html,body').animate(
+            {scrollTop: top},
+            this.options.scrollDuration,
+            function() {
+              that.focusedField.focus();
+            }
+          );
+        // Just focus on the field and let the browser do the rest
+        } else {
+          that.focusedField.focus();
+        }
       }
 
       // if onFormSubmit returns (bool) false, form won't be submitted, even if valid
@@ -1308,6 +1323,7 @@
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
     , animate: true                             // fade in / fade out error messages
     , animateDuration: 300                      // fadein/fadout ms time
+    , scrollDuration: 500                       // Duration in ms time of the window scroll when focusing on invalid field (0 = no scroll)
     , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
     , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
     , successClass: 'parsley-success'           // Class name on each valid input
