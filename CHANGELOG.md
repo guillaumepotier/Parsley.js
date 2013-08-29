@@ -1,11 +1,19 @@
 #Changelog
 
-**1.1.18**
+**1.1.19**
 
-  - onFormSubmit now prevent form submission if returns (bool) false.
+  - added scrollTo feature when going to focus field
+  - `onFieldSuccess` and onFieldError` are now called once by validation
+    and not on each validator check
+
+**1.1.18 (current stable)**
+
+  - `onFormSubmit` now prevent form submission if returns (bool) false.
     It allows adding another custom check on top of Parsley.
+  - Similarly, `onFieldSuccess` if returns (bool) false would make
+    field invalid, even if Parsley validators are all green
 
-**1.1.17 (current stable)**
+**1.1.17**
 
   - various localizations updates + new localizations
   - Ability to bind Parsley on a DOM elem, not only form (#245)
