@@ -1177,14 +1177,15 @@
       // form is invalid, focus an error field depending on focus policy
       if ( this.focusedField && !valid ) {
         // Scroll smoothly
-        if( this.options.scrollDuration > 0 ) {
+        if ( this.options.scrollDuration > 0 ) {
           var that = this,
-              top = this.focusedField.offset().top - $(window).height()/2; // Center the window on the field
+              top = this.focusedField.offset().top - $( window ).height() / 2; // Center the window on the field
 
-          $('html,body').animate(
-            {scrollTop: top},
+          $( 'html, body' ).animate( {
+              scrollTop: top
+            },
             this.options.scrollDuration,
-            function() {
+            function () {
               that.focusedField.focus();
             }
           );
