@@ -697,6 +697,40 @@ var testSuite = function () {
         expect( $( '#errorsmanagement-labelerror div' ).length ).to.be( 0 );
         expect( $( '#errorsmanagement-labelinfo' ).hasClass( 'parsley-great' ) ).to.be( true );
       } )
+      it ( 'Empty error wrapper', function () {
+        
+        $( '#nowrapper-form' ).parsley( {
+            successClass: 'parsley-great'
+          , errorClass: 'parsley-fail'
+          , errors: {
+            errorsWrapper: ''
+            , errorElem: '<span></span>'
+          }
+        } );
+
+        $( '#nowrapper-email' ).val( 'foo' ).parsley( 'validate' );
+        expect( $( '#nowrapper-email' ).hasClass( 'parsley-fail' ) ).to.be( true );
+        expect( $( '#nowrapper-form>span' ).length ).to.be( 1 );
+
+        $( '#nowrapper-required' ).val( '' ).parsley( 'validate' );
+        expect( $( '#nowrapper-required' ).hasClass( 'parsley-fail' ) ).to.be( true );
+        expect( $( '#nowrapper-form>span' ).length ).to.be( 2 );
+
+        $( '#nowrapper-email' ).val( 'foo@bar.baz' ).parsley( 'validate' );
+        expect( $( '#nowrapper-form>span' ).length ).to.be( 1 );
+        expect( $( '#nowrapper-email' ).hasClass( 'parsley-great' ) ).to.be( true );
+
+        $( '#nowrapper-required' ).val( '' ).parsley( 'validate' );
+        $( '#nowrapper2-required' ).val( '' ).parsley( 'validate' );
+
+        expect( $( '#nowrapper-form>span' ).length ).to.be( 2 );
+
+        $( '#nowrapper-required' ).val( 'foo' ).parsley( 'validate' );
+        expect( $( '#nowrapper-form>span' ).length ).to.be( 1 );
+        expect( $( '#nowrapper2-required' ).next().is('span') ).to.be( true );
+
+      } )
+
     } )
 
     /***************************************

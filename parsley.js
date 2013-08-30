@@ -355,8 +355,11 @@
         this.errorClassHandler = this.options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element;
       }
 
-      // error ul dom management done only once at init
-      this.ulErrorManagement();
+      // error wrapper dom management done only once at init
+      this.wrapperManagement();
+
+      // error element dom management done only once at init
+      this.errorElementManagement();
 
       // bind some html5 properties
       this.bindHtml5Constraints();
@@ -794,14 +797,61 @@
     }
 
     /**
-    * Manage ul error Container
+    * Manage error wrapper
     *
     * @private
-    * @method ulErrorManagement
+    * @method wrapperManagement
     */
-    , ulErrorManagement: function () {
-      this.ulError = '#' + this.hash;
-      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+    , wrapperManagement: function () {
+      if(this.options.errors.errorsWrapper !== ''){
+        //this.$errorWrapper = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+        this.errorWrapperIsParent = false;
+      } else {
+        //this.$errorWrapper = this.$element.parent();
+        this.errorWrapperIsParent = true;
+      }
+    }
+
+    /**
+    * Manage error wrapper
+    *
+    * @private
+    * @method wrapperManagement
+    */
+    , getErrorWrapper: function () {
+      var $wrapper;
+      if( !this.errorWrapperIsParent ) {
+        $wrapper = $( '#' + this.hash );
+
+        if( $wrapper.length === 0 ) {
+          $wrapper = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+        }
+      } else {
+        $wrapper = this.$element.parent();
+      }
+      return $wrapper;      
+    }
+
+    /**
+    * Manage error element
+    *
+    * @private
+    * @method errorElementManagement
+    */
+    , errorElementManagement: function () {
+      
+    }
+
+    /**
+    * Returns li for constraint
+    *
+    * @method getError
+    * @param {String} constraintName Method Name
+    */
+    , getError: function ( constraintName ) {
+      var $container = this.isRadioOrCheckbox ? this.$element.parent().parent() : this.getErrorWrapper();
+
+      return $container.find( '.' + this.hash + '.' + constraintName);
     }
 
     /**
@@ -811,15 +861,15 @@
     * @param {String} constraintName Method Name
     */
     , removeError: function ( constraintName ) {
-      var liError = this.ulError + ' .' + constraintName
+      var $liError = this.getError( constraintName )
         , that = this;
 
-      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
+      this.options.animate ? $liError.fadeOut( this.options.animateDuration, function () {
         $( this ).remove();
 
-        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
+        if ( !this.errorWrapperIsParent && this.getErrorWrapper().children().length === 0 ) {
           that.removeErrors();
-        } } ) : $( liError ).remove();
+        } } ) : $liError.remove();
     }
 
     /**
@@ -830,9 +880,39 @@
     */
     , addError: function ( error ) {
       for ( var constraint in error ) {
-        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
+        var $liTemplate = $( this.options.errors.errorElem ).addClass( constraint ).addClass( this.hash );
 
-        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
+        if( this.options.animate ) {
+          $liTemplate.html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration );
+        } else { 
+          $liTemplate.html( error[ constraint ] );
+        }
+
+        if(this.errorWrapperIsParent){
+          this.$element.after( $liTemplate );
+        } else{
+          this.getErrorWrapper().append( $liTemplate );
+        }
+
+      }
+    }
+
+    /**
+    * Update existing li error
+    *
+    * @method updateError
+    * @param {Object} { minlength: "error message for minlength constraint" }
+    */
+    , updateError: function ( element, error ) {
+      var $element = $(element);
+      for ( var constraint in error ) {
+        
+        if( this.options.animate ) {
+          $element.html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration );
+        } else { 
+          $element.html( error[ constraint ] );
+        }
+
       }
     }
 
@@ -842,7 +922,15 @@
     * @method removeErrors
     */
     , removeErrors: function () {
-      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
+      if( !this.errorWrapperIsParent ){
+        if( this.options.animate ){
+          this.getErrorWrapper().fadeOut( this.options.animateDuration, function () { 
+            $( this ).remove(); 
+          } );
+        } else { 
+          this.getErrorWrapper().remove();
+        }
+      }
     }
 
     /**
@@ -871,7 +959,7 @@
     */
     , manageError: function ( constraint ) {
       // display ulError container if it has been removed previously (or never shown)
-      if ( !$( this.ulError ).length ) {
+      if ( !this.getErrorWrapper().closest('body').length > 0) {
         this.manageErrorContainer();
       }
 
@@ -893,10 +981,14 @@
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
               this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
-      // add liError if not shown. Do not add more than once custom errorMessage if exist
-      if ( !$( this.ulError + ' .' + liClass ).length ) {
-        liError[ liClass ] = message;
+      // add liError if not shown. Do not add more than once custom errorMessage if exist. 
+      liError[ liClass ] = message;
+
+      var $errorElement = this.getError( liClass );
+      if ( !$errorElement.length ) {
         this.addError( liError );
+      } else { 
+        this.updateError( $errorElement, liError );
       }
     }
 
@@ -906,15 +998,20 @@
     * @method manageErrorContainer
     */
     , manageErrorContainer: function () {
-      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox )
-        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
+      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox );
+
+      if(this.options.animate){
+        this.getErrorWrapper().show();
+      }
 
       if ( 'undefined' !== typeof errorContainer ) {
-        $( errorContainer ).append( ulTemplate );
+        $( errorContainer ).append( this.getErrorWrapper() );
         return;
       }
 
-      !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
+      if(!this.errorWrapperIsParent){
+        !this.isRadioOrCheckbox ? this.$element.after( this.getErrorWrapper() ) : this.$element.parent().after( this.getErrorWrapper() );
+      }
     }
 
     /**
