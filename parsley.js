@@ -160,8 +160,7 @@
       }
 
       , remote: function ( val, url, self ) {
-        var result = null
-          , data = {}
+        var data = {}
           , dataType = {};
 
         data[ self.$element.attr( 'name' ) ] = val;
@@ -170,49 +169,76 @@
           dataType = { dataType: self.options.remoteDatatype };
         }
 
-        var manage = function ( isConstraintValid, message ) {
-          // remove error message if we got a server message, different from previous message
-          if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
-            $( self.ulError + ' .remote' ).remove();
-          }
+        var callback = function( val, success, error ){
+          // transform string response into object
+          var handleResponse = function ( response ) {
+            if ( 'object' === typeof response ) {
+              return response;
+            }
 
-          self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
-          self.manageValidationResult();
-        };
+            try {
+              response = $.parseJSON( response );
+            } catch ( err ) {}
 
-        // transform string response into object
-        var handleResponse = function ( response ) {
-          if ( 'object' === typeof response ) {
             return response;
           }
 
-          try {
-            response = $.parseJSON( response );
-          } catch ( err ) {}
+          var manageErrorMessage = function ( response ) {
+            return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null ) ) : null;
+          }
 
-          return response;
+          $.ajax( $.extend( {}, {
+              url: url
+            , data: data
+            , type: self.options.remoteMethod || 'GET'
+            , success: function ( response ) {
+              response = handleResponse( response );
+              if(1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success )){
+                success();
+              } else {
+                error(manageErrorMessage( response ));
+              }
+            }
+            , error: function ( response ) {
+              response = handleResponse( response );
+              error( manageErrorMessage( response ) );
+            }
+          }, dataType ) );
+
         }
 
-        var manageErrorMessage = function ( response ) {
-          return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null ) ) : null;
+        return self.Validator.validators.callback( val, callback, 'remote', self );
+      }
+
+      , callback: function ( val, callback, callbackKey, self ) {
+
+        var success = function(){
+          for ( var key in self.constraints){
+            if( key.indexOf(callbackKey) !== -1 ){
+              self.updtConstraint( { name: key, valid: true }, '' );
+            }
+          }
+          self.updtConstraint( { name: callbackKey, valid: true }, '' );
+          self.manageValidationResult(); // we need to add a constraint before calling this, otherwise it thinks its an unvalidated field.
         }
 
-        $.ajax( $.extend( {}, {
-            url: url
-          , data: data
-          , type: self.options.remoteMethod || 'GET'
-          , success: function ( response ) {
-            response = handleResponse( response );
-            manage( 1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success ), manageErrorMessage( response )
-            );
+        var error = function(errors){
+          
+          if( typeof errors === 'object' && errors !== null) {
+            for ( var key in errors) {
+              var error = errors[key];
+              self.updtConstraint( { name: callbackKey + '-' + key, valid: false }, error );
+            }
+          } else {
+            self.updtConstraint( { name: callbackKey , valid: false }, errors );
           }
-          , error: function ( response ) {
-            response = handleResponse( response );
-            manage( false, manageErrorMessage( response ) );
-          }
-        }, dataType ) );
+          
+          self.manageValidationResult();
+        }
 
-        return result;
+        callback.call(self, val, success, error );
+
+        return null;
       }
 
       /**
@@ -230,17 +256,30 @@
         return this.rangelength( obj, arrayRange );
       }
     }
+    /**
+    * Callback list.
+    *
+    * @property callbacks
+    * @type {Object}
+    */
+    , callbacks: {}
+
 
     /*
-    * Register custom validators and messages
+    * Register custom validators, messages, and callback validators
     */
     , init: function ( options ) {
       var customValidators = options.validators
-        , customMessages = options.messages;
+        , customMessages = options.messages
+        , callbacks = options.callbacks;
 
       var key;
       for ( key in customValidators ) {
         this.addValidator(key, customValidators[ key ]);
+      }
+
+      for ( key in callbacks ) {
+        this.addCallback(key, callbacks[ key ]);
       }
 
       for ( key in customMessages ) {
@@ -278,6 +317,17 @@
     */
     , addValidator: function ( name, fn ) {
       this.validators[ name ] = fn;
+    }
+
+    /**
+    * Registers a reusable callback validator
+    *
+    * @method addCallback
+    * @param {String} name Callback name.
+    * @param {Function} fn Validator function. Must have signature function( val, success, error). Call success and error functions based on results.
+    */
+    , addCallback: function ( name, fn ) {
+      this.callbacks[ name ] = fn;
     }
 
     /**
@@ -481,7 +531,11 @@
     * @param {Object} constraint
     */
     , updtConstraint: function ( constraint, message ) {
-      this.constraints[ constraint.name ] = $.extend( true, this.constraints[ constraint.name ], constraint );
+
+      //zepto doesnt handle this.constraints[ constraint.name ] being undefined, were going to hand in {} if its nothing
+      var source = typeof this.constraints[ constraint.name ]  === 'undefined' ? {} : this.constraints[ constraint.name ];
+
+      this.constraints[ constraint.name ] = $.extend( true, source, constraint );
 
       if ( 'string' === typeof message ) {
         this.Validator.messages[ constraint.name ] = message ;
@@ -730,7 +784,35 @@
       var valid = null;
 
       for ( var constraint in this.constraints ) {
-        var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
+        
+        var result;
+        var name = this.constraints[ constraint ].name;
+
+        var callbackName;
+        var isCallback = false;
+
+        if( name === 'callback' ){
+          isCallback = true;
+          callbackName = this.constraints[ constraint ].requirements;
+        } else { // if( name.indexOf('callback') !== -1 ){
+          for ( var key in this.Validator.callbacks ) {
+            if( name === key ){
+              isCallback = true;
+              callbackName = name;
+              break;
+            } else if( name.indexOf(key) === 0 ){
+              isCallback = true;
+              callbackName = key;
+              break;
+            }
+          }
+        }
+
+        if( !isCallback ) {
+          result = this.Validator.validators[ name ]( this.val, this.constraints[ constraint ].requirements, this );
+        } else {
+          result = this.Validator.validators[ 'callback' ]( this.val, this.Validator.callbacks[callbackName], callbackName, this );
+        }
 
         if ( false === result ) {
           valid = false;
@@ -897,6 +979,8 @@
       if ( !$( this.ulError + ' .' + liClass ).length ) {
         liError[ liClass ] = message;
         this.addError( liError );
+      } else { //update the message
+        $( this.ulError + ' .' + liClass).html(message);
       }
     }
 

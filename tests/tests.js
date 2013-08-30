@@ -26,7 +26,8 @@ var triggerEventValidation = function ( idOrClass ) {
 }
 
 var getErrorMessage = function ( idOrClass, constraintName ) {
-  return $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + constraintName ).text();
+  var result = $( '#' + $( idOrClass ).parsley( 'getHash' ) + ' li.' + constraintName ).text();
+  return result === null ? '' : result;
 }
 
 $( '#validate-form' ).parsley( { listeners: {
@@ -60,6 +61,28 @@ $( '#validator-tests' ).parsley( {
   }
   , messages: {
       multiple: 'This field should be a multiple of %s'
+  }
+  , callbacks: {
+
+    callback1 : function(val, success, error){
+      // setTimeout(function(){
+        if( val === 'error1' ){
+          error( { error1: 'An invalid value was input.' });
+        } else if( val === 'error2' ){
+          error( { error2: 'The server returned an unexpected response.' });
+        } else if( val === 'error1+2' ){
+          error( { 
+            error1: 'An invalid value was input.' 
+            , error2: 'The server returned an unexpected response.' 
+          });
+        } else if( val === 'error3' ){
+          error( 'Single error.' );
+        } else if( val === 'foo' || val === 'bar' || val === '' ){
+          success();
+        }
+      // }, 1)
+    }
+
   }
 } );
 
@@ -549,6 +572,8 @@ var testSuite = function () {
             sinon.stub( $, "ajax" ).yieldsTo( 'success' , "1" );
             $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
             expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
+            $( '#remote2' ).val( 'foo' ).trigger( $.Event( 'change' ) );
+            expect( $( '#remote2' ).parsley( 'isValid' ) ).to.be( true )
             done();
           } )
           it ( 'Test success 0', function ( done ) {
@@ -591,6 +616,72 @@ var testSuite = function () {
 
       } )
     } )
+    
+    describe ( 'Test generic callback validator', function () {
+
+      it ( 'Test good values true', function ( done ) {
+
+        // $( '#callback1' ).val( 'foo' ).trigger( $.Event( 'change' ) );
+        triggerSubmitValidation( '#callback1', 'foo' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( true )
+        // $( '#callback1' ).val( 'bar' ).trigger( $.Event( 'change' ) );
+        triggerSubmitValidation( '#callback1', 'bar' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( true )
+
+        done();
+      } )
+
+      it ( 'Test first bad value', function ( done ) {
+        
+        triggerSubmitValidation( '#callback1', 'error1' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( false )
+        expect( getErrorMessage( '#callback1', 'callback1-error1') ).to.be( 'An invalid value was input.' );
+        
+        done();
+      } )
+
+      it ( 'Test second bad value', function ( done ) {
+        
+        triggerSubmitValidation( '#callback1', 'error2' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( false )
+        expect( getErrorMessage( '#callback1', 'callback1-error2') ).to.be( 'The server returned an unexpected response.' );
+        
+        done();
+      } )
+
+      it ( 'Test second both bad values', function ( done ) {
+        
+        triggerSubmitValidation( '#callback1', 'error1+2' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( false )
+        expect( getErrorMessage( '#callback1', 'callback1-error1') ).to.be( 'An invalid value was input.' );
+        expect( getErrorMessage( '#callback1', 'callback1-error2') ).to.be( 'The server returned an unexpected response.' );
+        
+        done();
+      } )
+
+      it ( 'Test second both bad values', function ( done ) {
+        
+        triggerSubmitValidation( '#callback1', 'error3' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( false )
+        expect( getErrorMessage( '#callback1', 'callback1') ).to.be( 'Single error.' );
+        
+        done();
+      } )
+
+      it ( 'Test good values', function ( done ) {
+        
+        triggerSubmitValidation( '#callback1', 'foo' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( true )
+        expect( getErrorMessage( '#callback1', 'callback1-error1') ).to.be( '' );
+        expect( getErrorMessage( '#callback1', 'callback1-error2') ).to.be( '' );
+
+        triggerSubmitValidation( '#callback1', 'bar' );
+        expect( $( '#callback1' ).hasClass( 'parsley-success' ) ).to.be( true )
+        
+        done();
+      } )
+
+    });
 
     /***************************************
          override value with data-value
