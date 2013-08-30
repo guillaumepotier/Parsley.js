@@ -881,6 +881,7 @@
         return;
       // if empty required field and non required constraint fails, do not display
       } else if ( this.isRequired && 'required' !== constraint.name && ( null === this.getVal() || 0 === this.getVal().length ) ) {
+        this.removeError(constraint.name);
         return;
       }
 
