@@ -5,6 +5,7 @@
   - added scrollTo feature when going to focus field
   - `onFieldSuccess` and onFieldError` are now called once by validation
     and not on each validator check
+  - added notequalto validator in parsley.extend
 
 **1.1.18 (current stable)**
 
