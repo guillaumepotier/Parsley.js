@@ -1159,7 +1159,38 @@ var testSuite = function () {
     	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
     	 triggerSubmitValidation( '#americanDate', '2.8.12' );
     	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+       triggerSubmitValidation( '#americanDateCustomDelimiter', '02.08.2012' );
+       expect( $( '#americanDateCustomDelimiter' ).hasClass( 'parsley-success' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateCustomDelimiter', '2.8.2012' );
+       expect( $( '#americanDateCustomDelimiter' ).hasClass( 'parsley-success' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateCustomDelimiter', '32.80.2012' );
+       expect( $( '#americanDateCustomDelimiter' ).hasClass( 'parsley-error' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateCustomDelimiter', '08.2012' );
+       expect( $( '#americanDateCustomDelimiter' ).hasClass( 'parsley-error' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateCustomDelimiter', '2/8/2012' );
+       expect( $( '#americanDateCustomDelimiter' ).hasClass( 'parsley-error' ) ).to.be( true );
+       
+       triggerSubmitValidation( '#americanDateStrict', '02.08.2012' );
+       expect( $( '#americanDateStrict' ).hasClass( 'parsley-success' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateStrict', '02/08/2012' );
+       expect( $( '#americanDateStrict' ).hasClass( 'parsley-success' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateStrict', '02-08-2012' );
+       expect( $( '#americanDateStrict' ).hasClass( 'parsley-success' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateStrict', '2.08.2012' );
+       expect( $( '#americanDateStrict' ).hasClass( 'parsley-error' ) ).to.be( true );
+       
+       triggerSubmitValidation( '#americanDateStrictCustomDelimiter', '02.08.2012' );
+       expect( $( '#americanDateStrictCustomDelimiter' ).hasClass( 'parsley-error' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateStrictCustomDelimiter', '22.08.2012' );
+       expect( $( '#americanDateStrictCustomDelimiter' ).hasClass( 'parsley-error' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateStrictCustomDelimiter', '2-08-2012' );
+       expect( $( '#americanDateStrictCustomDelimiter' ).hasClass( 'parsley-error' ) ).to.be( true );
+       triggerSubmitValidation( '#americanDateStrictCustomDelimiter', '02-08-2012' );
+       expect( $( '#americanDateStrictCustomDelimiter' ).hasClass( 'parsley-success' ) ).to.be( true );       
+
        } )
+
      } )
      describe ( 'Test Parsley l10n es', function () {
        it ( 'es_dni', function () {
