@@ -1,4 +1,4 @@
-#Parsley.js
+﻿#Parsley.js
 
 [![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
 
@@ -10,7 +10,7 @@ See TODO.md
 
 #Curent Stable Version
 
-1.1.16
+1.1.18
 
 # Browser compatibility
 
@@ -52,7 +52,7 @@ Add new validators in `parsley.extend.js` and minify it. No validators will be a
 ##Localization
 
 If file does not exist, create it into `ì18n/` directory with same syntax as others.  
-Reference file is _messages.en.fr
+Reference file is _messages.en.js
 
 ##Integrations
 
@@ -62,6 +62,8 @@ Some integrations are
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
 * [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
+* [WTForms](https://github.com/johannes-gehrs/wtforms-parsleyjs)
+* [Cascade Framework](https://github.com/jslegers/cascadeframework/)
 
 ## Global
 

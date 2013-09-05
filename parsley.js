@@ -103,7 +103,7 @@
             regExp = /^\w+$/;
             break;
           case 'email':
-            regExp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i;
+            regExp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))){2,6}$/i;
             break;
           case 'url':
             val = new RegExp( '(https?|s?ftp|git)', 'i' ).test( val ) ? val : 'http://' + val;
@@ -625,11 +625,22 @@
       }
 
       // start validation process only if field has enough chars and validation never started
-      if ( !this.isRadioOrCheckbox && val.length < this.options.validationMinlength && !this.validatedOnce ) {
+      if ( !this.isRadioOrCheckbox && this.getLength(val) < this.options.validationMinlength && !this.validatedOnce ) {
         return true;
       }
 
       this.validate();
+    }
+
+    /**
+     * Get the length of a given value
+     *
+     * @method getLength
+     * @return {int} The length of the value
+     */
+    , getLength: function(val) {
+      if (!val || !val.hasOwnProperty('length')) return 0;
+      return val.length;
     }
 
     /**
@@ -724,12 +735,18 @@
         if ( false === result ) {
           valid = false;
           this.constraints[ constraint ].valid = valid;
-          this.options.listeners.onFieldError( this.element, this.constraints, this );
         } else if ( true === result ) {
           this.constraints[ constraint ].valid = true;
           valid = false !== valid;
-          this.options.listeners.onFieldSuccess( this.element, this.constraints, this );
         }
+      }
+
+      // listeners' ballet
+      if (false === valid) {
+        this.options.listeners.onFieldError( this.element, this.constraints, this );
+      } else if (true === valid && false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
+        // if onFieldSuccess returns (bool) false, consider that field si invalid
+        valid = false;
       }
 
       return valid;
@@ -768,6 +785,11 @@
         return false;
       }
 
+      // remove li error, and ul error if no more li inside
+      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
+        this.removeErrors();
+      }
+
       return valid;
     }
 
@@ -798,11 +820,6 @@
         if ( that.ulError && $( that.ulError ).children().length === 0 ) {
           that.removeErrors();
         } } ) : $( liError ).remove();
-
-      // remove li error, and ul error if no more li inside
-      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
-        this.removeErrors();
-      }
     }
 
     /**
@@ -864,6 +881,7 @@
         return;
       // if empty required field and non required constraint fails, do not display
       } else if ( this.isRequired && 'required' !== constraint.name && ( null === this.getVal() || 0 === this.getVal().length ) ) {
+        this.removeError(constraint.name);
         return;
       }
 
@@ -1159,10 +1177,30 @@
 
       // form is invalid, focus an error field depending on focus policy
       if ( this.focusedField && !valid ) {
-        this.focusedField.focus();
+        // Scroll smoothly
+        if ( this.options.scrollDuration > 0 ) {
+          var that = this,
+              top = this.focusedField.offset().top - $( window ).height() / 2; // Center the window on the field
+
+          $( 'html, body' ).animate( {
+              scrollTop: top
+            },
+            this.options.scrollDuration,
+            function () {
+              that.focusedField.focus();
+            }
+          );
+        // Just focus on the field and let the browser do the rest
+        } else {
+          that.focusedField.focus();
+        }
       }
 
-      this.options.listeners.onFormSubmit( valid, event, this );
+      // if onFormSubmit returns (bool) false, form won't be submitted, even if valid
+      var onFormSubmit = this.options.listeners.onFormSubmit( valid, event, this );
+      if ('undefined' !== typeof onFormSubmit) {
+        return onFormSubmit;
+      }
 
       return valid;
     }
@@ -1287,6 +1325,7 @@
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
     , animate: true                             // fade in / fade out error messages
     , animateDuration: 300                      // fadein/fadout ms time
+    , scrollDuration: 500                       // Duration in ms time of the window scroll when focusing on invalid field (0 = no scroll)
     , focus: 'first'                            // 'fist'|'last'|'none' which error field would have focus first on form validation
     , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
     , successClass: 'parsley-success'           // Class name on each valid input
@@ -1306,7 +1345,7 @@
       }
     , listeners: {
         onFieldValidate: function ( elem, ParsleyForm ) { return false; } // Executed on validation. Return true to ignore field validation
-      , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation
+      , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation. Return (bool) false to block submit, even if valid
       , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
       , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
     }

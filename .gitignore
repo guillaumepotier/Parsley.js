@@ -1,4 +1,4 @@
 .DS_Store
 
-components/*
+bower_components/*
 doc/*
