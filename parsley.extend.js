@@ -96,6 +96,19 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         }
         return day > 0 && day <= monthLength[month - 1];
       }
+
+      , notequalto: function ( val, elem, self ) {
+        var $elements, isUnique;
+        $elements = $(elem);
+        isUnique = true;
+        $.each($elements, function () {
+          if (val === $(this).val()) {
+            isUnique = false;
+            return false;
+          }
+        });
+        return isUnique;
+      }
     }
     , messages: {
         minwords:       "This value should have %s words at least."
@@ -107,6 +120,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , afterdate:      "This date should be after %s."
       , luhn:           "This value should pass the luhn test."
       , americandate:	"This value should be a valid date (MM/DD/YYYY)."
+      , notequalto:     "This value should be unique."
     }
   });
 }(window.jQuery || window.Zepto));

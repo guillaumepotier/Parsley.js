@@ -1160,6 +1160,16 @@ var testSuite = function () {
     	 triggerSubmitValidation( '#americanDate', '2.8.12' );
     	 expect( $( '#americanDate' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
+       it ( 'notEqualTo', function () {
+       triggerSubmitValidation( '#notequaltoFirstValue', 'abc' );
+       triggerSubmitValidation( '#notequaltoSecondValue', 'abc' );
+       expect( $( '#notequaltoSecondValue' ).hasClass( 'parsley-error' ) ).to.be( true );
+       expect( getErrorMessage( '#notequaltoSecondValue', 'notequalto') ).to.be( 'This value should be unique.' );
+
+       triggerSubmitValidation( '#notequaltoFirstValue', 'abc' );
+       triggerSubmitValidation( '#notequaltoSecondValue', 'xyz' );
+       expect( $( '#notequaltoSecondValue' ).hasClass( 'parsley-error' ) ).to.be( false );
+       } )
      } )
      describe ( 'Test Parsley l10n es', function () {
        it ( 'es_dni', function () {

@@ -43,6 +43,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , beforedate:     "This date should be before %s."
       , afterdate:      "This date should be after %s."
       , americandate:	"This value should be a valid date (MM/DD/YYYY)."
+      , notequalto:     "This value should be unique."
     }
   });
 }(window.jQuery || window.Zepto));
