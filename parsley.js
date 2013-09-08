@@ -370,11 +370,12 @@
       }
     }
 
-    , setParent: function ( elem ) {
-      this.$parent = $( elem );
-    }
+    , parent: function ( elem ) {
+      if ( 'undefined' !== typeof elem ) {
+        this.$parent = $( elem );
+        return this;
+      }
 
-    , getParent: function () {
       return this.$parent;
     }
 
@@ -509,8 +510,8 @@
       // if there are no more constraint, destroy parsley instance for this field
       if ( !this.hasConstraints() ) {
         // in a form context, remove item from parent
-        if ( 'ParsleyForm' === typeof this.getParent() ) {
-          this.getParent().removeItem( this.$element );
+        if ( 'ParsleyForm' === typeof this.parent() ) {
+          this.parent().removeItem( this.$element );
           return;
         }
 
@@ -1090,9 +1091,7 @@
       this.options = options;
       var self = this;
 
-      this.$element.find( options.inputs ).each( function () {
-        self.addItem( this );
-      });
+      self.addItem( this.$element.find( options.inputs ) );
 
       this.$element.on( 'submit.' + this.type , false, $.proxy( this.validate, this ) );
     }
@@ -1121,14 +1120,19 @@
     * @param elem
     */
     , addItem: function ( elem ) {
-      if ( $( elem ).is( this.options.excluded ) ) {
-        return false;
-      }
+      var parsley = this;
 
-      var ParsleyField = $( elem ).parsley( this.options );
-      ParsleyField.setParent( this );
+      $( elem ).each(function () {
+        var $this = $( this );
 
-      this.items.push( ParsleyField );
+        if ( $this.is( parsley.options.excluded ) ) {
+          return;
+        }
+
+        var parsleyField = $this.parsley( parsley.options ).parent( parsley );
+
+        parsley.items.push( parsleyField );
+      });
     }
 
     /**
