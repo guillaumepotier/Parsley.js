@@ -678,8 +678,8 @@
       var val = this.getVal()
         , valid = null;
 
-      // do not even bother trying validating a field w/o constraints
-      if ( !this.hasConstraints() ) {
+      // do not even bother trying validating a field w/o constraints, or if field is excluded
+      if ( !this.hasConstraints() || this.element.is( this.options.excluded ) ) {
         return null;
       }
 
@@ -1121,10 +1121,6 @@
     * @param elem
     */
     , addItem: function ( elem ) {
-      if ( $( elem ).is( this.options.excluded ) ) {
-        return false;
-      }
-
       var ParsleyField = $( elem ).parsley( this.options );
       ParsleyField.setParent( this );
 
