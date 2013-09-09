@@ -903,6 +903,13 @@ var testSuite = function () {
         expect( ParsleyForm.items.length ).to.be( 0 );
         expect( $( '.dynamic-email' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+        
+        $( '#dynamic-form' ).parsley( 'addItem', '.dynamic-email' );
+        expect( ParsleyForm.items.length ).to.be( 1 );
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( false );
+        $( '.dynamic-email' ).remove();
+        expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
+        expect( ParsleyForm.items.length ).to.be( 0 );
       } )
       it ( 'test adding constraint on the fly', function () {
         $( '#onthefly' ).parsley( 'addConstraint', { type: "email" } ).val( 'foo' );
