@@ -25,7 +25,6 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 	    , maxlength:      "Mae'r gwerth hwn yn rhy hir. Dylai fod yna %s neu llai o lythrennau"
 	    , rangelength:    "Mae'r gwerth hyd yn annilys. Dylai fod yna rhwng %s a %s o lythrennau"
 	    , equalto:        "Dylai'r gwerth hwn fod yr un fath."
-      
 
       // parsley.extend ///////////////////////////////
 	    , minwords:       "Dylai'r gwerth hwn cynnwys o leiaf %s gair."

@@ -1192,7 +1192,7 @@
           );
         // Just focus on the field and let the browser do the rest
         } else {
-          that.focusedField.focus();
+          this.focusedField.focus();
         }
       }
 
