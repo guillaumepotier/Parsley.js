@@ -4,7 +4,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     messages: {
       // parsley //////////////////////////////////////
-		defaultMessage: "Thông tin này không hợp lệ."
+        defaultMessage: "Thông tin này không hợp lệ."
       , type: {
             email:      "Email không hợp lệ."
           , url:        "Url không hợp lệ."
@@ -33,4 +33,3 @@ window.ParsleyConfig = window.ParsleyConfig || {};
     }
   });
 }(window.jQuery || window.Zepto));
-
