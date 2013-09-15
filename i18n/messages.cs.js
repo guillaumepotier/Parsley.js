@@ -25,9 +25,9 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 			, minlength:       "Tato položka je příliš krátká. Musí mít %s nebo více znaků."
 			, maxlength:       "Tato položka je příliš dlouhá. Musí mít %s nebo méně znaků."
 			, rangelength:     "Tato položka je mimo rozsah. Musí být rozmezí %s a %s znaků."
-            		, mincheck:        "Je nutné vybrat nejméně %s možností."
-            		, maxcheck:        "Je nutné vybrat nejvýše %s možností."
-            		, rangecheck:      "Je nutné vybrat %s až %s možností."
+			, mincheck:        "Je nutné vybrat nejméně %s možností."
+			, maxcheck:        "Je nutné vybrat nejvýše %s možností."
+			, rangecheck:      "Je nutné vybrat %s až %s možností."
 			, equalto:         "Tato položka by měla být stejná."
 
 			// parsley.extend ///////////////////////////////
@@ -36,10 +36,10 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 			, rangewords:      "Tato položka musí obsahovat %s až %s slov."
 			, greaterthan:     "Tato položka musí být větší než %s."
 			, lessthan:        "Tato položka musí být menší než %s."
-            		, beforedate:      "Toto datum musí být před %s."
-            		, afterdate:       "Toto datum musí být po %s."
-            		, luhn:            "Tato hodnota by měla projít Luhnovým testem."
-            		, americandate:	   "Toto datum by mělo být ve formátu MM/DD/YYYY."
+			, beforedate:      "Toto datum musí být před %s."
+			, afterdate:       "Toto datum musí být po %s."
+			, luhn:            "Tato hodnota by měla projít Luhnovým testem."
+			, americandate:    "Toto datum by mělo být ve formátu MM/DD/YYYY."
 		}
 	});
 }(window.jQuery || window.Zepto));

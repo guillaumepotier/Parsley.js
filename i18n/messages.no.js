@@ -31,14 +31,14 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , equalto:        "Denne verdien må være lik."
 
       // parsley.extend ///////////////////////////////
-       , minwords:       "Denne verdien må inneholde minst %s ord."
-       , maxwords:       "Denne verdien kan ikke inneholde mer enn %s ord."
-       , rangewords:     "Denne verdien må ha mellom %s og %s ord."
-       , greaterthan:    "Denne verdien må være større enn %s."
-       , lessthan:       "Denne verdien må være mindre enn %s."
-       , beforedate:     "Datoen må være før %s."
-       , afterdate:      "Datoen må være etter %s."
-       , americandate:   "Datoen må være på gyldig format (MM/DD/YYYY)."
+      , minwords:       "Denne verdien må inneholde minst %s ord."
+      , maxwords:       "Denne verdien kan ikke inneholde mer enn %s ord."
+      , rangewords:     "Denne verdien må ha mellom %s og %s ord."
+      , greaterthan:    "Denne verdien må være større enn %s."
+      , lessthan:       "Denne verdien må være mindre enn %s."
+      , beforedate:     "Datoen må være før %s."
+      , afterdate:      "Datoen må være etter %s."
+      , americandate:   "Datoen må være på gyldig format (MM/DD/YYYY)."
     }
   });
 }(window.jQuery || window.Zepto));
