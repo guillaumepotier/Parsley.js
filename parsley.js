@@ -173,7 +173,7 @@
         var manage = function ( isConstraintValid, message ) {
           // remove error message if we got a server message, different from previous message
           if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
-            $( self.ulError + ' .remote' ).remove();
+            $( self.UI.ulError + ' .remote' ).remove();
           }
 
           self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
@@ -307,6 +307,146 @@
     }
   };
 
+  var ParsleyUI = function ( ParsleyInstance ) {
+    this.init( ParsleyInstance );
+  };
+
+  ParsleyUI.prototype = {
+
+    constructor: ParsleyUI
+
+    , init: function ( ParsleyInstance ) {
+      this.ParsleyInstance = ParsleyInstance;
+      this.options = this.ParsleyInstance.options;
+      this.errorClassHandler = this.options.errors.classHandler( this.ParsleyInstance.element, this.ParsleyInstance.isRadioOrCheckbox ) || this.ParsleyInstance.$element;
+      this.ulErrorManagement();
+    }
+
+    /**
+    * Manage ul error Container
+    *
+    * @private
+    * @method ulErrorManagement
+    */
+    , ulErrorManagement: function () {
+      this.ulError = '#' + this.ParsleyInstance.hash;
+      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.ParsleyInstance.hash ).addClass( 'parsley-error-list' );
+    }
+
+    /**
+    * Remove li / ul error
+    *
+    * @method removeError
+    * @param {String} constraintName Method Name
+    */
+    , removeError: function ( constraintName ) {
+      var liError = this.ulError + ' .' + constraintName
+        , that = this;
+
+      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
+        $( this ).remove();
+
+        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
+          that.removeErrors();
+        } } ) : $( liError ).remove();
+    }
+
+    /**
+    * Add li error
+    *
+    * @method addError
+    * @param {Object} { minlength: "error message for minlength constraint" }
+    */
+    , addError: function ( error ) {
+      for ( var constraint in error ) {
+        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
+
+        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
+      }
+    }
+
+    /**
+    * Remove all ul / li errors
+    *
+    * @method removeErrors
+    */
+    , removeErrors: function () {
+      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
+    }
+
+    /**
+    * Remove ul errors and parsley error or success classes
+    *
+    * @method reset
+    */
+    , reset: function () {
+      this.ParsleyInstance.valid = null;
+      this.removeErrors();
+      this.ParsleyInstance.validatedOnce = false;
+      this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+
+      for ( var constraint in this.constraints ) {
+        this.constraints[ constraint ].valid = null;
+      }
+
+      return this;
+    }
+
+    /**
+    * Add li / ul errors messages
+    *
+    * @method manageError
+    * @param {Object} constraint
+    */
+    , manageError: function ( constraint ) {
+      // display ulError container if it has been removed previously (or never shown)
+      if ( !$( this.ulError ).length ) {
+        this.manageErrorContainer();
+      }
+
+      // TODO: refacto properly
+      // if required constraint but field is not null, do not display
+      if ( 'required' === constraint.name && null !== this.ParsleyInstance.getVal() && this.ParsleyInstance.getVal().length > 0 ) {
+        return;
+      // if empty required field and non required constraint fails, do not display
+      } else if ( this.ParsleyInstance.isRequired && 'required' !== constraint.name && ( null === this.ParsleyInstance.getVal() || 0 === this.ParsleyInstance.getVal().length ) ) {
+        this.removeError( constraint.name );
+        return;
+      }
+
+      // TODO: refacto error name w/ proper & readable function
+      var constraintName = constraint.name
+        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
+        , liError = {}
+        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
+            this.ParsleyInstance.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.ParsleyInstance.Validator.messages[ constraintName ] ?
+              this.ParsleyInstance.Validator.messages.defaultMessage : this.ParsleyInstance.Validator.formatMesssage( this.ParsleyInstance.Validator.messages[ constraintName ], constraint.requirements ) ) );
+
+      // add liError if not shown. Do not add more than once custom errorMessage if exist
+      if ( !$( this.ulError + ' .' + liClass ).length ) {
+        liError[ liClass ] = message;
+        this.addError( liError );
+      }
+    }
+
+    /**
+    * Create ul error container
+    *
+    * @method manageErrorContainer
+    */
+    , manageErrorContainer: function () {
+      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.ParsleyInstance.isRadioOrCheckbox )
+        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
+
+      if ( 'undefined' !== typeof errorContainer ) {
+        $( errorContainer ).append( ulTemplate );
+        return;
+      }
+
+      !this.ParsleyInstance.isRadioOrCheckbox ? this.ParsleyInstance.$element.after( ulTemplate ) : this.ParsleyInstance.$element.parent().after( ulTemplate );
+    }
+  };
+
   /**
   * ParsleyField class manage each form field inside a validated Parsley form.
   * Returns if field valid or not depending on its value and constraints
@@ -317,7 +457,6 @@
   */
   var ParsleyField = function ( element, options, type ) {
     this.options = options;
-    this.Validator = new Validator( options );
 
     // if type is ParsleyFieldMultiple, just return this. used for clone
     if ( type === 'ParsleyFieldMultiple' ) {
@@ -345,6 +484,7 @@
       this.validatedOnce = false;
       this.$element = $( element );
       this.val = this.$element.val();
+      this.Validator = new Validator( this.options );
       this.isRequired = false;
       this.constraints = {};
 
@@ -352,11 +492,10 @@
       if ( 'undefined' === typeof this.isRadioOrCheckbox ) {
         this.isRadioOrCheckbox = false;
         this.hash = this.generateHash();
-        this.errorClassHandler = this.options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element;
       }
 
       // error ul dom management done only once at init
-      this.ulErrorManagement();
+      this.UI = new ParsleyUI( this );
 
       // bind some html5 properties
       this.bindHtml5Constraints();
@@ -685,7 +824,7 @@
 
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
       if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
-        this.reset();
+        this.UI.reset();
         return null;
       }
 
@@ -766,10 +905,10 @@
 
       for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].valid ) {
-          this.manageError( this.constraints[ constraint ] );
+          this.UI.manageError( this.constraints[ constraint ] );
           valid = false;
         } else if ( true === this.constraints[ constraint ].valid ) {
-          this.removeError( this.constraints[ constraint ].name );
+          this.UI.removeError( this.constraints[ constraint ].name );
           valid = false !== valid;
         }
       }
@@ -777,144 +916,20 @@
       this.valid = valid;
 
       if ( true === this.valid ) {
-        this.removeErrors();
-        this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+        this.UI.removeErrors();
+        this.UI.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
         return true;
       } else if ( false === this.valid ) {
-        this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
+        this.UI.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
         return false;
       }
 
       // remove li error, and ul error if no more li inside
-      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
-        this.removeErrors();
+      if ( this.UI.ulError && $( this.ulError ).children().length === 0 ) {
+        this.UI.removeErrors();
       }
 
       return valid;
-    }
-
-    /**
-    * Manage ul error Container
-    *
-    * @private
-    * @method ulErrorManagement
-    */
-    , ulErrorManagement: function () {
-      this.ulError = '#' + this.hash;
-      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
-    }
-
-    /**
-    * Remove li / ul error
-    *
-    * @method removeError
-    * @param {String} constraintName Method Name
-    */
-    , removeError: function ( constraintName ) {
-      var liError = this.ulError + ' .' + constraintName
-        , that = this;
-
-      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
-        $( this ).remove();
-
-        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
-          that.removeErrors();
-        } } ) : $( liError ).remove();
-    }
-
-    /**
-    * Add li error
-    *
-    * @method addError
-    * @param {Object} { minlength: "error message for minlength constraint" }
-    */
-    , addError: function ( error ) {
-      for ( var constraint in error ) {
-        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
-
-        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
-      }
-    }
-
-    /**
-    * Remove all ul / li errors
-    *
-    * @method removeErrors
-    */
-    , removeErrors: function () {
-      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
-    }
-
-    /**
-    * Remove ul errors and parsley error or success classes
-    *
-    * @method reset
-    */
-    , reset: function () {
-      this.valid = null;
-      this.removeErrors();
-      this.validatedOnce = false;
-      this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
-
-      for ( var constraint in this.constraints ) {
-        this.constraints[ constraint ].valid = null;
-      }
-
-      return this;
-    }
-
-    /**
-    * Add li / ul errors messages
-    *
-    * @method manageError
-    * @param {Object} constraint
-    */
-    , manageError: function ( constraint ) {
-      // display ulError container if it has been removed previously (or never shown)
-      if ( !$( this.ulError ).length ) {
-        this.manageErrorContainer();
-      }
-
-      // TODO: refacto properly
-      // if required constraint but field is not null, do not display
-      if ( 'required' === constraint.name && null !== this.getVal() && this.getVal().length > 0 ) {
-        return;
-      // if empty required field and non required constraint fails, do not display
-      } else if ( this.isRequired && 'required' !== constraint.name && ( null === this.getVal() || 0 === this.getVal().length ) ) {
-        this.removeError(constraint.name);
-        return;
-      }
-
-      // TODO: refacto error name w/ proper & readable function
-      var constraintName = constraint.name
-        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
-        , liError = {}
-        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
-            this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
-              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
-
-      // add liError if not shown. Do not add more than once custom errorMessage if exist
-      if ( !$( this.ulError + ' .' + liClass ).length ) {
-        liError[ liClass ] = message;
-        this.addError( liError );
-      }
-    }
-
-    /**
-    * Create ul error container
-    *
-    * @method manageErrorContainer
-    */
-    , manageErrorContainer: function () {
-      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox )
-        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
-
-      if ( 'undefined' !== typeof errorContainer ) {
-        $( errorContainer ).append( ulTemplate );
-        return;
-      }
-
-      !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
     }
 
     /**
@@ -936,7 +951,8 @@
     */
     , destroy: function () {
       this.$element.removeClass( 'parsley-validated' );
-      this.reset().$element.off( '.' + this.type ).removeData( this.type );
+      this.UI.reset();
+      this.$element.off( '.' + this.type ).removeData( this.type );
     }
   };
 
@@ -1246,7 +1262,7 @@
     */
     , reset: function () {
       for ( var item = 0; item < this.items.length; item++ ) {
-        this.items[ item ].reset();
+        this.items[ item ].UI.reset();
       }
     }
   };
