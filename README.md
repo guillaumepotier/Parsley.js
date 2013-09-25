@@ -14,12 +14,12 @@ See TODO.md
 
 # Browser compatibility
 
-  - IE 7/8 (with jQuery < 2.x.x, parsley.min, not parsley.standalone)
+  - IE 7/8 (used with jQuery 1.x)
   - IE 9+ (latest jQuery and Zepto)
   - FF 14+
   - Chrome
 
-# Requirements
+# Min requirements
 
 jQuery 1.6+
 

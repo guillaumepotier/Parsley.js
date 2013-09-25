@@ -269,13 +269,6 @@
           , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js';
 
         switch ( location.hash ) {
-            case '#jquery':
-                jsAppend( jquery , pause( 100 ) );
-                jsAppend( '../parsley.js' , pause( 50 ) );
-                jsAppend( '../parsley.extend.js' , pause( 50 ) );
-                jsAppend( '../l10n/parsley.es.js' , pause( 50 ) );
-                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
-                break;
             case '#zepto':
                 jsAppend( zepto , pause( 100 ) );
                 jsAppend( '../parsley.js' , pause( 50 ) );
@@ -297,12 +290,12 @@
                 jsAppend( '../dist/parsley.es.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
                 break;
-            case '#standalone':
             default:
-                jsAppend( '../dist/parsley-standalone.min.js' , pause( 100 ) );
-                jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
-                jsAppend( '../dist/parsley.es.min.js' , pause( 50 ) );
-                document.getElementById( 'info' ).innerHTML = 'Parsley test suite - Standalone Zepto Minified version';
+                jsAppend( jquery , pause( 100 ) );
+                jsAppend( '../parsley.js' , pause( 50 ) );
+                jsAppend( '../parsley.extend.js' , pause( 50 ) );
+                jsAppend( '../l10n/parsley.es.js' , pause( 50 ) );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
                 break;
         }
 
