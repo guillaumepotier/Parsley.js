@@ -55,8 +55,13 @@ $( '#focus-form2' ).parsley( { listeners: {
 
 $( '#validator-tests' ).parsley( {
   validators: {
-    multiple: function ( val, multiple ) {
-      return val % multiple === 0;
+    multiple: function () {
+      return {
+        validate: function ( val, multiple ) {
+          return val % multiple === 0;
+        }
+        , priority: 32
+      }
     }
   }
   , messages: {
@@ -1429,7 +1434,5 @@ var testSuite = function () {
     	 expect( getErrorMessage( '#es_cif', 'es_cif') ).to.be( 'This value should be a valid CIF (Example: B00000000).' );
        } )
      } )
-
   } )
 }
-
