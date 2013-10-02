@@ -32,7 +32,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , rangewords: "Questo valore deve contenere tra %s e %s parole."
       , greaterthan: "Questo valore deve essere maggiore di %s."
       , lessthan: "Questo valore deve essere minore di %s."
-    , beforedate: "Questa data deve essere anteriore al %s."
+      , beforedate: "Questa data deve essere anteriore al %s."
       , afterdate: "Questa data deve essere posteriore al %s."
       , luhn: "Questo valore deve superare il test di Luhn."
     }

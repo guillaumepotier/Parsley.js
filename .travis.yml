@@ -4,6 +4,6 @@ node_js:
   - 0.6
 
 before_script:
-  - npm install mocha-phantomjs
+  - npm install -g mocha-phantomjs@v2.0.3
 
 script: ./bin/test-suite.sh
