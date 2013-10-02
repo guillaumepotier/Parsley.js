@@ -38,8 +38,8 @@
       , notblank:       "This value should not be blank."
       , required:       "This value is required."
       , regexp:         "This value seems to be invalid."
-      , min:            "This value should be greater than or equal to %s."
-      , max:            "This value should be lower than or equal to %s."
+      , min:            "This value should be greater than %s."
+      , max:            "This value should be lower than %s."
       , range:          "This value should be between %s and %s."
       , minlength:      "This value is too short. It should have %s characters or more."
       , maxlength:      "This value is too long. It should have %s characters or less."
@@ -69,7 +69,7 @@
       }
 
       , notblank: function ( val ) {
-        return 'string' === typeof val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
+        return null !== val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
       }
 
       // Works on all inputs. val is object for checkboxes
@@ -386,7 +386,7 @@
     */
     , bindHtml5Constraints: function () {
       // add html5 required support + class required support
-      if ( this.$element.hasClass( 'required' ) || this.$element.prop( 'required' ) ) {
+      if ( this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) ) {
         this.options.required = true;
       }
 
@@ -559,11 +559,12 @@
       }
 
       // alaways bind keyup event, for better UX when a field is invalid
-      var triggers = ( !this.options.trigger ? '' : this.options.trigger )
-        + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
-
+      var triggers = ( !this.options.trigger ? '' : this.options.trigger );
+      if(this.options.validateOnError == true){
+        trigger += ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
+      }
       // alaways bind change event, for better UX when a select is invalid
-      if ( this.$element.is( 'select' ) ) {
+      if ( this.$element.is( 'select' ) && this.options.validateOnError) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
 
@@ -629,7 +630,7 @@
         return true;
       }
 
-      this.validate();
+      this.validate( );
     }
 
     /**
@@ -694,9 +695,11 @@
         return this.valid;
       }
 
+      this.errorBubbling = 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors;
+
       valid = this.applyValidators();
 
-      if ( 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors ) {
+      if ( this.errorBubbling ) {
         this.manageValidationResult();
       }
 
@@ -755,7 +758,7 @@
     /**
     * Fired when all validators have be executed
     * Returns true or false if field is valid or not
-    * Display errors messages below failed fields
+    * Display errors messages below faild fields
     * Adds parsley-success or parsley-error class on fields
     *
     * @method manageValidationResult
@@ -779,9 +782,11 @@
       if ( true === this.valid ) {
         this.removeErrors();
         this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+        this.options.listeners.onFieldSuccess( this.element, this.constraints, this );
         return true;
       } else if ( false === this.valid ) {
         this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
+        this.options.listeners.onFieldError( this.element, this.constraints, this );
         return false;
       }
 
@@ -810,7 +815,7 @@
     * @method removeError
     * @param {String} constraintName Method Name
     */
-    , removeError: function ( constraintName ) {
+	, removeError: function ( constraintName ) {
       var liError = this.ulError + ' .' + constraintName
         , that = this;
 
@@ -832,7 +837,7 @@
       for ( var constraint in error ) {
         var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
 
-        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
+        $( this.ulError ).append( this.options.animate ? $( liTemplate ).text( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).text( error[ constraint ] ) );
       }
     }
 
@@ -976,6 +981,7 @@
       this.isRadioOrCheckbox = true;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
+      this.isSelect = this.$element.is('select');
       this.errorClassHandler = options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element.parent();
     }
 
@@ -1034,6 +1040,14 @@
           values.push( $( this ).val() );
         } );
 
+        return values;
+      }
+
+      if( this.isSelect ) {
+        var values = [];
+        $( this.siblings + ' :selected').parent().each(function(){
+          values.push( $(this).val() );
+        });
         return values;
       }
    }
@@ -1298,13 +1312,13 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) || true === $( this ).data( 'bind' ) ) {
+    if ( $( this ).is( 'form' ) ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
     // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
     } else if ( $( this ).is( options.inputs ) && !$( this ).is( options.excluded ) ) {
-      newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
+      newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox], select[data-group]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
     }
 
     return 'function' === typeof fn ? fn() : newInstance;
@@ -1334,6 +1348,7 @@
     , validators: {}                            // Add your custom validators functions
     , showErrors: true                          // Set to false if you don't want Parsley to display error messages
     , messages: {}                              // Add your own error messages here
+    , validateOnError: false					// Add Keyup event if the field already failed to validate
 
     //some quite advanced configuration here..
     , validateIfUnchanged: false                                          // false: validate once by field value change
