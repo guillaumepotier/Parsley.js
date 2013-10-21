@@ -830,9 +830,17 @@
     */
     , addError: function ( error ) {
       for ( var constraint in error ) {
-        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
+        var $liTemplate = $( this.options.errors.errorElem ).addClass( constraint ).html( error[ constraint ] );
 
-        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
+        if ( $liTemplate.is( 'label' ) ) {
+          var id = this.$element.attr( 'id' );
+
+          if ( id ) {
+            $liTemplate.attr( 'for', id );
+          }
+        }
+
+        $( this.ulError ).append( this.options.animate ? $liTemplate.hide().fadeIn( this.options.animateDuration ) : $liTemplate ) );
       }
     }
 
