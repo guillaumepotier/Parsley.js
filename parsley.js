@@ -887,7 +887,7 @@
 
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
-        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
+        , liClass = false !== this.options.errorMessage && 'function' !== typeof this.options.errorMessage ? 'custom-error-message' : constraintName
         , liError = {}
         , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
             this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
@@ -895,6 +895,10 @@
 
       // add liError if not shown. Do not add more than once custom errorMessage if exist
       if ( !$( this.ulError + ' .' + liClass ).length ) {
+        if ( 'function' === typeof message ) {
+          message = message ( constraint, this );
+        }
+
         liError[ liClass ] = message;
         this.addError( liError );
       }
