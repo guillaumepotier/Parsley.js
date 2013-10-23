@@ -548,7 +548,7 @@
     , bindValidationEvents: function () {
       // this field has validation events, that means it has to be validated
       this.valid = null;
-      this.$element.addClass( 'parsley-validated' );
+      this.$element.addClass( this.options.validatedClass );
 
       // remove eventually already binded events
       this.$element.off( '.' + this.type );
@@ -801,7 +801,7 @@
     */
     , ulErrorManagement: function () {
       this.ulError = '#' + this.hash;
-      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( this.options.errorListClass );
     }
 
     /**
@@ -935,7 +935,7 @@
     * @method destroy
     */
     , destroy: function () {
-      this.$element.removeClass( 'parsley-validated' );
+      this.$element.removeClass( this.options.validatedClass );
       this.reset().$element.off( '.' + this.type ).removeData( this.type );
     }
   };
@@ -1047,7 +1047,7 @@
    , bindValidationEvents: function () {
      // this field has validation events, that means it has to be validated
      this.valid = null;
-     this.$element.addClass( 'parsley-validated' );
+     this.$element.addClass( this.options.validatedClass );
 
      // remove eventually already binded events
      this.$element.off( '.' + this.type );
@@ -1330,6 +1330,8 @@
     , validationMinlength: 3                    // If trigger validation specified, only if value.length > validationMinlength
     , successClass: 'parsley-success'           // Class name on each valid input
     , errorClass: 'parsley-error'               // Class name on each invalid input
+    , errorListClass: 'parsley-error-list'
+    , validatedClass: 'parsley-validated'
     , errorMessage: false                       // Customize an unique error message showed if one constraint fails
     , validators: {}                            // Add your custom validators functions
     , showErrors: true                          // Set to false if you don't want Parsley to display error messages
