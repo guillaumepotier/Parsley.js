@@ -169,6 +169,10 @@
         if ( 'undefined' !== typeof self.options.remoteDatatype ) {
           dataType = { dataType: self.options.remoteDatatype };
         }
+        
+        if ( 'undefined' !== typeof self.options.noData ) {
+          data = null;
+        }
 
         var manage = function ( isConstraintValid, message ) {
           // remove error message if we got a server message, different from previous message
