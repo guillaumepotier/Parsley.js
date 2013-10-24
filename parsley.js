@@ -198,7 +198,7 @@
         }
 
         $.ajax( $.extend( {}, {
-            url: url
+            url: url.replace('%val', val)
           , data: data
           , type: self.options.remoteMethod || 'GET'
           , success: function ( response ) {
