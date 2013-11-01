@@ -96,6 +96,13 @@ window.ParsleyConfig = window.ParsleyConfig || {};
         }
         return day > 0 && day <= monthLength[month - 1];
       }
+      , multiselectmax : function ( selection , max ){
+      	if ( selection != null && selection.length > max ){
+      		return false;
+      	} else {
+      		return true;
+      	}
+      }
     }
     , messages: {
         minwords:       "This value should have %s words at least."
@@ -106,7 +113,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , beforedate:     "This date should be before %s."
       , afterdate:      "This date should be after %s."
       , luhn:           "This value should pass the luhn test."
-      , americandate:	"This value should be a valid date (MM/DD/YYYY)."
+      , americandate:	  "This value should be a valid date (MM/DD/YYYY)."
+      , multiselectmax: "No more than %s selections are allowed."
     }
   });
 }(window.jQuery || window.Zepto));
