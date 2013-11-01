@@ -160,7 +160,7 @@
       }
 
       , remote: function ( val, url, self ) {
-        var result = null
+        var result = $.Deferred(),
           , data = {}
           , dataType = {};
 
@@ -212,7 +212,7 @@
           }
         }, dataType ) );
 
-        return result;
+        return result.promise();
       }
 
       /**
@@ -721,10 +721,10 @@
 
     /**
     * Loop through every fields validators
-    * Adds errors after unvalid fields
+    * Adds errors after invalid fields
     *
     * @method applyValidators
-    * @return {Mixed} {Boolean} If field valid or not, null if not validated
+    * @return {Mixed} {Boolean} If field valid or not, null if not validated, Deferred if async validation
     */
     , applyValidators: function () {
       var valid = null;
@@ -738,6 +738,8 @@
         } else if ( true === result ) {
           this.constraints[ constraint ].valid = true;
           valid = false !== valid;
+        } else {
+          valid = result;
         }
       }
 
@@ -745,7 +747,7 @@
       if (false === valid) {
         this.options.listeners.onFieldError( this.element, this.constraints, this );
       } else if (true === valid && false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
-        // if onFieldSuccess returns (bool) false, consider that field si invalid
+        // if onFieldSuccess returns (bool) false, consider that field is invalid
         valid = false;
       }
 
@@ -1162,16 +1164,21 @@
     * @return {Boolean} Is form valid or not
     */
     , validate: function ( event ) {
-      var valid = true;
+      var valid = true, deferredIssues = [], itemIsValid, formIsValid;
       this.focusedField = false;
 
       for ( var item = 0; item < this.items.length; item++ ) {
-        if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
+        itemIsValid = 'undefined' !== typeof this.items[ item ] && this.items[ item ].validate()
+        if ( false === itemIsValid ) {
           valid = false;
 
           if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
             this.focusedField = this.items[ item ].$element;
           }
+        }
+        // Check if the return value of validator is a promise
+        if (itemIsValid.promise){
+          deferredIssues.push(itemIsValid);
         }
       }
 
@@ -1196,13 +1203,26 @@
         }
       }
 
+      if (valid && deferredIssues.length === 0){
+        formIsValid = $.Deferred();
+        formIsValid.resolve();
+      }
+      else if (valid && deferredIssues.length){
+        formIsValid = $.when.apply(this, deferredIssues);
+      }
+      else {
+        // Not valid
+        formIsValid = $.Deferred();
+        formIsValid.reject();
+      }
+
       // if onFormSubmit returns (bool) false, form won't be submitted, even if valid
-      var onFormSubmit = this.options.listeners.onFormSubmit( valid, event, this );
+      var onFormSubmit = this.options.listeners.onFormSubmit( formIsValid.promise(), event, this );
       if ('undefined' !== typeof onFormSubmit) {
         return onFormSubmit;
       }
 
-      return valid;
+      return formIsValid.promise();
     }
 
     , isValid: function () {
