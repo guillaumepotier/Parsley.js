@@ -1169,7 +1169,7 @@
 
       for ( var item = 0; item < this.items.length; item++ ) {
         itemIsValid = 'undefined' !== typeof this.items[ item ] && this.items[ item ].validate()
-        if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
+        if ( false === itemIsValid ) {
           valid = false;
 
           if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
