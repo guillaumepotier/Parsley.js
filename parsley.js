@@ -336,7 +336,7 @@
     *
     * @method addValidator
     * @param {String} name Validator name. Will automatically bindable through data-name=''
-    * @param {Function} fn Validator function. Must return {Boolean}
+    * @param {Function} fn Validator function. Must return { validator: fn(), priority: int }
     */
     , addValidator: function ( name, fn ) {
       this.validators[ name ] = fn;
@@ -964,11 +964,13 @@
     * @return {Boolean} Is field valid or not
     */
     , manageValidationResult: function () {
-      var valid = null;
+      var valid = null
+        , errors = [];
 
       for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].valid ) {
-          this.UI.manageError( this.constraints[ constraint ] );
+          errors.push( this.constraints[ constraint ]);
+          // this.UI.manageError( this.constraints[ constraint ] );
           valid = false;
         } else if ( true === this.constraints[ constraint ].valid ) {
           this.UI.removeError( this.constraints[ constraint ].name );
@@ -981,8 +983,20 @@
       if ( true === this.valid ) {
         this.UI.removeErrors();
         this.UI.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+
         return true;
       } else if ( false === this.valid ) {
+        if ( true === this.options.priorityEnabled ) {
+          var maxPriority = 0, constraint;
+          for ( var i = 0; i < errors.length; i++ )
+            if ( this.Validator.validators[ errors[ i ].name ]().priority > maxPriority )
+              constraint = errors[ i ];
+          this.UI.manageError( constraint );
+        } else {
+          for ( var i = 0; i < errors.length; i++ )
+            this.UI.manageError( errors[ i ] );
+        }
+
         this.UI.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
         return false;
       }
@@ -1401,6 +1415,7 @@
     // basic data-api overridable properties here..
     inputs: 'input, textarea, select'           // Default supported inputs.
     , excluded: 'input[type=hidden], input[type=file], :disabled' // Do not validate input[type=hidden] & :disabled.
+    , priorityEnabled: true                     // Will display only one error at the time depending on validators priorities
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
     , animate: true                             // fade in / fade out error messages
     , animateDuration: 300                      // fadein/fadout ms time

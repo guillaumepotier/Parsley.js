@@ -3,6 +3,7 @@
 window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     // deactivate errors animation, causing travis test suite failing
     animate: false
+  , priorityEnabled: false
   , scrollDuration: 0
   , messages: {
     type: {
@@ -67,6 +68,10 @@ $( '#validator-tests' ).parsley( {
   , messages: {
       multiple: 'This field should be a multiple of %s'
   }
+} );
+
+$( '#priorityForm' ).parsley( {
+  priorityEnabled: true
 } );
 
 $( '#onFieldValidate-form' ).parsley( { listeners: {
@@ -218,6 +223,16 @@ var testSuite = function () {
         $( '#errorMessage' ).val( 'foobar' ).parsley( 'validate' );
         expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).text() ).to.be( 'This is my custom message' );
       })
+      it ( 'Test prioritized validators', function () {
+        $( '#priorityValidator' ).val('notanemail');
+        expect( $( '#priorityForm' ).parsley( 'validate' ) ).to.be( false );
+        // just type validation error
+        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
+        $( '#priorityValidator' ).val('foo@bar.baz');
+        expect( $( '#priorityForm' ).parsley( 'validate' ) ).to.be( false );
+        // 15 chars min length validator here
+        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
+      } )
     } )
 
     /***************************************
