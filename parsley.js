@@ -1263,7 +1263,8 @@
   */
   $.fn.parsley = function ( option, fn ) {
     var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data() )
-      , newInstance = null;
+      , newInstance = null,
+      , args = Array.prototype.slice.call(arguments, 1);
 
     function bind ( self, type ) {
       var parsleyInstance = $( self ).data( type );
@@ -1289,7 +1290,7 @@
 
       // here is our parsley public function accessor
       if ( 'string' === typeof option && 'function' === typeof parsleyInstance[ option ] ) {
-        var response = parsleyInstance[ option ]( fn );
+        var response = parsleyInstance[ option ].apply( parsleyInstance, args );
 
         return 'undefined' !== typeof response ? response : $( self );
       }
