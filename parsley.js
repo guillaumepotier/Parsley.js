@@ -1263,7 +1263,7 @@
   */
   $.fn.parsley = function ( option, fn ) {
     var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data() )
-      , newInstance = null,
+      , newInstance = null
       , args = Array.prototype.slice.call(arguments, 1);
 
     function bind ( self, type ) {
