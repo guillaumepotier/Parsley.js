@@ -627,7 +627,7 @@
       for ( var constraint in this.options ) {
         var addConstraint = {};
         addConstraint[ constraint ] = this.options[ constraint ];
-        this.addConstraint( addConstraint, true );
+        this.addConstraint( addConstraint, true, false );
       }
     }
 
@@ -637,7 +637,7 @@
     * @method addConstraint
     * @param {Object} constraint { name: requirements }
     */
-    , addConstraint: function ( constraint, doNotUpdateValidationEvents ) {
+    , addConstraint: function ( constraint, doNotUpdateValidationEvents, sort ) {
         for ( var name in constraint ) {
           name = name.toLowerCase();
 
@@ -803,7 +803,11 @@
     * @returns {String} val
     */
     , getVal: function () {
-      return this.$element.data('value') || this.$element.val();
+      if ('undefined' !== typeof this.$element.parsleyDomApi()[ 'value' ]) {
+        return this.$element.parsleyDomApi()[ 'value' ];
+      }
+
+      return this.$element.data( 'value' ) || this.$element.val();
     }
 
     /**
@@ -1065,7 +1069,7 @@
       this.$element = $( element );
       this.group = options.group || false;
       this.hash = this.getName();
-      this.siblings = this.group ? '[data-group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
+      this.siblings = this.group ? '[parsley-group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.isRadioOrCheckbox = true;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
@@ -1102,7 +1106,7 @@
      }
 
      if ( 'undefined' === typeof this.$element.attr( 'name' ) ) {
-       throw "A radio / checkbox input must have a data-group attribute or a name to be Parsley validated !";
+       throw "A radio / checkbox input must have a parsley-group attribute or a name to be Parsley validated !";
      }
 
      return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
@@ -1355,7 +1359,7 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data() )
+    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data(), this.parsleyDomApi() )
       , newInstance = null;
 
     function bind ( self, type ) {
@@ -1391,7 +1395,7 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) || true === $( this ).data( 'bind' ) ) {
+    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).parsleyDomApi()[ 'bind' ] ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
@@ -1405,6 +1409,68 @@
 
   $.fn.parsley.Constructor = ParsleyForm;
 
+  /* PARSLEY auto-bind DATA-API + Global config retrieving
+  * =================================================== */
+  $( window ).on( 'load', function () {
+    $( '[parsley-validate]' ).each( function () {
+      $( this ).parsley();
+    } );
+  } );
+
+
+  /* PARSLEY DOM API
+  * =================================================== */
+  $.fn.parsleyDomApi = function () {
+    var obj = {};
+    $.each( this[0].attributes, function () {
+      if ( this.specified && /^parsley-/i.test( this.name ) ) {
+        obj[ camelize( this.name.replace( 'parsley-', '' ) ) ] = deserializeValue( this.value );
+      }
+    } );
+
+    return obj;
+  };
+
+  // Zepto deserializeValue function
+  // "true"  => true
+  // "false" => false
+  // "null"  => null
+  // "42"    => 42
+  // "42.5"  => 42.5
+  // JSON    => parse if valid
+  // String  => self
+  var deserializeValue = function( value ) {
+    var num
+    try {
+      return value ?
+        value == "true" ||
+        ( value == "false" ? false :
+          value == "null" ? null :
+          !isNaN( num = Number( value ) ) ? num :
+          /^[\[\{]/.test( value ) ? $.parseJSON( value ) :
+          value )
+        : value;
+    } catch ( e ) {
+      return value;
+    }
+  };
+
+  // Zepto camelize function
+  var camelize = function ( str ) {
+    return str.replace( /-+(.)?/g, function ( match, chr ) {
+      return chr ? chr.toUpperCase() : '';
+    } )
+  };
+
+  // Zepto dasherize function
+  var dasherize = function ( str ) {
+    return str.replace( /::/g, '/' )
+           .replace( /([A-Z]+)([A-Z][a-z])/g, '$1_$2' )
+           .replace( /([a-z\d])([A-Z])/g, '$1_$2' )
+           .replace( /_/g, '-' )
+           .toLowerCase()
+  };
+
   /**
   * Parsley plugin configuration
   *
@@ -1413,7 +1479,7 @@
   */
   $.fn.parsley.defaults = {
     // basic data-api overridable properties here..
-    inputs: 'input, textarea, select'           // Default supported inputs.
+    inputs: 'input, textarea, select'         // Default supported inputs.
     , excluded: 'input[type=hidden], input[type=file], :disabled' // Do not validate input[type=hidden] & :disabled.
     , priorityEnabled: true                     // Will display only one error at the time depending on validators priorities
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
@@ -1445,13 +1511,5 @@
     }
   };
 
-  /* PARSLEY auto-bind DATA-API + Global config retrieving
-  * =================================================== */
-  $( window ).on( 'load', function () {
-    $( '[data-validate="parsley"]' ).each( function () {
-      $( this ).parsley();
-    } );
-  } );
-
 // This plugin works with jQuery or Zepto (with data extension built for Zepto.)
-}(window.jQuery || window.Zepto);
+} ( window.jQuery || window.Zepto );

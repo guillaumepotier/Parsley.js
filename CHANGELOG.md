@@ -1,5 +1,16 @@
 #Changelog
 
+** 1.2.0**
+
+  - [BC Break] Added `priorityEnabled` option (default true). Only show highest
+    priority failing validator error message. Validator structure altered in order
+    to manage priority
+  - [BC Break] Now, custom DOM-API `parsley-` is supported and encouraged
+      - Now to validate a form, use `parsley-validate`
+      - Now to add a validator, use `parsley-<validator>`
+    Previous data-API still supported for validators (not for `data-validate`,
+    `data-value` and `data-bind`)
+
 **1.1.19**
 
   - added scrollTo feature when going to focus field
