@@ -1182,7 +1182,7 @@ parsley-error-message="You must enter a 10 characters alphanumeric value"</code>
   }
   , listeners: {
       onFieldValidate: function ( elem, ParsleyField ) { return false; }
-    , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}
+    , onFormValidate: function ( isFormValid, event, ParsleyForm ) {}
     , onFieldError: function ( elem, constraints, ParsleyField ) {}
     , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}
   }
@@ -1208,7 +1208,7 @@ parsley-error-message="You must enter a 10 characters alphanumeric value"</code>
                     <tr>
                         <td>Add a listener</td>
                         <td></td>
-                        <td>Allows you, even after Parsleys initial form binding, to add a custom listener. Available listeners currently are: <code>onFieldValidate</code>, <code>onFieldError</code>, <code>onFieldSuccess</code> and <code>onFormSubmit</code>. Their passed arguments are listed above in Default Plugin config. Note that if onFormSubmit callback returns <code>false</code>, form won't be submitted, even if Parsley valid. It allows you to add another custom check on top of Parsley. Similarly, if <code>onFieldSuccess</code> returns <code>false</code>, field would be considered as invalid and form too.</td>
+                        <td>Allows you, even after Parsleys initial form binding, to add a custom listener. Available listeners currently are: <code>onFieldValidate</code>, <code>onFieldError</code>, <code>onFieldSuccess</code> and <code>onFormValidate</code>. Their passed arguments are listed above in Default Plugin config. Note that if onFormValidate callback returns <code>false</code>, form won't be submitted, even if Parsley valid. It allows you to add another custom check on top of Parsley. Similarly, if <code>onFieldSuccess</code> returns <code>false</code>, field would be considered as invalid and form too.</td>
                         <td class="not-for-mobile">
 <pre><code>$( '#form' ).parsley( 'addListener', {
     onFieldValidate: function ( elem ) {
@@ -1451,7 +1451,7 @@ parsley-error-message="You must enter a 10 characters alphanumeric value"</code>
         } catch ( err ) {}
 
         $( '#demo-form' ).parsley( { listeners: {
-            onFormSubmit: function ( isFormValid, event ) {
+            onFormValidate: function ( isFormValid, event ) {
                 if ( isFormValid && !$( '#good-to-go').length ) {
                     $( '#demo-form-valid' ).after( '<span id="good-to-go" style="display:block;margin-top:5px;" class="alert alert-success">Yay, good to go!</span>' );
                     $( '#demo-form-valid' ).hide();

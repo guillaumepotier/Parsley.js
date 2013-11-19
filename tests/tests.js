@@ -32,20 +32,20 @@ var getErrorMessage = function ( idOrClass, constraintName ) {
 }
 
 $( '#validate-form' ).parsley( { listeners: {
-  onFormSubmit: function ( isFormValid, event ) {
+  onFormValidate: function ( isFormValid, event ) {
     $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
     event.preventDefault();
   }
 } } );
 
 $( '#focus-form' ).parsley( { listeners: {
-  onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
+  onFormValidate: function ( isFormValid, event, ParsleyForm ) {
     $( ParsleyForm.focusedField ).addClass( 'on-focus' );
   }
 } } );
 
 $( '#focus-form2' ).parsley( { listeners: {
-  onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
+  onFormValidate: function ( isFormValid, event, ParsleyForm ) {
     if ( ParsleyForm.focusedField ) {
       $( ParsleyForm.$element ).addClass( 'focus-on' );
     } else {
@@ -94,7 +94,7 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
 
     $( field ).addClass( 'success-foo-bar' );
   },
-  onFormSubmit: function ( isFormValid, event, focusField ) {
+  onFormValidate: function ( isFormValid, event, focusField ) {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
   }
 } } );
@@ -114,8 +114,8 @@ $( '#change-show-errors' ).parsley( {
 } );
 
 $( '#listeners-form' ).parsley( 'addListener', {
-  onFormSubmit: function ( isFormValid, event, focusField ) {
-    $( '#listeners-form' ).addClass( 'onFormSubmit-ok' );
+  onFormValidate: function ( isFormValid, event, focusField ) {
+    $( '#listeners-form' ).addClass( 'onFormValidate-ok' );
   }
 } );
 
@@ -980,7 +980,7 @@ var testSuite = function () {
           expect( $( '#onFieldValidate1' ).hasClass( 'parsley-success' ) ).to.be( false );
           expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( false );
         } )
-        it ( 'test onFormSubmit()' , function () {
+        it ( 'test onFormValidate()' , function () {
           expect( $( '#onFieldValidate-form' ).hasClass( 'this-form-is-invalid' ) ).to.be( true );
         } )
         it ( 'test onFieldError()', function () {
@@ -996,11 +996,11 @@ var testSuite = function () {
           $( '#onFieldValidate-form' ).parsley( 'validate' );
           expect( $( '#onFieldValidate2' ).hasClass( 'success-foo-bar' ) ).to.be( true );
         } )
-        it ( 'test addListener onFormSubmit', function () {
+        it ( 'test addListener onFormValidate', function () {
           $( '#listeners1' ).val( 'foo' );
-          expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( false );
+          expect( $( '#listeners-form' ).hasClass( 'onFormValidate-ok' ) ).to.be( false );
           $( '#listeners-form' ).parsley( 'validate' );
-          expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( true );
+          expect( $( '#listeners-form' ).hasClass( 'onFormValidate-ok' ) ).to.be( true );
         } )
       } )
       describe ( 'Test adding listeners with addListener interface', function () {
@@ -1041,7 +1041,7 @@ var testSuite = function () {
 
           $( '#onFormValidateCustom' ).parsley( {
             listeners: {
-              onFormSubmit: function () {
+              onFormValidate: function () {
                 return global;
               }
             }

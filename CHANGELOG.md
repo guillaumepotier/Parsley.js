@@ -10,6 +10,7 @@
       - Now to add a validator, use `parsley-<validator>`
     Previous data-API still supported for validators (not for `data-validate`,
     `data-value` and `data-bind`)
+  - [BC Break] `onFormSubmit` is now called `onFormValidate`
 
 **1.1.19**
 

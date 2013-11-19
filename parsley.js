@@ -803,8 +803,8 @@
     * @returns {String} val
     */
     , getVal: function () {
-      if ('undefined' !== typeof this.$element.parsleyDomApi()[ 'value' ]) {
-        return this.$element.parsleyDomApi()[ 'value' ];
+      if ('undefined' !== typeof this.$element.domApi()[ 'value' ]) {
+        return this.$element.domApi()[ 'value' ];
       }
 
       return this.$element.data( 'value' ) || this.$element.val();
@@ -1016,7 +1016,7 @@
     /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( valid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormValidate: function ( valid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -1197,7 +1197,7 @@
     /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( valid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormValidate: function ( valid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -1252,7 +1252,7 @@
 
     /**
     * Process each form field validation
-    * Display errors, call custom onFormSubmit() function
+    * Display errors, call custom onFormValidate() function
     *
     * @method validate
     * @param {Object} event jQuery Event
@@ -1293,10 +1293,10 @@
         }
       }
 
-      // if onFormSubmit returns (bool) false, form won't be submitted, even if valid
-      var onFormSubmit = this.options.listeners.onFormSubmit( valid, event, this );
-      if ('undefined' !== typeof onFormSubmit) {
-        return onFormSubmit;
+      // if onFormValidate returns (bool) false, form won't be submitted, even if valid
+      var onFormValidate = this.options.listeners.onFormValidate( valid, event, this );
+      if ('undefined' !== typeof onFormValidate) {
+        return onFormValidate;
       }
 
       return valid;
@@ -1359,7 +1359,7 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data(), this.parsleyDomApi() )
+    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data(), this.domApi() )
       , newInstance = null;
 
     function bind ( self, type ) {
@@ -1395,7 +1395,7 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).parsleyDomApi()[ 'bind' ] ) {
+    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).domApi()[ 'bind' ] ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
@@ -1409,7 +1409,7 @@
 
   $.fn.parsley.Constructor = ParsleyForm;
 
-  /* PARSLEY auto-bind DATA-API + Global config retrieving
+  /* PARSLEY auto-binding
   * =================================================== */
   $( window ).on( 'load', function () {
     $( '[parsley-validate]' ).each( function () {
@@ -1417,10 +1417,9 @@
     } );
   } );
 
-
   /* PARSLEY DOM API
   * =================================================== */
-  $.fn.parsleyDomApi = function () {
+  $.fn.domApi = function () {
     var obj = {};
     $.each( this[0].attributes, function () {
       if ( this.specified && /^parsley-/i.test( this.name ) ) {
@@ -1505,7 +1504,7 @@
       }
     , listeners: {
         onFieldValidate: function ( elem, ParsleyForm ) { return false; } // Executed on validation. Return true to ignore field validation
-      , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation. Return (bool) false to block submit, even if valid
+      , onFormValidate: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation. Return (bool) false to block submit, even if valid
       , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
       , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
     }
