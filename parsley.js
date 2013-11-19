@@ -807,7 +807,7 @@
         return this.$element.domApi()[ 'value' ];
       }
 
-      return this.$element.data( 'value' ) || this.$element.val();
+      return this.$element.val();
     }
 
     /**
@@ -1359,7 +1359,7 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data(), this.domApi() )
+    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.domApi() )
       , newInstance = null;
 
     function bind ( self, type ) {

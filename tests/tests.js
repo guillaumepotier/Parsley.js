@@ -148,7 +148,7 @@ var testSuite = function () {
         expect( $( '#hidden' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#hidden' ).parsley( 'validate' ) ).to.be( null );
       } )
-      it ( 'Should bind a DOM element with data-bind value set to true', function () {
+      it ( 'Should bind a DOM element with parsley-bind value set to true', function () {
         expect( $( '#bindNonFormInput' ).hasClass( 'parsley-validated' ) ).to.be( true );
       } )
     } )
@@ -246,7 +246,7 @@ var testSuite = function () {
         triggerSubmitValidation( '#notnull', 'foo' );
         expect( $( '#notnull' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
-      it ( 'required - data-api', function () {
+      it ( 'required - parsley-api', function () {
         triggerSubmitValidation( '#required', '' );
         expect( $( '#required' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( getErrorMessage( '#required', 'required') ).to.be( 'This value is required.' );
@@ -493,7 +493,7 @@ var testSuite = function () {
           $( '#checkbox-mincheck2' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-mincheck1' ).parsley( 'validate' ) ).to.be( true );
         } )
-        it ( 'mincheck data-group', function () {
+        it ( 'mincheck parsley-group', function () {
           $( '#checkbox-mincheckgroup1' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-mincheckgroup1' ).parsley( 'validate' ) ).to.be( false );
           expect( getErrorMessage( '#checkbox-mincheckgroup1', 'mincheck') ).to.be( 'You must select at least 2 choices.' );
@@ -614,15 +614,15 @@ var testSuite = function () {
     } )
 
     /***************************************
-         override value with data-value
+        override value with parsley-value
     ***************************************/
-    describe ( 'Override value with data-value' , function () {
-      it ( 'required - data-value is empty, value is empty', function () {
+    describe ( 'Override value with parsley-value' , function () {
+      it ( 'required - parsley-value is empty, value is empty', function () {
         triggerSubmitValidation( '#datavalue1', '' );
         expect( $( '#datavalue1' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( getErrorMessage( '#datavalue1', 'required') ).to.be( 'This value is required.' );
       } )
-      it ( 'required - data-value has value, value is empty', function () {
+      it ( 'required - parsley-value has value, value is empty', function () {
         triggerSubmitValidation( '#datavalue2', '' );
         expect( $( '#datavalue2' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -689,7 +689,7 @@ var testSuite = function () {
         expect( getErrorMessage( '#requiredchanged1', 'required') ).to.be( 'required 1' );
         expect( getErrorMessage( '#requiredchanged2', 'required') ).to.be( 'required 2' );
       } )
-      it ( 'Change error messages with data-api', function () {
+      it ( 'Change error messages with parsley-api', function () {
         triggerSubmitValidation( '#requiredchanged3', '' );
         expect( getErrorMessage( '#requiredchanged3', 'required') ).to.be( 'custom required' );
 
@@ -819,7 +819,7 @@ var testSuite = function () {
         $( '#alwaysValidate' ).parsley( 'validate' );
         expect( $( '#alwaysValidate' ).data( 'count' ) ).to.be( 3 );
       } )
-      it ( 'Test data-trigger="change" on multiple inputs', function () {
+      it ( 'Test parsley-trigger="change" on multiple inputs', function () {
         $( '#checkbox-maxcheck1' ).parsley( 'reset' );
         $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheck2' ).attr( 'checked', 'checked' );
@@ -910,7 +910,7 @@ var testSuite = function () {
           expect( $('#reset-textarea').hasClass('parsley-error')).to.be( false );
       })
       it ( 'test parsley dynamic add item', function () {
-        $( '#dynamic-form' ).append( '<input type="text" data-type="email" class="dynamic-email" data-trigger="change" value="foo" />' );
+        $( '#dynamic-form' ).append( '<input type="text" parsley-type="email" class="dynamic-email" parsley-trigger="change" value="foo" />' );
         var ParsleyForm = $( '#dynamic-form' ).parsley();
         expect( ParsleyForm.items.length ).to.be( 0 );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
@@ -947,7 +947,7 @@ var testSuite = function () {
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
-      it ( 'test setting custom error container within data-attributes', function () {
+      it ( 'test setting custom error container within parsley-attributes', function () {
         expect( $( '#dataerrorcontainer-form' ).parsley( 'validate' ) ).to.be( false );
         expect( $( '#mycustomerrorcontainer ul.parsley-error-list' ).length ).to.be( 1 );
       } )

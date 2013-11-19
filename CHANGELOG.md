@@ -5,11 +5,9 @@
   - [BC Break] Added `priorityEnabled` option (default true). Only show highest
     priority failing validator error message. Validator structure altered in order
     to manage priority
-  - [BC Break] Now, custom DOM-API `parsley-` is supported and encouraged
+  - [BC Break] added custom DOM-API `parsley-`. Previous data-API is dropped.
       - Now to validate a form, use `parsley-validate`
       - Now to add a validator, use `parsley-<validator>`
-    Previous data-API still supported for validators (not for `data-validate`,
-    `data-value` and `data-bind`)
   - [BC Break] `onFormSubmit` is now called `onFormValidate`
 
 **1.1.19**
