@@ -10,7 +10,7 @@ See TODO.md
 
 #Curent Stable Version
 
-1.1.18
+1.2.0
 
 # Browser compatibility
 

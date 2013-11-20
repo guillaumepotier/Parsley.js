@@ -1,6 +1,6 @@
 #Changelog
 
-** 1.2.0**
+** 1.2.0 (current stable)**
 
   - [BC Break] Added `priorityEnabled` option (default true). Only show highest
     priority failing validator error message. Validator structure altered in order
@@ -17,7 +17,7 @@
   - `onFieldSuccess` and onFieldError` are now called once by validation
     and not on each validator check
 
-**1.1.18 (current stable)**
+**1.1.18**
 
   - `onFormSubmit` now prevent form submission if returns (bool) false.
     It allows adding another custom check on top of Parsley.

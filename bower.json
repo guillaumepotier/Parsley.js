@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "1.1.18",
+  "version": "1.2.0",
   "dependencies": {
       "jquery": "~1.10.0",
       "bootstrap": "~2.3.2"
