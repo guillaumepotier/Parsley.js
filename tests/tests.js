@@ -851,6 +851,11 @@ var testSuite = function () {
         $( '#checkbox-maxcheck3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
         expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
       } )
+      it ( 'Test dynamic excluded fields validation', function () {
+        expect( $( '#dynamic-excluded' ).parsley( 'validate' ) ).to.be( false );
+        $( '#dynamic-disabled-email' ).attr( 'disabled', true );
+        expect( $( '#dynamic-excluded' ).parsley( 'validate' ) ).to.be( true );
+      } )
     } )
 
     /***************************************

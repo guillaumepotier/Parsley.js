@@ -889,6 +889,11 @@
         return null;
       }
 
+      // do not validate excluded fields
+      if ( this.$element.is( this.options.excluded ) ) {
+        return null;
+      }
+
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
       if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
         this.UI.reset();
@@ -1400,7 +1405,7 @@
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
     // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
-    } else if ( $( this ).is( options.inputs ) && !$( this ).is( options.excluded ) ) {
+    } else if ( $( this ).is( options.inputs ) ) {
       newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
     }
 
