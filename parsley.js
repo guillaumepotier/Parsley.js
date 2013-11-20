@@ -499,7 +499,7 @@
     */
     , manageErrorContainer: function () {
       var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.ParsleyInstance.isRadioOrCheckbox )
-        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
+        , ulTemplate = this.options.animate ? this.ulTemplate.css('display', '') : this.ulTemplate;
 
       if ( 'undefined' !== typeof errorContainer ) {
         $( errorContainer ).append( ulTemplate );

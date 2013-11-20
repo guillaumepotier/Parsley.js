@@ -1,6 +1,10 @@
 #Changelog
 
-** 1.2.0 (current stable)**
+**1.2.1**
+
+  - fix `display:block` added to error elements (#230) (PR #413)
+
+**1.2.0 (current stable)**
 
   - [BC Break] Added `priorityEnabled` option (default true). Only show highest
     priority failing validator error message. Validator structure altered in order
