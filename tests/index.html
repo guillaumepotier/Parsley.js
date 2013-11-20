@@ -43,225 +43,232 @@
     <div id="mocha"></div>
 
     <div style="display: none;">
-        <form data-validate="parsley">
-            <input type="text" id="input1" data-minlength="6" data-trigger="change keyup" />
+        <form parsley-validate>
+            <input type="text" id="input1" parsley-minlength="6" parsley-trigger="change keyup" />
             <input type="hidden" id="hidden" />
             <textarea id="textarea1"></textarea>
         </form>
         <form>
-            <input type="text" id="input2" data-validate="parsley" data-type="email" />
+            <input type="text" id="input2" parsley-validate parsley-type="email" />
             <textarea id="textarea2"></textarea>
         </form>
-        <form data-validate="parsley">
-            <input type="text" id="errormanagement" data-minlength="6" data-maxlength="10" data-type="alphanum" />
-            <input type="text" id="errorMessage" data-error-message="This is my <strong>custom</strong> message" data-minlength="20" data-type="email" />
+        <form parsley-validate>
+            <input type="text" id="errormanagement" parsley-minlength="6" parsley-maxlength="10" parsley-type="alphanum" />
+            <input type="text" id="errorMessage" parsley-error-message="This is my <strong>custom</strong> message" parsley-minlength="20" parsley-type="email" />
         </form>
-        <form id="validator-tests" data-validate="parsley">
-            <input type="text" id="notnull" data-notnull="true" />
-            <input type="text" id="notblank" data-notblank="true" />
+        <form id="priorityForm">
+            <input id="priorityValidator" type="text" parsley-type="email" parsley-minlength="15" />
+        </form>
+        <form id="validator-tests" parsley-validate>
+            <input type="text" id="notnull" parsley-notnull="true" />
+            <input type="text" id="notblank" parsley-notblank="true" />
 
-            <input type="text" id="required" data-required="true" />
+            <input type="text" id="required" parsley-required="true" />
             <input type="text" id="required-class" class="required" />
             <input type="text" id="required-html5" required="required" />
             <input type="text" id="required-html5-bis" required />
-            <select id="required-selectmultiple" multiple="multiple" name="selectmultiple" data-required="true">
+            <select id="required-selectmultiple" multiple="multiple" name="selectmultiple" parsley-required="true">
                 <option value="">Select</option>
                 <option value="foo">foo</option>
                 <option value="bar">bar</option>
             </select>
 
-            <input type="text" id="minlength" data-minlength="6" />
-            <input type="text" id="maxlength" data-maxlength="6" />
-            <input type="text" id="rangelength" data-rangelength="[6,10]" />
-            <input type="text" id="min" data-min="10" />
-            <input type="text" id="max" data-max="10" />
+            <input type="text" id="minlength" parsley-minlength="6" />
+            <input type="text" id="maxlength" parsley-maxlength="6" />
+            <input type="text" id="rangelength" parsley-rangelength="[6,10]" />
+            <input type="text" id="min" parsley-min="10" />
+            <input type="text" id="max" parsley-max="10" />
             <input type="number" id="min-html5" min="10" />
             <input type="number" id="max-html5" max="10" />
 
-            <input type="text" id="range" data-range="[6,10]" />
+            <input type="text" id="range" parsley-range="[6,10]" />
 
-            <input type="text" id="regexp" data-regexp="\d+" />
+            <input type="text" id="regexp" parsley-regexp="\d+" />
             <input type="text" id="regexp-html5" pattern="\d+" />
-            <input type="text" id="regexp-flag1" data-regexp="^[A-Z]" />
-            <input type="text" id="regexp-flag2" data-regexp="^[A-Z]" data-regexp-flag="i" />
+            <input type="text" id="regexp-flag1" parsley-regexp="^[A-Z]" />
+            <input type="text" id="regexp-flag2" parsley-regexp="^[A-Z]" parsley-regexp-flag="i" />
 
-            <input type="text" id="typeemail" data-type="email" />
+            <input type="text" id="typeemail" parsley-type="email" />
             <input type="email" id="typeemail-html5" />
 
             <input type="range" id="typerange-html5" min="5" max="10" />
 
-            <input type="text" id="typeurl" data-type="url" />
+            <input type="text" id="typeurl" parsley-type="url" />
             <input type="url" id="typeurl-html5" />
 
-            <input type="text" id="typeurlstrict" data-type="urlstrict" />
-            <input type="text" id="typedigits" data-type="digits" />
-            <input type="text" id="typenumber" data-type="number" />
-            <input type="text" id="typedateIso" data-type="dateIso" />
-            <input type="text" id="typealphanum" data-type="alphanum" />
-            <input type="text" id="typephone" data-type="phone" />
+            <input type="text" id="typeurlstrict" parsley-type="urlstrict" />
+            <input type="text" id="typedigits" parsley-type="digits" />
+            <input type="text" id="typenumber" parsley-type="number" />
+            <input type="text" id="typedateIso" parsley-type="dateIso" />
+            <input type="text" id="typealphanum" parsley-type="alphanum" />
+            <input type="text" id="typephone" parsley-type="phone" />
 
-            <input type="text" id="customvalidator" data-multiple="9" />
+            <input type="text" id="customvalidator" parsley-multiple="9" />
 
             <input type="text" id="equalTo-model" value="foobar" />
-            <input type="text" id="equalTo" data-equalTo="#equalTo-model" />
+            <input type="text" id="equalTo" parsley-equalTo="#equalTo-model" />
 
-            <input type="checkbox" id="checkbox-mincheck1" name="mincheck[]" value="foo" data-mincheck="2" />
+            <input type="checkbox" id="checkbox-mincheck1" name="mincheck[]" value="foo" parsley-mincheck="2" />
             <input type="checkbox" id="checkbox-mincheck2" name="mincheck[]" value="bar" />
 
-            <input type="checkbox" id="checkbox-mincheckgroup1" value="foo" data-group="foo" data-mincheck="2" />
-            <input type="checkbox" id="checkbox-mincheckgroup2" value="bar" data-group="foo" />
+            <input type="checkbox" id="checkbox-mincheckgroup1" value="foo" parsley-group="foo" parsley-mincheck="2" />
+            <input type="checkbox" id="checkbox-mincheckgroup2" value="bar" parsley-group="foo" />
 
-            <input type="checkbox" id="checkbox-maxcheck1" name="maxcheck[]" value="foo" data-maxcheck="2" data-trigger="change"/>
+            <input type="checkbox" id="checkbox-maxcheck1" name="maxcheck[]" value="foo" parsley-maxcheck="2" parsley-trigger="change"/>
             <input type="checkbox" id="checkbox-maxcheck2" name="maxcheck[]" value="bar" />
             <input type="checkbox" id="checkbox-maxcheck3" name="maxcheck[]" value="baz" />
 
-            <input type="checkbox" id="checkbox-rangecheck1" name="rangecheck[]" value="foo" data-rangecheck="[2,3]" />
+            <input type="checkbox" id="checkbox-rangecheck1" name="rangecheck[]" value="foo" parsley-rangecheck="[2,3]" />
             <input type="checkbox" id="checkbox-rangecheck2" name="rangecheck[]" value="bar" />
             <input type="checkbox" id="checkbox-rangecheck3" name="rangecheck[]" value="baz" />
             <input type="checkbox" id="checkbox-rangecheck4" name="rangecheck[]" value="boz" />
 
-            <input type="checkbox" id="checkbox-maxcheckchange1" name="maxcheckchange[]" value="foo" data-maxcheck="2" />
+            <input type="checkbox" id="checkbox-maxcheckchange1" name="maxcheckchange[]" value="foo" parsley-maxcheck="2" />
             <input type="checkbox" id="checkbox-maxcheckchange2" name="maxcheckchange[]" value="bar" />
             <input type="checkbox" id="checkbox-maxcheckchange3" name="maxcheckchange[]" value="baz" />
 
-            <input type="text" id="remote1" name="remote1" data-remote="http://foo.bar" data-remote-datatype="jsonp" />
-            <input type="text" id="remote2" name="remote2" data-remote="http://foo.bar/baz" data-trigger="change" data-remote-method="POST" />
+            <input type="text" id="remote1" name="remote1" parsley-remote="http://foo.bar" parsley-remote-datatype="jsonp" />
+            <input type="text" id="remote2" name="remote2" parsley-remote="http://foo.bar/baz" parsley-trigger="change" parsley-remote-method="POST" />
 
-            <input type="text" id="datavalue1" name="datavalue1" data-value="" value="" data-required="true" />
-            <input type="text" id="datavalue2" name="datavalue2" data-value="foo" value="" data-required="true" />
+            <input type="text" id="datavalue1" name="datavalue1" parsley-value="" value="" parsley-required="true" />
+            <input type="text" id="datavalue2" name="datavalue2" parsley-value="foo" value="" parsley-required="true" />
 
             <input type="submit" />
         </form>
-        <form id="validate-form" data-validate="parsley">
-            <input type="text" id="validate1" data-required="true" />
-            <input type="text" id="validate2" data-minlength="6" />
+        <form id="validate-form" parsley-validate>
+            <input type="text" id="validate1" parsley-required="true" />
+            <input type="text" id="validate2" parsley-minlength="6" />
             <input type="submit" id="validate-form-submit" />
         </form>
-        <form id="change-validation" data-validate="parsley">
-            <input type="text" id="minchar-change" data-type="email" data-trigger="keyup" data-validation-minlength="7" />
+        <form id="change-validation" parsley-validate>
+            <input type="text" id="minchar-change" parsley-type="email" parsley-trigger="keyup" parsley-validation-minlength="7" />
         </form>
-        <form id="change-show-errors" data-show-errors="false">
-            <input type="text" id="change-show-errors-field1" data-type="email" data-trigger="keyup" data-validation-minlength="0" />
-            <input type="text" id="change-show-errors-field2" data-type="url" />
+        <form id="change-show-errors" parsley-show-errors="false">
+            <input type="text" id="change-show-errors-field1" parsley-type="email" parsley-trigger="keyup" parsley-validation-minlength="0" />
+            <input type="text" id="change-show-errors-field2" parsley-type="url" />
         </form>
         <form id="requiredchanged1-form">
-            <input type="text" id="requiredchanged1" data-required="true" />
+            <input type="text" id="requiredchanged1" parsley-required="true" />
         </form>
         <form id="requiredchanged2-form">
-            <input type="text" id="requiredchanged2" data-required="true" />
-            <input type="text" id="requiredchanged3" data-required="true" data-type="email" data-required-message="custom required" data-type-email-message="custom email" />
+            <input type="text" id="requiredchanged2" parsley-required="true" />
+            <input type="text" id="requiredchanged3" parsley-required="true" parsley-type="email" parsley-required-message="custom required" parsley-type-email-message="custom email" />
         </form>
 
         <form id="errorsmanagement-form">
             <label id="errorsmanagement-labelinfo"></label>
             <label id="errorsmanagement-labelerror"></label>
-            <input type="text" id="errorsmanagement-email" data-type="email" />
+            <input type="text" id="errorsmanagement-email" parsley-type="email" />
         </form>
 
-        <form id="validation-scenarios" data-validate="parsley">
-            <input type="text" id="scenario-multiple-errors-and-required" data-required="true" data-type="email" data-rangelength="[20,50]" >
-            <input type="text" id="scenario-not-required" data-trigger="keyup" data-minlength="6" />
-            <input type="text" id="scenario-keyup-when-notvalid" data-trigger="change" data-type="email" />
-            <input type="text" id="scenario-validation-after-field-reset" data-trigger="keyup" data-required="true" />
-            <select id="scenario-validation-change-select" data-required="true">
+        <form id="validation-scenarios" parsley-validate>
+            <input type="text" id="scenario-multiple-errors-and-required" parsley-required="true" parsley-type="email" parsley-rangelength="[20,50]" >
+            <input type="text" id="scenario-not-required" parsley-trigger="keyup" parsley-minlength="6" />
+            <input type="text" id="scenario-keyup-when-notvalid" parsley-trigger="change" parsley-type="email" />
+            <input type="text" id="scenario-validation-after-field-reset" parsley-trigger="keyup" parsley-required="true" />
+            <select id="scenario-validation-change-select" parsley-required="true">
                 <option value="">Chose</option>
                 <option value="foo">foo</option>
                 <option value="bar">bar</option>
             </select>
         </form>
-        <form data-validate="parsley" id="focus-form" data-focus="last">
-            <input type="text" id="focus1" data-type="email" data-required="true" />
-            <input type="text" id="focus2" data-type="email" data-required="true" />
+        <form parsley-validate id="focus-form" parsley-focus="last">
+            <input type="text" id="focus1" parsley-type="email" parsley-required="true" />
+            <input type="text" id="focus2" parsley-type="email" parsley-required="true" />
         </form>
-        <form data-validate="parsley" id="focus-form2" data-focus="none">
-            <input type="text" id="focus3" data-type="email" data-required="true" />
-            <input type="text" id="focus4" data-type="email" data-required="true" />
+        <form parsley-validate id="focus-form2" parsley-focus="none">
+            <input type="text" id="focus3" parsley-type="email" parsley-required="true" />
+            <input type="text" id="focus4" parsley-type="email" parsley-required="true" />
         </form>
-        <form data-validate="parsley" id="hidden-input-form">
-            <input type="text" id="hidden-input1" data-type="email" data-required="true" />
+        <form parsley-validate id="hidden-input-form">
+            <input type="text" id="hidden-input1" parsley-type="email" parsley-required="true" />
             <input type="hidden" id="hidden-input2" />
         </form>
-        <form data-validate="parsley" id="destroy">
-            <input type="text" data-type="email" id="destroy-email" data-trigger="change" />
-            <input type="select" id="destroy-multiple" data-required="true"></input>
+        <form parsley-validate id="destroy">
+            <input type="text" parsley-type="email" id="destroy-email" parsley-trigger="change" />
+            <input type="select" id="destroy-multiple" parsley-required="true"></input>
         </form>
-        <form data-validate="parsley" id="reset">
-            <input type="text" id="reset-email" data-required="true" />
-            <textarea id="reset-textarea" data-required="true"></textarea>
+        <form parsley-validate id="reset">
+            <input type="text" id="reset-email" parsley-required="true" />
+            <textarea id="reset-textarea" parsley-required="true"></textarea>
         </form>
-        <form data-validate="parsley" id="dynamic-form" data-triggers="keyup change">
+        <form parsley-validate id="dynamic-form" parsley-triggers="keyup change">
         </form>
-        <form data-validate="parsley" id="onthefly-form">
+        <form parsley-validate id="onthefly-form">
             <input type="text" id="onthefly" />
         </form>
         <form dat-validate="parsley" id="dataerrorcontainer-form">
-            <input id="dataerrorcontainer" type="text" required data-error-container="#mycustomerrorcontainer" />
+            <input id="dataerrorcontainer" type="text" required parsley-error-container="#mycustomerrorcontainer" />
         </form>
         <form dat-validate="parsley" id="isValid-form">
             <input id="isValid-field" type="text" required />
         </form>
         <div id="mycustomerrorcontainer"></div>
-        <form data-validate="parsley" id="onFieldValidate-form">
-            <input type="text" id="onFieldValidate1" data-type="email" data-required="true" />
-            <input type="text" id="onFieldValidate2" data-type="email" data-required="true" />
+        <form parsley-validate id="onFieldValidate-form">
+            <input type="text" id="onFieldValidate1" parsley-type="email" parsley-required="true" />
+            <input type="text" id="onFieldValidate2" parsley-type="email" parsley-required="true" />
         </form>
         <form id="alwaysValidate-form">
-            <input type="text" id="alwaysValidate" data-type="email" />
+            <input type="text" id="alwaysValidate" parsley-type="email" />
         </form>
-        <form data-validate="parsley" id="listeners-form">
-            <input type="text" id="listeners1" data-type="email" data-required="true" />
+        <form parsley-validate id="listeners-form">
+            <input type="text" id="listeners1" parsley-type="email" parsley-required="true" />
         </form>
-        <form data-validate="parsley" id="onFieldValidatetrue-form">
-            <input type="text" id="onFieldValidatefalse" data-type="email" data-required="true" />
-            <input type="text" id="onFieldValidatetrue" data-type="email" data-required="true" />
+        <form parsley-validate id="onFieldValidatetrue-form">
+            <input type="text" id="onFieldValidatefalse" parsley-type="email" parsley-required="true" />
+            <input type="text" id="onFieldValidatetrue" parsley-type="email" parsley-required="true" />
         </form>
-        <form data-validate="parsley" id="addListenerFieldValidate">
-            <input type="text" id="addListenerFieldValidate-field" data-type="email" data-required="true" />
+        <form parsley-validate id="addListenerFieldValidate">
+            <input type="text" id="addListenerFieldValidate-field" parsley-type="email" parsley-required="true" />
         </form>
         <form id="onFormValidateCustom">
-            <input type="text" id="onFormValidateCustom-field" data-type="email" data-required="true" />
+            <input type="text" id="onFormValidateCustom-field" parsley-type="email" parsley-required="true" />
         </form>
-        <form data-validate="parsley" id="radiocheckboxes">
+        <form parsley-validate id="radiocheckboxes">
             <div id="radio-parent">
                 <input type="radio" id="radio1" name="radio" value="radio1" />
-                <input type="radio" id="radio2" name="radio" value="radio2" data-required="true" />
+                <input type="radio" id="radio2" name="radio" value="radio2" parsley-required="true" />
             </div>
             <div id="check_parent">
-                <input type="checkbox" id="check1" name="check[]" value="check1" data-required="true" />
-                <input type="checkbox" id="check2" name="check[]" value="check2" data-required="true" />
+                <input type="checkbox" id="check1" name="check[]" value="check1" parsley-required="true" />
+                <input type="checkbox" id="check2" name="check[]" value="check2" parsley-required="true" />
             </div>
         </form>
 
-        <form data-validate="parsley">
-            <input type="text" id="minwords" data-minwords="6" />
-            <input type="text" id="maxwords" data-maxwords="6" />
-            <input type="text" id="rangewords" data-rangewords="[6, 10]" />
+        <form parsley-validate>
+            <input type="text" id="minwords" parsley-minwords="6" />
+            <input type="text" id="maxwords" parsley-maxwords="6" />
+            <input type="text" id="rangewords" parsley-rangewords="[6, 10]" />
             <input type="text" id="greaterThan-model" value="1" />
-            <input type="text" id="greaterThan" data-greaterthan="#greaterThan-model" />
+            <input type="text" id="greaterThan" parsley-greaterthan="#greaterThan-model" />
             <input type="text" id="lessThan-model" value="2" />
-            <input type="text" id="lessThan" data-lessthan="#lessThan-model" />
+            <input type="text" id="lessThan" parsley-lessthan="#lessThan-model" />
             <input type="text" id="beforeDate-model" value="1/1/2014" />
-            <input type="text" id="beforeDate" data-beforedate="#beforeDate-model" />
+            <input type="text" id="beforeDate" parsley-beforedate="#beforeDate-model" />
             <input type="text" id="afterDate-model" value="1/1/2014" />
-            <input type="text" id="afterDate" data-afterdate="#afterDate-model" />
-            <input type="text" id="inList" data-inlist="true, 1, valid, value with spaces, yes, one" />
-            <input type="text" id="inListSingleValue" data-inlist="true" />
-            <input type="text" id="inListEmpty" data-inlist="" />
-            <input type="text" id="inListSingleComma" data-inlist="," />
-            <input type="text" id="inListCustomDelimiter" data-inlist="foo | bar | foo bar" data-inlist-delimiter="|" />
+            <input type="text" id="afterDate" parsley-afterdate="#afterDate-model" />
+            <input type="text" id="inList" parsley-inlist="true, 1, valid, value with spaces, yes, one" />
+            <input type="text" id="inListSingleValue" parsley-inlist="true" />
+            <input type="text" id="inListEmpty" parsley-inlist="" />
+            <input type="text" id="inListSingleComma" parsley-inlist="," />
+            <input type="text" id="inListCustomDelimiter" parsley-inlist="foo | bar | foo bar" parsley-inlist-delimiter="|" />
 
-            <input type="text" id="luhn" data-luhn="true" />
-            <input type="text" id="americanDate" data-americandate="true" />
-            <input type="text" id="es_dni" data-es_dni="true" />
-            <input type="text" id="es_cif" data-es_cif="true" />
-            <input type="text" id="es_postalcode" data-es_postalcode="true" />
-            <input type="text" id="es_ssn" data-es_ssn="true" />
-            <input type="text" id="es_ccc" data-es_ccc="true" />
+            <input type="text" id="luhn" parsley-luhn="true" />
+            <input type="text" id="americanDate" parsley-americandate="true" />
+            <input type="text" id="es_dni" parsley-es_dni="true" />
+            <input type="text" id="es_cif" parsley-es_cif="true" />
+            <input type="text" id="es_postalcode" parsley-es_postalcode="true" />
+            <input type="text" id="es_ssn" parsley-es_ssn="true" />
+            <input type="text" id="es_ccc" parsley-es_ccc="true" />
         </form>
 
-        <div data-validate="parsley" data-bind="true">
-            <input type="text" id="bindNonFormInput" data-required="true" value="" />
+        <div parsley-validate parsley-bind id="parsley-bind">
+            <input type="text" id="bindNonFormInput" parsley-required="true" value="" />
         </div>
+
+        <form id="dynamic-excluded" parsley-validate>
+            <input type="email" id="dynamic-disabled-email" required />
+        </form>
     </div>
 
     <script type="text/javascript">
@@ -269,13 +276,6 @@
           , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js';
 
         switch ( location.hash ) {
-            case '#jquery':
-                jsAppend( jquery , pause( 100 ) );
-                jsAppend( '../parsley.js' , pause( 50 ) );
-                jsAppend( '../parsley.extend.js' , pause( 50 ) );
-                jsAppend( '../l10n/parsley.es.js' , pause( 50 ) );
-                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
-                break;
             case '#zepto':
                 jsAppend( zepto , pause( 100 ) );
                 jsAppend( '../parsley.js' , pause( 50 ) );
@@ -297,12 +297,12 @@
                 jsAppend( '../dist/parsley.es.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
                 break;
-            case '#standalone':
             default:
-                jsAppend( '../dist/parsley-standalone.min.js' , pause( 100 ) );
-                jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
-                jsAppend( '../dist/parsley.es.min.js' , pause( 50 ) );
-                document.getElementById( 'info' ).innerHTML = 'Parsley test suite - Standalone Zepto Minified version';
+                jsAppend( jquery , pause( 100 ) );
+                jsAppend( '../parsley.js' , pause( 50 ) );
+                jsAppend( '../parsley.extend.js' , pause( 50 ) );
+                jsAppend( '../l10n/parsley.es.js' , pause( 50 ) );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
                 break;
         }
 

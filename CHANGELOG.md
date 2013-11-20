@@ -1,12 +1,23 @@
 #Changelog
 
+** 1.2.0 (current stable)**
+
+  - [BC Break] Added `priorityEnabled` option (default true). Only show highest
+    priority failing validator error message. Validator structure altered in order
+    to manage priority. (#189)
+  - [BC Break] added custom DOM-API `parsley-`. Previous data-API is dropped. (#143)
+      - Now to validate a form, use `parsley-validate`
+      - Now to add a validator, use `parsley-<validator>`
+  - [BC Break] `onFormSubmit` is now called `onFormValidate`
+  - Dynamic excluded fields management (#410)
+
 **1.1.19**
 
   - added scrollTo feature when going to focus field
   - `onFieldSuccess` and onFieldError` are now called once by validation
     and not on each validator check
 
-**1.1.18 (current stable)**
+**1.1.18**
 
   - `onFormSubmit` now prevent form submission if returns (bool) false.
     It allows adding another custom check on top of Parsley.

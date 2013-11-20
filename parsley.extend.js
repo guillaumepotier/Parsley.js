@@ -3,98 +3,135 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 (function ($) {
   window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     validators: {
-      minwords: function ( val, nbWords ) {
-        val = val.replace( /(^\s*)|(\s*$)/gi, "" );
-        val = val.replace( /[ ]{2,}/gi, " " );
-        val = val.replace( /\n /, "\n" );
-        val = val.split(' ').length;
+      minwords: function () {
+        return {
+          validate: function ( val, nbWords ) {
+            val = val.replace( /(^\s*)|(\s*$)/gi, "" );
+            val = val.replace( /[ ]{2,}/gi, " " );
+            val = val.replace( /\n /, "\n" );
+            val = val.split(' ').length;
 
-        return val >= nbWords;
-      }
-
-      , maxwords : function ( val, nbWords ) {
-        val = val.replace( /(^\s*)|(\s*$)/gi, "" );
-        val = val.replace( /[ ]{2,}/gi, " " );
-        val = val.replace( /\n /, "\n" );
-        val = val.split(' ').length;
-
-        return val <= nbWords;
-      }
-
-      , rangewords: function ( val, obj ) {
-        val = val.replace( /(^\s*)|(\s*$)/gi, "" );
-        val = val.replace( /[ ]{2,}/gi, " " );
-        val = val.replace( /\n /, "\n" );
-        val = val.split(' ').length;
-
-        return val >= obj[0] && val <= obj[1];
-      }
-
-      , greaterthan: function ( val, elem, self ) {
-        self.options.validateIfUnchanged = true;
-
-        return new Number(val) > new Number($( elem ).val());
-      }
-
-      , lessthan: function ( val, elem, self ) {
-        self.options.validateIfUnchanged = true;
-
-        return new Number(val) < new Number($( elem ).val());
-      }
-
-      , beforedate: function ( val, elem, self) {
-        return Date.parse(val) < Date.parse($(elem).val());
-      }
-
-      , afterdate: function ( val, elem, self) {
-        return Date.parse($(elem).val()) < Date.parse(val);
-      }
-
-      , inlist: function ( val, list, self ) {
-        var delimiter = self.options.inlistDelimiter || ',';
-        var listItems = (list + "").split(new RegExp("\\s*\\" + delimiter + "\\s*"));
-
-        return (listItems.indexOf(val.trim()) !== -1);
-      }
-
-      , luhn: function ( val, elem, self) {
-        val = val.replace(/[ -]/g, '');
-        var digit, n, sum, _j, _len1, _ref2;
-        sum = 0;
-        _ref2 = val.split('').reverse();
-        for (n = _j = 0, _len1 = _ref2.length; _j < _len1; n = ++_j) {
-          digit = _ref2[n];
-          digit = +digit;
-          if (n % 2) {
-            digit *= 2;
-            if (digit < 10) {
-              sum += digit;
-            } else {
-              sum += digit - 9;
-            }
-          } else {
-            sum += digit;
+            return val >= nbWords;
           }
+          , priority: 32
         }
-        return sum % 10 === 0;
       }
+      , maxwords : function () {
+        return {
+          validate: function ( val, nbWords ) {
+            val = val.replace( /(^\s*)|(\s*$)/gi, "" );
+            val = val.replace( /[ ]{2,}/gi, " " );
+            val = val.replace( /\n /, "\n" );
+            val = val.split(' ').length;
 
-      , americandate: function ( val, elem, self) {
-        if(!/^([01]?[0-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test(val)) {
-        	return false;
+            return val <= nbWords;
+          }
+          , priority: 32
         }
-        var parts = val.split(/[.\/-]+/);
-        var day = parseInt(parts[1], 10);
-        var month = parseInt(parts[0], 10);
-        var year = parseInt(parts[2], 10);
-        if(year == 0 || month == 0 || month > 12) {
-          return false;
+      }
+      , rangewords: function () {
+        var that = this;
+        return {
+          validate: function ( val, arrayRange) {
+            return that.minwords().validate( val, arrayRange[0] ) && that.maxwords().validate( val, arrayRange[1] );
+          }
+          , priority: 32
         }
-        var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-        if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
-          monthLength[1] = 29;
+      }
+      , greaterthan: function () {
+        return {
+          validate: function ( val, elem, self ) {
+            self.options.validateIfUnchanged = true;
+
+            return new Number(val) > new Number($( elem ).val());
+          }
+          , priority: 32
         }
-        return day > 0 && day <= monthLength[month - 1];
+      }
+      , lessthan: function () {
+        return {
+          validate: function ( val, elem, self ) {
+            self.options.validateIfUnchanged = true;
+
+            return new Number(val) < new Number($( elem ).val());
+          }
+          , priority: 32
+        }
+      }
+      , beforedate: function () {
+        return {
+          validate: function ( val, elem, self) {
+            return Date.parse(val) < Date.parse($(elem).val());
+          }
+          , priority: 32
+        }
+      }
+      , afterdate: function () {
+        return {
+          validate: function ( val, elem, self) {
+            return Date.parse($(elem).val()) < Date.parse(val);
+          }
+          , priority: 32
+        }
+      }
+      , inlist: function () {
+        return {
+          validate: function ( val, list, self ) {
+            var delimiter = self.options.inlistDelimiter || ',';
+            var listItems = (list + "").split(new RegExp("\\s*\\" + delimiter + "\\s*"));
+
+            return (listItems.indexOf(val.trim()) !== -1);
+          }
+          , priority: 32
+        }
+      }
+      , luhn: function () {
+        return {
+          validate: function ( val, elem, self) {
+            val = val.replace(/[ -]/g, '');
+            var digit, n, sum, _j, _len1, _ref2;
+            sum = 0;
+            _ref2 = val.split('').reverse();
+            for (n = _j = 0, _len1 = _ref2.length; _j < _len1; n = ++_j) {
+              digit = _ref2[n];
+              digit = +digit;
+              if (n % 2) {
+                digit *= 2;
+                if (digit < 10) {
+                  sum += digit;
+                } else {
+                  sum += digit - 9;
+                }
+              } else {
+                sum += digit;
+              }
+            }
+            return sum % 10 === 0;
+          }
+          , priority: 32
+        }
+      }
+      , americandate: function () {
+        return {
+          validate: function ( val, elem, self) {
+            if ( !/^([01]?[0-9])[\.\/-]([0-3]?[0-9])[\.\/-]([0-9]{4}|[0-9]{2})$/.test( val ) ) {
+              return false;
+            }
+            var parts = val.split(/[.\/-]+/);
+            var day = parseInt(parts[1], 10);
+            var month = parseInt(parts[0], 10);
+            var year = parseInt(parts[2], 10);
+            if ( year == 0 || month == 0 || month > 12 ) {
+              return false;
+            }
+            var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+            if ( year % 400 == 0 || ( year % 100 != 0 && year % 4 == 0 ) ) {
+              monthLength[1] = 29;
+            }
+            return day > 0 && day <= monthLength[month - 1];
+          }
+          , priority: 32
+        }
       }
     }
     , messages: {

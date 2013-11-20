@@ -3,6 +3,8 @@
 window.ParsleyConfig = $.extend( true, {}, window.ParsleyConfig, {
     // deactivate errors animation, causing travis test suite failing
     animate: false
+  , priorityEnabled: false
+  , scrollDuration: 0
   , messages: {
     type: {
       urlstrict: "urlstrict global override."
@@ -30,20 +32,20 @@ var getErrorMessage = function ( idOrClass, constraintName ) {
 }
 
 $( '#validate-form' ).parsley( { listeners: {
-  onFormSubmit: function ( isFormValid, event ) {
+  onFormValidate: function ( isFormValid, event ) {
     $( '#validate-form' ).addClass( isFormValid ? 'form-valid' : 'form-invalid' );
     event.preventDefault();
   }
 } } );
 
 $( '#focus-form' ).parsley( { listeners: {
-  onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
+  onFormValidate: function ( isFormValid, event, ParsleyForm ) {
     $( ParsleyForm.focusedField ).addClass( 'on-focus' );
   }
 } } );
 
 $( '#focus-form2' ).parsley( { listeners: {
-  onFormSubmit: function ( isFormValid, event, ParsleyForm ) {
+  onFormValidate: function ( isFormValid, event, ParsleyForm ) {
     if ( ParsleyForm.focusedField ) {
       $( ParsleyForm.$element ).addClass( 'focus-on' );
     } else {
@@ -54,13 +56,22 @@ $( '#focus-form2' ).parsley( { listeners: {
 
 $( '#validator-tests' ).parsley( {
   validators: {
-    multiple: function ( val, multiple ) {
-      return val % multiple === 0;
+    multiple: function () {
+      return {
+        validate: function ( val, multiple ) {
+          return val % multiple === 0;
+        }
+        , priority: 32
+      }
     }
   }
   , messages: {
       multiple: 'This field should be a multiple of %s'
   }
+} );
+
+$( '#priorityForm' ).parsley( {
+  priorityEnabled: true
 } );
 
 $( '#onFieldValidate-form' ).parsley( { listeners: {
@@ -83,7 +94,7 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
 
     $( field ).addClass( 'success-foo-bar' );
   },
-  onFormSubmit: function ( isFormValid, event, focusField ) {
+  onFormValidate: function ( isFormValid, event, focusField ) {
     $( '#onFieldValidate-form' ).addClass( 'this-form-is-invalid' );
   }
 } } );
@@ -103,8 +114,8 @@ $( '#change-show-errors' ).parsley( {
 } );
 
 $( '#listeners-form' ).parsley( 'addListener', {
-  onFormSubmit: function ( isFormValid, event, focusField ) {
-    $( '#listeners-form' ).addClass( 'onFormSubmit-ok' );
+  onFormValidate: function ( isFormValid, event, focusField ) {
+    $( '#listeners-form' ).addClass( 'onFormValidate-ok' );
   }
 } );
 
@@ -137,7 +148,7 @@ var testSuite = function () {
         expect( $( '#hidden' ).hasClass( 'parsley-validated' ) ).to.be( false );
         expect( $( '#hidden' ).parsley( 'validate' ) ).to.be( null );
       } )
-      it ( 'Should bind a DOM element with data-bind value set to true', function () {
+      it ( 'Should bind a DOM element with parsley-bind value set to true', function () {
         expect( $( '#bindNonFormInput' ).hasClass( 'parsley-validated' ) ).to.be( true );
       } )
     } )
@@ -212,6 +223,16 @@ var testSuite = function () {
         $( '#errorMessage' ).val( 'foobar' ).parsley( 'validate' );
         expect( $( '#' + $( '#errorMessage' ).parsley( 'getHash' ) + ' li' ).text() ).to.be( 'This is my custom message' );
       })
+      it ( 'Test prioritized validators', function () {
+        $( '#priorityValidator' ).val('notanemail');
+        expect( $( '#priorityForm' ).parsley( 'validate' ) ).to.be( false );
+        // just type validation error
+        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
+        $( '#priorityValidator' ).val('foo@bar.baz');
+        expect( $( '#priorityForm' ).parsley( 'validate' ) ).to.be( false );
+        // 15 chars min length validator here
+        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
+      } )
     } )
 
     /***************************************
@@ -225,7 +246,7 @@ var testSuite = function () {
         triggerSubmitValidation( '#notnull', 'foo' );
         expect( $( '#notnull' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
-      it ( 'required - data-api', function () {
+      it ( 'required - parsley-api', function () {
         triggerSubmitValidation( '#required', '' );
         expect( $( '#required' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( getErrorMessage( '#required', 'required') ).to.be( 'This value is required.' );
@@ -472,7 +493,7 @@ var testSuite = function () {
           $( '#checkbox-mincheck2' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-mincheck1' ).parsley( 'validate' ) ).to.be( true );
         } )
-        it ( 'mincheck data-group', function () {
+        it ( 'mincheck parsley-group', function () {
           $( '#checkbox-mincheckgroup1' ).attr( 'checked', 'checked' );
           expect( $( '#checkbox-mincheckgroup1' ).parsley( 'validate' ) ).to.be( false );
           expect( getErrorMessage( '#checkbox-mincheckgroup1', 'mincheck') ).to.be( 'You must select at least 2 choices.' );
@@ -593,15 +614,15 @@ var testSuite = function () {
     } )
 
     /***************************************
-         override value with data-value
+        override value with parsley-value
     ***************************************/
-    describe ( 'Override value with data-value' , function () {
-      it ( 'required - data-value is empty, value is empty', function () {
+    describe ( 'Override value with parsley-value' , function () {
+      it ( 'required - parsley-value is empty, value is empty', function () {
         triggerSubmitValidation( '#datavalue1', '' );
         expect( $( '#datavalue1' ).hasClass( 'parsley-error' ) ).to.be( true );
         expect( getErrorMessage( '#datavalue1', 'required') ).to.be( 'This value is required.' );
       } )
-      it ( 'required - data-value has value, value is empty', function () {
+      it ( 'required - parsley-value has value, value is empty', function () {
         triggerSubmitValidation( '#datavalue2', '' );
         expect( $( '#datavalue2' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
@@ -668,7 +689,7 @@ var testSuite = function () {
         expect( getErrorMessage( '#requiredchanged1', 'required') ).to.be( 'required 1' );
         expect( getErrorMessage( '#requiredchanged2', 'required') ).to.be( 'required 2' );
       } )
-      it ( 'Change error messages with data-api', function () {
+      it ( 'Change error messages with parsley-api', function () {
         triggerSubmitValidation( '#requiredchanged3', '' );
         expect( getErrorMessage( '#requiredchanged3', 'required') ).to.be( 'custom required' );
 
@@ -798,7 +819,7 @@ var testSuite = function () {
         $( '#alwaysValidate' ).parsley( 'validate' );
         expect( $( '#alwaysValidate' ).data( 'count' ) ).to.be( 3 );
       } )
-      it ( 'Test data-trigger="change" on multiple inputs', function () {
+      it ( 'Test parsley-trigger="change" on multiple inputs', function () {
         $( '#checkbox-maxcheck1' ).parsley( 'reset' );
         $( '#checkbox-maxcheck1' ).attr( 'checked', 'checked' );
         $( '#checkbox-maxcheck2' ).attr( 'checked', 'checked' );
@@ -829,6 +850,11 @@ var testSuite = function () {
         expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 0 );
         $( '#checkbox-maxcheck3' ).attr( 'checked', 'checked' ).trigger( $.Event( 'change' ) );
         expect( $( 'ul#' + $( '#checkbox-maxcheck1' ).parsley( 'getHash' ) ).length ).to.be( 1 );
+      } )
+      it ( 'Test dynamic excluded fields validation', function () {
+        expect( $( '#dynamic-excluded' ).parsley( 'validate' ) ).to.be( false );
+        $( '#dynamic-disabled-email' ).attr( 'disabled', true );
+        expect( $( '#dynamic-excluded' ).parsley( 'validate' ) ).to.be( true );
       } )
     } )
 
@@ -889,7 +915,7 @@ var testSuite = function () {
           expect( $('#reset-textarea').hasClass('parsley-error')).to.be( false );
       })
       it ( 'test parsley dynamic add item', function () {
-        $( '#dynamic-form' ).append( '<input type="text" data-type="email" class="dynamic-email" data-trigger="change" value="foo" />' );
+        $( '#dynamic-form' ).append( '<input type="text" parsley-type="email" class="dynamic-email" parsley-trigger="change" value="foo" />' );
         var ParsleyForm = $( '#dynamic-form' ).parsley();
         expect( ParsleyForm.items.length ).to.be( 0 );
         expect( $( '#dynamic-form' ).parsley( 'validate' ) ).to.be( true );
@@ -926,7 +952,7 @@ var testSuite = function () {
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
         expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
-      it ( 'test setting custom error container within data-attributes', function () {
+      it ( 'test setting custom error container within parsley-attributes', function () {
         expect( $( '#dataerrorcontainer-form' ).parsley( 'validate' ) ).to.be( false );
         expect( $( '#mycustomerrorcontainer ul.parsley-error-list' ).length ).to.be( 1 );
       } )
@@ -959,7 +985,7 @@ var testSuite = function () {
           expect( $( '#onFieldValidate1' ).hasClass( 'parsley-success' ) ).to.be( false );
           expect( $( '#onFieldValidate1' ).hasClass( 'parsley-error' ) ).to.be( false );
         } )
-        it ( 'test onFormSubmit()' , function () {
+        it ( 'test onFormValidate()' , function () {
           expect( $( '#onFieldValidate-form' ).hasClass( 'this-form-is-invalid' ) ).to.be( true );
         } )
         it ( 'test onFieldError()', function () {
@@ -975,11 +1001,11 @@ var testSuite = function () {
           $( '#onFieldValidate-form' ).parsley( 'validate' );
           expect( $( '#onFieldValidate2' ).hasClass( 'success-foo-bar' ) ).to.be( true );
         } )
-        it ( 'test addListener onFormSubmit', function () {
+        it ( 'test addListener onFormValidate', function () {
           $( '#listeners1' ).val( 'foo' );
-          expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( false );
+          expect( $( '#listeners-form' ).hasClass( 'onFormValidate-ok' ) ).to.be( false );
           $( '#listeners-form' ).parsley( 'validate' );
-          expect( $( '#listeners-form' ).hasClass( 'onFormSubmit-ok' ) ).to.be( true );
+          expect( $( '#listeners-form' ).hasClass( 'onFormValidate-ok' ) ).to.be( true );
         } )
       } )
       describe ( 'Test adding listeners with addListener interface', function () {
@@ -1020,7 +1046,7 @@ var testSuite = function () {
 
           $( '#onFormValidateCustom' ).parsley( {
             listeners: {
-              onFormSubmit: function () {
+              onFormValidate: function () {
                 return global;
               }
             }
@@ -1428,7 +1454,5 @@ var testSuite = function () {
     	 expect( getErrorMessage( '#es_cif', 'es_cif') ).to.be( 'This value should be a valid CIF (Example: B00000000).' );
        } )
      } )
-
   } )
 }
-
