@@ -701,10 +701,14 @@ var testSuite = function () {
             successClass: 'parsley-great'
           , errorClass: 'parsley-fail'
           , errors: {
-            classHandler: function () {
+            classHandler: function ( element, isRadioOrCheckbox ) {
+              expect( isRadioOrCheckbox ).to.be( false );
+              expect( element ).to.be.an( 'object' );
               return $( '#errorsmanagement-labelinfo' );
             }
-            , container: function () {
+            , container: function ( element , isRadioOrCheckbox ) {
+              expect( isRadioOrCheckbox ).to.be( false );
+              expect( element ).to.be.an( 'object' );
               return $( '#errorsmanagement-labelerror' );
             }
             , errorsWrapper: '<div></div>'

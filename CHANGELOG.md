@@ -5,6 +5,7 @@
   - fix `display:block` added to error elements (#230) (PR #413)
   - added some more translations
   - added `data-parsley-namespace` feature to allow W3C compliant DOM-API (#424)
+  - fixed options.error.container element (#425)
 
 **1.2.0 (current stable)**
 
