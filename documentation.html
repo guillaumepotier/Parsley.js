@@ -243,6 +243,10 @@
 &lt;form parsley-validate>
   [...]
 &lt;/form></code></pre>
+            <div class="alert alert-block alert-info">
+                <span class="label label-important">Heads up!</span> <strong>W3C standards</strong>:
+                Parsley by default use <code>parsley-</code> API, which is so nice and simple, but absolutely not W3C valid. This is a personal choice, deal with it :) But, if you really want to be W3C compliant, feel free to configure your own DOM-API namespace by overriding Parsley default configs or using <code>data-parsley-namespace="data-parsley-"</code> (see below).
+            </div>
             </section>
             <a href="#top" class="top pull-right">Top</a>
 
@@ -252,7 +256,7 @@
                 <h3>Parsley Form</h3>
                 <p>This is the main Parsley form validation factory, where you decide if a form is validated, and set some extra options.</p>
                 <pre><code>&lt;form parsley-validate>&lt;/form></code></pre>
-                 <div class="alert alert-block alert-info">
+                <div class="alert alert-block alert-info">
                 <span class="label label-important">Heads up!</span> <strong>HTML5</strong>:
                 If you use HTML5 types and want to disable HTML5 native browser validation, add a <code>novalidate</code> attribute to <code>form</code> tag.
                 </div>
@@ -267,6 +271,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td><code>data-parsley-namespace</code></td>
+                        <td>parsley-</td>
+                        <td>Choose the DOM-API you want to use for Parsley.</td>
+                        <td  class="not-for-mobile"></td>
+                    </tr>
                     <tr>
                         <td><code>parsley-validate</code></td>
                         <td></td>

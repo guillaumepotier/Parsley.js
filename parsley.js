@@ -803,8 +803,8 @@
     * @returns {String} val
     */
     , getVal: function () {
-      if ('undefined' !== typeof this.$element.domApi()[ 'value' ]) {
-        return this.$element.domApi()[ 'value' ];
+      if ('undefined' !== typeof this.$element.domApi( this.options.namespace )[ 'value' ]) {
+        return this.$element.domApi( this.options.namespace )[ 'value' ];
       }
 
       return this.$element.val();
@@ -1364,7 +1364,8 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.domApi() )
+    var namespace = { namespace: $( this ).data( 'parsleyNamespace' ) ? $( this ).data( 'parsleyNamespace' ) : ( 'undefined' !== typeof option && 'undefined' !== typeof option.namespace ? option.namespace : $.fn.parsley.defaults.namespace ) }
+      , options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.domApi( namespace.namespace ) )
       , newInstance = null;
 
     function bind ( self, type ) {
@@ -1400,7 +1401,7 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).domApi()[ 'bind' ] ) {
+    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).domApi( namespace.namespace )[ 'bind' ] ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
@@ -1412,8 +1413,6 @@
     return 'function' === typeof fn ? fn() : newInstance;
   };
 
-  $.fn.parsley.Constructor = ParsleyForm;
-
   /* PARSLEY auto-binding
   * =================================================== */
   $( window ).on( 'load', function () {
@@ -1424,11 +1423,17 @@
 
   /* PARSLEY DOM API
   * =================================================== */
-  $.fn.domApi = function () {
-    var obj = {};
-    $.each( this[0].attributes, function () {
-      if ( this.specified && /^parsley-/i.test( this.name ) ) {
-        obj[ camelize( this.name.replace( 'parsley-', '' ) ) ] = deserializeValue( this.value );
+  $.fn.domApi = function ( namespace ) {
+    var obj = {}
+      , regex = new RegExp("^" + namespace, 'i');
+
+    if ( 'undefined' === typeof this[ 0 ] ) {
+      return {};
+    }
+
+    $.each( this[ 0 ].attributes, function () {
+      if ( this.specified && regex.test( this.name ) ) {
+        obj[ camelize( this.name.replace( namespace, '' ) ) ] = deserializeValue( this.value );
       }
     } );
 
@@ -1483,7 +1488,8 @@
   */
   $.fn.parsley.defaults = {
     // basic data-api overridable properties here..
-    inputs: 'input, textarea, select'         // Default supported inputs.
+    namespace: 'parsley-'                       // DOM-API, default 'parsley-'. W3C valid would be 'data-parsley-' but quite ugly
+    , inputs: 'input, textarea, select'         // Default supported inputs.
     , excluded: 'input[type=hidden], input[type=file], :disabled' // Do not validate input[type=hidden] & :disabled.
     , priorityEnabled: true                     // Will display only one error at the time depending on validators priorities
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..

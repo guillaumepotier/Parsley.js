@@ -227,12 +227,16 @@
         <form parsley-validate id="radiocheckboxes">
             <div id="radio-parent">
                 <input type="radio" id="radio1" name="radio" value="radio1" />
-                <input type="radio" id="radio2" name="radio" value="radio2" parsley-required="true" />
+                <input type="radio" id="radio2" name="radio" value="radio2" required />
             </div>
             <div id="check_parent">
-                <input type="checkbox" id="check1" name="check[]" value="check1" parsley-required="true" />
-                <input type="checkbox" id="check2" name="check[]" value="check2" parsley-required="true" />
+                <input type="checkbox" id="check1" name="check[]" value="check1" required />
+                <input type="checkbox" id="check2" name="check[]" value="check2" required />
             </div>
+        </form>
+
+        <form id="dom-api" parsley-validate data-parsley-namespace="data-parsley-">
+            <input type="text" id="dom-api-input" data-parsley-minlength="15" />
         </form>
 
         <form parsley-validate>

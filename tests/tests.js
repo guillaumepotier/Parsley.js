@@ -1080,6 +1080,17 @@ var testSuite = function () {
     } )
 
     /***************************************
+          test parsley DOM-API namespace
+     ***************************************/
+     describe ( 'test parsley DOM-API namespace', function () {
+       it ( 'Test overriding default parsley DOM-API', function () {
+         $( '#dom-api-input' ).val( 'foo' );
+         expect( $( '#dom-api' ).parsley( 'validate' ) ).to.be( false );
+         $( '#dom-api-input' ).val( 'foobarbazquxbux' );
+         expect( $( '#dom-api' ).parsley( 'validate' ) ).to.be( true );
+       } )
+     } )
+    /***************************************
             test parsley.extend.js
      ***************************************/
      describe ( 'Test Parsley extend', function () {
