@@ -979,7 +979,6 @@
       for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].valid ) {
           errors.push( this.constraints[ constraint ]);
-          // this.UI.manageError( this.constraints[ constraint ] );
           valid = false;
         } else if ( true === this.constraints[ constraint ].valid ) {
           this.UI.removeError( this.constraints[ constraint ].name );
@@ -996,10 +995,15 @@
         return true;
       } else if ( false === this.valid ) {
         if ( true === this.options.priorityEnabled ) {
-          var maxPriority = 0, constraint;
-          for ( var i = 0; i < errors.length; i++ )
-            if ( this.Validator.validators[ errors[ i ].name ]().priority > maxPriority )
+          var maxPriority = 0, constraint, priority;
+          for ( var i = 0; i < errors.length; i++ ) {
+            priority = this.Validator.validators[ errors[ i ].name ]().priority;
+
+            if ( priority > maxPriority ) {
               constraint = errors[ i ];
+              maxPriority = priority;
+            }
+          }
           this.UI.manageError( constraint );
         } else {
           for ( var i = 0; i < errors.length; i++ )

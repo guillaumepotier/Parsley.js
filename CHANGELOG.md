@@ -6,6 +6,7 @@
   - added some more translations
   - added `data-parsley-namespace` feature to allow W3C compliant DOM-API (#424)
   - fixed options.error.container element (#425)
+  - fixed priority validator error (#426)
 
 **1.2.0 (current stable)**
 

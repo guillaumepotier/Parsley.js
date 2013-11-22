@@ -227,11 +227,11 @@ var testSuite = function () {
         $( '#priorityValidator' ).val('notanemail');
         expect( $( '#priorityForm' ).parsley( 'validate' ) ).to.be( false );
         // just type validation error
-        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
+        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li.type' ).length ).to.be( 1 );
         $( '#priorityValidator' ).val('foo@bar.baz');
         expect( $( '#priorityForm' ).parsley( 'validate' ) ).to.be( false );
         // 15 chars min length validator here
-        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
+        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li.minlength' ).length ).to.be( 1 );
       } )
     } )
 
