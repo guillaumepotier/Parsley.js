@@ -446,6 +446,15 @@ var testSuite = function () {
         triggerSubmitValidation( '#typephone', '(917) 5878 5457' );
         expect( $( '#typephone' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'tel', function () {
+        triggerSubmitValidation( '#typephone2', 'foo' );
+        expect( $( '#typephone2' ).hasClass( 'parsley-error' ) ).to.be( true );
+        expect( getErrorMessage( '#typephone2', 'type') ).to.be( 'This value should be a valid phone number.' );
+        triggerSubmitValidation( '#typephone2', '(917) 5878 5457' );
+        expect( $( '#typephone2' ).hasClass( 'parsley-success' ) ).to.be( true );
+      } )
+
+
       it ( 'number', function () {
         triggerSubmitValidation( '#typenumber', 'foo' );
         expect( $( '#typenumber' ).hasClass( 'parsley-error' ) ).to.be( true );

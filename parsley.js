@@ -593,8 +593,9 @@
       }
 
       // add html5 supported types & options
-      if ( 'undefined' !== typeof this.$element.attr( 'type' ) && new RegExp( this.$element.attr( 'type' ), 'i' ).test( 'email url number range' ) ) {
-        this.options.type = this.$element.attr( 'type' );
+      var type = this.$element.attr( 'type' );
+      if ( 'undefined' !== typeof type && new RegExp( type, 'i' ).test( 'email url number range tel' ) ) {
+        this.options.type = 'tel' === type ? 'phone' : type;
 
         // number and range types could have min and/or max values
         if ( new RegExp( this.options.type, 'i' ).test( 'number range' ) ) {
