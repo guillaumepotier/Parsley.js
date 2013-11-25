@@ -1208,8 +1208,13 @@ parsley-error-message="You must enter a 10 characters alphanumeric value"</code>
                         <td  class="not-for-mobile"><p>Add a custom validator that checks if number is a multiple of another:</p>
 <pre><code>$( '#form' ).parsley( {
     validators: {
-      multiple: function ( val, multiple ) {
-        return val % multiple === 0;
+      multiple: function() {
+        return {
+          validate: function(val, multiple) {
+            return val % multiple === 0;
+          },
+          priority: 2
+        };
       }
     }
   , messages: {
