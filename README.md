@@ -65,6 +65,12 @@ Some integrations are
 * [WTForms](https://github.com/johannes-gehrs/wtforms-parsleyjs)
 * [Cascade Framework](https://github.com/jslegers/cascadeframework/)
 
+##Conditional Logic
+
+If you want to show and hide form elements based on answers to certain fields, the library below extends parsely.js adding conditional logic.
+
+* [Parsely-conditions](http://themonk.github.io/parsely-conditions/)
+
 ## Global
 
 * fork repository
