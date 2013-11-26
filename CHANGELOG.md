@@ -3,6 +3,8 @@
 **1.2.2**
 
   - added `data-parsley-validate` W3C compliant support
+  - removeConstraint does not destroy anymore ParsleyField instance on last
+    error removal. It just reset UI (#259)
 
 **1.2.1 (current stable)**
 

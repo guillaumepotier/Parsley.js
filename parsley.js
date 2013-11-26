@@ -733,15 +733,9 @@
         this.isRequired = false;
       }
 
-      // if there are no more constraint, destroy parsley instance for this field
+      // if there are no more constraint, reset errors and validation state
       if ( !this.hasConstraints() ) {
-        // in a form context, remove item from parent
-        if ( 'ParsleyForm' === typeof this.getParent() ) {
-          this.getParent().removeItem( this.$element );
-          return;
-        }
-
-        this.destroy();
+        this.UI.reset();
         return;
       }
 

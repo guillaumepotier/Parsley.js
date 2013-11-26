@@ -968,7 +968,7 @@ var testSuite = function () {
         $( '#onthefly' ).parsley( 'removeConstraint', 'type' ).val( 'foo' );
         $( '#onthefly-form' ).parsley( 'validate' );
         expect( $( '#onthefly' ).hasClass( 'parsley-error' ) ).to.be( false );
-        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( false );
+        expect( $( '#onthefly' ).hasClass( 'parsley-validated' ) ).to.be( true );
       } )
       it ( 'test setting custom error container within parsley-attributes', function () {
         expect( $( '#dataerrorcontainer-form' ).parsley( 'validate' ) ).to.be( false );
