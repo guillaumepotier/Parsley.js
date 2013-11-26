@@ -342,10 +342,27 @@
     * Add / override a validator in validators list
     *
     * @method addValidator
-    * @param {String} name Validator name. Will automatically bindable through data-name=''
-    * @param {Function} fn Validator function. Must return { validator: fn(), priority: int }
+    * @param {String} name Validator name.
+    * @param {Function} fn Validator. Must return { validator: fn(), priority: int }
     */
     , addValidator: function ( name, fn ) {
+      if ('undefined' === typeof fn().validate) {
+        throw new Error( 'Validator `' + name + '` must have a validate method. See more here: http://parsleyjs.org/documentation.html#javascript-general' );
+      }
+
+      // add default prioirty if not given.
+      if ('undefined' === typeof fn().priority) {
+        fn = {
+            validate: fn().validate
+          , priority: 32
+        };
+
+        // Warn if possible
+        if (window.console && window.console.warn) {
+          window.console.warn( 'Validator `' + name + '` should have a priority. Default priority 32 given' );
+        }
+      }
+
       this.validators[ name ] = fn;
     }
 
@@ -1436,18 +1453,20 @@
   /* PARSLEY DOM API
   * =================================================== */
   $.fn.domApi = function ( namespace ) {
-    var obj = {}
+    var attribute,
+      obj = {}
       , regex = new RegExp("^" + namespace, 'i');
 
     if ( 'undefined' === typeof this[ 0 ] ) {
       return {};
     }
 
-    $.each( this[ 0 ].attributes, function () {
-      if ( this.specified && regex.test( this.name ) ) {
-        obj[ camelize( this.name.replace( namespace, '' ) ) ] = deserializeValue( this.value );
+    for ( var i in this[ 0 ].attributes ) {
+      attribute = this[ 0 ].attributes[ i ];
+      if ( attribute.specified && regex.test( attribute.name ) ) {
+        obj[ camelize( attribute.name.replace( namespace, '' ) ) ] = deserializeValue( attribute.value );
       }
-    } );
+    }
 
     return obj;
   };

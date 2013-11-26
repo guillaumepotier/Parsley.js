@@ -1,6 +1,11 @@
 {
   "name": "parsleyjs",
-  "version": "1.2.0",
+  "version": "1.2.1",
+  "ignore": [
+      "bin",
+      "tests",
+      "bower.json"
+    ],
   "dependencies": {
       "jquery": "~1.10.0",
       "bootstrap": "~2.3.2"
