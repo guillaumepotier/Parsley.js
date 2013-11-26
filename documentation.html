@@ -245,7 +245,7 @@
 &lt;/form></code></pre>
             <div class="alert alert-block alert-info">
                 <span class="label label-important">Heads up!</span> <strong>W3C standards</strong>:
-                Parsley by default use <code>parsley-</code> API, which is so nice and simple, but absolutely not W3C valid. This is a personal choice, deal with it :) But, if you really want to be W3C compliant, feel free to configure your own DOM-API namespace by overriding Parsley default configs or using <code>data-parsley-namespace="data-parsley-"</code> (see below).
+                Parsley by default use <code>parsley-</code> API, which is so nice and simple, but absolutely not W3C valid. This is a personal choice, deal with it :) But, if you really want to be W3C compliant, feel free to configure your own DOM-API namespace by overriding Parsley default configs or using <code>data-parsley-namespace="data-parsley-"</code> and use <code>data-parsley-validate</code> to auto bind forms. (see below)
             </div>
             </section>
             <a href="#top" class="top pull-right">Top</a>
@@ -278,7 +278,10 @@
                         <td  class="not-for-mobile"></td>
                     </tr>
                     <tr>
-                        <td><code>parsley-validate</code></td>
+                        <td>
+                            <code>parsley-validate</code><br/>
+                            <code>data-parsley-validate</code>
+                        </td>
                         <td></td>
                         <td>Bind Parsley validation to the form and its items with validation constraints</td>
                         <td  class="not-for-mobile"></td>

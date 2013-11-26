@@ -48,6 +48,11 @@
             <input type="hidden" id="hidden" />
             <textarea id="textarea1"></textarea>
         </form>
+        <form data-parsley-validate>
+            <input type="text" id="input1-1" parsley-minlength="6" parsley-trigger="change keyup" />
+            <input type="hidden" id="hidden1-1" />
+            <textarea id="textarea1-1"></textarea>
+        </form>
         <form>
             <input type="text" id="input2" parsley-validate parsley-type="email" />
             <textarea id="textarea2"></textarea>

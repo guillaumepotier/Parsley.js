@@ -1,5 +1,9 @@
 #Changelog
 
+**1.2.2**
+
+  - added `data-parsley-validate` W3C compliant support
+
 **1.2.1 (current stable)**
 
   - fix `display:block` added to error elements (#230) (PR #413)

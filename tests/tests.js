@@ -137,8 +137,13 @@ var testSuite = function () {
     ***************************************/
     describe ( 'Test Parsley auto binding', function () {
       it ( 'Items with validation methods inside a form validated by Parsley are binded', function () {
+        // with parsley-validate
         expect( $( '#input1' ).hasClass( 'parsley-validated' ) ).to.be( true );
         expect( $( '#textarea1' ).hasClass( 'parsley-validated' ) ).to.be( false );
+
+        // with data-parsley-validate
+        expect( $( '#input1-1' ).hasClass( 'parsley-validated' ) ).to.be( true );
+        expect( $( '#textarea1-1' ).hasClass( 'parsley-validated' ) ).to.be( false );
       } )
       it ( 'Items with validation methods can be validated as stand-alone too', function () {
         expect( $( '#input2' ).hasClass( 'parsley-validated' ) ).to.be( true );
