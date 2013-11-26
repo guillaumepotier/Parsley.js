@@ -166,8 +166,8 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , beforedate:     "This date should be before %s."
       , afterdate:      "This date should be after %s."
       , luhn:           "This value should pass the luhn test."
-      , americandate:	"This value should be a valid date (MM/DD/YYYY)."
-      , dmydate:	"This value should be a valid date (DD/MM/YYYY)."
+      , americandate:	  "This value should be a valid date (MM/DD/YYYY)."
+      , dmydate:	      "This value should be a valid date (DD/MM/YYYY)."
     }
   });
 }(window.jQuery || window.Zepto));
