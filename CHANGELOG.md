@@ -1,6 +1,6 @@
 #Changelog
 
-**1.2.1**
+**1.2.1 (current stable)**
 
   - fix `display:block` added to error elements (#230) (PR #413)
   - added some more translations
@@ -8,8 +8,9 @@
   - fixed options.error.container element (#425)
   - fixed priority validator error (#426)
   - added HTML5 tel support (#334)
+  - fixed custom validators error message if priority is not set. (#432)
 
-**1.2.0 (current stable)**
+**1.2.0**
 
   - [BC Break] Added `priorityEnabled` option (default true). Only show highest
     priority failing validator error message. Validator structure altered in order
