@@ -21,7 +21,7 @@ See TODO.md
 
 # Min requirements
 
-jQuery 1.6+
+jQuery 1.7+
 
 #Install dependencies for documentation and tests
 
