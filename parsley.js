@@ -1445,7 +1445,7 @@
   /* PARSLEY auto-binding
   * =================================================== */
   $( window ).on( 'load', function () {
-    $( '[parsley-validate]' ).each( function () {
+    $( '[parsley-validate], [data-parsley-validate]' ).each( function () {
       $( this ).parsley();
     } );
   } );
