@@ -1344,7 +1344,7 @@
       , errorElem: '<li></li>'                                            // each field constraint fail in an li
       }
     , listeners: {
-        onFieldValidate: function ( elem, ParsleyForm ) { return false; } // Executed on validation. Return true to ignore field validation
+        onFieldValidate: function ( elem, ParsleyField ) { return false; } // Executed on validation. Return true to ignore field validation
       , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation. Return (bool) false to block submit, even if valid
       , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
       , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
