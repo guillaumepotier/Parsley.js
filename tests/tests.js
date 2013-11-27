@@ -801,7 +801,7 @@ var testSuite = function () {
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( true );
 
-        // than keypress is alaways listened, to avoid false values with success classes, until real trigger event is fired..
+        // than keypress is always listened, to avoid false values with success classes, until real trigger event is fired..
         $( '#scenario-keyup-when-notvalid' ).val( 'foo@bar' );
         $( '#scenario-keyup-when-notvalid' ).trigger( $.Event( 'keyup' ) );
         expect( $( '#scenario-keyup-when-notvalid' ).hasClass( 'parsley-success' ) ).to.be( false );
