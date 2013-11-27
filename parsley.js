@@ -779,11 +779,11 @@
         this.options.trigger = !this.options.trigger ? 'change' : ' change';
       }
 
-      // alaways bind keyup event, for better UX when a field is invalid
+      // always bind keyup event, for better UX when a field is invalid
       var triggers = ( !this.options.trigger ? '' : this.options.trigger )
         + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
 
-      // alaways bind change event, for better UX when a select is invalid
+      // always bind change event, for better UX when a select is invalid
       if ( this.$element.is( 'select' ) ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
@@ -1177,7 +1177,7 @@
      // remove eventually already binded events
      this.$element.off( '.' + this.type );
 
-      // alaways bind keyup event, for better UX when a field is invalid
+      // always bind keyup event, for better UX when a field is invalid
       var self = this
         , triggers = ( !this.options.trigger ? '' : this.options.trigger )
         + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : ' change' );
