@@ -5,6 +5,7 @@
   - added `data-parsley-validate` W3C compliant support
   - removeConstraint does not destroy anymore ParsleyField instance on last
     error removal. It just reset UI (#259)
+  - fixed IE9 `null` attribute in `domApi` (#439)
 
 **1.2.1 (current stable)**
 
