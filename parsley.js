@@ -64,170 +64,239 @@
     * @type {Object}
     */
     , validators: {
-      notnull: function ( val ) {
-        return val.length > 0;
+      notnull: function () {
+        return {
+          validate: function ( val ) {
+            return val.length > 0;
+          }
+          , priority: 2
+        }
       }
-
-      , notblank: function ( val ) {
-        return 'string' === typeof val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
+      , notblank: function () {
+        return {
+          validate: function ( val ) {
+            return 'string' === typeof val && '' !== val.replace( /^\s+/g, '' ).replace( /\s+$/g, '' );
+          }
+          , priority: 2
+        }
       }
+      , required: function () {
+        var that = this;
+        return {
+          validate: function ( val ) {
+            // for checkboxes and select multiples. Check there is at least one required value
+            if ( 'object' === typeof val ) {
+              for ( var i in val ) {
+                if ( that.required().validate( val[ i ] ) ) {
+                  return true;
+                }
+              }
 
-      // Works on all inputs. val is object for checkboxes
-      , required: function ( val ) {
-
-        // for checkboxes and select multiples. Check there is at least one required value
-        if ( 'object' === typeof val ) {
-          for ( var i in val ) {
-            if ( this.required( val[ i ] ) ) {
-              return true;
+              return false;
             }
+
+            return that.notnull().validate( val ) && that.notblank().validate( val );
           }
-
-          return false;
+          , priority: 512
         }
-
-        return this.notnull( val ) && this.notblank( val );
       }
+      , type: function () {
+        return {
+          validate: function ( val, type ) {
+            var regExp;
 
-      , type: function ( val, type ) {
-        var regExp;
+            switch ( type ) {
+              case 'number':
+                regExp = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
+                break;
+              case 'digits':
+                regExp = /^\d+$/;
+                break;
+              case 'alphanum':
+                regExp = /^\w+$/;
+                break;
+              case 'email':
+                regExp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))){2,6}$/i;
+                break;
+              case 'url':
+                val = new RegExp( '(https?|s?ftp|git)', 'i' ).test( val ) ? val : 'http://' + val;
+                /* falls through */
+              case 'urlstrict':
+                regExp = /^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+                break;
+              case 'dateIso':
+                regExp = /^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/;
+                break;
+              case 'phone':
+                regExp = /^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/;
+                break;
+              default:
+                return false;
+            }
 
-        switch ( type ) {
-          case 'number':
-            regExp = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
-            break;
-          case 'digits':
-            regExp = /^\d+$/;
-            break;
-          case 'alphanum':
-            regExp = /^\w+$/;
-            break;
-          case 'email':
-            regExp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))){2,6}$/i;
-            break;
-          case 'url':
-            val = new RegExp( '(https?|s?ftp|git)', 'i' ).test( val ) ? val : 'http://' + val;
-            /* falls through */
-          case 'urlstrict':
-            regExp = /^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
-            break;
-          case 'dateIso':
-            regExp = /^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/;
-            break;
-          case 'phone':
-            regExp = /^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/;
-            break;
-          default:
-            return false;
-        }
-
-        // test regExp if not null
-        return '' !== val ? regExp.test( val ) : false;
-      }
-
-      , regexp: function ( val, regExp, self ) {
-        return new RegExp( regExp, self.options.regexpFlag || '' ).test( val );
-      }
-
-      , minlength: function ( val, min ) {
-        return val.length >= min;
-      }
-
-      , maxlength: function ( val, max ) {
-        return val.length <= max;
-      }
-
-      , rangelength: function ( val, arrayRange ) {
-        return this.minlength( val, arrayRange[ 0 ] ) && this.maxlength( val, arrayRange[ 1 ] );
-      }
-
-      , min: function ( val, min ) {
-        return Number( val ) >= min;
-      }
-
-      , max: function ( val, max ) {
-        return Number( val ) <= max;
-      }
-
-      , range: function ( val, arrayRange ) {
-        return val >= arrayRange[ 0 ] && val <= arrayRange[ 1 ];
-      }
-
-      , equalto: function ( val, elem, self ) {
-        self.options.validateIfUnchanged = true;
-
-        return val === $( elem ).val();
-      }
-
-      , remote: function ( val, url, self ) {
-        var result = $.Deferred(),
-          , data = {}
-          , dataType = {};
-
-        data[ self.$element.attr( 'name' ) ] = val;
-
-        if ( 'undefined' !== typeof self.options.remoteDatatype ) {
-          dataType = { dataType: self.options.remoteDatatype };
-        }
-
-        var manage = function ( isConstraintValid, message ) {
-          // remove error message if we got a server message, different from previous message
-          if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
-            $( self.ulError + ' .remote' ).remove();
+            // test regExp if not null
+            return '' !== val ? regExp.test( val ) : false;
           }
-
-          self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
-          self.manageValidationResult();
-        };
-
-        // transform string response into object
-        var handleResponse = function ( response ) {
-          if ( 'object' === typeof response ) {
-            return response;
-          }
-
-          try {
-            response = $.parseJSON( response );
-          } catch ( err ) {}
-
-          return response;
+          , priority: 256
         }
-
-        var manageErrorMessage = function ( response ) {
-          return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null ) ) : null;
+      }
+      , regexp: function () {
+        return {
+          validate: function ( val, regExp, self ) {
+            return new RegExp( regExp, self.options.regexpFlag || '' ).test( val );
+          }
+          , priority: 64
         }
-
-        $.ajax( $.extend( {}, {
-            url: url
-          , data: data
-          , type: self.options.remoteMethod || 'GET'
-          , success: function ( response ) {
-            response = handleResponse( response );
-            manage( 1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success ), manageErrorMessage( response )
-            );
+      }
+      , minlength: function () {
+        return {
+          validate: function ( val, min ) {
+            return val.length >= min;
           }
-          , error: function ( response ) {
-            response = handleResponse( response );
-            manage( false, manageErrorMessage( response ) );
+          , priority: 32
+        }
+      }
+      , maxlength: function () {
+        return {
+          validate: function ( val, max ) {
+            return val.length <= max;
           }
-        }, dataType ) );
+          , priority: 32
+        }
+      }
+      , rangelength: function () {
+        var that = this;
+        return {
+          validate: function ( val, arrayRange ) {
+            return that.minlength().validate( val, arrayRange[ 0 ] ) && that.maxlength().validate( val, arrayRange[ 1 ] );
+          }
+          , priority: 32
+        }
+      }
+      , min: function () {
+        return {
+          validate: function ( val, min ) {
+            return Number( val ) >= min;
+          }
+          , priority: 32
+        }
+      }
+      , max: function () {
+        return {
+          validate: function ( val, max ) {
+            return Number( val ) <= max;
+          }
+          , priority: 32
+        }
+      }
+      , range: function () {
+        var that = this;
+        return {
+          validate: function ( val, arrayRange ) {
+            return that.min().validate( val, arrayRange[ 0 ] ) && that.max().validate( val, arrayRange[ 1 ] );
+          }
+          , priority: 32
+        }
+      }
+      , equalto: function () {
+        return {
+          validate: function ( val, elem, self ) {
+            self.options.validateIfUnchanged = true;
+            return val === $( elem ).val();
+          }
+          , priority: 64
+        }
+      }
+      , remote: function () {
+        return {
+          validate: function ( val, url, self ) {
+            var result = $.Deferred()
+              , data = {}
+              , dataType = {};
 
-        return result.promise();
+            data[ self.$element.attr( 'name' ) ] = val;
+
+            if ( 'undefined' !== typeof self.options.remoteDatatype )
+              dataType = { dataType: self.options.remoteDatatype };
+
+            var manage = function ( isConstraintValid, message ) {
+              // remove error message if we got a server message, different from previous message
+              if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
+                $( self.UI.ulError + ' .remote' ).remove();
+              }
+
+              if (false === isConstraintValid) {
+                  self.options.listeners.onFieldError( self.element, self.constraints, self );
+              } else if (true === isConstraintValid && false === self.options.listeners.onFieldSuccess( self.element, self.constraints, self )) {
+                  // if onFieldSuccess returns (bool) false, consider that field si invalid
+                  isConstraintValid = false;
+              }
+
+              self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
+              self.manageValidationResult();
+            };
+
+            // transform string response into object
+            var handleResponse = function ( response ) {
+              if ( 'object' === typeof response ) {
+                return response;
+              }
+
+              try {
+                response = $.parseJSON( response );
+              } catch ( err ) {}
+
+              return response;
+            }
+
+            var manageErrorMessage = function ( response ) {
+              return 'object' === typeof response && null !== response ? ( 'undefined' !== typeof response.error ? response.error : ( 'undefined' !== typeof response.message ? response.message : null ) ) : null;
+            }
+
+            $.ajax( $.extend( {}, {
+                url: url
+              , data: data
+              , type: self.options.remoteMethod || 'GET'
+              , success: function ( response ) {
+                response = handleResponse( response );
+                manage( 1 === response || true === response || ( 'object' === typeof response && null !== response && 'undefined' !== typeof response.success ), manageErrorMessage( response )
+                );
+              }
+              , error: function ( response ) {
+                response = handleResponse( response );
+                manage( false, manageErrorMessage( response ) );
+              }
+            }, dataType ) );
+
+            return result.promise();
+          }
+          , priority: 64
+        }
       }
 
       /**
       * Aliases for checkboxes constraints
       */
-      , mincheck: function ( obj, val ) {
-        return this.minlength( obj, val );
+      , mincheck: function () {
+        var that = this;
+        return {
+          validate: function ( obj, val ) { return that.minlength().validate( obj, val ) }
+          , priority: 32
+        }
       }
-
-      , maxcheck: function ( obj, val ) {
-        return this.maxlength( obj, val);
+      , maxcheck: function () {
+        var that = this;
+        return {
+          validate: function ( obj, val ) { return that.maxlength().validate( obj, val ) }
+          , priority: 32
+        }
       }
-
-      , rangecheck: function ( obj, arrayRange ) {
-        return this.rangelength( obj, arrayRange );
+      , rangecheck: function () {
+        var that = this;
+        return {
+          validate: function ( obj, arrayRange ) { return that.rangelength().validate( obj, arrayRange ) }
+          , priority: 32
+        }
       }
     }
 
@@ -236,9 +305,9 @@
     */
     , init: function ( options ) {
       var customValidators = options.validators
-        , customMessages = options.messages;
+        , customMessages = options.messages
+        , key;
 
-      var key;
       for ( key in customValidators ) {
         this.addValidator(key, customValidators[ key ]);
       }
@@ -273,10 +342,27 @@
     * Add / override a validator in validators list
     *
     * @method addValidator
-    * @param {String} name Validator name. Will automatically bindable through data-name=''
-    * @param {Function} fn Validator function. Must return {Boolean}
+    * @param {String} name Validator name.
+    * @param {Function} fn Validator. Must return { validator: fn(), priority: int }
     */
     , addValidator: function ( name, fn ) {
+      if ('undefined' === typeof fn().validate) {
+        throw new Error( 'Validator `' + name + '` must have a validate method. See more here: http://parsleyjs.org/documentation.html#javascript-general' );
+      }
+
+      // add default prioirty if not given.
+      if ('undefined' === typeof fn().priority) {
+        fn = {
+            validate: fn().validate
+          , priority: 32
+        };
+
+        // Warn if possible
+        if (window.console && window.console.warn) {
+          window.console.warn( 'Validator `' + name + '` should have a priority. Default priority 32 given' );
+        }
+      }
+
       this.validators[ name ] = fn;
     }
 
@@ -307,6 +393,147 @@
     }
   };
 
+  var ParsleyUI = function ( ParsleyInstance ) {
+    this.init( ParsleyInstance );
+  };
+
+  ParsleyUI.prototype = {
+
+    constructor: ParsleyUI
+
+    , init: function ( ParsleyInstance ) {
+      this.ParsleyInstance = ParsleyInstance;
+      this.hash = ParsleyInstance.hash;
+      this.options = this.ParsleyInstance.options;
+      this.errorClassHandler = this.options.errors.classHandler( this.ParsleyInstance.element, this.ParsleyInstance.isRadioOrCheckbox ) || this.ParsleyInstance.$element;
+      this.ulErrorManagement();
+    }
+
+    /**
+    * Manage ul error Container
+    *
+    * @private
+    * @method ulErrorManagement
+    */
+    , ulErrorManagement: function () {
+      this.ulError = '#' + this.hash;
+      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
+    }
+
+    /**
+    * Remove li / ul error
+    *
+    * @method removeError
+    * @param {String} constraintName Method Name
+    */
+    , removeError: function ( constraintName ) {
+      var liError = this.ulError + ' .' + constraintName
+        , that = this;
+
+      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
+        $( this ).remove();
+
+        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
+          that.removeErrors();
+        } } ) : $( liError ).remove();
+    }
+
+    /**
+    * Add li error
+    *
+    * @method addError
+    * @param {Object} { minlength: "error message for minlength constraint" }
+    */
+    , addError: function ( error ) {
+      for ( var constraint in error ) {
+        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
+
+        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
+      }
+    }
+
+    /**
+    * Remove all ul / li errors
+    *
+    * @method removeErrors
+    */
+    , removeErrors: function () {
+      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
+    }
+
+    /**
+    * Remove ul errors and parsley error or success classes
+    *
+    * @method reset
+    */
+    , reset: function () {
+      this.ParsleyInstance.valid = null;
+      this.removeErrors();
+      this.ParsleyInstance.validatedOnce = false;
+      this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
+
+      for ( var constraint in this.constraints ) {
+        this.constraints[ constraint ].valid = null;
+      }
+
+      return this;
+    }
+
+    /**
+    * Add li / ul errors messages
+    *
+    * @method manageError
+    * @param {Object} constraint
+    */
+    , manageError: function ( constraint ) {
+      // display ulError container if it has been removed previously (or never shown)
+      if ( !$( this.ulError ).length ) {
+        this.manageErrorContainer();
+      }
+
+      // TODO: refacto properly
+      // if required constraint but field is not null, do not display
+      if ( 'required' === constraint.name && null !== this.ParsleyInstance.getVal() && this.ParsleyInstance.getVal().length > 0 ) {
+        return;
+      // if empty required field and non required constraint fails, do not display
+      } else if ( this.ParsleyInstance.isRequired && 'required' !== constraint.name && ( null === this.ParsleyInstance.getVal() || 0 === this.ParsleyInstance.getVal().length ) ) {
+        this.removeError( constraint.name );
+        return;
+      }
+
+      // TODO: refacto error name w/ proper & readable function
+      var constraintName = constraint.name
+        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
+        , liError = {}
+        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
+            this.ParsleyInstance.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.ParsleyInstance.Validator.messages[ constraintName ] ?
+              this.ParsleyInstance.Validator.messages.defaultMessage : this.ParsleyInstance.Validator.formatMesssage( this.ParsleyInstance.Validator.messages[ constraintName ], constraint.requirements ) ) );
+
+      // add liError if not shown. Do not add more than once custom errorMessage if exist
+      if ( !$( this.ulError + ' .' + liClass ).length ) {
+        liError[ liClass ] = message;
+        this.addError( liError );
+      }
+    }
+
+    /**
+    * Create ul error container
+    *
+    * @method manageErrorContainer
+    */
+    , manageErrorContainer: function () {
+      var errorContainer = this.options.errorContainer || this.options.errors.container( this.ParsleyInstance.element, this.ParsleyInstance.isRadioOrCheckbox )
+        , ulTemplate = this.options.animate ? this.ulTemplate.css('display', '') : this.ulTemplate;
+
+      if ( 'undefined' !== typeof errorContainer ) {
+        $( errorContainer ).append( ulTemplate );
+        return;
+      }
+
+      !this.ParsleyInstance.isRadioOrCheckbox ? this.ParsleyInstance.$element.after( ulTemplate ) : this.ParsleyInstance.$element.parent().after( ulTemplate );
+    }
+  };
+
   /**
   * ParsleyField class manage each form field inside a validated Parsley form.
   * Returns if field valid or not depending on its value and constraints
@@ -317,7 +544,6 @@
   */
   var ParsleyField = function ( element, options, type ) {
     this.options = options;
-    this.Validator = new Validator( options );
 
     // if type is ParsleyFieldMultiple, just return this. used for clone
     if ( type === 'ParsleyFieldMultiple' ) {
@@ -345,6 +571,7 @@
       this.validatedOnce = false;
       this.$element = $( element );
       this.val = this.$element.val();
+      this.Validator = new Validator( this.options );
       this.isRequired = false;
       this.constraints = {};
 
@@ -352,11 +579,10 @@
       if ( 'undefined' === typeof this.isRadioOrCheckbox ) {
         this.isRadioOrCheckbox = false;
         this.hash = this.generateHash();
-        this.errorClassHandler = this.options.errors.classHandler( element, this.isRadioOrCheckbox ) || this.$element;
       }
 
       // error ul dom management done only once at init
-      this.ulErrorManagement();
+      this.UI = new ParsleyUI( this );
 
       // bind some html5 properties
       this.bindHtml5Constraints();
@@ -391,8 +617,9 @@
       }
 
       // add html5 supported types & options
-      if ( 'undefined' !== typeof this.$element.attr( 'type' ) && new RegExp( this.$element.attr( 'type' ), 'i' ).test( 'email url number range' ) ) {
-        this.options.type = this.$element.attr( 'type' );
+      var type = this.$element.attr( 'type' );
+      if ( 'undefined' !== typeof type && new RegExp( type, 'i' ).test( 'email url number range tel' ) ) {
+        this.options.type = 'tel' === type ? 'phone' : type;
 
         // number and range types could have min and/or max values
         if ( new RegExp( this.options.type, 'i' ).test( 'number range' ) ) {
@@ -425,7 +652,7 @@
       for ( var constraint in this.options ) {
         var addConstraint = {};
         addConstraint[ constraint ] = this.options[ constraint ];
-        this.addConstraint( addConstraint, true );
+        this.addConstraint( addConstraint, true, false );
       }
     }
 
@@ -435,7 +662,7 @@
     * @method addConstraint
     * @param {Object} constraint { name: requirements }
     */
-    , addConstraint: function ( constraint, doNotUpdateValidationEvents ) {
+    , addConstraint: function ( constraint, doNotUpdateValidationEvents, sort ) {
         for ( var name in constraint ) {
           name = name.toLowerCase();
 
@@ -506,15 +733,9 @@
         this.isRequired = false;
       }
 
-      // if there are no more constraint, destroy parsley instance for this field
+      // if there are no more constraint, reset errors and validation state
       if ( !this.hasConstraints() ) {
-        // in a form context, remove item from parent
-        if ( 'ParsleyForm' === typeof this.getParent() ) {
-          this.getParent().removeItem( this.$element );
-          return;
-        }
-
-        this.destroy();
+        this.UI.reset();
         return;
       }
 
@@ -558,11 +779,11 @@
         this.options.trigger = !this.options.trigger ? 'change' : ' change';
       }
 
-      // alaways bind keyup event, for better UX when a field is invalid
+      // always bind keyup event, for better UX when a field is invalid
       var triggers = ( !this.options.trigger ? '' : this.options.trigger )
         + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
 
-      // alaways bind change event, for better UX when a select is invalid
+      // always bind change event, for better UX when a select is invalid
       if ( this.$element.is( 'select' ) ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
@@ -601,7 +822,11 @@
     * @returns {String} val
     */
     , getVal: function () {
-      return this.$element.data('value') || this.$element.val();
+      if ('undefined' !== typeof this.$element.domApi( this.options.namespace )[ 'value' ]) {
+        return this.$element.domApi( this.options.namespace )[ 'value' ];
+      }
+
+      return this.$element.val();
     }
 
     /**
@@ -683,9 +908,14 @@
         return null;
       }
 
+      // do not validate excluded fields
+      if ( this.$element.is( this.options.excluded ) ) {
+        return null;
+      }
+
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
       if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
-        this.reset();
+        this.UI.reset();
         return null;
       }
 
@@ -721,16 +951,16 @@
 
     /**
     * Loop through every fields validators
-    * Adds errors after invalid fields
+    * Adds errors after unvalid fields
     *
     * @method applyValidators
-    * @return {Mixed} {Boolean} If field valid or not, null if not validated, Deferred if async validation
+    * @return {Mixed} {Boolean} If field valid or not, null if not validated
     */
     , applyValidators: function () {
       var valid = null;
 
       for ( var constraint in this.constraints ) {
-        var result = this.Validator.validators[ this.constraints[ constraint ].name ]( this.val, this.constraints[ constraint ].requirements, this );
+        var result = this.Validator.validators[ this.constraints[ constraint ].name ]().validate( this.val, this.constraints[ constraint ].requirements, this );
 
         if ( false === result ) {
           valid = false;
@@ -739,7 +969,7 @@
           this.constraints[ constraint ].valid = true;
           valid = false !== valid;
         } else {
-          valid = result;
+            valid = result;
         }
       }
 
@@ -747,7 +977,7 @@
       if (false === valid) {
         this.options.listeners.onFieldError( this.element, this.constraints, this );
       } else if (true === valid && false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
-        // if onFieldSuccess returns (bool) false, consider that field is invalid
+        // if onFieldSuccess returns (bool) false, consider that field si invalid
         valid = false;
       }
 
@@ -764,14 +994,15 @@
     * @return {Boolean} Is field valid or not
     */
     , manageValidationResult: function () {
-      var valid = null;
+      var valid = null
+        , errors = [];
 
       for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].valid ) {
-          this.manageError( this.constraints[ constraint ] );
+          errors.push( this.constraints[ constraint ]);
           valid = false;
         } else if ( true === this.constraints[ constraint ].valid ) {
-          this.removeError( this.constraints[ constraint ].name );
+          this.UI.removeError( this.constraints[ constraint ].name );
           valid = false !== valid;
         }
       }
@@ -779,150 +1010,43 @@
       this.valid = valid;
 
       if ( true === this.valid ) {
-        this.removeErrors();
-        this.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+        this.UI.removeErrors();
+        this.UI.errorClassHandler.removeClass( this.options.errorClass ).addClass( this.options.successClass );
+
         return true;
       } else if ( false === this.valid ) {
-        this.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
+        if ( true === this.options.priorityEnabled ) {
+          var maxPriority = 0, constraint, priority;
+          for ( var i = 0; i < errors.length; i++ ) {
+            priority = this.Validator.validators[ errors[ i ].name ]().priority;
+
+            if ( priority > maxPriority ) {
+              constraint = errors[ i ];
+              maxPriority = priority;
+            }
+          }
+          this.UI.manageError( constraint );
+        } else {
+          for ( var i = 0; i < errors.length; i++ )
+            this.UI.manageError( errors[ i ] );
+        }
+
+        this.UI.errorClassHandler.removeClass( this.options.successClass ).addClass( this.options.errorClass );
         return false;
       }
 
       // remove li error, and ul error if no more li inside
-      if ( this.ulError && $( this.ulError ).children().length === 0 ) {
-        this.removeErrors();
+      if ( this.UI.ulError && $( this.ulError ).children().length === 0 ) {
+        this.UI.removeErrors();
       }
 
       return valid;
     }
 
     /**
-    * Manage ul error Container
-    *
-    * @private
-    * @method ulErrorManagement
-    */
-    , ulErrorManagement: function () {
-      this.ulError = '#' + this.hash;
-      this.ulTemplate = $( this.options.errors.errorsWrapper ).attr( 'id', this.hash ).addClass( 'parsley-error-list' );
-    }
-
-    /**
-    * Remove li / ul error
-    *
-    * @method removeError
-    * @param {String} constraintName Method Name
-    */
-    , removeError: function ( constraintName ) {
-      var liError = this.ulError + ' .' + constraintName
-        , that = this;
-
-      this.options.animate ? $( liError ).fadeOut( this.options.animateDuration, function () {
-        $( this ).remove();
-
-        if ( that.ulError && $( that.ulError ).children().length === 0 ) {
-          that.removeErrors();
-        } } ) : $( liError ).remove();
-    }
-
-    /**
-    * Add li error
-    *
-    * @method addError
-    * @param {Object} { minlength: "error message for minlength constraint" }
-    */
-    , addError: function ( error ) {
-      for ( var constraint in error ) {
-        var liTemplate = $( this.options.errors.errorElem ).addClass( constraint );
-
-        $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
-      }
-    }
-
-    /**
-    * Remove all ul / li errors
-    *
-    * @method removeErrors
-    */
-    , removeErrors: function () {
-      this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
-    }
-
-    /**
-    * Remove ul errors and parsley error or success classes
-    *
-    * @method reset
-    */
-    , reset: function () {
-      this.valid = null;
-      this.removeErrors();
-      this.validatedOnce = false;
-      this.errorClassHandler.removeClass( this.options.successClass ).removeClass( this.options.errorClass );
-
-      for ( var constraint in this.constraints ) {
-        this.constraints[ constraint ].valid = null;
-      }
-
-      return this;
-    }
-
-    /**
-    * Add li / ul errors messages
-    *
-    * @method manageError
-    * @param {Object} constraint
-    */
-    , manageError: function ( constraint ) {
-      // display ulError container if it has been removed previously (or never shown)
-      if ( !$( this.ulError ).length ) {
-        this.manageErrorContainer();
-      }
-
-      // TODO: refacto properly
-      // if required constraint but field is not null, do not display
-      if ( 'required' === constraint.name && null !== this.getVal() && this.getVal().length > 0 ) {
-        return;
-      // if empty required field and non required constraint fails, do not display
-      } else if ( this.isRequired && 'required' !== constraint.name && ( null === this.getVal() || 0 === this.getVal().length ) ) {
-        this.removeError(constraint.name);
-        return;
-      }
-
-      // TODO: refacto error name w/ proper & readable function
-      var constraintName = constraint.name
-        , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
-        , liError = {}
-        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
-            this.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.Validator.messages[ constraintName ] ?
-              this.Validator.messages.defaultMessage : this.Validator.formatMesssage( this.Validator.messages[ constraintName ], constraint.requirements ) ) );
-
-      // add liError if not shown. Do not add more than once custom errorMessage if exist
-      if ( !$( this.ulError + ' .' + liClass ).length ) {
-        liError[ liClass ] = message;
-        this.addError( liError );
-      }
-    }
-
-    /**
-    * Create ul error container
-    *
-    * @method manageErrorContainer
-    */
-    , manageErrorContainer: function () {
-      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.isRadioOrCheckbox )
-        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
-
-      if ( 'undefined' !== typeof errorContainer ) {
-        $( errorContainer ).append( ulTemplate );
-        return;
-      }
-
-      !this.isRadioOrCheckbox ? this.$element.after( ulTemplate ) : this.$element.parent().after( ulTemplate );
-    }
-
-    /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( valid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormValidate: function ( valid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -938,7 +1062,8 @@
     */
     , destroy: function () {
       this.$element.removeClass( 'parsley-validated' );
-      this.reset().$element.off( '.' + this.type ).removeData( this.type );
+      this.UI.reset();
+      this.$element.off( '.' + this.type ).removeData( this.type );
     }
   };
 
@@ -974,7 +1099,7 @@
       this.$element = $( element );
       this.group = options.group || false;
       this.hash = this.getName();
-      this.siblings = this.group ? '[data-group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
+      this.siblings = this.group ? '[parsley-group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.isRadioOrCheckbox = true;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
@@ -1011,7 +1136,7 @@
      }
 
      if ( 'undefined' === typeof this.$element.attr( 'name' ) ) {
-       throw "A radio / checkbox input must have a data-group attribute or a name to be Parsley validated !";
+       throw "A radio / checkbox input must have a parsley-group attribute or a name to be Parsley validated !";
      }
 
      return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
@@ -1054,7 +1179,7 @@
      // remove eventually already binded events
      this.$element.off( '.' + this.type );
 
-      // alaways bind keyup event, for better UX when a field is invalid
+      // always bind keyup event, for better UX when a field is invalid
       var self = this
         , triggers = ( !this.options.trigger ? '' : this.options.trigger )
         + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : ' change' );
@@ -1102,7 +1227,7 @@
     /**
     * Add custom listeners
     *
-    * @param {Object} { listener: function () {} }, eg { onFormSubmit: function ( valid, event, focus ) { ... } }
+    * @param {Object} { listener: function () {} }, eg { onFormValidate: function ( valid, event, focus ) { ... } }
     */
     , addListener: function ( object ) {
       for ( var listener in object ) {
@@ -1157,7 +1282,7 @@
 
     /**
     * Process each form field validation
-    * Display errors, call custom onFormSubmit() function
+    * Display errors, call custom onFormValidate() function
     *
     * @method validate
     * @param {Object} event jQuery Event
@@ -1168,7 +1293,7 @@
       this.focusedField = false;
 
       for ( var item = 0; item < this.items.length; item++ ) {
-        itemIsValid = 'undefined' !== typeof this.items[ item ] && this.items[ item ].validate()
+        itemIsValid = 'undefined' !== typeof this.items[ item ] && this.items[ item ].validate();
         if ( false === itemIsValid ) {
           valid = false;
 
@@ -1177,7 +1302,7 @@
           }
         }
         // Check if the return value of validator is a promise
-        if (itemIsValid.promise){
+        if (itemIsValid !== null && itemIsValid.promise){
           deferredIssues.push(itemIsValid);
         }
       }
@@ -1216,10 +1341,10 @@
         formIsValid.reject();
       }
 
-      // if onFormSubmit returns (bool) false, form won't be submitted, even if valid
-      var onFormSubmit = this.options.listeners.onFormSubmit( formIsValid.promise(), event, this );
-      if ('undefined' !== typeof onFormSubmit) {
-        return onFormSubmit;
+      // if onFormValidate returns (bool) false, form won't be submitted, even if valid
+      var onFormValidate = this.options.listeners.onFormValidate( formIsValid.promise(), event, this );
+      if ('undefined' !== typeof onFormValidate) {
+        return onFormValidate;
       }
 
       return formIsValid.promise();
@@ -1266,7 +1391,7 @@
     */
     , reset: function () {
       for ( var item = 0; item < this.items.length; item++ ) {
-        this.items[ item ].reset();
+        this.items[ item ].UI.reset();
       }
     }
   };
@@ -1282,7 +1407,8 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.data() )
+    var namespace = { namespace: $( this ).data( 'parsleyNamespace' ) ? $( this ).data( 'parsleyNamespace' ) : ( 'undefined' !== typeof option && 'undefined' !== typeof option.namespace ? option.namespace : $.fn.parsley.defaults.namespace ) }
+      , options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.domApi( namespace.namespace ) )
       , newInstance = null;
 
     function bind ( self, type ) {
@@ -1318,19 +1444,87 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) || true === $( this ).data( 'bind' ) ) {
+    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).domApi( namespace.namespace )[ 'bind' ] ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
     // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
-    } else if ( $( this ).is( options.inputs ) && !$( this ).is( options.excluded ) ) {
+    } else if ( $( this ).is( options.inputs ) ) {
       newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
     }
 
     return 'function' === typeof fn ? fn() : newInstance;
   };
 
-  $.fn.parsley.Constructor = ParsleyForm;
+  /* PARSLEY auto-binding
+  * =================================================== */
+  $( window ).on( 'load', function () {
+    $( '[parsley-validate], [data-parsley-validate]' ).each( function () {
+      $( this ).parsley();
+    } );
+  } );
+
+  /* PARSLEY DOM API
+  * =================================================== */
+  $.fn.domApi = function ( namespace ) {
+    var attribute,
+      obj = {}
+      , regex = new RegExp("^" + namespace, 'i');
+
+    if ( 'undefined' === typeof this[ 0 ] ) {
+      return {};
+    }
+
+    for ( var i in this[ 0 ].attributes ) {
+      attribute = this[ 0 ].attributes[ i ];
+
+      if ( null !== attribute && attribute.specified && regex.test( attribute.name ) ) {
+        obj[ camelize( attribute.name.replace( namespace, '' ) ) ] = deserializeValue( attribute.value );
+      }
+    }
+
+    return obj;
+  };
+
+  // Zepto deserializeValue function
+  // "true"  => true
+  // "false" => false
+  // "null"  => null
+  // "42"    => 42
+  // "42.5"  => 42.5
+  // JSON    => parse if valid
+  // String  => self
+  var deserializeValue = function( value ) {
+    var num
+    try {
+      return value ?
+        value == "true" ||
+        ( value == "false" ? false :
+          value == "null" ? null :
+          !isNaN( num = Number( value ) ) ? num :
+          /^[\[\{]/.test( value ) ? $.parseJSON( value ) :
+          value )
+        : value;
+    } catch ( e ) {
+      return value;
+    }
+  };
+
+  // Zepto camelize function
+  var camelize = function ( str ) {
+    return str.replace( /-+(.)?/g, function ( match, chr ) {
+      return chr ? chr.toUpperCase() : '';
+    } )
+  };
+
+  // Zepto dasherize function
+  var dasherize = function ( str ) {
+    return str.replace( /::/g, '/' )
+           .replace( /([A-Z]+)([A-Z][a-z])/g, '$1_$2' )
+           .replace( /([a-z\d])([A-Z])/g, '$1_$2' )
+           .replace( /_/g, '-' )
+           .toLowerCase()
+  };
 
   /**
   * Parsley plugin configuration
@@ -1340,8 +1534,10 @@
   */
   $.fn.parsley.defaults = {
     // basic data-api overridable properties here..
-    inputs: 'input, textarea, select'           // Default supported inputs.
+    namespace: 'parsley-'                       // DOM-API, default 'parsley-'. W3C valid would be 'data-parsley-' but quite ugly
+    , inputs: 'input, textarea, select, :sigil(input)'         // Default supported inputs.
     , excluded: 'input[type=hidden], input[type=file], :disabled' // Do not validate input[type=hidden] & :disabled.
+    , priorityEnabled: true                     // Will display only one error at the time depending on validators priorities
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
     , animate: true                             // fade in / fade out error messages
     , animateDuration: 300                      // fadein/fadout ms time
@@ -1365,19 +1561,11 @@
       }
     , listeners: {
         onFieldValidate: function ( elem, ParsleyForm ) { return false; } // Executed on validation. Return true to ignore field validation
-      , onFormSubmit: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation. Return (bool) false to block submit, even if valid
+      , onFormValidate: function ( isFormValid, event, ParsleyForm ) {}     // Executed once on form validation. Return (bool) false to block submit, even if valid
       , onFieldError: function ( elem, constraints, ParsleyField ) {}     // Executed when a field is detected as invalid
       , onFieldSuccess: function ( elem, constraints, ParsleyField ) {}   // Executed when a field passes validation
     }
   };
 
-  /* PARSLEY auto-bind DATA-API + Global config retrieving
-  * =================================================== */
-  $( window ).on( 'load', function () {
-    $( '[data-validate="parsley"]' ).each( function () {
-      $( this ).parsley();
-    } );
-  } );
-
 // This plugin works with jQuery or Zepto (with data extension built for Zepto.)
-}(window.jQuery || window.Zepto);
+} ( window.jQuery || window.Zepto );
