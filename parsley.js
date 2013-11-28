@@ -908,7 +908,7 @@
     */
     , validate: function ( errorBubbling ) {
       var promise = this.validateDeferred( errorBubbling );
-      var validNow = undefined;
+      var validNow = null;
       promise.done( function( valid ) {
         validNow = valid;
       } );
@@ -1337,7 +1337,7 @@
      */
     , validate: function ( event ) {
       var promise = this.validateDeferred( event );
-      var validNow = undefined;
+      var validNow = null;
       promise.done( function( valid ) {
         validNow = valid;
       } );
@@ -1425,7 +1425,7 @@
 
     , isValid: function() {
       var promise = this.isValidDeferred();
-      var validNow = undefined;
+      var validNow = null;
       promise.done( function( valid ) {
         validNow = valid;
       } );
