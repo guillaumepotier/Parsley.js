@@ -914,7 +914,7 @@
       }
 
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
-      if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
+      if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired && !this.$element.is( this.options.alwaysValidate )) ) {
         this.UI.reset();
         return null;
       }
@@ -1457,8 +1457,7 @@
 
     for ( var i in this[ 0 ].attributes ) {
       attribute = this[ 0 ].attributes[ i ];
-
-      if ( null !== attribute && attribute.specified && regex.test( attribute.name ) ) {
+      if ( attribute.specified && regex.test( attribute.name ) ) {
         obj[ camelize( attribute.name.replace( namespace, '' ) ) ] = deserializeValue( attribute.value );
       }
     }
