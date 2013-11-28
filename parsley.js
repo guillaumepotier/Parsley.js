@@ -1457,6 +1457,7 @@
 
     for ( var i in this[ 0 ].attributes ) {
       attribute = this[ 0 ].attributes[ i ];
+      
       if ( null !== attribute && attribute.specified && regex.test( attribute.name ) ) {
         obj[ camelize( attribute.name.replace( namespace, '' ) ) ] = deserializeValue( attribute.value );
       }
