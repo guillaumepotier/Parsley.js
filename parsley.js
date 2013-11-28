@@ -914,7 +914,7 @@
       }
 
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
-      if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired && !this.$element.is( this.options.alwaysValidate )) ) {
+      if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired && !this.$element.is( this.options.allowCustomRequired )) ) {
         this.UI.reset();
         return null;
       }
@@ -1517,6 +1517,7 @@
     namespace: 'parsley-'                       // DOM-API, default 'parsley-'. W3C valid would be 'data-parsley-' but quite ugly
     , inputs: 'input, textarea, select'         // Default supported inputs.
     , excluded: 'input[type=hidden], input[type=file], :disabled' // Do not validate input[type=hidden] & :disabled.
+    , allowCustomRequired: ''                   // Apply validation rules even when empty and not explicitly required.
     , priorityEnabled: true                     // Will display only one error at the time depending on validators priorities
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
     , animate: true                             // fade in / fade out error messages
