@@ -876,6 +876,16 @@
     }
 
     /**
+     * Return if field verify its constraints
+     *
+     * @method isValidDeferred
+     * @return {Object} A Promise object that is resolved when all constraints have been checked
+     */
+    , isValidDeferred: function () {
+      return this.validateDeferred( false );
+    }
+
+    /**
     * Return if field has constraints
     *
     * @method hasConstraints
@@ -897,6 +907,25 @@
     * @return {Boolean} Is field valid or not
     */
     , validate: function ( errorBubbling ) {
+      var promise = this.validateDeferred( errorBubbling );
+      var validNow = undefined;
+      promise.done( function( valid ) {
+        validNow = valid;
+      } );
+      promise.fail( function() {
+        throw "Error while checking field validity";
+      } );
+      return validNow;
+    }
+
+    /**
+     * Validate a field & display errors asynchronously
+     *
+     * @method validateDeferred
+     * @param {Boolean} errorBubbling set to false if you just want valid boolean without error bubbling next to fields
+     * @return {Object} A Promise object that is resolved when all constraints have been checked
+     */
+    , validateDeferred: function ( errorBubbling ) {
       var val = this.getVal()
         , deferred = $.Deferred()
         , promise = deferred.promise()
@@ -1300,13 +1329,32 @@
     }
 
     /**
-    * Process each form field validation
+     * Process each form field validation
+     * Display errors, call custom onFormValidate() function
+     *
+     * @method validate
+     * @return {Boolean} The form is valid or not
+     */
+    , validate: function ( event ) {
+      var promise = this.validateDeferred( event );
+      var validNow = undefined;
+      promise.done( function( valid ) {
+        validNow = valid;
+      } );
+      promise.fail( function() {
+        throw "Error while checking form validity";
+      } );
+      return validNow;
+    }
+
+    /**
+    * Process each form field validation, asynchronously
     * Display errors, call custom onFormValidate() function
     *
-    * @method validate
-    * @return {Object} A Promise object that will be resolved with the validation result
+    * @method validateDeferred
+    * @return {Object} A Promise object that is resolved when all constraints on all fields have been checked
     */
-    , validate: function ( event ) {
+    , validateDeferred: function ( event ) {
       var deferred = $.Deferred()
         , promise = deferred.promise()
         , itemsPromises = []
@@ -1317,7 +1365,7 @@
 
       $.each( this.items, function( itemIndex, item ) {
         if ( 'undefined' !== typeof item ) {
-          var itemPromise = item.validate();
+          var itemPromise = item.validateDeferred();
           itemsPromises.push( itemPromise );
 
           itemPromise.done( function( valid ) {
@@ -1375,7 +1423,19 @@
       return promise;
     }
 
-    , isValid: function () {
+    , isValid: function() {
+      var promise = this.isValidDeferred();
+      var validNow = undefined;
+      promise.done( function( valid ) {
+        validNow = valid;
+      } );
+      promise.fail( function() {
+        throw "Error while checking form validity";
+      } );
+      return validNow;
+    }
+
+    , isValidDeferred: function () {
       // collect all promises from items
       var deferred = $.Deferred()
         , promises = []
