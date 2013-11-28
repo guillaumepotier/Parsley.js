@@ -210,7 +210,7 @@
       , remote: function () {
         return {
           validate: function ( val, url, self ) {
-            var result = null
+            var deferred = $.Deferred()
               , data = {}
               , dataType = {};
 
@@ -221,19 +221,16 @@
 
             var manage = function ( isConstraintValid, message ) {
               // remove error message if we got a server message, different from previous message
-              if ( 'undefined' !== typeof message && 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
-                $( self.UI.ulError + ' .remote' ).remove();
+              if ( 'undefined' !== typeof message ) {
+                if( 'undefined' !== typeof self.Validator.messages.remote && message !== self.Validator.messages.remote ) {
+                  $( self.UI.ulError + ' .remote' ).remove();
+                }
+
+                // update the message
+                self.Validator.messages.remote = message ;
               }
 
-              if (false === isConstraintValid) {
-                  self.options.listeners.onFieldError( self.element, self.constraints, self );
-              } else if (true === isConstraintValid && false === self.options.listeners.onFieldSuccess( self.element, self.constraints, self )) {
-                  // if onFieldSuccess returns (bool) false, consider that field si invalid
-                  isConstraintValid = false;
-              }
-
-              self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
-              self.manageValidationResult();
+              deferred.resolveWith( self, [isConstraintValid] );
             };
 
             // transform string response into object
@@ -268,7 +265,7 @@
               }
             }, dataType ) );
 
-            return result;
+            return deferred.promise();
           }
           , priority: 64
         }
@@ -901,36 +898,37 @@
     */
     , validate: function ( errorBubbling ) {
       var val = this.getVal()
-        , valid = null;
+        , deferred = $.Deferred()
+        , promise = deferred.promise()
+      ;
 
       // do not even bother trying validating a field w/o constraints
       if ( !this.hasConstraints() ) {
-        return null;
+        deferred.resolveWith( this, [ null ] );
       }
-
       // do not validate excluded fields
-      if ( this.$element.is( this.options.excluded ) ) {
-        return null;
+      else if ( this.$element.is( this.options.excluded ) ) {
+        deferred.resolveWith( this, [ null ] );
       }
-
       // reset Parsley validation if onFieldValidate returns true, or if field is empty and not required
-      if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
+      else if ( this.options.listeners.onFieldValidate( this.element, this ) || ( '' === val && !this.isRequired ) ) {
         this.UI.reset();
-        return null;
+        deferred.resolveWith( this, [ null ] );
       }
-
       // do not validate a field already validated and unchanged !
-      if ( !this.needsValidation( val ) ) {
-        return this.valid;
+      else if ( !this.needsValidation( val ) ) {
+        deferred.resolveWith( this, [this.valid] );
+      }
+      else {
+        // collect the validators promises and resolve the deferred when they are done
+        this.applyValidators( deferred );
+
+        if ( 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors ) {
+          deferred.done( this.manageValidationResult );
+        }
       }
 
-      valid = this.applyValidators();
-
-      if ( 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors ) {
-        this.manageValidationResult();
-      }
-
-      return valid;
+      return promise;
     }
 
     /**
@@ -954,32 +952,55 @@
     * Adds errors after unvalid fields
     *
     * @method applyValidators
-    * @return {Mixed} {Boolean} If field valid or not, null if not validated
+    * @param {Object} A Deferred object
     */
-    , applyValidators: function () {
-      var valid = null;
+    , applyValidators: function ( deferred ) {
+      var promises = []
+        , self = this;
 
-      for ( var constraint in this.constraints ) {
-        var result = this.Validator.validators[ this.constraints[ constraint ].name ]().validate( this.val, this.constraints[ constraint ].requirements, this );
-
-        if ( false === result ) {
-          valid = false;
-          this.constraints[ constraint ].valid = valid;
-        } else if ( true === result ) {
-          this.constraints[ constraint ].valid = true;
-          valid = false !== valid;
+      $.each(this.constraints, function( constraintName, constraint ) {
+        var result = self.Validator.validators[ constraint.name ]().validate( self.val, constraint.requirements, self );
+        var constraintPromise;
+        if ( false === result || true === result || 'undefined' == typeof result ) {
+          // create a resolved promise
+          constraintPromise = $.when( result );
+        } else {
+          // it must be a promise object
+          constraintPromise = result;
         }
-      }
 
-      // listeners' ballet
-      if (false === valid) {
-        this.options.listeners.onFieldError( this.element, this.constraints, this );
-      } else if (true === valid && false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
-        // if onFieldSuccess returns (bool) false, consider that field si invalid
-        valid = false;
-      }
+        constraintPromise.done( function( valid ) {
+          if( 'undefined' != typeof valid ) constraint.valid = valid;
+        } );
 
-      return valid;
+        promises.push( constraintPromise );
+      });
+
+      // reduce the promises
+      $.when.apply( $, promises )
+        // if everything goes ok, the field is valid if no constraint fails
+        .done( function() {
+          var valid = true;
+          $.each( arguments, function( index, constraintValid ) {
+            if( false === constraintValid ) {
+              valid = false;
+              return false;
+            }
+          } );
+
+          // listeners' ballet
+
+          if (false === valid) {
+            self.options.listeners.onFieldError( self.element, self.constraints, self );
+          } else if (true === valid && false === self.options.listeners.onFieldSuccess( self.element, self.constraints, self )) {
+            // if onFieldSuccess returns (bool) false, consider that field is invalid
+            valid = false;
+          }
+
+          deferred.resolveWith( self, [valid] );
+        })
+        // otherwise, reject the deferred
+        .fail( deferred.reject );
     }
 
     /**
@@ -1283,61 +1304,105 @@
     * Display errors, call custom onFormValidate() function
     *
     * @method validate
-    * @param {Object} event jQuery Event
-    * @return {Boolean} Is form valid or not
+    * @return {Object} A Promise object that will be resolved with the validation result
     */
     , validate: function ( event ) {
-      var valid = true;
+      var deferred = $.Deferred()
+        , promise = deferred.promise()
+        , itemsPromises = []
+        , self = this
+      ;
+
       this.focusedField = false;
 
-      for ( var item = 0; item < this.items.length; item++ ) {
-        if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
-          valid = false;
+      $.each( this.items, function( itemIndex, item ) {
+        if ( 'undefined' !== typeof item ) {
+          var itemPromise = item.validate();
+          itemsPromises.push( itemPromise );
 
-          if ( !this.focusedField && 'first' === this.options.focus || 'last' === this.options.focus ) {
-            this.focusedField = this.items[ item ].$element;
-          }
-        }
-      }
-
-      // form is invalid, focus an error field depending on focus policy
-      if ( this.focusedField && !valid ) {
-        // Scroll smoothly
-        if ( this.options.scrollDuration > 0 ) {
-          var that = this,
-              top = this.focusedField.offset().top - $( window ).height() / 2; // Center the window on the field
-
-          $( 'html, body' ).animate( {
-              scrollTop: top
-            },
-            this.options.scrollDuration,
-            function () {
-              that.focusedField.focus();
+          itemPromise.done( function( valid ) {
+            if(valid === false) {
+              if ( !self.focusedField && 'first' === self.options.focus || 'last' === self.options.focus ) {
+                self.focusedField = item.$element;
+              }
             }
-          );
-        // Just focus on the field and let the browser do the rest
-        } else {
-          this.focusedField.focus();
+          } );
         }
-      }
+      } );
 
-      // if onFormValidate returns (bool) false, form won't be submitted, even if valid
-      var onFormValidate = this.options.listeners.onFormValidate( valid, event, this );
-      if ('undefined' !== typeof onFormValidate) {
-        return onFormValidate;
-      }
+      // reduce the item promises
+      $.when.apply( $, itemsPromises )
+        .done( function() {
+          var valid = true;
+          $.each( arguments, function( index, itemValid ) {
+            if( false === itemValid ) {
+              valid = false;
+              return false;
+            }
+          } );
 
-      return valid;
+          // form is invalid, focus an error field depending on focus policy
+          if ( self.focusedField && !valid ) {
+            // Scroll smoothly
+            if ( self.options.scrollDuration > 0 ) {
+              var top = self.focusedField.offset().top - $( window ).height() / 2; // Center the window on the field
+
+              $( 'html, body' ).animate( {
+                  scrollTop: top
+                },
+                self.options.scrollDuration,
+                function () {
+                  self.focusedField.focus();
+                }
+              );
+              // Just focus on the field and let the browser do the rest
+            } else {
+              self.focusedField.focus();
+            }
+          }
+
+          // if onFormValidate returns (bool) false, form won't be submitted, even if valid
+          var onFormValidate = self.options.listeners.onFormValidate( valid, event, self );
+          if ('undefined' !== typeof onFormValidate) {
+            valid = onFormValidate;
+          }
+
+          deferred.resolveWith( self, [valid] );
+        })
+        .fail( deferred.reject )
+      ;
+
+      return promise;
     }
 
     , isValid: function () {
-      for ( var item = 0; item < this.items.length; item++ ) {
-        if ( false === this.items[ item ].isValid() ) {
-          return false;
-        }
-      }
+      // collect all promises from items
+      var deferred = $.Deferred()
+        , promises = []
+        , self = this
+      ;
 
-      return true;
+      $.each(this.items, function(itemIndex, item) {
+        promises.push(item.isValid());
+      });
+
+      // reduce the promises
+      $.when.apply( $, promises )
+        .done( function() {
+          var valid = true;
+          $.each( arguments, function(index, itemValid) {
+            if(false === itemValid) {
+              valid = false;
+              return false;
+            }
+          });
+
+          deferred.resolveWith( self, [valid] );
+        })
+        .fail( deferred.reject )
+      ;
+
+      return deferred.promise();
     }
 
     /**
@@ -1383,10 +1448,10 @@
   * @class Parsley
   * @constructor
   * @param {Mixed} Options. {Object} to configure Parsley or {String} method name to call a public class method
-  * @param {Function} Callback function
+  * @param {Mixed} Optional method parameters
   * @return {Mixed} public class method return
   */
-  $.fn.parsley = function ( option, fn ) {
+  $.fn.parsley = function ( option, params ) {
     var namespace = { namespace: $( this ).data( 'parsleyNamespace' ) ? $( this ).data( 'parsleyNamespace' ) : ( 'undefined' !== typeof option && 'undefined' !== typeof option.namespace ? option.namespace : $.fn.parsley.defaults.namespace ) }
       , options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.domApi( namespace.namespace ) )
       , newInstance = null;
@@ -1415,7 +1480,7 @@
 
       // here is our parsley public function accessor
       if ( 'string' === typeof option && 'function' === typeof parsleyInstance[ option ] ) {
-        var response = parsleyInstance[ option ]( fn );
+        var response = parsleyInstance[ option ]( params );
 
         return 'undefined' !== typeof response ? response : $( self );
       }
@@ -1433,7 +1498,7 @@
       newInstance = bind( $( this ), !$( this ).is( 'input[type=radio], input[type=checkbox]' ) ? 'parsleyField' : 'parsleyFieldMultiple' );
     }
 
-    return 'function' === typeof fn ? fn() : newInstance;
+    return newInstance;
   };
 
   /* PARSLEY auto-binding
