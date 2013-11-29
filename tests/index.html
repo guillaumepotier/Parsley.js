@@ -283,11 +283,14 @@
 
     <script type="text/javascript">
         var jquery = 'resources/jquery.min.js'
-          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js';
+          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js'
+          , simplyDeferred = 'resources/simply-deferred-2.4.js'
+        ;
 
         switch ( location.hash ) {
             case '#zepto':
                 jsAppend( zepto , pause( 100 ) );
+                jsAppend( simplyDeferred , pause( 100 ) );
                 jsAppend( '../parsley.js' , pause( 50 ) );
                 jsAppend( '../parsley.extend.js' , pause( 50 ) );
                 jsAppend( '../l10n/parsley.es.js' , pause( 50 ) );
@@ -295,6 +298,7 @@
                 break;
             case '#zepto-min':
                 jsAppend( zepto , pause( 100 ) );
+                jsAppend( simplyDeferred , pause( 100 ) );
                 jsAppend( '../dist/parsley.min.js' , pause( 50 ) );
                 jsAppend( '../dist/parsley.extend.min.js' , pause( 50 ) );
                 jsAppend( '../dist/parsley.es.min.js' , pause( 50 ) );

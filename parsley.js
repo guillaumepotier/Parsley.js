@@ -949,12 +949,12 @@
         deferred.resolveWith( this, [this.valid] );
       }
       else {
-        // collect the validators promises and resolve the deferred when they are done
-        this.applyValidators( deferred );
-
         if ( 'undefined' !== typeof errorBubbling ? errorBubbling : this.options.showErrors ) {
           deferred.done( this.manageValidationResult );
         }
+        
+        // collect the validators promises and resolve the deferred when they are done
+        this.applyValidators( deferred );
       }
 
       return promise;
