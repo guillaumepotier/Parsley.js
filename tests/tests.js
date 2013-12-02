@@ -991,6 +991,31 @@ var testSuite = function () {
     /***************************************
               test custom functions
     ***************************************/
+    describe ( 'API calling' , function () {
+      it ( 'allow to call form methods', function () {
+        expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( true );
+        expect( $( '#programmableField' ).hasClass( 'parsley-success' ) ).to.be( true );
+        
+        $( '#api-calls-form' ).parsley( 'reset' );
+        expect( $( '#programmableField' ).hasClass( 'parsley-success' ) ).to.be( false );
+      } )
+      
+      it ( 'allow to call field methods', function() {
+        $( '#programmableField' ).val( '12345' );
+        expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( true );
+        
+        expect( $( '#programmableField' ).parsley( 'addConstraint', { minlength: 8 } ) );
+        expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( false );
+        
+        expect( $( '#programmableField' ).parsley( 'updateConstraint', { minlength: 3 } ) );
+        expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( true );
+        
+        expect( $( '#programmableField' ).parsley( 'updateConstraint', { minlength: 8 }, "Less than 8 is not enough" ) );
+        expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( false );
+        expect( $( '#api-calls-form .parsley-error-list .minlength' ).text() ).to.be( "Less than 8 is not enough" );
+      } )
+    } )
+    
     describe ( 'Test custom listeners', function () {
       describe ( 'Test overriding listeners in config', function () {
         it ( 'test onFieldValidate()', function () {
