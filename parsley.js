@@ -612,7 +612,7 @@
     */
     , bindHtml5Constraints: function () {
       // add html5 required support + class required support
-      if ( this.$element.hasClass( 'required' ) || this.$element.prop( 'required' ) ) {
+      if ( this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) ) {
         this.options.required = true;
       }
 
