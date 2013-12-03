@@ -209,6 +209,10 @@
         <form dat-validate="parsley" id="isValid-form">
             <input id="isValid-field" type="text" required />
         </form>
+        <form id="api-calls-form" data-validate="parsley">
+            <input type="text" id="programmableField" required value="filled"/>
+            <input type="submit" />
+        </form>
         <div id="mycustomerrorcontainer"></div>
         <form parsley-validate id="onFieldValidate-form">
             <input type="text" id="onFieldValidate1" parsley-type="email" parsley-required="true" />
