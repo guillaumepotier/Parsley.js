@@ -451,6 +451,13 @@
         $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
       }
     }
+    //update existing error messages. 
+    , updateError: function ( error ) {
+      for ( var constraint in error ) {
+        var ul = $( this.ulError );
+        $( this.ulError +  " > li." + constraint).html(error[constraint]);
+      }
+    }
 
     /**
     * Remove all ul / li errors
@@ -513,6 +520,9 @@
       if ( !$( this.ulError + ' .' + liClass ).length ) {
         liError[ liClass ] = message;
         this.addError( liError );
+      } else { //update existing error message in cases where the isValid parameter is unchanged but the error message has changed. 
+        liError[ liClass ] = message;
+        this.updateError( liError );
       }
     }
 
