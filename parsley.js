@@ -451,6 +451,13 @@
         $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
       }
     }
+    //update existing error messages. 
+    , updateError: function ( error ) {
+      for ( var constraint in error ) {
+        var ul = $( this.ulError );
+        $( this.ulError +  " > li." + constraint).html(error[constraint]);
+      }
+    }
 
     /**
     * Remove all ul / li errors
@@ -513,6 +520,9 @@
       if ( !$( this.ulError + ' .' + liClass ).length ) {
         liError[ liClass ] = message;
         this.addError( liError );
+      } else { //update existing error message in cases where the isValid parameter is unchanged but the error message has changed. 
+        liError[ liClass ] = message;
+        this.updateError( liError );
       }
     }
 
@@ -637,7 +647,16 @@
       }
 
       if ( 'string' === typeof this.$element.attr( 'pattern' ) && this.$element.attr( 'pattern' ).length ) {
+        // Only replace the regexp option if it is not already set. This is to allow the 'pattern' attribute to have one value
+        // but the "parsley-regexp" to have another. In mobile Safari (and possibly other mobile browsers as well) it is sometimes 
+        // desirable to use the pattern="[0-9]*" trick to make the browser display the numeric on-screen keyboard but
+        // still perform validation using a more involved regular expression.
+        // Example where the pattern attribute is only used to trigger the on-screen numeric keyboard and 
+        // the parsley-regexp attribute validates for exactly five digits:
+        // pattern="[0-9]*" parsley-regexp="^[0-9]{5}$"
+        if('undefined' === this.options.regexp) {
           this.options.regexp = this.$element.attr( 'pattern' );
+        }
       }
 
     }
