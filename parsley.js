@@ -595,7 +595,9 @@
       this.UI = new ParsleyUI( this );
 
       // bind some html5 properties
-      this.bindHtml5Constraints();
+      if ( this.options.useHtml5Constraints ) {
+        this.bindHtml5Constraints();
+      }
 
       // bind validators to field
       this.addConstraints();
@@ -1540,6 +1542,7 @@
     , errorMessage: false                       // Customize an unique error message showed if one constraint fails
     , validators: {}                            // Add your custom validators functions
     , showErrors: true                          // Set to false if you don't want Parsley to display error messages
+    , useHtml5Constraints: true                 // Set to false if you don't want Parsley to use html5 constraints
     , messages: {}                              // Add your own error messages here
 
     //some quite advanced configuration here..
