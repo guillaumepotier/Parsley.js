@@ -499,6 +499,28 @@ var testSuite = function () {
         triggerSubmitValidation( '#customvalidator', '18' );
         expect( $( '#customvalidator' ).hasClass( 'parsley-success' ) ).to.be( true );
       } )
+      it ( 'html5ConstraintsDisabled', function () {
+        triggerSubmitValidation( '#html5-constraints-disabled-1', '(734) 555 1212' );
+        expect( $( '#html5-constraints-disabled-1' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+        triggerSubmitValidation( '#html5-constraints-disabled-1', 'ABCDEF' );
+        expect( $( '#html5-constraints-disabled-1' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        triggerSubmitValidation( '#html5-constraints-disabled-2', 'foo@bar.com' );
+        expect( $( '#html5-constraints-disabled-2' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+        triggerSubmitValidation( '#html5-constraints-disabled-2', '123' );
+        expect( $( '#html5-constraints-disabled-2' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        triggerSubmitValidation( '#html5-constraints-disabled-3', '12345' );
+        expect( $( '#html5-constraints-disabled-3' ).hasClass( 'parsley-error' ) ).to.be( true );
+
+        triggerSubmitValidation( '#html5-constraints-disabled-3', 'ABCDEF' );
+        expect( $( '#html5-constraints-disabled-3' ).hasClass( 'parsley-success' ) ).to.be( true );
+
+        triggerSubmitValidation( '#html5-constraints-disabled-4', '' );
+        expect( $( '#html5-constraints-disabled-4' ).hasClass( 'parsley-error' ) ).to.be( false );
+      } )
       describe ( 'Test radio / checkboxes specific validators', function () {
         it ( 'mincheck', function () {
           $( '#checkbox-mincheck1' ).attr( 'checked', 'checked' );
