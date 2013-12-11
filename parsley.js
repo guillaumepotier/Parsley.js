@@ -723,7 +723,10 @@
       this.constraints[ constraint.name ] = $.extend( true, this.constraints[ constraint.name ], constraint );
 
       if ( 'string' === typeof message ) {
-        this.Validator.messages[ constraint.name ] = message ;
+        if ( constraint.name ===  'type' )
+          this.Validator.messages[ constraint.name ][ constraint.requirements ] = message ;
+        else
+          this.Validator.messages[ constraint.name ] = message ;
       }
 
       // force field validation next check and reset validation events
