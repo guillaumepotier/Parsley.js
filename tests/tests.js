@@ -710,6 +710,27 @@ var testSuite = function () {
         triggerSubmitValidation( '#requiredchanged3', 'foo' );
         expect( getErrorMessage( '#requiredchanged3', 'type') ).to.be( 'custom email' );
       } )
+
+      it ( 'Change error messages for single constraint using updateConstraint', function () {
+        triggerSubmitValidation( '#updateconstraint1', '' );
+        expect( getErrorMessage( '#updateconstraint1', 'required') ).to.be( 'required error' );
+        $( '#updateconstraint1' ).parsley( 'updateConstraint', { required: true }, "NEW required error" );
+        triggerSubmitValidation( '#updateconstraint1', '' );
+        expect( getErrorMessage( '#updateconstraint1', 'required') ).to.be( 'NEW required error' );
+
+        triggerSubmitValidation( '#updateconstraint2', 'foo' );
+        expect( getErrorMessage( '#updateconstraint2', 'type') ).to.be( 'email error' );
+        $( '#updateconstraint2' ).parsley( 'updateConstraint', { type: "email" }, "NEW email error" );
+        triggerSubmitValidation( '#updateconstraint2', 'bar' );
+        expect( getErrorMessage( '#updateconstraint2', 'type') ).to.be( 'NEW email error' );
+
+        triggerSubmitValidation( '#updateconstraint3', 'foo' );
+        expect( getErrorMessage( '#updateconstraint3', 'type') ).to.be( 'number error' );
+        $( '#updateconstraint3' ).parsley( 'updateConstraint', { type: "number" }, "NEW number error" );
+        triggerSubmitValidation( '#updateconstraint3', 'bar' );
+        expect( getErrorMessage( '#updateconstraint3', 'type') ).to.be( 'NEW number error' );
+      } )
+
       it ( 'Change error handler', function () {
         $( '#errorsmanagement-form' ).parsley( {
             successClass: 'parsley-great'
