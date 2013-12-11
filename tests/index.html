@@ -141,6 +141,12 @@
 
             <input type="submit" />
         </form>
+        <form id="html5-constraints-disabled" parsley-use-html5-constraints="false" parsley-validate>
+            <input type="tel" id="html5-constraints-disabled-1" parsley-regexp="^[A-Z]*$" />
+            <input type="email" id="html5-constraints-disabled-2" parsley-regexp="\d+$" />
+            <input type="text" id="html5-constraints-disabled-3" pattern="[0-9]*" minlength="5" parsley-regexp="^[A-Z]*$" />
+            <input type="text" id="html5-constraints-disabled-4" required />
+        </form>
         <form id="validate-form" parsley-validate>
             <input type="text" id="validate1" parsley-required="true" />
             <input type="text" id="validate2" parsley-minlength="6" />
@@ -160,7 +166,11 @@
             <input type="text" id="requiredchanged2" parsley-required="true" />
             <input type="text" id="requiredchanged3" parsley-required="true" parsley-type="email" parsley-required-message="custom required" parsley-type-email-message="custom email" />
         </form>
-
+        <form id="updateconstraint-form">
+            <input type="text" id="updateconstraint1" parsley-required="true" parsley-required-message="required error" />
+            <input type="text" id="updateconstraint2" parsley-type="email" parsley-type-email-message="email error" />
+            <input type="text" id="updateconstraint3" parsley-type="number" parsley-type-number-message="number error" />
+        </form>
         <form id="errorsmanagement-form">
             <label id="errorsmanagement-labelinfo"></label>
             <label id="errorsmanagement-labelerror"></label>

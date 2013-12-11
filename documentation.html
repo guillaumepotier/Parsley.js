@@ -258,7 +258,8 @@
                 <pre><code>&lt;form parsley-validate>&lt;/form></code></pre>
                 <div class="alert alert-block alert-info">
                 <span class="label label-important">Heads up!</span> <strong>HTML5</strong>:
-                If you use HTML5 types and want to disable HTML5 native browser validation, add a <code>novalidate</code> attribute to <code>form</code> tag.
+                If you use HTML5 types and want to disable HTML5 native browser validation, add a <code>novalidate</code> attribute to <code>form</code> tag. 
+                If you want to prevent parsley from using any HTML5 validation attributes you can disable it by setting the useHtml5Constraints flag to false in the advanced configuration options
                 </div>
                 <h4>Properties</h4>
                 <table class="table table-striped table-bordered table-hover">
@@ -1190,6 +1191,7 @@ parsley-error-message="You must enter a 10 characters alphanumeric value"</code>
   , errorClass: 'parsley-error'
   , validators: {}
   , showErrors: true
+  , useHtml5Constraints: true
   , messages: {}
 
   //some quite advanced configuration here..

@@ -451,6 +451,13 @@
         $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
       }
     }
+    //update existing error messages. 
+    , updateError: function ( error ) {
+      for ( var constraint in error ) {
+        var ul = $( this.ulError );
+        $( this.ulError +  " > li." + constraint).html(error[constraint]);
+      }
+    }
 
     /**
     * Remove all ul / li errors
@@ -513,6 +520,9 @@
       if ( !$( this.ulError + ' .' + liClass ).length ) {
         liError[ liClass ] = message;
         this.addError( liError );
+      } else { //update existing error message in cases where the isValid parameter is unchanged but the error message has changed. 
+        liError[ liClass ] = message;
+        this.updateError( liError );
       }
     }
 
@@ -585,7 +595,9 @@
       this.UI = new ParsleyUI( this );
 
       // bind some html5 properties
-      this.bindHtml5Constraints();
+      if ( this.options.useHtml5Constraints ) {
+        this.bindHtml5Constraints();
+      }
 
       // bind validators to field
       this.addConstraints();
@@ -711,7 +723,10 @@
       this.constraints[ constraint.name ] = $.extend( true, this.constraints[ constraint.name ], constraint );
 
       if ( 'string' === typeof message ) {
-        this.Validator.messages[ constraint.name ] = message ;
+        if ( constraint.name ===  'type' )
+          this.Validator.messages[ constraint.name ][ constraint.requirements ] = message ;
+        else
+          this.Validator.messages[ constraint.name ] = message ;
       }
 
       // force field validation next check and reset validation events
@@ -1530,6 +1545,7 @@
     , errorMessage: false                       // Customize an unique error message showed if one constraint fails
     , validators: {}                            // Add your custom validators functions
     , showErrors: true                          // Set to false if you don't want Parsley to display error messages
+    , useHtml5Constraints: true                 // Set to false if you don't want Parsley to use html5 constraints
     , messages: {}                              // Add your own error messages here
 
     //some quite advanced configuration here..
