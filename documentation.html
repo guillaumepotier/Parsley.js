@@ -259,7 +259,7 @@
                 <div class="alert alert-block alert-info">
                 <span class="label label-important">Heads up!</span> <strong>HTML5</strong>:
                 If you use HTML5 types and want to disable HTML5 native browser validation, add a <code>novalidate</code> attribute to <code>form</code> tag. 
-                If you want to prevent parsley from using any HTML5 validation attributes you can disable it by setting the useHtml5Constraints flag to false in the advanced configuration options
+                If you want to prevent parsley from using any HTML5 validation attributes you can disable it by setting the <code>useHtml5Constraints</code> flag to false in the advanced configuration options, or using <code>parsley-use-html5-constraints="false"</code> in DOM.
                 </div>
                 <h4>Properties</h4>
                 <table class="table table-striped table-bordered table-hover">
@@ -285,6 +285,12 @@
                         </td>
                         <td></td>
                         <td>Bind Parsley validation to the form and its items with validation constraints</td>
+                        <td  class="not-for-mobile"></td>
+                    </tr>
+                    <tr>
+                        <td><code>parsley-use-html5-constraints</code></td>
+                        <td>true</td>
+                        <td>Bind or not supported HTML5 tags</td>
                         <td  class="not-for-mobile"></td>
                     </tr>
                     <tr>

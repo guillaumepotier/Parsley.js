@@ -424,7 +424,8 @@
     * Remove li / ul error
     *
     * @method removeError
-    * @param {String} constraintName Method Name
+    * @param  {String} constraintName Method Name
+    * @return ParsleyUI
     */
     , removeError: function ( constraintName ) {
       var liError = this.ulError + ' .' + constraintName
@@ -436,13 +437,16 @@
         if ( that.ulError && $( that.ulError ).children().length === 0 ) {
           that.removeErrors();
         } } ) : $( liError ).remove();
+
+        return this;
     }
 
     /**
     * Add li error
     *
     * @method addError
-    * @param {Object} { minlength: "error message for minlength constraint" }
+    * @param  {Object} { minlength: "error message for minlength constraint" }
+    * @return ParsleyUI
     */
     , addError: function ( error ) {
       for ( var constraint in error ) {
@@ -450,28 +454,44 @@
 
         $( this.ulError ).append( this.options.animate ? $( liTemplate ).html( error[ constraint ] ).hide().fadeIn( this.options.animateDuration ) : $( liTemplate ).html( error[ constraint ] ) );
       }
+
+      return this;
     }
-    //update existing error messages. 
+
+    /**
+    * Update existing error if text has changed
+    *
+    * @method updateError
+    * @param  {Object} { minlength: "error message for minlength constraint" }
+    * @return ParsleyUI
+    */
     , updateError: function ( error ) {
       for ( var constraint in error ) {
-        var ul = $( this.ulError );
-        $( this.ulError +  " > li." + constraint).html(error[constraint]);
+        if ( error[ constraint ] !==  $( this.ulError +  " > li." + constraint ).html() ) {
+          this.removeError( constraint ).addError( error );
+        }
       }
+
+      return this;
     }
 
     /**
     * Remove all ul / li errors
     *
     * @method removeErrors
+    * @return ParsleyUI
     */
     , removeErrors: function () {
       this.options.animate ? $( this.ulError ).fadeOut( this.options.animateDuration, function () { $( this ).remove(); } ) : $( this.ulError ).remove();
+
+      return this;
     }
 
     /**
     * Remove ul errors and parsley error or success classes
     *
     * @method reset
+    * @return ParsleyUI
     */
     , reset: function () {
       this.ParsleyInstance.valid = null;
@@ -490,7 +510,8 @@
     * Add li / ul errors messages
     *
     * @method manageError
-    * @param {Object} constraint
+    * @param  {Object} constraint
+    * @return ParsleyUI
     */
     , manageError: function ( constraint ) {
       // display ulError container if it has been removed previously (or never shown)
@@ -501,11 +522,13 @@
       // TODO: refacto properly
       // if required constraint but field is not null, do not display
       if ( 'required' === constraint.name && null !== this.ParsleyInstance.getVal() && this.ParsleyInstance.getVal().length > 0 ) {
-        return;
+        return this;
+
       // if empty required field and non required constraint fails, do not display
       } else if ( this.ParsleyInstance.isRequired && 'required' !== constraint.name && ( null === this.ParsleyInstance.getVal() || 0 === this.ParsleyInstance.getVal().length ) ) {
         this.removeError( constraint.name );
-        return;
+
+        return this;
       }
 
       // TODO: refacto error name w/ proper & readable function
@@ -516,20 +539,19 @@
             this.ParsleyInstance.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.ParsleyInstance.Validator.messages[ constraintName ] ?
               this.ParsleyInstance.Validator.messages.defaultMessage : this.ParsleyInstance.Validator.formatMesssage( this.ParsleyInstance.Validator.messages[ constraintName ], constraint.requirements ) ) );
 
-      // add liError if not shown. Do not add more than once custom errorMessage if exist
-      if ( !$( this.ulError + ' .' + liClass ).length ) {
-        liError[ liClass ] = message;
-        this.addError( liError );
-      } else { //update existing error message in cases where the isValid parameter is unchanged but the error message has changed. 
-        liError[ liClass ] = message;
-        this.updateError( liError );
-      }
+      liError[ liClass ] = message;
+
+      // add liError if not shown. update if already exist
+      !$( this.ulError + ' .' + liClass ).length ? this.addError( liError ) : this.updateError( liError );
+
+      return this;
     }
 
     /**
     * Create ul error container
     *
     * @method manageErrorContainer
+    * @return ParsleyUI
     */
     , manageErrorContainer: function () {
       var errorContainer = this.options.errorContainer || this.options.errors.container( this.ParsleyInstance.element, this.ParsleyInstance.isRadioOrCheckbox )
@@ -541,6 +563,8 @@
       }
 
       !this.ParsleyInstance.isRadioOrCheckbox ? this.ParsleyInstance.$element.after( ulTemplate ) : this.ParsleyInstance.$element.parent().after( ulTemplate );
+
+      return this;
     }
   };
 

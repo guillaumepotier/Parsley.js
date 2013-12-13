@@ -1,5 +1,10 @@
 #Changelog
 
+**1.2.3**
+
+  - added useHtml5Constraint option (#459)
+  - update error message if has changed (#459)
+
 **1.2.2 (current stable)**
 
   - added `data-parsley-validate` W3C compliant support
