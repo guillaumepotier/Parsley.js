@@ -4,6 +4,7 @@
 
   - added useHtml5Constraint option (#459)
   - update error message if has changed (#459)
+  - fixed IE7 `undefined` attribute in `domApi` (#439)
 
 **1.2.2 (current stable)**
 
