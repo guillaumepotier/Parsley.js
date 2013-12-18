@@ -80,7 +80,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
             var delimiter = self.options.inlistDelimiter || ',';
             var listItems = (list + "").split(new RegExp("\\s*\\" + delimiter + "\\s*"));
 
-            return (listItems.indexOf(val.trim()) !== -1);
+            return ($.inArray($.trim(val), listItems) !== -1);
           }
           , priority: 32
         }
