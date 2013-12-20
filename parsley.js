@@ -1285,10 +1285,6 @@
     * @param elem
     */
     , addItem: function ( elem ) {
-      if ( $( elem ).is( this.options.excluded ) ) {
-        return false;
-      }
-
       var ParsleyField = $( elem ).parsley( this.options );
       ParsleyField.setParent( this );
 
