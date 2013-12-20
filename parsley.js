@@ -1136,7 +1136,7 @@
       this.$element = $( element );
       this.group = options.group || false;
       this.hash = this.getName();
-      this.siblings = this.group ? '[parsley-group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
+      this.siblings = this.group ? '[' + options.namespace + 'group="' + this.group + '"]' : 'input[name="' + this.$element.attr( 'name' ) + '"]';
       this.isRadioOrCheckbox = true;
       this.isRadio = this.$element.is( 'input[type=radio]' );
       this.isCheckbox = this.$element.is( 'input[type=checkbox]' );
