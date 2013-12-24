@@ -902,9 +902,8 @@
      * @method getLength
      * @return {int} The length of the value
      */
-    , getLength: function(val) {
-      if (!val || !val.hasOwnProperty('length')) return 0;
-      return val.length;
+    , getLength: function ( val ) {
+      return !val || !val.hasOwnProperty( 'length' ) ? 0 : val.length;
     }
 
     /**
@@ -1176,7 +1175,7 @@
        throw "A radio / checkbox input must have a parsley-group attribute or a name to be Parsley validated !";
      }
 
-     return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\])/g, '' );
+     return 'parsley-' + this.$element.attr( 'name' ).replace( /(:|\.|\[|\]|\$)/g, '' );
    }
 
    /**
