@@ -1,0 +1,29 @@
+{
+  "name": "parsley2",
+  "version": "2.0.0-pre",
+  "ignore": [
+    "**/.*",
+    "build",
+    "test",
+    "*.md",
+    "AUTHORS.txt",
+    "Gruntfile.js",
+    "package.json",
+    "bower.json"
+  ],
+  "dependencies": {
+    "jquery": "~1.10.0",
+    "validator.js": "~0.4.0"
+  },
+  "devDependencies": {
+    "requirejs": "~2.1.0",
+    "requirejs-domready": "~2.0.0",
+    "almond": "~0.2.7"
+  },
+  "keywords": [
+    "parsley",
+    "form",
+    "validatation",
+    "library"
+  ]
+}

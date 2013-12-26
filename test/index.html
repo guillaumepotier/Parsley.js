@@ -1,0 +1,19 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Parsleyjs Test Suite</title>
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+</head>
+<body>
+    <div id="info"></div>
+    <div id="mocha"></div>
+    <script src="../bower_components/requirejs/require.js" data-main="tests.js"></script>
+
+    <div style="display:none">
+        <!-- FOR FUNCTIONAL TESTS -->
+        <form data-parsley-validate>
+            <input type="email" required />
+        </form>
+    </div>
+</body>
+</html>
