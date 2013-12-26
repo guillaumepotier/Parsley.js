@@ -1,5 +1,6 @@
 define('parsley/utils', function () {
   return {
+    // Parsley DOM-API
     attr: function ($element, namespace) {
       var attribute,
         obj = {},
@@ -16,6 +17,31 @@ define('parsley/utils', function () {
       }
 
       return obj;
+    },
+
+    // Recursive object / array getter
+    get: function (obj, path) {
+      var i = 0,
+      paths = (path || '').split('.');
+
+      while (this.isObject(obj) || this.isArray(obj)) {
+        obj = obj[paths[i++]];
+        if (i === paths.length)
+          return obj;
+      }
+
+      return undefined;
+    },
+
+    /** Third party functions **/
+    // Underscore isArray
+    isArray: function (mixed) {
+      return Object.prototype.toString.call(mixed) === '[object Array]';
+    },
+
+    // Underscore isObject
+    isObject: function (mixed) {
+      return mixed === Object(mixed);
     },
 
     // Zepto deserialize function

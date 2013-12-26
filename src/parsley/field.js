@@ -1,14 +1,14 @@
 define('parsley/field', function () {
-  var Field = function(element, options) {
-    this.__class__ = 'Field';
+  var ParsleyField = function(element, options) {
+    this.__class__ = 'ParsleyField';
     this.init(element, options);
   };
 
-  Field.prototype = {
+  ParsleyField.prototype = {
     init: function(element, options) {
       this.options= options;
     }
   };
 
-  return Field;
+  return ParsleyField;
 });

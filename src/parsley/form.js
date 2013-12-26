@@ -1,16 +1,16 @@
 define('parsley/form', [
   "parsley/field"
-  ], function (Field) {
-  var Form = function(element, options) {
-    this.__class__ = 'Form';
+  ], function (ParsleyField) {
+  var ParsleyForm = function(element, options) {
+    this.__class__ = 'ParsleyForm';
     this.init(element, options);
   };
 
-  Form.prototype = {
+  ParsleyForm.prototype = {
     init: function(element, options) {
       this.options= options;
     }
   };
 
-  return Form;
+  return ParsleyForm;
 });

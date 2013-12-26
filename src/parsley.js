@@ -1,7 +1,7 @@
 /*!
 * Parsley.js
 * <guillaume@wisembly.com>
-* MIT Licenced
+* MIT Licensed
 *
 */
 
@@ -13,12 +13,12 @@ define('src/parsley', [
   'parsley/utils',
   'parsley/defaults',
   'domReady'
-], function(Validator, ParsleyForm, ParsleyForm, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, domReady) {
+], function(Validator, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, domReady) {
   var Parsley = function (element, options) {
     this.__class__ = 'Parsley';
 
     if ('undefined' === typeof element)
-      return this;
+      throw new Error('You must give an element');
 
     return this.init($(element), options);
   };
@@ -30,20 +30,26 @@ define('src/parsley', [
       this.options = this.getOptions(options, this.namespace);
 
       // if a form elem is given, bind all its input children
-      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.namespace)['bind']) {
+      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.namespace)['bind'])
         return this.bind('parsleyForm');
 
       // if it is a Parsley supported single element, bind it too, except inputs type hidden
       // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
-      } else if (this.$element.is(this.options.inputs)) {
+      else if (this.$element.is(this.options.inputs))
         return this.bind('parsleyField');
-      }
+
+      return this;
     },
 
     getNamespace: function (options) {
-      return 'undefined' !== typeof this.$element.data('parsleyNamespace') ?
-        this.$element.data('parsleyNamespace') : ('undefined' !== typeof options && 'undefined' !== typeof options.namespace ?
-          options.namespace : ParsleyDefaultOptions.namespace);
+      if ('undefined' !== typeof this.$element.data('parsleyNamespace'))
+          return this.$element.data('parsleyNamespace');
+      if ('undefined' !== typeof ParsleyUtils.get(options, 'namespace'))
+          return options.namespace;
+      if ('undefined' !== typeof ParsleyUtils.get(window, 'ParsleyConfig.namespace'))
+          return window.ParsleyConfig.namespace;
+
+      return ParsleyDefaultOptions.namespace;
     },
 
     getOptions: function (options, namespace) {
@@ -73,13 +79,17 @@ define('src/parsley', [
     }
   };
 
-  /* PARSLEY auto-binding
+  /* PARSLEY auto-binding. Prevent it by setting ParsleyConfig.autoBind to false
   * =================================================== */
-  domReady(function () {
-    $('[parsley-validate], [data-parsley-validate]').each(function () {
-      new Parsley(this);
+  if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
+    domReady(function () {
+      $('[parsley-validate], [data-parsley-validate]').each(function () {
+        new Parsley(this);
+      });
     });
-  });
+
+  window.ParsleyUtils = ParsleyUtils;
+  window.ParsleyValidator = Validator;
 
   return (window.Parsley = window.psly = Parsley);
 });

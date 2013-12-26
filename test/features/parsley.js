@@ -4,9 +4,50 @@ define(function () {
       it('should be an function', function () {
         expect(Parsley).to.be.a('function');
       });
-      it('should return this without an element', function () {
-        expect(new Parsley()).to.be.an('object');
-        expect(new Parsley().__class__).to.be('Parsley');
+      it('should throw an error if no element given', function () {
+        expect(Parsley).to.throwException();
+      });
+      it('should return ParsleyForm instance if instantiated on a form', function () {
+        $('body').append('<form id="element"></form>');
+        var parsleyInstance = new Parsley($('#element'));
+        expect(parsleyInstance).to.be.an('object');
+        expect(parsleyInstance.__class__).to.be('ParsleyForm');
+        $('#element').remove();
+      });
+      it('should return ParsleyField instance if instantiated on a field', function () {
+        $('body').append('<input id="element" />');
+        var parsleyInstance = new Parsley($('#element'));
+        expect(parsleyInstance).to.be.an('object');
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
+        $('#element').remove();
+      });
+      it('should return Parsley if instantiated on an unsupported element', function () {
+        $('body').append('<div id="element"></div>');
+        var parsleyInstance = new Parsley($('#element'));
+        expect(parsleyInstance).to.be.an('object');
+        expect(parsleyInstance.__class__).to.be('Parsley');
+        $('#element').remove();
+      });
+      it('should handle DOM API namespace', function () {
+        $('body').append('<div id="element"></div>');
+
+        // default ParsleyOptions.namespace
+        expect(new Parsley($('#element'))['namespace']).to.be('data-parsley-');
+
+        // global JS config
+        window.ParsleyConfig = {namespace: 'data-foo-'};
+        expect(new Parsley($('#element'))['namespace']).to.be('data-foo-');
+
+        // option on the go
+        expect(new Parsley($('#element'), {
+          namespace: "data-bar-"
+        })['namespace']).to.be('data-bar-');
+
+        // data- DOM-API
+        $('#element').attr('data-parsley-namespace', 'data-baz-');
+        expect(new Parsley($('#element'), {
+          namespace: "data-bar-"
+        })['namespace']).to.be('data-baz-');
       });
     });
   }
