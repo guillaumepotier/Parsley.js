@@ -53,7 +53,13 @@ define('src/parsley', [
     },
 
     getOptions: function (options, namespace) {
-      return $.extend(true, {}, ParsleyDefaultOptions, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, options, ParsleyUtils.attr(namespace));
+      return $.extend(
+        true,
+        {},
+        ParsleyDefaultOptions,
+        'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {},
+        options,
+        ParsleyUtils.attr(this.$element, namespace));
     },
 
     bind: function (type) {
@@ -88,6 +94,7 @@ define('src/parsley', [
       });
     });
 
+  window.ParsleyUI = ParsleyUI;
   window.ParsleyUtils = ParsleyUtils;
   window.ParsleyValidator = Validator;
 

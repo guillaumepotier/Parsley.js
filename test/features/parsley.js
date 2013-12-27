@@ -28,7 +28,7 @@ define(function () {
         expect(parsleyInstance.__class__).to.be('Parsley');
         $('#element').remove();
       });
-      it('should handle DOM API namespace', function () {
+      it('should handle namespace configuration', function () {
         $('body').append('<div id="element"></div>');
 
         // default ParsleyOptions.namespace
@@ -48,6 +48,17 @@ define(function () {
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
         })['namespace']).to.be('data-baz-');
+        delete window.ParsleyConfig.namespace;
+        $('#element').remove();
+      });
+      it('should handle proper options management', function () {
+        $('body').append('<form id="element" data-parsley-foo="bar" data-parsley-baz="baz"></form>');
+        window.ParsleyConfig = {bar: "baz", baz:"qux"};
+        var parsleyInstance = new Parsley($('#element'), {qux: "bux"});
+        expect(parsleyInstance.options.foo).to.be('bar');
+        expect(parsleyInstance.options.baz).to.be('baz');
+        expect(parsleyInstance.options.bar).to.be('baz');
+        expect(parsleyInstance.options.qux).to.be('bux');
       });
     });
   }
