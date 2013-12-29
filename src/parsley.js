@@ -1,22 +1,23 @@
 /*!
 * Parsley.js
 * <guillaume@wisembly.com>
+* Version @@version - built @@timestamp
 * MIT Licensed
 *
 */
 
-define('src/parsley', [
-  'validator',
+define([
   'parsley/form',
   'parsley/field',
   'parsley/ui',
   'parsley/utils',
   'parsley/defaults',
-  'domReady'
-], function(Validator, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, domReady) {
+  'validator',
+  'vendors/requirejs-domready/domReady'
+], function(ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, Validator, domReady) {
   var Parsley = function (element, options) {
     this.__class__ = 'Parsley';
-    this.__version__ = '@version';
+    this.__version__ = '@@version';
 
     if ('undefined' === typeof element)
       throw new Error('You must give an element');

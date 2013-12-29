@@ -1,5 +1,5 @@
 define('parsley/form', [
-  "parsley/field"
+  'parsley/field'
   ], function (ParsleyField) {
   var ParsleyForm = function(element, options) {
     this.__class__ = 'ParsleyForm';

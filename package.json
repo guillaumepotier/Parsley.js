@@ -1,6 +1,6 @@
 {
   "name": "parsley",
-  "version": "2.0.0",
+  "version": "2.0.0-pre",
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
   "keywords": [
@@ -19,9 +19,11 @@
     "mocha-phantomjs": "*",
     "expect.js": "*",
     "grunt-contrib-requirejs": "~0.4.1",
-    "grunt-amd-dist": "~0.4.5"
+    "grunt-replace": "~0.5.1",
+    "grunt-bower-cli": "0.0.1",
+    "grunt-contrib-clean": "~0.5.0"
   },
   "scripts": {
-      "test": "mocha-phantomjs test/index.html"
+    "test": "mocha-phantomjs test/index.html"
   }
 }

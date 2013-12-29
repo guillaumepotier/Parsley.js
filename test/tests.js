@@ -1,4 +1,4 @@
-require(['config'], function () {
+require(['../src/config'], function () {
   // load expect, mocha and sinon stuff
   require([
     'expect',
