@@ -17,7 +17,7 @@ requirejs.config({
         'jquery': 'vendors/jquery/jquery',
         'expect': 'modules/expect.js/expect',
         'mocha': 'modules/mocha/mocha',
-        'sinon': 'modules/sinon/lib/sinon'
+        'sinon': 'vendors/sinonjs/sinon'
       }
     },
 

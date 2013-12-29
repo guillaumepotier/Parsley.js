@@ -16,6 +16,7 @@ define('src/parsley', [
 ], function(Validator, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, domReady) {
   var Parsley = function (element, options) {
     this.__class__ = 'Parsley';
+    this.__version__ = '@version';
 
     if ('undefined' === typeof element)
       throw new Error('You must give an element');
@@ -83,6 +84,11 @@ define('src/parsley', [
 
       return parsleyInstance;
     }
+  };
+
+  /* jQuery plugin API */
+  $.fn.parsley = function (options) {
+    return new Parsley(this, options);
   };
 
   /* PARSLEY auto-binding. Prevent it by setting ParsleyConfig.autoBind to false
