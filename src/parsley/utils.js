@@ -20,17 +20,17 @@ define('parsley/utils', function () {
     },
 
     // Recursive object / array getter
-    get: function (obj, path) {
+    get: function (obj, path, placeholder) {
       var i = 0,
       paths = (path || '').split('.');
 
       while (this.isObject(obj) || this.isArray(obj)) {
         obj = obj[paths[i++]];
         if (i === paths.length)
-          return obj;
+          return obj || placeholder;
       }
 
-      return undefined;
+      return placeholder;
     },
 
     /** Third party functions **/

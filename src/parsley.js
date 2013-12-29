@@ -58,7 +58,7 @@ define('src/parsley', [
         true,
         {},
         ParsleyDefaultOptions,
-        'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {},
+        ParsleyUtils.get(window, 'ParsleyConfig', {}),
         options,
         ParsleyUtils.attr(this.$element, namespace));
     },
@@ -67,7 +67,7 @@ define('src/parsley', [
       var parsleyInstance = this.$element.data(type);
 
       // if data never binded, bind it right now!
-      if ('undefined' !== parsleyInstance) {
+      if ('undefined' === typeof parsleyInstance) {
         switch (type) {
           case 'parsleyForm':
             parsleyInstance = new ParsleyForm(this.$element, this.options);
