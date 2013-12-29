@@ -1685,9 +1685,9 @@ define('vendors/requirejs-domready/domReady',[],function () {
 });
 
 /*!
-* Parsley.js
-* <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sun Dec 29 2013 23:44:36
+* parsley
+* Guillaume Potier - <guillaume@wisembly.com>
+* Version 2.0.0-pre - built Mon Dec 30 2013 00:23:30
 * MIT Licensed
 *
 */

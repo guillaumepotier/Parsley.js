@@ -1,8 +1,8 @@
 /*!
-* Parsley.js
-* <guillaume@wisembly.com>
+* @@name
+* @@author
 * Version @@version - built @@timestamp
-* MIT Licensed
+* @@license Licensed
 *
 */
 

@@ -4,6 +4,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-bower-cli');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   // Project configuration.
@@ -19,12 +20,24 @@ module.exports = function(grunt) {
         options: {
           patterns: [
             {
+              match: 'name',
+              replacement: '<%= pkg.name %>'
+            },
+            {
               match: 'version',
               replacement: '<%= pkg.version %>'
             },
             {
+              match: 'author',
+              replacement: '<%= pkg.author.name %> - <<%= pkg.author.email %>>'
+            },
+            {
               match: 'timestamp',
               replacement: '<%= grunt.template.today() %>'
+            },
+            {
+              match: 'license',
+              replacement: '<%= pkg.license %>'
             }
           ]
         },
@@ -62,11 +75,23 @@ module.exports = function(grunt) {
           optimize: 'none'
         }
       }
+    },
+
+    uglify: {
+      min: {
+        options: {
+          report: 'gzip',
+          preserveComments: function (pos, node) { return new RegExp('^!').test(node.value); }
+        },
+        files: {
+          'dist/parsley.min.js': 'dist/parsley.min.js'
+        }
+      }
     }
   });
 
   /** Tasks here **/
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['clean:dist', 'bower:install']);
-  grunt.registerTask('build', ['configure', 'requirejs', 'replace']);
+  grunt.registerTask('build', ['configure', 'requirejs', 'replace', 'uglify:min']);
 };
