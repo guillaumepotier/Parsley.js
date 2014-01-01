@@ -412,38 +412,6 @@ var requirejs, require, define;
 
 define("bower_components/almond/almond", function(){});
 
-define('parsley/field', [],function () {
-  var ParsleyField = function(element, options) {
-    this.__class__ = 'ParsleyField';
-    this.init(element, options);
-  };
-
-  ParsleyField.prototype = {
-    init: function(element, options) {
-      this.options= options;
-    }
-  };
-
-  return ParsleyField;
-});
-
-define('parsley/form', [
-  'parsley/field'
-  ], function (ParsleyField) {
-  var ParsleyForm = function(element, options) {
-    this.__class__ = 'ParsleyForm';
-    this.init(element, options);
-  };
-
-  ParsleyForm.prototype = {
-    init: function(element, options) {
-      this.options= options;
-    }
-  };
-
-  return ParsleyForm;
-});
-
 define('parsley/ui', [],function () {
   var UI = function(options) {
     this.__class__ = 'UI';
@@ -457,92 +425,6 @@ define('parsley/ui', [],function () {
   };
 
   return UI;
-});
-
-define('parsley/utils', [],function () {
-  return {
-    // Parsley DOM-API
-    attr: function ($element, namespace) {
-      var attribute,
-        obj = {},
-        regex = new RegExp("^" + namespace, 'i');
-
-      if ('undefined' === typeof $element[0])
-        return {};
-
-      for (var i in $element[0].attributes) {
-        attribute = $element[0].attributes[i];
-        if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
-          obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
-        }
-      }
-
-      return obj;
-    },
-
-    // Recursive object / array getter
-    get: function (obj, path, placeholder) {
-      var i = 0,
-      paths = (path || '').split('.');
-
-      while (this.isObject(obj) || this.isArray(obj)) {
-        obj = obj[paths[i++]];
-        if (i === paths.length)
-          return obj || placeholder;
-      }
-
-      return placeholder;
-    },
-
-    /** Third party functions **/
-    // Underscore isArray
-    isArray: function (mixed) {
-      return Object.prototype.toString.call(mixed) === '[object Array]';
-    },
-
-    // Underscore isObject
-    isObject: function (mixed) {
-      return mixed === Object(mixed);
-    },
-
-    // Zepto deserialize function
-    deserializeValue: function (value) {
-      var num
-      try {
-        return value ?
-          value == "true" ||
-          (value == "false" ? false :
-          value == "null" ? null :
-          !isNaN(num = Number(value)) ? num :
-          /^[\[\{]/.test(value) ? $.parseJSON(value) :
-          value)
-          : value;
-      } catch (e) { return value; }
-    },
-
-    // Zepto camelize function
-    camelize: function (str) {
-      return str.replace(/-+(.)?/g, function(match, chr) {
-        return chr ? chr.toUpperCase() : '';
-      });
-    },
-
-    // Zepto dasherize function
-    dasherize: function (str) {
-      return str.replace(/::/g, '/')
-             .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-             .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-             .replace(/_/g, '-')
-             .toLowerCase();
-    }
-  };
-});
-
-define('parsley/defaults', [],function () {
-  return {
-    namespace: 'data-parsley-',                 // Default data-namespace for DOM API
-    inputs: 'input, textarea, select',          // Default supported inputs
-  };
 });
 
 /*!
@@ -1554,6 +1436,220 @@ define("vendors/validator.js/dist/validator", (function (global) {
     };
 }(this)));
 
+define('parsley/validator', [
+  'validator'
+], function (Validator) {
+  var ParsleyValidator = function(options) {
+    this.__class__ = 'ParsleyValidator';
+    this.init(options);
+  };
+
+  ParsleyValidator.prototype = {
+    init: function(options) {
+      this.options= options;
+    }
+  };
+
+  return ParsleyValidator;
+});
+
+define('parsley/defaults', [],function () {
+  return {
+    namespace: 'data-parsley-',                 // Default data-namespace for DOM API
+    inputs: 'input, textarea, select',          // Default supported inputs
+  };
+});
+
+define('parsley/field', [
+    'parsley/ui',
+    'parsley/validator',
+    'parsley/defaults'
+], function (ParsleyUI, ParsleyValidator, ParsleyDefaults) {
+  var ParsleyField = function(element, options) {
+    this.__class__ = 'ParsleyField';
+
+    if ('undefined' === typeof element)
+      throw new Error('You must give an element');
+
+    this.init($(element), options || ParsleyDefaults);
+  };
+
+  ParsleyField.prototype = {
+    init: function ($element, options) {
+      this.options = options;
+      this.$element = $element;
+      this.hash = this.generateHash();
+    },
+
+    validate: function () {},
+    isValid: function () {},
+
+    bindConstraints: function () {},
+    bindTriggers: function () {},
+
+    addConstraint: function (constraint) {},
+    removeConstraint: function (constraint) {},
+    updateConstraint: function (constraint) {},
+
+
+    generateHash: function () {
+      if (this.group)
+        return 'parsley-' + this.group;
+
+      return 'parsley-' + new String(Math.random()).substring(2, 9);
+    }
+  };
+
+  return ParsleyField;
+});
+
+define('parsley/form', [
+  'parsley/field',
+  'parsley/defaults'
+  ], function (ParsleyField, ParsleyDefaults) {
+  var ParsleyForm = function(element, options) {
+    this.__class__ = 'ParsleyForm';
+
+    if ('undefined' === typeof element)
+      throw new Error('You must give an element');
+
+    this.init($(element), options || ParsleyDefaults);
+  };
+
+  ParsleyForm.prototype = {
+    init: function ($element, options) {
+      this.options = options;
+      this.$element = $element;
+
+      this.bindFields();
+      this.$element.on('submit.' + this.__class__, false, $.proxy(this.validate, this));
+    },
+
+    validate: function () {
+      this.bindFields();
+
+      for (var i = 0; i < this.fields.length; i++) {
+        this.fields[i].validate();
+      }
+    },
+
+    isValid: function () {
+      this.bindFields();
+
+      for (var i = 0; i < this.fields.length; i++)
+        if (false === this.fields[i].isValid())
+          return false;
+
+      return true;
+    },
+
+    bindFields: function () {
+      var self = this;
+      this.fields = [];
+
+      this.$element.find(this.options.inputs).each(function () {
+        self.addField(this);
+      });
+
+      return this;
+    },
+
+    addField: function (field) {
+      this.fields.push(new ParsleyField(field, this.options));
+
+      return this;
+    },
+
+    removeField: function (field) {},
+    addListener: function (listener) {},
+    removeListener: function(listener) {},
+    updateListener: function(listener) {},
+    reset: function () {},
+    destroy: function () {}
+  };
+
+  return ParsleyForm;
+});
+
+define('parsley/utils', [],function () {
+  return {
+    // Parsley DOM-API
+    attr: function ($element, namespace) {
+      var attribute,
+        obj = {},
+        regex = new RegExp("^" + namespace, 'i');
+
+      if ('undefined' === typeof $element[0])
+        return {};
+
+      for (var i in $element[0].attributes) {
+        attribute = $element[0].attributes[i];
+        if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
+          obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
+        }
+      }
+
+      return obj;
+    },
+
+    // Recursive object / array getter
+    get: function (obj, path, placeholder) {
+      var i = 0,
+      paths = (path || '').split('.');
+
+      while (this.isObject(obj) || this.isArray(obj)) {
+        obj = obj[paths[i++]];
+        if (i === paths.length)
+          return obj || placeholder;
+      }
+
+      return placeholder;
+    },
+
+    /** Third party functions **/
+    // Underscore isArray
+    isArray: function (mixed) {
+      return Object.prototype.toString.call(mixed) === '[object Array]';
+    },
+
+    // Underscore isObject
+    isObject: function (mixed) {
+      return mixed === Object(mixed);
+    },
+
+    // Zepto deserialize function
+    deserializeValue: function (value) {
+      var num
+      try {
+        return value ?
+          value == "true" ||
+          (value == "false" ? false :
+          value == "null" ? null :
+          !isNaN(num = Number(value)) ? num :
+          /^[\[\{]/.test(value) ? $.parseJSON(value) :
+          value)
+          : value;
+      } catch (e) { return value; }
+    },
+
+    // Zepto camelize function
+    camelize: function (str) {
+      return str.replace(/-+(.)?/g, function(match, chr) {
+        return chr ? chr.toUpperCase() : '';
+      });
+    },
+
+    // Zepto dasherize function
+    dasherize: function (str) {
+      return str.replace(/::/g, '/')
+             .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+             .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+             .replace(/_/g, '-')
+             .toLowerCase();
+    }
+  };
+});
+
 /**
  * @license RequireJS domReady 2.0.1 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -1687,7 +1783,7 @@ define('vendors/requirejs-domready/domReady',[],function () {
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Mon Dec 30 2013 00:23:30
+* Version 2.0.0-pre - built Wed Jan 01 2014 16:30:24
 * MIT Licensed
 *
 */
