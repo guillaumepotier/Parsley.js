@@ -10,7 +10,7 @@ define('parsley/constraint', [
     this.name = name;
     this.requirements = requirements;
 
-    this.priority = ParsleyUtils.get(parsleyField.Validator.validators[name], 'priority', 2)
+    this.priority = ParsleyUtils.get(parsleyField.Validator.validators[name], 'priority', 2);
     this.isDomConstraint = ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name);
 
     this.isViolated = false;

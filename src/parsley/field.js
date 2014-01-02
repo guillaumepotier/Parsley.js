@@ -32,6 +32,8 @@ define('parsley/field', [
     bind: function () {
       this.bindConstraints();
       this.bindTriggers();
+
+      return this;
     },
 
     bindConstraints: function () {
@@ -40,6 +42,8 @@ define('parsley/field', [
       for (var name in this.options) {
         this.addConstraint(ParsleyUtils.makeObject(name, this.options[name]));
       }
+
+      return this;
     },
 
     bindTriggers: function () {},
@@ -54,13 +58,41 @@ define('parsley/field', [
       constraint = ParsleyUtils.keyValue(constraint);
       constraint.key = constraint.key.toLowerCase();
 
-      if ('function' === typeof this.Validator.validators[constraint.key])
-        this.constraints.push(new ParsleyConstraint(this, constraint.key, constraint.value));
+      if ('function' === typeof this.Validator.validators[constraint.key]) {
+        constraint = new ParsleyConstraint(this, constraint.key, constraint.value);
+
+        // if constraint already exist, delete it and push new version
+        if (true === this.hasConstraint(constraint.name))
+          this.removeConstraint(constraint.name);
+
+        this.constraints.push(constraint);
+      }
+
+      return this;
     },
 
-    removeConstraint: function (constraint) {},
-    updateConstraint: function (constraint) {},
+    removeConstraint: function (name) {
+      for (var i = 0; i < this.constraints.length; i++)
+        if (name === this.constraints[i].name) {
+          this.constraints.splice(i, 1);
+          break;
+        }
 
+      return this;
+    },
+
+    updateConstraint: function (constraint) {
+      return this.removeConstraint(constraint.name)
+        .addConstraint(constraint);
+    },
+
+    hasConstraint: function (name) {
+      for (var i = 0; i < this.constraints.length; i++)
+        if (name === this.constraints[i].name)
+          return true;
+
+      return false;
+    },
 
     generateHash: function () {
       if (this.group)
