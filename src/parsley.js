@@ -28,11 +28,10 @@ define([
   Parsley.prototype = {
     init: function ($element, options) {
       this.$element = $element;
-      this.namespace = this.getNamespace(options);
-      this.options = this.getOptions(options, this.namespace);
+      this.options = this.getOptions(options, this.getNamespace(options));
 
       // if a form elem is given, bind all its input children
-      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.namespace)['bind'])
+      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.options.namespace)['bind'])
         return this.bind('parsleyForm');
 
       // if it is a Parsley supported single element, bind it too, except inputs type hidden
@@ -61,7 +60,8 @@ define([
         ParsleyDefaultOptions,
         ParsleyUtils.get(window, 'ParsleyConfig', {}),
         options,
-        ParsleyUtils.attr(this.$element, namespace));
+        ParsleyUtils.attr(this.$element, namespace),
+        {namespace: namespace});
     },
 
     bind: function (type) {

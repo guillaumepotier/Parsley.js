@@ -1,6 +1,6 @@
 define(function () {
   return function (Parsley) {
-    describe('Parsley', function () {
+    describe('ParsleyBase', function () {
       it('should be an function', function () {
         expect(Parsley).to.be.a('function');
       });
@@ -34,22 +34,22 @@ define(function () {
         $('body').append('<div id="element"></div>');
 
         // default ParsleyOptions.namespace
-        expect(new Parsley($('#element'))['namespace']).to.be('data-parsley-');
+        expect(new Parsley($('#element')).options.namespace).to.be('data-parsley-');
 
         // global JS config
         window.ParsleyConfig = {namespace: 'data-foo-'};
-        expect(new Parsley($('#element'))['namespace']).to.be('data-foo-');
+        expect(new Parsley($('#element')).options.namespace).to.be('data-foo-');
 
         // option on the go
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
-        })['namespace']).to.be('data-bar-');
+        }).options.namespace).to.be('data-bar-');
 
         // data- DOM-API
         $('#element').attr('data-parsley-namespace', 'data-baz-');
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
-        })['namespace']).to.be('data-baz-');
+        }).options.namespace).to.be('data-baz-');
         delete window.ParsleyConfig.namespace;
       });
       it('should handle proper options management', function () {
@@ -65,10 +65,11 @@ define(function () {
         $('body').append('<div id="element" data-parsley-namespace="baz-"></div>');
         var parsleyInstance = $('#element').parsley({foo: 'bar'});
         expect(parsleyInstance.__class__).to.be('Parsley');
-        expect(parsleyInstance.namespace).to.be('baz-');
+        expect(parsleyInstance.options.namespace).to.be('baz-');
         expect(parsleyInstance.options.foo).to.be('bar');
       });
       afterEach(function () {
+        window.ParsleyConfig = {};
         if ($('#element').length)
             $('#element').remove();
       });

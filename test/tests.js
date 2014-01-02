@@ -28,7 +28,7 @@ require(['../src/config'], function () {
       ], function (parsleyBase, field, form, ui, utils) {
         describe('Unit Tests', function () {
           parsleyBase(Parsley);
-          field(ParsleyField);
+          field(ParsleyField, Parsley);
           form(ParsleyForm);
           ui(ParsleyUI);
           utils(ParsleyUtils);

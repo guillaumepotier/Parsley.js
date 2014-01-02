@@ -1447,10 +1447,39 @@ define('parsley/validator', [
   ParsleyValidator.prototype = {
     init: function(options) {
       this.options= options;
+    },
+
+    validators: {
+      notnull: function () {
+        return $.extend(new Validator.Assert().NotNull(), {priority: 2});
+      },
+      notblank: function () {
+        return $.extend(new Validator.Assert().NotBlank(), {priority: 2});
+      },
+      required: function () {
+        return $.extend(new Validator.Assert().Required(), {priority: 512});
+      }
     }
   };
 
+  ParsleyValidator.Assert = Validator.Assert;
+
   return ParsleyValidator;
+});
+
+define('parsley/constraint', [],function () {
+  var Constraint = function(name, requirements, priority, domConstraint) {
+    this.__class__ = 'Constraint';
+    this.name = name;
+    this.priority = priority || 2;
+    this.requirements = requirements;
+    this.isDomConstraint = domConstraint || false;
+
+    this.isViolated = false;
+    this.errorMessage = '';
+  };
+
+  return Constraint;
 });
 
 define('parsley/defaults', [],function () {
@@ -1460,11 +1489,118 @@ define('parsley/defaults', [],function () {
   };
 });
 
+define('parsley/utils', [],function () {
+  return {
+    // Parsley DOM-API
+    // returns object from dom attributes and values
+    // if attr is given, returns bool if attr present in DOM or not
+    attr: function ($element, namespace, checkAttr) {
+      var attribute,
+        obj = {},
+        regex = new RegExp('^' + namespace, 'i');
+
+      if ('undefined' === typeof $element[0])
+        return {};
+
+      for (var i in $element[0].attributes) {
+        attribute = $element[0].attributes[i];
+        if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
+          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr, 'i').test(attribute.name))
+              return true;
+
+          obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
+        }
+      }
+
+      return 'undefined' === typeof checkAttr ? obj : false;
+    },
+
+    // Recursive object / array getter
+    get: function (obj, path, placeholder) {
+      var i = 0,
+      paths = (path || '').split('.');
+
+      while (this.isObject(obj) || this.isArray(obj)) {
+        obj = obj[paths[i++]];
+        if (i === paths.length)
+          return obj || placeholder;
+      }
+
+      return placeholder;
+    },
+
+    // {foo: bar, bar: baz} => [{key: foo, value: bar}, {key: bar, value: baz}]
+    keyValue: function (object) {
+      var keyValue = [];
+
+      for (var key in object)
+        keyValue.push({
+          key: key,
+          value: object[key]
+        });
+
+      return 1 === keyValue.length ? keyValue[0] : keyValue;
+    },
+
+    makeObject: function () {
+      var object = {};
+      for (var i = 0; i < arguments.length; i += 2)
+        object[arguments[i]] = arguments[i+1];
+
+      return object;
+    },
+
+    /** Third party functions **/
+    // Underscore isArray
+    isArray: function (mixed) {
+      return Object.prototype.toString.call(mixed) === '[object Array]';
+    },
+
+    // Underscore isObject
+    isObject: function (mixed) {
+      return mixed === Object(mixed);
+    },
+
+    // Zepto deserialize function
+    deserializeValue: function (value) {
+      var num
+      try {
+        return value ?
+          value == "true" ||
+          (value == "false" ? false :
+          value == "null" ? null :
+          !isNaN(num = Number(value)) ? num :
+          /^[\[\{]/.test(value) ? $.parseJSON(value) :
+          value)
+          : value;
+      } catch (e) { return value; }
+    },
+
+    // Zepto camelize function
+    camelize: function (str) {
+      return str.replace(/-+(.)?/g, function(match, chr) {
+        return chr ? chr.toUpperCase() : '';
+      });
+    },
+
+    // Zepto dasherize function
+    dasherize: function (str) {
+      return str.replace(/::/g, '/')
+             .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+             .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+             .replace(/_/g, '-')
+             .toLowerCase();
+    }
+  };
+});
+
 define('parsley/field', [
     'parsley/ui',
     'parsley/validator',
-    'parsley/defaults'
-], function (ParsleyUI, ParsleyValidator, ParsleyDefaults) {
+    'parsley/constraint',
+    'parsley/defaults',
+    'parsley/utils'
+], function (ParsleyUI, ParsleyValidator, ParsleyConstraint, ParsleyDefaults, ParsleyUtils) {
   var ParsleyField = function(element, options) {
     this.__class__ = 'ParsleyField';
 
@@ -1479,15 +1615,50 @@ define('parsley/field', [
       this.options = options;
       this.$element = $element;
       this.hash = this.generateHash();
+      this.Validator = new ParsleyValidator(options);
+      this.bind();
     },
 
     validate: function () {},
     isValid: function () {},
+    getVal: function () {
 
-    bindConstraints: function () {},
+    },
+
+    bind: function () {
+      this.bindConstraints();
+      this.bindTriggers();
+    },
+
+    bindConstraints: function () {
+      this.constraints = [];
+
+      for (var name in this.options) {
+        this.addConstraint(ParsleyUtils.makeObject(name, this.options[name]));
+      }
+    },
+
     bindTriggers: function () {},
 
-    addConstraint: function (constraint) {},
+    /**
+    * Dynamically add a new constraint to a field
+    *
+    * @method addConstraint
+    * @param {Object} constraint { name: requirements }
+    */
+    addConstraint: function (constraint) {
+      constraint = ParsleyUtils.keyValue(constraint);
+      constraint.key = constraint.key.toLowerCase();
+
+      if ('function' === typeof this.Validator.validators[constraint.key])
+        this.constraints.push(new ParsleyConstraint(
+          constraint.key,
+          constraint.value,
+          ParsleyUtils.get(this.Validator.validators[constraint.key], 'priority', 2),
+          ParsleyUtils.attr(this.$element, this.options.namespace, constraint.key)
+        ));
+    },
+
     removeConstraint: function (constraint) {},
     updateConstraint: function (constraint) {},
 
@@ -1497,7 +1668,10 @@ define('parsley/field', [
         return 'parsley-' + this.group;
 
       return 'parsley-' + new String(Math.random()).substring(2, 9);
-    }
+    },
+
+    reset: function () {},
+    destroy: function () {}
   };
 
   return ParsleyField;
@@ -1569,85 +1743,6 @@ define('parsley/form', [
   };
 
   return ParsleyForm;
-});
-
-define('parsley/utils', [],function () {
-  return {
-    // Parsley DOM-API
-    attr: function ($element, namespace) {
-      var attribute,
-        obj = {},
-        regex = new RegExp("^" + namespace, 'i');
-
-      if ('undefined' === typeof $element[0])
-        return {};
-
-      for (var i in $element[0].attributes) {
-        attribute = $element[0].attributes[i];
-        if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
-          obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
-        }
-      }
-
-      return obj;
-    },
-
-    // Recursive object / array getter
-    get: function (obj, path, placeholder) {
-      var i = 0,
-      paths = (path || '').split('.');
-
-      while (this.isObject(obj) || this.isArray(obj)) {
-        obj = obj[paths[i++]];
-        if (i === paths.length)
-          return obj || placeholder;
-      }
-
-      return placeholder;
-    },
-
-    /** Third party functions **/
-    // Underscore isArray
-    isArray: function (mixed) {
-      return Object.prototype.toString.call(mixed) === '[object Array]';
-    },
-
-    // Underscore isObject
-    isObject: function (mixed) {
-      return mixed === Object(mixed);
-    },
-
-    // Zepto deserialize function
-    deserializeValue: function (value) {
-      var num
-      try {
-        return value ?
-          value == "true" ||
-          (value == "false" ? false :
-          value == "null" ? null :
-          !isNaN(num = Number(value)) ? num :
-          /^[\[\{]/.test(value) ? $.parseJSON(value) :
-          value)
-          : value;
-      } catch (e) { return value; }
-    },
-
-    // Zepto camelize function
-    camelize: function (str) {
-      return str.replace(/-+(.)?/g, function(match, chr) {
-        return chr ? chr.toUpperCase() : '';
-      });
-    },
-
-    // Zepto dasherize function
-    dasherize: function (str) {
-      return str.replace(/::/g, '/')
-             .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-             .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-             .replace(/_/g, '-')
-             .toLowerCase();
-    }
-  };
 });
 
 /**
@@ -1783,7 +1878,7 @@ define('vendors/requirejs-domready/domReady',[],function () {
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Wed Jan 01 2014 16:30:24
+* Version 2.0.0-pre - built Thu Jan 02 2014 11:32:20
 * MIT Licensed
 *
 */
@@ -1810,11 +1905,10 @@ define('parsley',[
   Parsley.prototype = {
     init: function ($element, options) {
       this.$element = $element;
-      this.namespace = this.getNamespace(options);
-      this.options = this.getOptions(options, this.namespace);
+      this.options = this.getOptions(options, this.getNamespace(options));
 
       // if a form elem is given, bind all its input children
-      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.namespace)['bind'])
+      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.options.namespace)['bind'])
         return this.bind('parsleyForm');
 
       // if it is a Parsley supported single element, bind it too, except inputs type hidden
@@ -1843,7 +1937,8 @@ define('parsley',[
         ParsleyDefaultOptions,
         ParsleyUtils.get(window, 'ParsleyConfig', {}),
         options,
-        ParsleyUtils.attr(this.$element, namespace));
+        ParsleyUtils.attr(this.$element, namespace),
+        {namespace: namespace});
     },
 
     bind: function (type) {

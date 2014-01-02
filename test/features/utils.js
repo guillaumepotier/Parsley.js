@@ -1,6 +1,6 @@
 define(function () {
   return function (ParsleyUtils) {
-    describe('Utils', function () {
+    describe('ParsleyUtils', function () {
       it('should have a proper deserializeValue() function', function () {
         expect(ParsleyUtils.deserializeValue('true')).to.be(true);
         expect(ParsleyUtils.deserializeValue('1')).to.be(1);
@@ -48,6 +48,11 @@ define(function () {
         attr = ParsleyUtils.attr(element, 'data-parsley-');
 
         expect(attr).to.eql({'foo': 'bar', 'bar': [0, 42]});
+
+        // test if attr exist
+        expect(ParsleyUtils.attr(element, 'data-parsley-', 'foo')).to.be(true);
+        expect(ParsleyUtils.attr(element, 'data-parsley-', 'FoO')).to.be(true);
+        expect(ParsleyUtils.attr(element, 'data-parsley-', 'baz')).to.be(false);
       });
       it('should have a proper get() function', function () {
         var object = {

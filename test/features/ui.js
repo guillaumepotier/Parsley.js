@@ -1,6 +1,6 @@
 define(function () {
   return function () {
-    describe('UI', function () {
+    describe('ParsleyUI', function () {
       it.skip('first test', function () {
       });
     });
