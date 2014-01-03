@@ -12,9 +12,10 @@ define([
   'parsley/ui',
   'parsley/utils',
   'parsley/defaults',
-  'validator',
+  'parsley/abstract',
+  'parsley/validator',
   'vendors/requirejs-domready/domReady'
-], function(ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, Validator, domReady) {
+], function(ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, domReady) {
   var Parsley = function (element, options) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
@@ -29,6 +30,7 @@ define([
     init: function ($element, options) {
       this.$element = $element;
       this.options = this.getOptions(options);
+      this.ParsleyValidator = new ParsleyValidator(this.options);
 
       // if a form elem is given, bind all its input children
       if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.options.namespace)['bind'])
@@ -73,10 +75,10 @@ define([
       if ('undefined' === typeof parsleyInstance) {
         switch (type) {
           case 'parsleyForm':
-            parsleyInstance = new ParsleyForm(this);
+            parsleyInstance = $.extend(new ParsleyForm(this), new ParsleyAbstract());
             break;
           case 'parsleyField':
-            parsleyInstance = new ParsleyField(this);
+            parsleyInstance = $.extend(new ParsleyField(this), new ParsleyAbstract());
             break;
           default:
             throw new Error(type + 'is not a supported Parsley type');
@@ -103,9 +105,8 @@ define([
       });
     });
 
-  window.ParsleyUI = ParsleyUI;
   window.ParsleyUtils = ParsleyUtils;
-  window.ParsleyValidator = Validator;
+  window.ParsleyValidator = new ParsleyValidator().Validator;
 
   return (window.Parsley = window.psly = Parsley);
 });

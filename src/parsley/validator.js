@@ -3,16 +3,31 @@ define('parsley/validator', [
 ], function (Validator) {
   var ParsleyValidator = function(options) {
     this.__class__ = 'ParsleyValidator';
-    this.init(options);
+    this.Validator = Validator;
+    this.options = options;
   };
 
   ParsleyValidator.prototype = {
-    init: function(options) {
-      this.options= options;
+    validate: function () {
+      return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
     },
 
-    validate: function () {
-      return new Validator.Validator().validate.apply(new Validator.Validator(), arguments);
+    addValidator: function (name, fn, priority) {
+      this.validators[name] = function (requirements) {
+        return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
+      }
+
+      return this;
+    },
+
+    updateValidator: function (name, fn, priority) {
+      return addValidator(name, fn, priority);
+    },
+
+    removeValidator: function (name) {
+      delete(this.validators[name]);
+
+      return this;
     },
 
     validators: {
@@ -33,7 +48,7 @@ define('parsley/validator', [
             return $.extend(new Validator.Assert().Regexp(
               '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/'), { priority: 256 });
           default:
-            throw new Error('validator type ' + type + ' is not supported');
+            throw new Error('validator type `' + type + '` is not supported');
         }
       }
     }

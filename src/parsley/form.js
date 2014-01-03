@@ -1,7 +1,8 @@
 define('parsley/form', [
   'parsley/field',
+  'parsley/abstract',
   'parsley/utils'
-  ], function (ParsleyField, ParsleyUtils) {
+  ], function (ParsleyField, ParsleyAbstract, ParsleyUtils) {
   var ParsleyForm = function(parsleyInstance) {
     this.__class__ = 'ParsleyForm';
 
@@ -51,7 +52,7 @@ define('parsley/form', [
     },
 
     addField: function (field) {
-      this.fields.push(new ParsleyField(this.parsleyInstance));
+      this.fields.push($.extend(new ParsleyField(this.parsleyInstance), new ParsleyAbstract()));
 
       return this;
     },

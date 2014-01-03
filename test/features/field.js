@@ -72,6 +72,36 @@ define(function () {
         $('#element').val('foo');
         expect(parsleyField.isValid()).to.be(true);
       });
+      it('should valid more complex `type` validator', function () {
+        $('body').append('<input type="text" id="element" value="" />');
+        var parsleyField = new Parsley($('#element'))
+          .addConstraint({ type: 'email' });
+        expect(parsleyField.isValid()).to.be(false);
+        $('#element').val('foo');
+        expect(parsleyField.isValid()).to.be(false);
+        $('#element').val('foo@bar.baz');
+        expect(parsleyField.isValid()).to.be(true);
+      });
+      it('should valid most complex Callback() validator', function () {
+        $('body').append('<input type="text" id="element" value="" />');
+        var parsleyField = new Parsley($('#element'))
+          .registerValidator('multiple', function (value, multiple) {
+            if (!isNaN(parseFloat(value)) && isFinite(value))
+              return !(new Number(value) % multiple);
+
+            return false;
+          }, 512)
+          .addConstraint({ multiple: 2 });
+        expect(parsleyField.isValid()).to.be(false);
+        $('#element').val('1');
+        expect(parsleyField.isValid()).to.be(false);
+        $('#element').val('2');
+        expect(parsleyField.isValid()).to.be(true);
+        parsleyField.updateConstraint({ multiple: 3 });
+        expect(parsleyField.isValid()).to.be(false);
+        $('#element').val('9');
+        expect(parsleyField.isValid()).to.be(true);
+      });
       afterEach(function () {
         window.ParsleyConfig = {};
         if ($('#element').length)

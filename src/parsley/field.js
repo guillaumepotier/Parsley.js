@@ -1,9 +1,8 @@
 define('parsley/field', [
     'parsley/ui',
-    'parsley/validator',
-    'parsley/constraintFactory',
+    'parsley/factory',
     'parsley/utils'
-], function (ParsleyUI, ParsleyValidator, ConstraintFactory, ParsleyUtils) {
+], function (ParsleyUI, ConstraintFactory, ParsleyUtils) {
   var ParsleyField = function(parsleyInstance) {
     this.__class__ = 'ParsleyField';
 
@@ -21,7 +20,7 @@ define('parsley/field', [
       this.options = options;
       this.$element = $element;
       this.hash = this.generateHash();
-      this.Validator = new ParsleyValidator(options);
+      this.ParsleyValidator = this.parsleyInstance.ParsleyValidator;
       this.bind();
     },
 
@@ -56,11 +55,11 @@ define('parsley/field', [
 
       // if we want to validate field against all constraints, just call Validator
       if (false === this.options.stopOnFirstFailingConstraint)
-        return true === new ParsleyValidator.validate(this.getVal(), this.constraints);
+        return true === this.ParsleyValidator.validate(this.getVal(), this.constraints);
 
       // else, iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++) {
-        if (true !== new ParsleyValidator().validate(this.getVal(), this.constraints, priorities[i]))
+        if (true !== this.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i]))
           return false;
       }
 
@@ -112,7 +111,7 @@ define('parsley/field', [
       constraint = ParsleyUtils.keyValue(constraint);
       constraint.key = constraint.key.toLowerCase();
 
-      if ('function' === typeof this.Validator.validators[constraint.key]) {
+      if ('function' === typeof this.ParsleyValidator.validators[constraint.key]) {
         constraint = new ConstraintFactory(this, constraint.key, constraint.value, priority);
 
         // if constraint already exist, delete it and push new version
