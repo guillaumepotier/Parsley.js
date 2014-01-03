@@ -822,7 +822,7 @@ define('parsley/defaults', [],function () {
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.4.11 - built Fri Jan 03 2014 11:03:54
+* Version 0.4.12 - built Fri Jan 03 2014 14:58:03
 * MIT Licensed
 *
 */
@@ -835,7 +835,7 @@ define('parsley/defaults', [],function () {
 
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '0.4.11';
+    this.__version__ = '0.4.12';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
 
@@ -1234,6 +1234,12 @@ define('parsley/defaults', [],function () {
 
     Callback: function ( fn ) {
       this.__class__ = 'Callback';
+      this.arguments = Array.prototype.slice.call( arguments );
+
+      if ( 1 === this.arguments.length )
+        this.arguments = []
+      else
+        this.arguments.splice( 0, 1 );
 
       if ( 'function' !== typeof fn )
         throw new Error( 'Callback must be instanciated with a function' );
@@ -1241,7 +1247,8 @@ define('parsley/defaults', [],function () {
       this.fn = fn;
 
       this.validate = function ( value ) {
-        var result = fn( value, this );
+        var arguments = [ value ].concat( this.arguments) ;
+        var result = this.fn.apply( this, arguments );
 
         if ( true !== result )
           throw new Violation( this, value, { result: result } );
@@ -2016,7 +2023,7 @@ define('vendors/requirejs-domready/domReady',[],function () {
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Fri Jan 03 2014 15:57:20
+* Version 2.0.0-pre - built Fri Jan 03 2014 16:13:03
 * MIT Licensed
 *
 */

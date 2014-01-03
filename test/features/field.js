@@ -13,11 +13,20 @@ define(function () {
       });
       it('should properly bind DOM constraints', function () {
         $('body').append('<input type="text" id="element" data-parsley-required />');
-        var parsleyField = new Parsley($('#element'), new Parsley($('#element')).options);
+        var parsleyField = new Parsley($('#element'));
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].__class__).to.be('Required');
         expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
         expect(parsleyField.constraints[0].name).to.be('required');
+        expect(parsleyField.constraints[0].isDomConstraint).to.be(true);
+      });
+      it('should properly bind HTML DOM supported constraints', function () {
+        $('body').append('<input type="email" id="element" />');
+        var parsleyField = new Parsley($('#element'));
+        expect(parsleyField.constraints.length).to.be(1);
+        expect(parsleyField.constraints[0].__class__).to.be('Email');
+        expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
+        expect(parsleyField.constraints[0].name).to.be('type');
         expect(parsleyField.constraints[0].isDomConstraint).to.be(true);
       });
       it('should have a proper addConstraint() javascript method', function () {
@@ -101,6 +110,35 @@ define(function () {
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('9');
         expect(parsleyField.isValid()).to.be(true);
+      });
+      it('should properly compute constraints on each validation', function () {
+        $('body').append('<input type="email" required id="element" />');
+        var parsleyField = new Parsley($('#element'), {
+          validators : {
+            multiple: {
+              fn: function (value, multiple) {
+                if (!isNaN(parseFloat(value)) && isFinite(value))
+                  return !(new Number(value) % multiple);
+
+                return false;
+              },
+              priority: 64
+            }
+          }
+        })
+        .registerValidator('foobazer', function (value) {
+          return 'foobar' === value;
+        }, 2)
+        .addConstraint({ multiple: 4 })
+        .addConstraint({ foobazer: true });
+        expect(parsleyField.constraints.length).to.be(4);
+        $('#element').removeAttr('required');
+        parsleyField.refreshConstraints();
+        expect(parsleyField.constraints.length).to.be(3);
+        parsleyField
+          .removeConstraint('multiple')
+          .refreshConstraints();
+        expect(parsleyField.constraints.length).to.be(2);
       });
       afterEach(function () {
         window.ParsleyConfig = {};
