@@ -7,7 +7,7 @@ define(function () {
       it('should throw an error if no parsleyInstance given', function () {
         expect(ParsleyField).to.throwException();
       });
-      it('should generate proper hash', function () {
+      it('should generate a proper hash', function () {
         $('body').append('<input type="text" id="element" data-parsley-notnull />')
         expect(new Parsley($('#element')).hash.length).to.be(new String('parsley-').length + 7);
       });
@@ -15,16 +15,18 @@ define(function () {
         $('body').append('<input type="text" id="element" data-parsley-required />');
         var parsleyField = new Parsley($('#element'), new Parsley($('#element')).options);
         expect(parsleyField.constraints.length).to.be(1);
-        expect(parsleyField.constraints[0].__class__).to.be('Constraint');
+        expect(parsleyField.constraints[0].__class__).to.be('Required');
+        expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
         expect(parsleyField.constraints[0].name).to.be('required');
         expect(parsleyField.constraints[0].isDomConstraint).to.be(true);
       });
-      it('should use addConstraint() javascript method', function () {
+      it('should have a proper addConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
           .addConstraint({ required: true });
         expect(parsleyField.constraints.length).to.be(1);
-        expect(parsleyField.constraints[0].__class__).to.be('Constraint');
+        expect(parsleyField.constraints[0].__class__).to.be('Required');
+        expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
         expect(parsleyField.constraints[0].name).to.be('required');
         expect(parsleyField.constraints[0].requirements).to.be(true);
         expect(parsleyField.constraints[0].priority).to.be(512);
@@ -37,7 +39,7 @@ define(function () {
         expect(parsleyField.constraints[0].requirements).to.be(false);
         expect(parsleyField.constraints[0].priority).to.be(64);
       });
-      it('should use updateConstraint() javascript method', function () {
+      it('should have a proper updateConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
           .addConstraint({ required: true });
@@ -49,7 +51,7 @@ define(function () {
         expect(parsleyField.constraints[0].requirements).to.be(false);
         expect(parsleyField.constraints[0].priority).to.be(64);
       });
-      it('should use removeConstraint() javascript method', function () {
+      it('should have a proper removeConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
           .addConstraint({ required: true })
@@ -57,6 +59,18 @@ define(function () {
           .removeConstraint('required');
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].name).to.be('notnull');
+      });
+      it('should always validate field withoud constraints', function () {
+        $('body').append('<input type="text" id="element" value="" />');
+        expect(new Parsley($('#element')).isValid()).to.be(true);
+      });
+      it('should valid simple validator', function () {
+        $('body').append('<input type="text" id="element" value="" />');
+        var parsleyField = new Parsley($('#element'))
+          .addConstraint({ required: true });
+        expect(parsleyField.isValid()).to.be(false);
+        $('#element').val('foo');
+        expect(parsleyField.isValid()).to.be(true);
       });
       afterEach(function () {
         window.ParsleyConfig = {};

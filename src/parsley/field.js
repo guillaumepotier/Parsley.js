@@ -1,9 +1,9 @@
 define('parsley/field', [
     'parsley/ui',
     'parsley/validator',
-    'parsley/constraint',
+    'parsley/constraintFactory',
     'parsley/utils'
-], function (ParsleyUI, ParsleyValidator, ParsleyConstraint, ParsleyUtils) {
+], function (ParsleyUI, ParsleyValidator, ConstraintFactory, ParsleyUtils) {
   var ParsleyField = function(parsleyInstance) {
     this.__class__ = 'ParsleyField';
 
@@ -25,20 +25,14 @@ define('parsley/field', [
       this.bind();
     },
 
-    validate: function () {
-      var priorities = this.getConstraintsSortedPriorities(),
-        valid = true;
-
-      for (var i = 0; i < priorities.length; i++) {
-        valid = valid || new Validator.validate(this.getVal(), this.constraints, priorities[i]);
-
-        if (true === this.options.stopOnFirstFailingConstraint)
-          break;
-      }
-
-      this.valid = valid;
+    refreshOptions: function () {
+      this.options = this.parsleyInstance.getOptions(this.options);
 
       return this;
+    },
+
+    validate: function () {
+
     },
 
     getConstraintsSortedPriorities: function () {
@@ -53,7 +47,25 @@ define('parsley/field', [
       return priorities;
     },
 
-    isValid: function () {},
+    isValid: function () {
+      var priorities = this.getConstraintsSortedPriorities();
+
+      // recompute options and rebind constraints to have latest changes
+      this.refreshOptions()
+        .bindConstraints();
+
+      // if we want to validate field against all constraints, just call Validator
+      if (false === this.options.stopOnFirstFailingConstraint)
+        return true === new ParsleyValidator.validate(this.getVal(), this.constraints);
+
+      // else, iterate over priorities one by one, and validate related asserts one by one
+      for (var i = 0; i < priorities.length; i++) {
+        if (true !== new ParsleyValidator().validate(this.getVal(), this.constraints, priorities[i]))
+          return false;
+      }
+
+      return true;
+    },
 
     getVal: function () {
       // todo: group (radio, checkboxes..)
@@ -71,11 +83,18 @@ define('parsley/field', [
     },
 
     bindConstraints: function () {
-      this.constraints = [];
+      var constraints = [];
 
-      for (var name in this.options) {
+      // clean all existing DOM constraints to only keep javascript user constraints
+      for (var i = 0; i < this.constraints.length; i++)
+        if (false === this.constraints[i].isDomConstraint)
+          constraints.push(this.constraints[i]);
+
+      this.constraints = constraints;
+
+      // then add DOM constraints in options
+      for (var name in this.options)
         this.addConstraint(ParsleyUtils.makeObject(name, this.options[name]));
-      }
 
       return this;
     },
@@ -94,7 +113,7 @@ define('parsley/field', [
       constraint.key = constraint.key.toLowerCase();
 
       if ('function' === typeof this.Validator.validators[constraint.key]) {
-        constraint = new ParsleyConstraint(this, constraint.key, constraint.value, priority);
+        constraint = new ConstraintFactory(this, constraint.key, constraint.value, priority);
 
         // if constraint already exist, delete it and push new version
         if (true === this.hasConstraint(constraint.name))
