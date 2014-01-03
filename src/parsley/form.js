@@ -1,14 +1,15 @@
 define('parsley/form', [
   'parsley/field',
-  'parsley/defaults'
-  ], function (ParsleyField, ParsleyDefaults) {
-  var ParsleyForm = function(element, options) {
+  'parsley/utils'
+  ], function (ParsleyField, ParsleyUtils) {
+  var ParsleyForm = function(parsleyInstance) {
     this.__class__ = 'ParsleyForm';
 
-    if ('undefined' === typeof element)
-      throw new Error('You must give an element');
+    if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
+      throw new Error('You must give a Parsley instance');
 
-    this.init($(element), options || ParsleyDefaults);
+    this.parsleyInstance = parsleyInstance;
+    this.init(parsleyInstance.$element, parsleyInstance.options);
   };
 
   ParsleyForm.prototype = {
@@ -50,7 +51,7 @@ define('parsley/form', [
     },
 
     addField: function (field) {
-      this.fields.push(new ParsleyField(field, this.options));
+      this.fields.push(new ParsleyField(this.parsleyInstance));
 
       return this;
     },

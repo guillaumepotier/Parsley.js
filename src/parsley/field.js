@@ -2,20 +2,22 @@ define('parsley/field', [
     'parsley/ui',
     'parsley/validator',
     'parsley/constraint',
-    'parsley/defaults',
     'parsley/utils'
-], function (ParsleyUI, ParsleyValidator, ParsleyConstraint, ParsleyDefaults, ParsleyUtils) {
-  var ParsleyField = function(element, options) {
+], function (ParsleyUI, ParsleyValidator, ParsleyConstraint, ParsleyUtils) {
+  var ParsleyField = function(parsleyInstance) {
     this.__class__ = 'ParsleyField';
 
-    if ('undefined' === typeof element)
-      throw new Error('You must give an element');
+    if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
+      throw new Error('You must give a Parsley instance');
 
-    this.init($(element), options || ParsleyDefaults);
+    this.parsleyInstance = parsleyInstance;
+    this.init(parsleyInstance.$element, parsleyInstance.options);
   };
 
   ParsleyField.prototype = {
     init: function ($element, options) {
+      this.valid = true;
+      this.constraints = [];
       this.options = options;
       this.$element = $element;
       this.hash = this.generateHash();
@@ -23,10 +25,42 @@ define('parsley/field', [
       this.bind();
     },
 
-    validate: function () {},
-    isValid: function () {},
-    getVal: function () {
+    validate: function () {
+      var priorities = this.getConstraintsSortedPriorities(),
+        valid = true;
 
+      for (var i = 0; i < priorities.length; i++) {
+        valid = valid || new Validator.validate(this.getVal(), this.constraints, priorities[i]);
+
+        if (true === this.options.stopOnFirstFailingConstraint)
+          break;
+      }
+
+      this.valid = valid;
+
+      return this;
+    },
+
+    getConstraintsSortedPriorities: function () {
+      var priorities = [];
+
+      for (var i = 0; i < this.constraints.length; i++)
+        if (-1 === priorities.indexOf(this.constraints[i].priority))
+          priorities.push(this.constraints[i].priority);
+
+      priorities.sort(function (a, b) { return b - a; });
+
+      return priorities;
+    },
+
+    isValid: function () {},
+
+    getVal: function () {
+      // todo: group (radio, checkboxes..)
+      if ('undefined' !== typeof this.options['value'])
+        return this.options['value'];
+
+      return this.$element.val();
     },
 
     bind: function () {
@@ -49,17 +83,18 @@ define('parsley/field', [
     bindTriggers: function () {},
 
     /**
-    * Dynamically add a new constraint to a field
+    * Add a new constraint to a field
     *
     * @method addConstraint
-    * @param {Object} constraint { name: requirements }
+    * @param {Object} constraint  { name: requirements }
+    * @param {Number} priority    optional: constraint priority
     */
-    addConstraint: function (constraint) {
+    addConstraint: function (constraint, priority) {
       constraint = ParsleyUtils.keyValue(constraint);
       constraint.key = constraint.key.toLowerCase();
 
       if ('function' === typeof this.Validator.validators[constraint.key]) {
-        constraint = new ParsleyConstraint(this, constraint.key, constraint.value);
+        constraint = new ParsleyConstraint(this, constraint.key, constraint.value, priority);
 
         // if constraint already exist, delete it and push new version
         if (true === this.hasConstraint(constraint.name))
@@ -81,9 +116,9 @@ define('parsley/field', [
       return this;
     },
 
-    updateConstraint: function (constraint) {
+    updateConstraint: function (constraint, priority) {
       return this.removeConstraint(constraint.name)
-        .addConstraint(constraint);
+        .addConstraint(constraint, priority);
     },
 
     hasConstraint: function (name) {

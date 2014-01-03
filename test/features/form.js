@@ -1,5 +1,5 @@
 define(function () {
-  return function (ParsleyForm) {
+  return function (ParsleyForm, Parsley) {
     describe('ParsleyForm', function () {
       it('should be an function', function () {
         expect(ParsleyForm).to.be.a('function');
@@ -14,7 +14,7 @@ define(function () {
             '<div id="field2"></div>'           +
             '<textarea id="field2"></textarea>' +
           '</form>');
-        parsleyForm = new ParsleyForm($('#element'));
+        parsleyForm = new Parsley($('#element'));
         expect(parsleyForm.fields.length).to.be(2);
       });
       afterEach(function () {

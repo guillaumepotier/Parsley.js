@@ -13,13 +13,13 @@ define('parsley/validator', [
 
     validators: {
       notnull: function () {
-        return $.extend(new Validator.Assert().NotNull(), {priority: 2});
+        return $.extend(new Validator.Assert().NotNull(), { priority: 2 });
       },
       notblank: function () {
-        return $.extend(new Validator.Assert().NotBlank(), {priority: 2});
+        return $.extend(new Validator.Assert().NotBlank(), { priority: 2 });
       },
       required: function () {
-        return $.extend(new Validator.Assert().Required(), {priority: 512});
+        return $.extend(new Validator.Assert().Required(), { priority: 512 });
       }
     }
   };

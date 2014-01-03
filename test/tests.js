@@ -29,7 +29,7 @@ require(['../src/config'], function () {
         describe('Unit Tests', function () {
           parsleyBase(Parsley);
           field(ParsleyField, Parsley);
-          form(ParsleyForm);
+          form(ParsleyForm, Parsley);
           ui(ParsleyUI);
           utils(ParsleyUtils);
         });

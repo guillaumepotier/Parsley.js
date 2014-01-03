@@ -28,7 +28,7 @@ define([
   Parsley.prototype = {
     init: function ($element, options) {
       this.$element = $element;
-      this.options = this.getOptions(options, this.getNamespace(options));
+      this.options = this.getOptions(options);
 
       // if a form elem is given, bind all its input children
       if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.options.namespace)['bind'])
@@ -53,7 +53,9 @@ define([
       return ParsleyDefaultOptions.namespace;
     },
 
-    getOptions: function (options, namespace) {
+    getOptions: function (options) {
+      var namespace = this.getNamespace(options);
+
       return $.extend(
         true,
         {},
@@ -61,7 +63,7 @@ define([
         ParsleyUtils.get(window, 'ParsleyConfig', {}),
         options,
         ParsleyUtils.attr(this.$element, namespace),
-        {namespace: namespace});
+        { namespace: namespace });
     },
 
     bind: function (type) {
@@ -71,10 +73,10 @@ define([
       if ('undefined' === typeof parsleyInstance) {
         switch (type) {
           case 'parsleyForm':
-            parsleyInstance = new ParsleyForm(this.$element, this.options);
+            parsleyInstance = new ParsleyForm(this);
             break;
           case 'parsleyField':
-            parsleyInstance = new ParsleyField(this.$element, this.options);
+            parsleyInstance = new ParsleyField(this);
             break;
           default:
             throw new Error(type + 'is not a supported Parsley type');
