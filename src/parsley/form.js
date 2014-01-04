@@ -17,17 +17,39 @@ define('parsley/form', [
     init: function ($element, options) {
       this.options = options;
       this.$element = $element;
+      this.validationResult = null;
 
       this.bindFields();
       this.$element.on('submit.' + this.__class__, false, $.proxy(this.validate, this));
     },
 
-    validate: function () {
+    validate: function (event) {
+      var isValid = true,
+        focusedField = false;
+
       this.bindFields();
 
       for (var i = 0; i < this.fields.length; i++) {
-        this.fields[i].validate();
+        isValid = isValid && this.fields[i].validate();
+
+        if (!isValid && (!focusedField && 'first' === this.options.focus || 'last' === this.options.focus))
+          focusedField = this.fields[i];
       }
+
+      // form validation listener.
+      // form submission can be prevented here too, event if form is valid
+      this.options.onFormValidate(isValid, event, this);
+
+      // prevent form submission if validation fails
+      if (false === isValid)
+        event.preventDefault();
+
+      // TODO animate
+      // focus on an error field
+      if ('none' !== this.options.focus && false !== focusedField)
+        focusedField.$element.focus();
+
+      return this;
     },
 
     isValid: function () {
@@ -58,9 +80,6 @@ define('parsley/form', [
     },
 
     removeField: function (field) {},
-    addListener: function (listener) {},
-    removeListener: function(listener) {},
-    updateListener: function(listener) {},
     reset: function () {},
     destroy: function () {}
   };

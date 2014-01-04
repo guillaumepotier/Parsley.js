@@ -17,6 +17,7 @@ define(function () {
         parsleyForm = new Parsley($('#element'));
         expect(parsleyForm.fields.length).to.be(2);
       });
+      it.skip('should test onFormValidate() listener');
       afterEach(function () {
         if ($('#element').length)
             $('#element').remove();

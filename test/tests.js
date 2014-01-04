@@ -21,13 +21,15 @@ require(['../src/config'], function () {
       // load full parsley.js + UT
       require([
         'features/parsley',
+        'features/abstract',
         'features/field',
         'features/form',
         'features/ui',
         'features/utils'
-      ], function (parsleyBase, field, form, ui, utils) {
+      ], function (parsleyBase, abstract, field, form, ui, utils) {
         describe('Unit Tests', function () {
           parsleyBase(Parsley);
+          abstract(Parsley);
           field(ParsleyField, Parsley);
           form(ParsleyForm, Parsley);
           ui(ParsleyUI);

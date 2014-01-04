@@ -15,10 +15,10 @@ define('parsley/field', [
 
   ParsleyField.prototype = {
     init: function ($element, options) {
-      this.valid = true;
       this.constraints = [];
       this.options = options;
       this.$element = $element;
+      this.validationResult = null;
       this.hash = this.generateHash();
       this.ParsleyValidator = this.parsleyInstance.ParsleyValidator;
       this.bind();
@@ -31,7 +31,17 @@ define('parsley/field', [
     },
 
     validate: function () {
+      this.options.listeners.onFieldValidate(this);
 
+      if (this.isValid())
+        this.options.listeners.onFieldSuccess(this);
+      else
+        this.options.listeners.onFieldError(this);
+
+      // TODO
+      // UI event here
+
+      return this;
     },
 
     getConstraintsSortedPriorities: function () {
@@ -54,13 +64,12 @@ define('parsley/field', [
 
       // if we want to validate field against all constraints, just call Validator
       if (false === this.options.stopOnFirstFailingConstraint)
-        return true === this.ParsleyValidator.validate(this.getVal(), this.constraints);
+        return true === (this.validationResult = this.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
 
       // else, iterate over priorities one by one, and validate related asserts one by one
-      for (var i = 0; i < priorities.length; i++) {
-        if (true !== this.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i]))
+      for (var i = 0; i < priorities.length; i++)
+        if (true !== (this.validationResult = this.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i])))
           return false;
-      }
 
       return true;
     },
@@ -109,9 +118,9 @@ define('parsley/field', [
       if (this.$element.hasClass('required') || this.$element.attr('required'))
         this.addConstraint({ required: true }, undefined, true);
 
-      // html5 type pattern => regexp validator
+      // html5 pattern
       if ('string' === typeof this.$element.attr('pattern'))
-        this.addConstraint({ regexp: this.$element.attr('pattern')}, undefined, true);
+        this.addConstraint({ pattern: this.$element.attr('pattern')}, undefined, true);
 
       // html5 types
       var type = this.$element.attr('type');

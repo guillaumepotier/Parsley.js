@@ -535,7 +535,7 @@ define('parsley/utils', [],function () {
 define('parsley/factory', [
   'parsley/utils'
 ], function (ParsleyUtils) {
-  return ConstraintFactory = function (parsleyField, name, requirements, priority) {
+  return ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
 
     if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
       throw new Error('ParsleyField instance expected');
@@ -558,7 +558,7 @@ define('parsley/factory', [
       requirements: requirements,
       priority: priority,
       groups: [priority],
-      isDomConstraint: ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name)
+      isDomConstraint: isDomConstraint || ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name)
     });
   };
 });
@@ -580,10 +580,10 @@ define('parsley/field', [
 
   ParsleyField.prototype = {
     init: function ($element, options) {
-      this.valid = true;
       this.constraints = [];
       this.options = options;
       this.$element = $element;
+      this.validationResult = null;
       this.hash = this.generateHash();
       this.ParsleyValidator = this.parsleyInstance.ParsleyValidator;
       this.bind();
@@ -596,7 +596,17 @@ define('parsley/field', [
     },
 
     validate: function () {
+      this.options.listeners.onFieldValidate(this);
 
+      if (this.isValid())
+        this.options.listeners.onFieldSuccess(this);
+      else
+        this.options.listeners.onFieldError(this);
+
+      // TODO
+      // UI event here
+
+      return this;
     },
 
     getConstraintsSortedPriorities: function () {
@@ -615,20 +625,25 @@ define('parsley/field', [
       var priorities = this.getConstraintsSortedPriorities();
 
       // recompute options and rebind constraints to have latest changes
-      this.refreshOptions()
-        .bindConstraints();
+      this.refreshConstraints();
 
       // if we want to validate field against all constraints, just call Validator
-      if (false === this.options.stopOnFirstFailingConstraint)
-        return true === this.ParsleyValidator.validate(this.getVal(), this.constraints);
-
-      // else, iterate over priorities one by one, and validate related asserts one by one
-      for (var i = 0; i < priorities.length; i++) {
-        if (true !== this.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i]))
-          return false;
+      if (false === this.options.stopOnFirstFailingConstraint) {
+        console.log('here', this.constraints)
+        return true === (this.validationResult = this.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
       }
 
+      // else, iterate over priorities one by one, and validate related asserts one by one
+      for (var i = 0; i < priorities.length; i++)
+        if (true !== (this.validationResult = this.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i])))
+          return false;
+
       return true;
+    },
+
+    refreshConstraints: function () {
+      return this.refreshOptions()
+        .bindConstraints();
     },
 
     getVal: function () {
@@ -660,6 +675,38 @@ define('parsley/field', [
       for (var name in this.options)
         this.addConstraint(ParsleyUtils.makeObject(name, this.options[name]));
 
+      // finally, bind special HTML5 constraints
+      return this.bindHtml5Constraints();
+    },
+
+    // TODO include $element.attrs() in this.options to avoid some of these html5 tests ?
+    bindHtml5Constraints: function () {
+      // html5 required
+      if (this.$element.hasClass('required') || this.$element.attr('required'))
+        this.addConstraint({ required: true }, undefined, true);
+
+      // html5 pattern
+      if ('string' === typeof this.$element.attr('pattern'))
+        this.addConstraint({ pattern: this.$element.attr('pattern')}, undefined, true);
+
+      // html5 types
+      var type = this.$element.attr('type');
+      if ('undefined' !== typeof type && new RegExp(type, 'i').test('email url number range tel')) {
+        this.addConstraint({ type: type }, undefined, true);
+
+        // number and range types could have min and/or max values
+        if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
+          return this.addConstraint({ range: [this.$element.attr('min'), this.$element.attr('max')] }, undefined, true);
+
+        // min value
+        if ('undefined' !== typeof this.$element.attr('min'))
+          return this.addConstraint({ min: this.$element.attr('min') }, undefined, true);
+
+        // max value
+        if ('undefined' !== typeof this.$element.attr('max'))
+          return this.addConstraint({ max: this.$element.attr('max') }, undefined, true);
+      }
+
       return this;
     },
 
@@ -669,15 +716,16 @@ define('parsley/field', [
     * Add a new constraint to a field
     *
     * @method addConstraint
-    * @param {Object} constraint  { name: requirements }
-    * @param {Number} priority    optional: constraint priority
+    * @param {Object}   constraint        { name: requirements }
+    * @param {Number}   priority          optional
+    * @param {Boolean}  isDomConstraint   optional
     */
-    addConstraint: function (constraint, priority) {
+    addConstraint: function (constraint, priority, isDomConstraint) {
       constraint = ParsleyUtils.keyValue(constraint);
       constraint.key = constraint.key.toLowerCase();
 
       if ('function' === typeof this.ParsleyValidator.validators[constraint.key]) {
-        constraint = new ConstraintFactory(this, constraint.key, constraint.value, priority);
+        constraint = new ConstraintFactory(this, constraint.key, constraint.value, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
         if (true === this.hasConstraint(constraint.name))
@@ -727,15 +775,21 @@ define('parsley/field', [
 });
 
 define('parsley/abstract', [],function () {
-  var ParsleyAbstract = function(options) {
-  };
+  var ParsleyAbstract = function(options) {};
 
   ParsleyAbstract.prototype = {
     registerValidator: function (name, fn, priority) {
       this.parsleyInstance.ParsleyValidator.addValidator(name, fn, priority);
 
       return this;
-    }
+    },
+    removeValidator: function (name) {},
+    updateValidator: function (name, fn, priority) {
+      return this.registerValidator(name, fn, priority);
+    },
+    addListener: function (listener) {},
+    removeListener: function(listener) {},
+    updateListener: function(listener) {}
   };
 
   return ParsleyAbstract;
@@ -760,17 +814,39 @@ define('parsley/form', [
     init: function ($element, options) {
       this.options = options;
       this.$element = $element;
+      this.validationResult = null;
 
       this.bindFields();
       this.$element.on('submit.' + this.__class__, false, $.proxy(this.validate, this));
     },
 
-    validate: function () {
+    validate: function (event) {
+      var isValid = true,
+        focusedField = false;
+
       this.bindFields();
 
       for (var i = 0; i < this.fields.length; i++) {
-        this.fields[i].validate();
+        isValid = isValid && this.fields[i].validate();
+
+        if (!isValid && (!focusedField && 'first' === this.options.focus || 'last' === this.options.focus))
+          focusedField = this.fields[i];
       }
+
+      // form validation listener.
+      // form submission can be prevented here too, event if form is valid
+      this.options.onFormValidate(isValid, event, this);
+
+      // prevent form submission if validation fails
+      if (false === isValid)
+        event.preventDefault();
+
+      // TODO animate
+      // focus on an error field
+      if ('none' !== this.options.focus && false !== focusedField)
+        focusedField.$element.focus();
+
+      return this;
     },
 
     isValid: function () {
@@ -801,9 +877,6 @@ define('parsley/form', [
     },
 
     removeField: function (field) {},
-    addListener: function (listener) {},
-    removeListener: function(listener) {},
-    updateListener: function(listener) {},
     reset: function () {},
     destroy: function () {}
   };
@@ -813,16 +886,24 @@ define('parsley/form', [
 
 define('parsley/defaults', [],function () {
   return {
-    namespace: 'data-parsley-',                 // Default data-namespace for DOM API
-    inputs: 'input, textarea, select',          // Default supported inputs
-    stopOnFirstFailingConstraint: true          // Stop validating field on highest priority failing constraint
+    namespace: 'data-parsley-',                   // Default data-namespace for DOM API
+    inputs: 'input, textarea, select',            // Default supported inputs
+    stopOnFirstFailingConstraint: true,           // Stop validating field on highest priority failing constraint
+    validators: {},                               // Register here some custom validators
+    focus: 'first',                               // Focused field on form validation error. 'fist'|'last'|'none'
+    listeners: {
+      onFieldValidate : function (ParsleyField) {},                   // Executed each time a field is validated
+      onFormValidate: function (isFormValid, event, ParsleyForm) {},  // Executed each time a form is validated
+      onFieldError: function (ParsleyField) {},                       // Executed when a field fails validation
+      onFieldSuccess: function (ParsleyField) {}                      // Executed when a field passes validation
+    }
   };
 });
 
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.4.12 - built Fri Jan 03 2014 14:58:03
+* Version 0.5.0 - built Sat Jan 04 2014 12:54:35
 * MIT Licensed
 *
 */
@@ -835,7 +916,7 @@ define('parsley/defaults', [],function () {
 
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '0.4.12';
+    this.__version__ = '0.5.0';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
 
@@ -1149,6 +1230,10 @@ define('parsley/defaults', [],function () {
     hasGroup: function ( group ) {
       if ( _isArray( group ) )
         return this.hasOneOf( group );
+
+      // All Asserts respond to "Any" group
+      if ( 'Any' === group )
+        return true;
 
       // Asserts with no group also respond to "Default" group. Else return false
       if ( !this.hasGroups() )
@@ -1834,13 +1919,19 @@ define("vendors/validator.js/dist/validator", (function (global) {
 define('parsley/validator', [
   'validator'
 ], function (Validator) {
-  var ParsleyValidator = function(options) {
+  var ParsleyValidator = function (options) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
-    this.options = options;
+
+    this.init(options || {});
   };
 
   ParsleyValidator.prototype = {
+    init: function (options) {
+      for (var name in options.validators)
+        this.addValidator(name, options.validators[name].fn, options.validators[name].priority);
+    },
+
     validate: function () {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
     },
@@ -1874,15 +1965,40 @@ define('parsley/validator', [
         return $.extend(new Validator.Assert().Required(), { priority: 512 });
       },
       type: function (type) {
+        var assert;
+
         switch (type) {
           case 'email':
-            return $.extend(new Validator.Assert().Email(), { priority: 256 });
+            assert = new Validator.Assert().Email();
+            break;
           case 'number':
-            return $.extend(new Validator.Assert().Regexp(
-              '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/'), { priority: 256 });
+            assert = new Validator.Assert().Regexp('/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/');
+            break;
+          case 'digits':
+            assert = new Validator.Assert().Regexp('/^\d+$/');
+            break;
+          case 'alphanum':
+            assert = new Validator.Asser().Regexp('/^\w+$/');
+            break;
+          // TODO
+          case 'url':
+          case 'urlstrict':
+            assert = new Validator.Assert().Regexp("/^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i");
+            break;
+          case 'dateIso':
+            assert = new Validator.Assert().Regexp('/^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/');
+            break;
+          case 'tel':
+            assert = new Validator.Assert().Regexp('/^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/');
+            break;
           default:
             throw new Error('validator type `' + type + '` is not supported');
         }
+
+        return $.extend(assert, { priority: 256 });
+      },
+      pattern: function (regexp) {
+        return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
       }
     }
   };
@@ -2023,7 +2139,7 @@ define('vendors/requirejs-domready/domReady',[],function () {
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Fri Jan 03 2014 16:13:03
+* Version 2.0.0-pre - built Sat Jan 04 2014 12:59:20
 * MIT Licensed
 *
 */

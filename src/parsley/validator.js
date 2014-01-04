@@ -79,8 +79,8 @@ define('parsley/validator', [
 
         return $.extend(assert, { priority: 256 });
       },
-      regexp: function (regExp) {
-        return $.extend(new Validator.Assert().Regexp(regExp));
+      pattern: function (regexp) {
+        return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
       }
     }
   };
