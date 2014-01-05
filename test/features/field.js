@@ -32,7 +32,7 @@ define(function () {
       it('should have a proper addConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
-          .addConstraint({ required: true });
+          .addConstraint('required', true);
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].__class__).to.be('Required');
         expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
@@ -42,7 +42,7 @@ define(function () {
         expect(parsleyField.constraints[0].isDomConstraint).to.be(false);
 
         // trying to add an existing constraint result in an update
-        parsleyField.addConstraint({ required: false }, 64);
+        parsleyField.addConstraint('required', false, 64);
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].name).to.be('required');
         expect(parsleyField.constraints[0].requirements).to.be(false);
@@ -51,10 +51,10 @@ define(function () {
       it('should have a proper updateConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
-          .addConstraint({ required: true });
+          .addConstraint('required', true);
 
         // same as above test where addConstraint resulted in an updateConstraint
-        parsleyField.updateConstraint({ required: false }, 64);
+        parsleyField.updateConstraint('required', false, 64);
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].name).to.be('required');
         expect(parsleyField.constraints[0].requirements).to.be(false);
@@ -63,8 +63,8 @@ define(function () {
       it('should have a proper removeConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
-          .addConstraint({ required: true })
-          .addConstraint({ notnull: true })
+          .addConstraint('required', true)
+          .addConstraint('notnull', true)
           .removeConstraint('required');
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].name).to.be('notnull');
@@ -76,7 +76,7 @@ define(function () {
       it('should valid simple validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
         var parsleyField = new Parsley($('#element'))
-          .addConstraint({ required: true });
+          .addConstraint('required', true);
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('foo');
         expect(parsleyField.isValid()).to.be(true);
@@ -84,7 +84,7 @@ define(function () {
       it('should valid more complex `type` validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
         var parsleyField = new Parsley($('#element'))
-          .addConstraint({ type: 'email' });
+          .addConstraint('type', 'email');
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('foo');
         expect(parsleyField.isValid()).to.be(false);
@@ -100,13 +100,13 @@ define(function () {
 
             return false;
           }, 512)
-          .addConstraint({ multiple: 2 });
+          .addConstraint('multiple', 2);
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('1');
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('2');
         expect(parsleyField.isValid()).to.be(true);
-        parsleyField.updateConstraint({ multiple: 3 });
+        parsleyField.updateConstraint('multiple', 3);
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('9');
         expect(parsleyField.isValid()).to.be(true);
@@ -129,8 +129,8 @@ define(function () {
         .registerValidator('foobazer', function (value) {
           return 'foobar' === value;
         }, 2)
-        .addConstraint({ multiple: 4 })
-        .addConstraint({ foobazer: true });
+        .addConstraint('multiple', 4)
+        .addConstraint('foobazer', true);
         parsleyField.bindConstraints();
         expect(parsleyField.constraints.length).to.be(4);
         $('#element').removeAttr('data-parsley-required');
@@ -161,6 +161,7 @@ define(function () {
         parsleyField = new Parsley($('#element'), { stopOnFirstFailingConstraint: false });
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(3);
+        console.log(parsleyField.validationResult)
       });
       it.skip('should test onFieldValidate() listener');
       it.skip('should test onFieldError() listener');

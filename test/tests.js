@@ -41,10 +41,10 @@ require(['../src/config'], function () {
 
         // load then functionnal tests
         require([
-          'features/instances'
+          // 'features/instances'
         ], function (instances) {
           describe('Functional Tests', function () {
-            instances();
+            // instances();
           });
 
           // run mocha

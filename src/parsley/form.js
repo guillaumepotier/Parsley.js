@@ -29,7 +29,7 @@ define('parsley/form', [
       var isValid = true,
         focusedField = false;
 
-      this.bindFields();
+      this.refreshFields();
 
       for (var i = 0; i < this.fields.length; i++) {
         isValid = isValid && this.fields[i].validate();
@@ -55,13 +55,17 @@ define('parsley/form', [
     },
 
     isValid: function () {
-      this.bindFields();
+      this.refreshFields();
 
       for (var i = 0; i < this.fields.length; i++)
         if (false === this.fields[i].isValid())
           return false;
 
       return true;
+    },
+
+    refreshFields: function () {
+      return this.actualizeOptions().bindFields();
     },
 
     bindFields: function () {

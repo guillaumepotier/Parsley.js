@@ -104,7 +104,7 @@ define('parsley/field', [
 
       // then re-add Parsley DOM-API constraints
       for (var name in this.options)
-        this.addConstraint(ParsleyUtils.makeObject(name, this.options[name]));
+        this.addConstraint(name, this.options[name]);
 
       // finally, bind special HTML5 constraints
       return this.bindHtml5Constraints();
@@ -114,28 +114,28 @@ define('parsley/field', [
     bindHtml5Constraints: function () {
       // html5 required
       if (this.$element.hasClass('required') || this.$element.attr('required'))
-        this.addConstraint({ required: true }, undefined, true);
+        this.addConstraint('required', true, undefined, true);
 
       // html5 pattern
       if ('string' === typeof this.$element.attr('pattern'))
-        this.addConstraint({ pattern: this.$element.attr('pattern')}, undefined, true);
+        this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
 
       // html5 types
       var type = this.$element.attr('type');
       if ('undefined' !== typeof type && new RegExp(type, 'i').test('email url number range tel')) {
-        this.addConstraint({ type: type }, undefined, true);
+        this.addConstraint('type', type, undefined, true);
 
         // number and range types could have min and/or max values
         if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
-          return this.addConstraint({ range: [this.$element.attr('min'), this.$element.attr('max')] }, undefined, true);
+          return this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
 
         // min value
         if ('undefined' !== typeof this.$element.attr('min'))
-          return this.addConstraint({ min: this.$element.attr('min') }, undefined, true);
+          return this.addConstraint('min', this.$element.attr('min'), undefined, true);
 
         // max value
         if ('undefined' !== typeof this.$element.attr('max'))
-          return this.addConstraint({ max: this.$element.attr('max') }, undefined, true);
+          return this.addConstraint('max', this.$element.attr('max'), undefined, true);
       }
 
       return this;
@@ -147,16 +147,16 @@ define('parsley/field', [
     * Add a new constraint to a field
     *
     * @method addConstraint
-    * @param {Object}   constraint        { name: requirements }
+    * @param {String}   name
+    * @param {Mixed}    requirements      optional
     * @param {Number}   priority          optional
     * @param {Boolean}  isDomConstraint   optional
     */
-    addConstraint: function (constraint, priority, isDomConstraint) {
-      constraint = ParsleyUtils.keyValue(constraint);
-      constraint.key = constraint.key.toLowerCase();
+    addConstraint: function (name, requirements, priority, isDomConstraint) {
+      name = name.toLowerCase();
 
-      if ('function' === typeof this.ParsleyValidator.validators[constraint.key]) {
-        constraint = new ConstraintFactory(this, constraint.key, constraint.value, priority, isDomConstraint);
+      if ('function' === typeof this.ParsleyValidator.validators[name]) {
+        constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
         if (true === this.hasConstraint(constraint.name))
@@ -178,9 +178,9 @@ define('parsley/field', [
       return this;
     },
 
-    updateConstraint: function (constraint, priority) {
-      return this.removeConstraint(constraint.name)
-        .addConstraint(constraint, priority);
+    updateConstraint: function (name, parameters, priority) {
+      return this.removeConstraint(name)
+        .addConstraint(name, parameters, priority);
     },
 
     hasConstraint: function (name) {
