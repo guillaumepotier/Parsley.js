@@ -24,7 +24,10 @@ define('parsley/field', [
 
       this.validationResult = null;
       this.hash = this.generateHash();
-      this.ParsleyValidator = this.parsleyInstance.ParsleyValidator;
+
+      this.Validator = this.parsleyInstance.Validator;
+      this.UI = this.parsleyInstance.UI;
+
       this.bind();
     },
 
@@ -63,11 +66,11 @@ define('parsley/field', [
 
       // if we want to validate field against all constraints, just call Validator
       if (false === this.options.stopOnFirstFailingConstraint)
-        return true === (this.validationResult = this.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
+        return true === (this.validationResult = this.Validator.validate(this.getVal(), this.constraints, 'Any'));
 
       // else, iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++)
-        if (true !== (this.validationResult = this.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i])))
+        if (true !== (this.validationResult = this.Validator.validate(this.getVal(), this.constraints, priorities[i])))
           return false;
 
       return true;
@@ -83,7 +86,6 @@ define('parsley/field', [
 
     bind: function () {
       this.bindConstraints();
-      this.bindTriggers();
 
       return this;
     },
@@ -152,7 +154,7 @@ define('parsley/field', [
     addConstraint: function (name, requirements, priority, isDomConstraint) {
       name = name.toLowerCase();
 
-      if ('function' === typeof this.ParsleyValidator.validators[name]) {
+      if ('function' === typeof this.Validator.validators[name]) {
         constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version

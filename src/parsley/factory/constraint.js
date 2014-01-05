@@ -6,7 +6,7 @@ define('parsley/factory/constraint', [
     if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
       throw new Error('ParsleyField instance expected');
 
-    if ('function' !== typeof parsleyField.ParsleyValidator.validators[name] &&
+    if ('function' !== typeof parsleyField.Validator.validators[name] &&
       'Assert' !== parsleyField.Validator.validators[name](requirements).__parentClass__)
       throw new Error('Valid validator expected');
 
@@ -14,13 +14,13 @@ define('parsley/factory/constraint', [
       if ('undefined' !== typeof parsleyField.options[name + 'Priority'])
         return parsleyField.options[name + 'Priority'];
 
-      return ParsleyUtils.get(parsleyField.ParsleyValidator.validators[name](requirements), 'priority', 2);
+      return ParsleyUtils.get(parsleyField.Validator.validators[name](requirements), 'priority', 2);
     };
 
     priority = priority || getPriority(parsleyField, name);
 
     // TODO add group priority
-    return $.extend(new parsleyField.ParsleyValidator.validators[name](requirements), {
+    return $.extend(new parsleyField.Validator.validators[name](requirements), {
       name: name,
       requirements: requirements,
       priority: priority,

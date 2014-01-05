@@ -13,9 +13,10 @@ define([
   'parsley/defaults',
   'parsley/abstract',
   'parsley/validator',
+  'parsley/ui',
   'parsley/factory/options',
   'vendors/requirejs-domready/domReady'
-], function(ParsleyForm, ParsleyField, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyOptionsFactory, domReady) {
+], function(ParsleyForm, ParsleyField, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, domReady) {
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
@@ -32,10 +33,12 @@ define([
       this.$element = $element;
 
       this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
+      var options = this.OptionsFactory.staticOptions;
 
-      var options = this.OptionsFactory.get(this);
-      this.ParsleyValidator = new ParsleyValidator(options);
+      this.Validator = new ParsleyValidator(options);
+      this.UI = new ParsleyUI(options);
 
+      // a ParsleyForm instance is obviously a <form> elem but also every node that is not an input and have data-parsley-validate attribute
       if (this.$element.is('form') || ('undefined' !== typeof options.validate && !this.$element.is(options.inputs)))
         return this.bind('parsleyForm', parsleyInstance);
 
