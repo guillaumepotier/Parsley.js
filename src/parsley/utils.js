@@ -38,27 +38,6 @@ define('parsley/utils', function () {
       return placeholder;
     },
 
-    // {foo: bar, bar: baz} => [{key: foo, value: bar}, {key: bar, value: baz}]
-    keyValue: function (object) {
-      var keyValue = [];
-
-      for (var key in object)
-        keyValue.push({
-          key: key,
-          value: object[key]
-        });
-
-      return 1 === keyValue.length ? keyValue[0] : keyValue;
-    },
-
-    makeObject: function () {
-      var object = {};
-      for (var i = 0; i < arguments.length; i += 2)
-        object[arguments[i]] = arguments[i+1];
-
-      return object;
-    },
-
     hash: function (length) {
       return new String(Math.random()).substring(2, length ? length + 2 : 9);
     },
