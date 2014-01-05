@@ -10,7 +10,7 @@ See TODO.md
 
 #Curent Stable Version
 
-1.2.2
+1.2.3
 
 # Browser compatibility
 
@@ -51,12 +51,12 @@ Add new validators in `parsley.extend.js` and minify it. No validators will be a
 
 ##Localization
 
-If file does not exist, create it into `ì18n/` directory with same syntax as others.  
+If file does not exist, create it into `ì18n/` directory with same syntax as others.
 Reference file is _messages.en.js
 
 ##Integrations
 
-Create integration with other framework as a separate Github repo and send a pull request for including here.  
+Create integration with other framework as a separate Github repo and send a pull request for including here.
 Some integrations are
 
 * [Django](https://github.com/agiliq/django-parsley)

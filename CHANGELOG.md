@@ -6,6 +6,8 @@
   - update error message if has changed (#459)
   - fixed IE7 `undefined` attribute in `domApi` (#439)
   - fixed dynamic excluded fields in `addItem` method (#473)
+  - removed bootstrap dep in bower, versionned localy
+  - changed jquery requirement in bower, started test suite
 
 **1.2.2 (current stable)**
 

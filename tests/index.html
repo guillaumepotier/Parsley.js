@@ -297,7 +297,8 @@
 
     <script type="text/javascript">
         var jquery = 'resources/jquery.min.js'
-          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js';
+          , zepto = 'resources/zepto-1.0rc1[zepto.event.data.ajax.fx.fx_modules].js'
+          , jquery2x = '../bower_components/jquery/jquery.min.js';
 
         switch ( location.hash ) {
             case '#zepto':
@@ -321,12 +322,19 @@
                 jsAppend( '../dist/parsley.es.min.js' , pause( 50 ) );
                 document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, minified version';
                 break;
+            case '#jquery-2.x':
+                jsAppend( jquery2x , pause( 100 ) );
+                jsAppend( '../parsley.js' , pause( 50 ) );
+                jsAppend( '../parsley.extend.js' , pause( 50 ) );
+                jsAppend( '../l10n/parsley.es.js' , pause( 50 ) );
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery 2.0.x, unminified version';
+                break;
             default:
                 jsAppend( jquery , pause( 100 ) );
                 jsAppend( '../parsley.js' , pause( 50 ) );
                 jsAppend( '../parsley.extend.js' , pause( 50 ) );
                 jsAppend( '../l10n/parsley.es.js' , pause( 50 ) );
-                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery, unminified version';
+                document.getElementById( 'info' ).innerHTML = 'Parsley test suite for jQuery 1.8.x, unminified version';
                 break;
         }
 
