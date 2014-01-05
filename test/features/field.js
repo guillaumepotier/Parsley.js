@@ -112,7 +112,7 @@ define(function () {
         expect(parsleyField.isValid()).to.be(true);
       });
       it('should properly compute constraints on each validation', function () {
-        $('body').append('<input type="email" required id="element" />');
+        $('body').append('<input type="email" data-parsley-required id="element" />');
         var parsleyField = new Parsley($('#element'), {
           validators : {
             multiple: {
@@ -131,8 +131,9 @@ define(function () {
         }, 2)
         .addConstraint({ multiple: 4 })
         .addConstraint({ foobazer: true });
+        parsleyField.bindConstraints();
         expect(parsleyField.constraints.length).to.be(4);
-        $('#element').removeAttr('required');
+        $('#element').removeAttr('data-parsley-required');
         parsleyField.refreshConstraints();
         expect(parsleyField.constraints.length).to.be(3);
         parsleyField
@@ -167,7 +168,7 @@ define(function () {
       afterEach(function () {
         window.ParsleyConfig = {};
         if ($('#element').length)
-            $('#element').remove();
+          $('#element').remove();
       });
     });
   }

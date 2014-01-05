@@ -1,4 +1,4 @@
-define('parsley/factory', [
+define('parsley/factory/constraint', [
   'parsley/utils'
 ], function (ParsleyUtils) {
   return ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
@@ -19,6 +19,7 @@ define('parsley/factory', [
 
     priority = priority || getPriority(parsleyField, name);
 
+    // TODO add group priority
     return $.extend(new parsleyField.ParsleyValidator.validators[name](requirements), {
       name: name,
       requirements: requirements,

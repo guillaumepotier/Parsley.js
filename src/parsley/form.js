@@ -10,14 +10,15 @@ define('parsley/form', [
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
-    this.init(parsleyInstance.$element, parsleyInstance.options);
+    this.init(parsleyInstance.$element);
   };
 
   ParsleyForm.prototype = {
-    init: function ($element, options) {
-      this.options = options;
+    init: function ($element) {
       this.$element = $element;
       this.validationResult = null;
+
+      this.options = this.parsleyInstance.OptionsFactory.get(this);
 
       this.bindFields();
       this.$element.on('submit.' + this.__class__, false, $.proxy(this.validate, this));

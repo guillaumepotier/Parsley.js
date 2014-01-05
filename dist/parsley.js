@@ -412,21 +412,6 @@ var requirejs, require, define;
 
 define("bower_components/almond/almond", function(){});
 
-define('parsley/ui', [],function () {
-  var ParsleyUI = function(options) {
-    this.__class__ = 'ParsleyUI';
-    this.init(options);
-  };
-
-  ParsleyUI.prototype = {
-    init: function(options) {
-      this.options= options;
-    }
-  };
-
-  return ParsleyUI;
-});
-
 define('parsley/utils', [],function () {
   return {
     // Parsley DOM-API
@@ -437,7 +422,7 @@ define('parsley/utils', [],function () {
         obj = {},
         regex = new RegExp('^' + namespace, 'i');
 
-      if ('undefined' === typeof $element[0])
+      if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
         return {};
 
       for (var i in $element[0].attributes) {
@@ -532,7 +517,7 @@ define('parsley/utils', [],function () {
   };
 });
 
-define('parsley/factory', [
+define('parsley/factory/constraint', [
   'parsley/utils'
 ], function (ParsleyUtils) {
   return ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
@@ -553,6 +538,7 @@ define('parsley/factory', [
 
     priority = priority || getPriority(parsleyField, name);
 
+    // TODO add group priority
     return $.extend(new parsleyField.ParsleyValidator.validators[name](requirements), {
       name: name,
       requirements: requirements,
@@ -563,11 +549,30 @@ define('parsley/factory', [
   };
 });
 
+define('parsley/ui', [],function () {
+  var ParsleyUI = function (parsleyFieldInstance) {
+    this.__class__ = 'ParsleyUI';
+
+    if ('ParsleyField' !== ParsleyUtils.get(parsleyFieldInstance, '__class__'))
+      throw new Error('You must give a ParsleyField instance');
+
+    this.init(parsleyFieldInstance);
+  };
+
+  ParsleyUI.prototype = {
+    init: function (parsleyFieldInstance) {
+      this.parsleyFieldInstance = parsleyFieldInstance;
+    }
+  };
+
+  return ParsleyUI;
+});
+
 define('parsley/field', [
+    'parsley/factory/constraint',
     'parsley/ui',
-    'parsley/factory',
     'parsley/utils'
-], function (ParsleyUI, ConstraintFactory, ParsleyUtils) {
+], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
   var ParsleyField = function(parsleyInstance) {
     this.__class__ = 'ParsleyField';
 
@@ -575,24 +580,21 @@ define('parsley/field', [
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
+    this.UI = new ParsleyUI(this, parsleyInstance.options);
     this.init(parsleyInstance.$element, parsleyInstance.options);
   };
 
   ParsleyField.prototype = {
     init: function ($element, options) {
       this.constraints = [];
-      this.options = options;
       this.$element = $element;
+
+      this.options = this.parsleyInstance.OptionsFactory.get(this);
+
       this.validationResult = null;
       this.hash = this.generateHash();
       this.ParsleyValidator = this.parsleyInstance.ParsleyValidator;
       this.bind();
-    },
-
-    refreshOptions: function () {
-      this.options = this.parsleyInstance.getOptions(this.options);
-
-      return this;
     },
 
     validate: function () {
@@ -603,8 +605,8 @@ define('parsley/field', [
       else
         this.options.listeners.onFieldError(this);
 
-      // TODO
       // UI event here
+      this.UI.reflow();
 
       return this;
     },
@@ -621,6 +623,7 @@ define('parsley/field', [
       return priorities;
     },
 
+    // TODO add group validation
     isValid: function () {
       var priorities = this.getConstraintsSortedPriorities();
 
@@ -628,10 +631,8 @@ define('parsley/field', [
       this.refreshConstraints();
 
       // if we want to validate field against all constraints, just call Validator
-      if (false === this.options.stopOnFirstFailingConstraint) {
-        console.log('here', this.constraints)
+      if (false === this.options.stopOnFirstFailingConstraint)
         return true === (this.validationResult = this.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
-      }
 
       // else, iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++)
@@ -639,11 +640,6 @@ define('parsley/field', [
           return false;
 
       return true;
-    },
-
-    refreshConstraints: function () {
-      return this.refreshOptions()
-        .bindConstraints();
     },
 
     getVal: function () {
@@ -661,6 +657,10 @@ define('parsley/field', [
       return this;
     },
 
+    refreshConstraints: function () {
+      return this.actualizeOptions().bindConstraints();
+    },
+
     bindConstraints: function () {
       var constraints = [];
 
@@ -671,7 +671,7 @@ define('parsley/field', [
 
       this.constraints = constraints;
 
-      // then add DOM constraints in options
+      // then re-add Parsley DOM-API constraints
       for (var name in this.options)
         this.addConstraint(ParsleyUtils.makeObject(name, this.options[name]));
 
@@ -778,15 +778,23 @@ define('parsley/abstract', [],function () {
   var ParsleyAbstract = function(options) {};
 
   ParsleyAbstract.prototype = {
+    actualizeOptions: function () {
+      this.options = this.parsleyInstance.OptionsFactory.get(this);
+
+      return this;
+    },
+
     registerValidator: function (name, fn, priority) {
       this.parsleyInstance.ParsleyValidator.addValidator(name, fn, priority);
 
       return this;
     },
+
     removeValidator: function (name) {},
     updateValidator: function (name, fn, priority) {
       return this.registerValidator(name, fn, priority);
     },
+
     addListener: function (listener) {},
     removeListener: function(listener) {},
     updateListener: function(listener) {}
@@ -807,14 +815,15 @@ define('parsley/form', [
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
-    this.init(parsleyInstance.$element, parsleyInstance.options);
+    this.init(parsleyInstance.$element);
   };
 
   ParsleyForm.prototype = {
-    init: function ($element, options) {
-      this.options = options;
+    init: function ($element) {
       this.$element = $element;
       this.validationResult = null;
+
+      this.options = this.parsleyInstance.OptionsFactory.get(this);
 
       this.bindFields();
       this.$element.on('submit.' + this.__class__, false, $.proxy(this.validate, this));
@@ -2006,6 +2015,51 @@ define('parsley/validator', [
   return ParsleyValidator;
 });
 
+define('parsley/factory/options', [
+  'parsley/utils'
+], function (ParsleyUtils) {
+  var ParlseyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
+    this.__class__ = 'OptionsFactory';
+
+    this.formOptions = null;
+    this.fieldOptions = null;
+
+    this.baseOptions = $.extend(true, {}, defaultOptions, globalOptions, userOptions, { namespace: namespace });
+  };
+
+  ParlseyOptionsFactory.prototype = {
+    get: function (parsleyInstance) {
+      if ('undefined' === typeof parsleyInstance.__class__)
+        throw new Error('Parsley Instance expected');
+
+      switch (parsleyInstance.__class__) {
+        case 'Parsley':
+          return this.baseOptions;
+        case 'ParsleyForm':
+          return this.getParent(parsleyInstance);
+        case 'ParsleyField':
+          return this.getChild(parsleyInstance);
+        default:
+          throw new Error('Instance ' + parsleyInstance.__class__ + ' is not supported');
+      }
+    },
+
+    getParent: function (formInstance) {
+      this.formOptions = ParsleyUtils.attr(formInstance.$element, this.baseOptions.namespace);
+
+      return $.extend({}, this.baseOptions, this.formOptions);
+    },
+
+    getChild: function (fieldInstance) {
+      this.fieldOptions = ParsleyUtils.attr(fieldInstance.$element, this.baseOptions.namespace);
+
+      return $.extend({}, this.baseOptions, this.formOptions, this.fieldOptions);
+    }
+  };
+
+  return ParlseyOptionsFactory;
+});
+
 /**
  * @license RequireJS domReady 2.0.1 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -2139,7 +2193,7 @@ define('vendors/requirejs-domready/domReady',[],function () {
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sat Jan 04 2014 12:59:20
+* Version 2.0.0-pre - built Sun Jan 05 2014 10:34:27
 * MIT Licensed
 *
 */
@@ -2147,13 +2201,13 @@ define('vendors/requirejs-domready/domReady',[],function () {
 define('parsley',[
   'parsley/form',
   'parsley/field',
-  'parsley/ui',
   'parsley/utils',
   'parsley/defaults',
   'parsley/abstract',
   'parsley/validator',
+  'parsley/factory/options',
   'vendors/requirejs-domready/domReady'
-], function(ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, domReady) {
+], function(ParsleyForm, ParsleyField, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyOptionsFactory, domReady) {
   var Parsley = function (element, options) {
     this.__class__ = 'Parsley';
     this.__version__ = '2.0.0-pre';
@@ -2167,15 +2221,16 @@ define('parsley',[
   Parsley.prototype = {
     init: function ($element, options) {
       this.$element = $element;
-      this.options = this.getOptions(options);
-      this.ParsleyValidator = new ParsleyValidator(this.options);
+      this.namespace = this.getNamespace(options);
 
-      // if a form elem is given, bind all its input children
-      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.options.namespace)['bind'])
+      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.namespace);
+      this.options = this.OptionsFactory.get(this);
+
+      this.ParsleyValidator = new ParsleyValidator(this.Options);
+
+      if (this.$element.is('form') || ('undefined' !== typeof this.options.validate && !this.$element.is(this.options.inputs)))
         return this.bind('parsleyForm');
 
-      // if it is a Parsley supported single element, bind it too, except inputs type hidden
-      // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
       else if (this.$element.is(this.options.inputs))
         return this.bind('parsleyField');
 
@@ -2191,19 +2246,6 @@ define('parsley',[
           return window.ParsleyConfig.namespace;
 
       return ParsleyDefaultOptions.namespace;
-    },
-
-    getOptions: function (options) {
-      var namespace = this.getNamespace(options);
-
-      return $.extend(
-        true,
-        {},
-        ParsleyDefaultOptions,
-        ParsleyUtils.get(window, 'ParsleyConfig', {}),
-        options,
-        ParsleyUtils.attr(this.$element, namespace),
-        { namespace: namespace });
     },
 
     bind: function (type) {

@@ -8,7 +8,7 @@ define('parsley/utils', function () {
         obj = {},
         regex = new RegExp('^' + namespace, 'i');
 
-      if ('undefined' === typeof $element[0])
+      if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
         return {};
 
       for (var i in $element[0].attributes) {

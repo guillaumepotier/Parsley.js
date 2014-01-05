@@ -1,12 +1,16 @@
 define('parsley/ui', function () {
-  var ParsleyUI = function(options) {
+  var ParsleyUI = function (parsleyFieldInstance) {
     this.__class__ = 'ParsleyUI';
-    this.init(options);
+
+    if ('ParsleyField' !== ParsleyUtils.get(parsleyFieldInstance, '__class__'))
+      throw new Error('You must give a ParsleyField instance');
+
+    this.init(parsleyFieldInstance);
   };
 
   ParsleyUI.prototype = {
-    init: function(options) {
-      this.options= options;
+    init: function (parsleyFieldInstance) {
+      this.parsleyFieldInstance = parsleyFieldInstance;
     }
   };
 

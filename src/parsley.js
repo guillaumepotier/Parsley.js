@@ -9,13 +9,13 @@
 define([
   'parsley/form',
   'parsley/field',
-  'parsley/ui',
   'parsley/utils',
   'parsley/defaults',
   'parsley/abstract',
   'parsley/validator',
+  'parsley/factory/options',
   'vendors/requirejs-domready/domReady'
-], function(ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, domReady) {
+], function(ParsleyForm, ParsleyField, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyOptionsFactory, domReady) {
   var Parsley = function (element, options) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
@@ -29,15 +29,16 @@ define([
   Parsley.prototype = {
     init: function ($element, options) {
       this.$element = $element;
-      this.options = this.getOptions(options);
-      this.ParsleyValidator = new ParsleyValidator(this.options);
+      this.namespace = this.getNamespace(options);
 
-      // if a form elem is given, bind all its input children
-      if (this.$element.is('form') || 'undefined' !== typeof ParsleyUtils.attr(this.options.namespace)['bind'])
+      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.namespace);
+      this.options = this.OptionsFactory.get(this);
+
+      this.ParsleyValidator = new ParsleyValidator(this.Options);
+
+      if (this.$element.is('form') || ('undefined' !== typeof this.options.validate && !this.$element.is(this.options.inputs)))
         return this.bind('parsleyForm');
 
-      // if it is a Parsley supported single element, bind it too, except inputs type hidden
-      // add here a return instance, cuz' we could call public methods on single elems with data[ option ]() above
       else if (this.$element.is(this.options.inputs))
         return this.bind('parsleyField');
 
@@ -53,19 +54,6 @@ define([
           return window.ParsleyConfig.namespace;
 
       return ParsleyDefaultOptions.namespace;
-    },
-
-    getOptions: function (options) {
-      var namespace = this.getNamespace(options);
-
-      return $.extend(
-        true,
-        {},
-        ParsleyDefaultOptions,
-        ParsleyUtils.get(window, 'ParsleyConfig', {}),
-        options,
-        ParsleyUtils.attr(this.$element, namespace),
-        { namespace: namespace });
     },
 
     bind: function (type) {

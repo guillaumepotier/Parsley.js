@@ -1,8 +1,8 @@
 define('parsley/field', [
+    'parsley/factory/constraint',
     'parsley/ui',
-    'parsley/factory',
     'parsley/utils'
-], function (ParsleyUI, ConstraintFactory, ParsleyUtils) {
+], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
   var ParsleyField = function(parsleyInstance) {
     this.__class__ = 'ParsleyField';
 
@@ -10,24 +10,21 @@ define('parsley/field', [
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
+    this.UI = new ParsleyUI(this, parsleyInstance.options);
     this.init(parsleyInstance.$element, parsleyInstance.options);
   };
 
   ParsleyField.prototype = {
     init: function ($element, options) {
       this.constraints = [];
-      this.options = options;
       this.$element = $element;
+
+      this.options = this.parsleyInstance.OptionsFactory.get(this);
+
       this.validationResult = null;
       this.hash = this.generateHash();
       this.ParsleyValidator = this.parsleyInstance.ParsleyValidator;
       this.bind();
-    },
-
-    refreshOptions: function () {
-      this.options = this.parsleyInstance.getOptions(this.options);
-
-      return this;
     },
 
     validate: function () {
@@ -38,8 +35,8 @@ define('parsley/field', [
       else
         this.options.listeners.onFieldError(this);
 
-      // TODO
       // UI event here
+      this.UI.reflow();
 
       return this;
     },
@@ -56,6 +53,7 @@ define('parsley/field', [
       return priorities;
     },
 
+    // TODO add group validation
     isValid: function () {
       var priorities = this.getConstraintsSortedPriorities();
 
@@ -74,11 +72,6 @@ define('parsley/field', [
       return true;
     },
 
-    refreshConstraints: function () {
-      return this.refreshOptions()
-        .bindConstraints();
-    },
-
     getVal: function () {
       // todo: group (radio, checkboxes..)
       if ('undefined' !== typeof this.options['value'])
@@ -94,6 +87,10 @@ define('parsley/field', [
       return this;
     },
 
+    refreshConstraints: function () {
+      return this.actualizeOptions().bindConstraints();
+    },
+
     bindConstraints: function () {
       var constraints = [];
 
@@ -104,7 +101,7 @@ define('parsley/field', [
 
       this.constraints = constraints;
 
-      // then add DOM constraints in options
+      // then re-add Parsley DOM-API constraints
       for (var name in this.options)
         this.addConstraint(ParsleyUtils.makeObject(name, this.options[name]));
 
