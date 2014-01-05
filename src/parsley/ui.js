@@ -11,6 +11,14 @@ define('parsley/ui', function () {
   ParsleyUI.prototype = {
     init: function (parsleyFieldInstance) {
       this.parsleyFieldInstance = parsleyFieldInstance;
+    },
+
+    reflow: function () {
+
+    },
+
+    reset: function () {
+
     }
   };
 

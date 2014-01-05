@@ -146,22 +146,21 @@ define(function () {
         parsleyField = new Parsley($('#element'));
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(1);
-        expect(parsleyField.validationResult[0].assert).to.be('Required');
+        expect(parsleyField.validationResult[0].assert.name).to.be('required');
         $('#element').val('foo');
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(1);
-        expect(parsleyField.validationResult[0].assert).to.be('Email');
+        expect(parsleyField.validationResult[0].assert.name).to.be('type');
         $('#element').val('foo@bar.baz');
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(1);
-        expect(parsleyField.validationResult[0].assert).to.be('Regexp');
+        expect(parsleyField.validationResult[0].assert.name).to.be('pattern');
       });
       it('should handle all violations if `stopOnFirstFailingConstraint` is set to false', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
         parsleyField = new Parsley($('#element'), { stopOnFirstFailingConstraint: false });
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(3);
-        console.log(parsleyField.validationResult)
       });
       it.skip('should test onFieldValidate() listener');
       it.skip('should test onFieldError() listener');

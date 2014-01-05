@@ -110,7 +110,6 @@ define('parsley/field', [
       return this.bindHtml5Constraints();
     },
 
-    // TODO include $element.attrs() in this.options to avoid some of these html5 tests ?
     bindHtml5Constraints: function () {
       // html5 required
       if (this.$element.hasClass('required') || this.$element.attr('required'))
@@ -140,8 +139,6 @@ define('parsley/field', [
 
       return this;
     },
-
-    bindTriggers: function () {},
 
     /**
     * Add a new constraint to a field
