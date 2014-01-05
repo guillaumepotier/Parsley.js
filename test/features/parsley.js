@@ -33,44 +33,44 @@ define(function () {
         $('body').append('<div id="element"></div>');
 
         // default ParsleyOptions.namespace
-        expect(new Parsley($('#element')).options.namespace).to.be('data-parsley-');
+        expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-parsley-');
 
         // global JS config
         window.ParsleyConfig = {namespace: 'data-foo-'};
-        expect(new Parsley($('#element')).options.namespace).to.be('data-foo-');
+        expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-foo-');
 
         // option on the go
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
-        }).options.namespace).to.be('data-bar-');
+        }).OptionsFactory.staticOptions.namespace).to.be('data-bar-');
 
         // data- DOM-API
         $('#element').attr('data-parsley-namespace', 'data-baz-');
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
-        }).options.namespace).to.be('data-baz-');
+        }).OptionsFactory.staticOptions.namespace).to.be('data-baz-');
         delete window.ParsleyConfig.namespace;
       });
       it('should handle proper options management', function () {
         $('body').append('<form id="element" data-parsley-foo="bar" data-parsley-baz="baz"></form>');
         window.ParsleyConfig = {bar: "baz", baz:"qux"};
-        var parsleyInstance = new Parsley($('#element'), {qux: "bux"});
+        var parsleyInstance = new Parsley($('#element'), { qux: "bux" });
         expect(parsleyInstance.options.foo).to.be('bar');
         expect(parsleyInstance.options.baz).to.be('baz');
         expect(parsleyInstance.options.bar).to.be('baz');
         expect(parsleyInstance.options.qux).to.be('bux');
       });
       it('should have a jquery plugin API', function () {
-        $('body').append('<div id="element" data-parsley-namespace="baz-"></div>');
-        var parsleyInstance = $('#element').parsley({foo: 'bar'});
-        expect(parsleyInstance.__class__).to.be('Parsley');
+        $('body').append('<input type="text" id="element" data-parsley-namespace="baz-"></div>');
+        var parsleyInstance = $('#element').parsley({ foo: 'bar' });
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
         expect(parsleyInstance.options.namespace).to.be('baz-');
         expect(parsleyInstance.options.foo).to.be('bar');
       });
       afterEach(function () {
         window.ParsleyConfig = {};
         if ($('#element').length)
-            $('#element').remove();
+          $('#element').remove();
       });
     });
   }

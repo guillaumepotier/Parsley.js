@@ -3,15 +3,16 @@ define('parsley/field', [
     'parsley/ui',
     'parsley/utils'
 ], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
-  var ParsleyField = function(parsleyInstance) {
+  var ParsleyField = function(field, parsleyInstance) {
     this.__class__ = 'ParsleyField';
+    this.__id__ = ParsleyUtils.hash(4);
 
     if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
     this.UI = new ParsleyUI(this, parsleyInstance.options);
-    this.init(parsleyInstance.$element, parsleyInstance.options);
+    this.init($(field), parsleyInstance.options);
   };
 
   ParsleyField.prototype = {
@@ -194,7 +195,7 @@ define('parsley/field', [
       if (this.group)
         return 'parsley-' + this.group;
 
-      return 'parsley-' + new String(Math.random()).substring(2, 9);
+      return 'parsley-' + this.__id__;
     },
 
     reset: function () {},

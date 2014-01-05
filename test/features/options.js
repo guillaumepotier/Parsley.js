@@ -14,7 +14,7 @@ define(function () {
           { foo: 'BAR', bar: 'BAZ' },
           { foo: null }
         );
-        expect(options.baseOptions).to.eql({ foo: null, bar: 'BAZ', baz: 'qux' });
+        expect(options.staticOptions).to.eql({ foo: null, bar: 'BAZ', baz: 'qux' });
       });
       it('should throw an exception if get() called withoud a Parsley instance', function () {
         expect(new ParlseyOptionsFactory().get).to.throwException();

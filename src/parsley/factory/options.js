@@ -3,11 +3,12 @@ define('parsley/factory/options', [
 ], function (ParsleyUtils) {
   var ParlseyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
     this.__class__ = 'OptionsFactory';
+    this.__id__ = ParsleyUtils.hash(4);
 
     this.formOptions = null;
     this.fieldOptions = null;
 
-    this.baseOptions = $.extend(true, {}, defaultOptions, globalOptions, userOptions, { namespace: namespace });
+    this.staticOptions = $.extend(true, {}, defaultOptions, globalOptions, userOptions, { namespace: namespace });
   };
 
   ParlseyOptionsFactory.prototype = {
@@ -17,7 +18,7 @@ define('parsley/factory/options', [
 
       switch (parsleyInstance.__class__) {
         case 'Parsley':
-          return this.baseOptions;
+          return this.staticOptions;
         case 'ParsleyForm':
           return this.getParent(parsleyInstance);
         case 'ParsleyField':
@@ -28,15 +29,17 @@ define('parsley/factory/options', [
     },
 
     getParent: function (formInstance) {
-      this.formOptions = ParsleyUtils.attr(formInstance.$element, this.baseOptions.namespace);
+      this.formOptions = ParsleyUtils.attr(formInstance.$element, this.staticOptions.namespace);
 
-      return $.extend({}, this.baseOptions, this.formOptions);
+      // not deep extend, since formOptions is a 1 level deep object
+      return $.extend({}, this.staticOptions, this.formOptions);
     },
 
     getChild: function (fieldInstance) {
-      this.fieldOptions = ParsleyUtils.attr(fieldInstance.$element, this.baseOptions.namespace);
+      this.fieldOptions = ParsleyUtils.attr(fieldInstance.$element, this.staticOptions.namespace);
 
-      return $.extend({}, this.baseOptions, this.formOptions, this.fieldOptions);
+      // not deep extend, since formOptions and fieldOptions is a 1 level deep object
+      return $.extend({}, this.staticOptions, this.formOptions, this.fieldOptions);
     }
   };
 

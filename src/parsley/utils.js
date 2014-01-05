@@ -59,6 +59,10 @@ define('parsley/utils', function () {
       return object;
     },
 
+    hash: function (length) {
+      return new String(Math.random()).substring(2, length ? length + 2 : 9);
+    },
+
     /** Third party functions **/
     // Underscore isArray
     isArray: function (mixed) {

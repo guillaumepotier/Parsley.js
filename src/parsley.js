@@ -16,31 +16,31 @@ define([
   'parsley/factory/options',
   'vendors/requirejs-domready/domReady'
 ], function(ParsleyForm, ParsleyField, ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyOptionsFactory, domReady) {
-  var Parsley = function (element, options) {
+  var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
+    this.__id__ = ParsleyUtils.hash(4);
 
     if ('undefined' === typeof element)
       throw new Error('You must give an element');
 
-    return this.init($(element), options);
+    return this.init($(element), options, parsleyInstance);
   };
 
   Parsley.prototype = {
-    init: function ($element, options) {
+    init: function ($element, options, parsleyInstance) {
       this.$element = $element;
-      this.namespace = this.getNamespace(options);
 
-      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.namespace);
-      this.options = this.OptionsFactory.get(this);
+      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
 
-      this.ParsleyValidator = new ParsleyValidator(this.Options);
+      var options = this.OptionsFactory.get(this);
+      this.ParsleyValidator = new ParsleyValidator(options);
 
-      if (this.$element.is('form') || ('undefined' !== typeof this.options.validate && !this.$element.is(this.options.inputs)))
-        return this.bind('parsleyForm');
+      if (this.$element.is('form') || ('undefined' !== typeof options.validate && !this.$element.is(options.inputs)))
+        return this.bind('parsleyForm', parsleyInstance);
 
-      else if (this.$element.is(this.options.inputs))
-        return this.bind('parsleyField');
+      else if (this.$element.is(options.inputs))
+        return this.bind('parsleyField', parsleyInstance);
 
       return this;
     },
@@ -56,17 +56,17 @@ define([
       return ParsleyDefaultOptions.namespace;
     },
 
-    bind: function (type) {
+    bind: function (type, parentParsleyInstance) {
       var parsleyInstance = this.$element.data(type);
 
       // if data never binded, bind it right now!
       if ('undefined' === typeof parsleyInstance) {
         switch (type) {
           case 'parsleyForm':
-            parsleyInstance = $.extend(new ParsleyForm(this), new ParsleyAbstract());
+            parsleyInstance = $.extend(new ParsleyForm(this.$element, parentParsleyInstance || this), new ParsleyAbstract());
             break;
           case 'parsleyField':
-            parsleyInstance = $.extend(new ParsleyField(this), new ParsleyAbstract());
+            parsleyInstance = $.extend(new ParsleyField(this.$element, parentParsleyInstance || this), new ParsleyAbstract());
             break;
           default:
             throw new Error(type + 'is not a supported Parsley type');
