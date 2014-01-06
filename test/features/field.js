@@ -7,10 +7,6 @@ define(function () {
       it('should throw an error if no parsleyInstance given', function () {
         expect(ParsleyField).to.throwException();
       });
-      it('should generate a proper hash', function () {
-        $('body').append('<input type="text" id="element" data-parsley-notnull />')
-        expect(new Parsley($('#element')).hash.length).to.be(new String('parsley-').length + 4);
-      });
       it('should properly bind DOM constraints', function () {
         $('body').append('<input type="text" id="element" data-parsley-required />');
         var parsleyField = new Parsley($('#element'));

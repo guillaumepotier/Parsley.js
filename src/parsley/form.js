@@ -1,8 +1,7 @@
 define('parsley/form', [
-  'parsley/field',
   'parsley/abstract',
   'parsley/utils'
-  ], function (ParsleyField, ParsleyAbstract, ParsleyUtils) {
+  ], function (ParsleyAbstract, ParsleyUtils) {
   var ParsleyForm = function(element, parsleyInstance) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
@@ -22,6 +21,9 @@ define('parsley/form', [
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
       this.bindFields();
+
+      // jQuery stuff
+      this.$element.attr('novalidate', 'novalidate');
       this.$element.on('submit.' + this.__class__, false, $.proxy(this.validate, this));
     },
 
@@ -32,7 +34,7 @@ define('parsley/form', [
       this.refreshFields();
 
       for (var i = 0; i < this.fields.length; i++) {
-        isValid = isValid && this.fields[i].validate();
+        isValid = isValid && true === this.fields[i].validate().validationResult;
 
         if (!isValid && (!focusedField && 'first' === this.options.focus || 'last' === this.options.focus))
           focusedField = this.fields[i];
@@ -40,7 +42,7 @@ define('parsley/form', [
 
       // form validation listener.
       // form submission can be prevented here too, event if form is valid
-      this.options.onFormValidate(isValid, event, this);
+      this.options.listeners.onFormValidate(isValid, event, this);
 
       // prevent form submission if validation fails
       if (false === isValid)
@@ -80,8 +82,11 @@ define('parsley/form', [
     },
 
     addField: function (field) {
-      // get field through Parsley class and inject current parsleyInstance
-      this.fields.push(new Parsley(field, {}, this.parsleyInstance));
+      var fieldInstance = new window.Parsley(field, {}, this.parsleyInstance);
+
+      // only add valid field children
+      if ('ParsleyField' === fieldInstance.__class__)
+        this.fields.push(fieldInstance);
 
       return this;
     },

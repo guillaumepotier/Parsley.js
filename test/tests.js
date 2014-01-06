@@ -48,11 +48,10 @@ require(['../src/config'], function () {
           });
 
           // run mocha
-          if (window.mochaPhantomJS) {
+          if (window.mochaPhantomJS)
             mochaPhantomJS.run();
-          } else {
+          else
             mocha.run();
-          }
         });
       });
     });

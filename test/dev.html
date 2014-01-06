@@ -1,0 +1,20 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Parsleyjs Test Suite</title>
+    <style>
+        #element {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form id="form" data-parsley-validate>
+        Email: <input type="email" required />
+        <input type="submit" />
+    </form>
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script>
+</body>
+</html>

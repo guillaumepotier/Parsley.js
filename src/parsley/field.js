@@ -19,11 +19,9 @@ define('parsley/field', [
     init: function ($element, options) {
       this.constraints = [];
       this.$element = $element;
+      this.validationResult = [];
 
       this.options = this.parsleyInstance.OptionsFactory.get(this);
-
-      this.validationResult = null;
-      this.hash = this.generateHash();
 
       this.Validator = this.parsleyInstance.Validator;
       this.UI = this.parsleyInstance.UI;
@@ -188,13 +186,6 @@ define('parsley/field', [
           return true;
 
       return false;
-    },
-
-    generateHash: function () {
-      if (this.group)
-        return 'parsley-' + this.group;
-
-      return 'parsley-' + this.__id__;
     },
 
     reset: function () {},
