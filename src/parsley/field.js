@@ -11,7 +11,6 @@ define('parsley/field', [
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
-    this.UI = new ParsleyUI(this, parsleyInstance.options);
     this.init($(field), parsleyInstance.options);
   };
 
@@ -24,7 +23,8 @@ define('parsley/field', [
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
       this.Validator = this.parsleyInstance.Validator;
-      this.UI = this.parsleyInstance.UI;
+
+      $.publish('parsley:ui:setup', this);
 
       this.bind();
     },
@@ -37,8 +37,8 @@ define('parsley/field', [
       else
         this.options.listeners.onFieldError(this);
 
-      // UI event here
-      this.UI.reflow();
+      console.log('before reflow', this.validationResult)
+      $.publish('parsley:ui:reflow', this);
 
       return this;
     },
@@ -61,6 +61,13 @@ define('parsley/field', [
 
       // recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
+
+      // if a field is empty and not required, it is valid, do not bother to validate something
+      if ('' === this.getVal())
+        if (-1 === this.indexOfConstraint('required') ||
+            (-1 !== this.indexOfConstraint('required') && false === this.constraints[this.indexOfConstraint('required')].requirements)) {
+          return this.validationResult = [];
+        }
 
       // if we want to validate field against all constraints, just call Validator
       if (false === this.options.stopOnFirstFailingConstraint)
@@ -156,7 +163,7 @@ define('parsley/field', [
         constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
-        if (true === this.hasConstraint(constraint.name))
+        if (-1 !== this.indexOfConstraint(constraint.name))
           this.removeConstraint(constraint.name);
 
         this.constraints.push(constraint);
@@ -180,16 +187,21 @@ define('parsley/field', [
         .addConstraint(name, parameters, priority);
     },
 
-    hasConstraint: function (name) {
+    indexOfConstraint: function (name) {
       for (var i = 0; i < this.constraints.length; i++)
         if (name === this.constraints[i].name)
-          return true;
+          return i;
 
-      return false;
+      return -1;
     },
 
-    reset: function () {},
-    destroy: function () {}
+    reset: function () {
+      $.publish('parsley:ui:reset', this);
+    },
+
+    destroy: function () {
+      $.publish('parsley:ui:destroy', this);
+    },
   };
 
   return ParsleyField;

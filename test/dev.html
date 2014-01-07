@@ -1,16 +1,23 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Parsleyjs Test Suite</title>
+    <title>Parsleyjs Developpement Tests</title>
     <style>
         #element {
             display: none;
         }
+        .parsley-success {
+            border: 1px solid green;
+        }
+        .parsley-error {
+            border: 1px solid red;
+        }
     </style>
 </head>
 <body>
-    <form id="form" data-parsley-validate>
+    <form id="form" data-parsley-validate >
         Email: <input type="email" required />
+        Fullname: <input type="text" data-parsley-minlength="5" />
         <input type="submit" />
     </form>
 

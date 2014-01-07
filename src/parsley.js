@@ -36,7 +36,6 @@ define([
       var options = this.OptionsFactory.staticOptions;
 
       this.Validator = new ParsleyValidator(options);
-      this.UI = new ParsleyUI(options);
 
       // a ParsleyForm instance is obviously a <form> elem but also every node that is not an input and have data-parsley-validate attribute
       if (this.$element.is('form') || ('undefined' !== typeof options.validate && !this.$element.is(options.inputs)))
@@ -88,7 +87,29 @@ define([
     return new Parsley(this, options);
   };
 
-  // define some super globals for window ;)
+  // lightweight pub/sub
+  (function($) {
+    var o = $({});
+
+    $.subscribe = function() {
+      o.on.apply(o, arguments);
+    };
+
+    $.unsubscribe = function() {
+      o.off.apply(o, arguments);
+    };
+
+    $.publish = function() {
+      o.trigger.apply(o, arguments);
+    };
+  }(jQuery));
+
+  // UI is a class apart that only listen to some events
+  // Could be overriden by defining a window.ParsleyConfig.ParsleyUI appropriate class
+  window.ParsleyUI = 'function' === typeof ParsleyUtils.get(window.ParsleyConfig, 'ParsleyUI') ?
+    new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
+
+  // define now some super globals for window
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
   window.ParsleyValidator = new ParsleyValidator().Validator;

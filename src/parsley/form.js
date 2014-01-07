@@ -29,15 +29,14 @@ define('parsley/form', [
 
     validate: function (event) {
       var isValid = true,
-        focusedField = false;
+        validationResult = [];
 
       this.refreshFields();
 
       for (var i = 0; i < this.fields.length; i++) {
-        isValid = isValid && true === this.fields[i].validate().validationResult;
-
-        if (!isValid && (!focusedField && 'first' === this.options.focus || 'last' === this.options.focus))
-          focusedField = this.fields[i];
+        validationResult = this.fields[i].validate().validationResult;
+        if (true !== validationResult && validationResult.length > 0 && isValid)
+          isValid = false;
       }
 
       // form validation listener.
@@ -47,11 +46,6 @@ define('parsley/form', [
       // prevent form submission if validation fails
       if (false === isValid)
         event.preventDefault();
-
-      // TODO animate
-      // focus on an error field
-      if ('none' !== this.options.focus && false !== focusedField)
-        focusedField.$element.focus();
 
       return this;
     },
