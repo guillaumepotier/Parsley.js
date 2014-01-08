@@ -1,6 +1,7 @@
 ﻿#Parsley.js
 
 [![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guillaumepotier/parsley.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Javascript form validation, without actually writing a single line of javascript!
 
