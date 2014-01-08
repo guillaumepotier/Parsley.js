@@ -29,12 +29,14 @@ define('parsley/field', [
     validate: function () {
       this.options.listeners.onFieldValidate(this);
 
+      $.publish('parsley:field:validate', this);
+
       if (this.isValid())
         this.options.listeners.onFieldSuccess(this);
       else
         this.options.listeners.onFieldError(this);
 
-      $.publish('parsley:field:validate', this);
+      $.publish('parsley:field:validated', this);
 
       return this;
     },
@@ -79,8 +81,8 @@ define('parsley/field', [
 
     getVal: function () {
       // todo: group (radio, checkboxes..)
-      if ('undefined' !== typeof this.options['value'])
-        return this.options['value'];
+      if ('undefined' !== typeof this.options.value)
+        return this.options.value;
 
       return this.$element.val();
     },

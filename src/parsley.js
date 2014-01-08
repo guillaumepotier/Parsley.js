@@ -90,25 +90,25 @@ define([
   // lightweight pub/sub
   (function($) {
     var o = $({})
-      registered = {};
+      subscribed = {};
 
     // $.subscribe(name, callback);
     // $.subscribe(name, contect, callback);
     $.subscribe = function (name) {
-      if ('undefined' === typeof registered[name])
-        registered[name] = [];
+      if ('undefined' === typeof subscribed[name])
+        subscribed[name] = [];
 
       if ('object' === typeof arguments[1] && 'function' === typeof arguments[2])
-        return registered[name].push({'context': arguments[1], 'callback': arguments[2]});
+        return subscribed[name].push({'context': arguments[1], 'callback': arguments[2]});
 
       if ('function' === typeof arguments[1])
-        return registered[name].push({'context': undefined, 'callback': arguments[1]})
+        return subscribed[name].push({'context': undefined, 'callback': arguments[1]})
     };
 
     $.unsubscribe = function (name) {
       var context, callback;
 
-      if ('undefined' === typeof registered[name])
+      if ('undefined' === typeof subscribed[name])
         return;
 
       if ('object' === typeof arguments[1] && 'function' === typeof arguments[2]) {
@@ -119,20 +119,24 @@ define([
       else
         throw new Error('wrong arguments');
 
-      for (var i = 0; i < registered[name].length; i++)
-        if (registered[name][i]['context'] === context && registered[name]['callback'] === callback)
-          registered[name].splice(i, 1);
+      for (var i = 0; i < subscribed[name].length; i++)
+        if (subscribed[name][i]['context'] === context && subscribed[name]['callback'] === callback)
+          subscribed[name].splice(i, 1);
+    };
+
+    $.unsubscribeAll = function (name) {
+      if ('undefined' === typeof subscribed[name])
+        return;
+
+      delete(subscribed[name]);
     };
 
     $.publish = function (name) {
-      if ('undefined' === typeof registered[name])
+      if ('undefined' === typeof subscribed[name])
         return;
 
-      for (var i = 0; i < registered[name].length; i++)
-        if ('undefined' !== typeof registered[name][i]['context'])
-          registered[name][i]['callback'].apply(registered[name][i]['context'], arguments);
-        else
-          registered[name][i]['callback'].apply(o, arguments);
+      for (var i = 0; i < subscribed[name].length; i++)
+        subscribed[name][i]['callback'].apply('undefined' !== typeof subscribed[name][i]['context'] ? subscribed[name][i]['context'] : o, Array.prototype.slice.call(arguments, 1));
     };
   }(jQuery));
 

@@ -69,16 +69,14 @@ define(function () {
       });
       it('should implement a tiny pub/sub mechanism: subscribe with context', function (done) {
         var obj = { foo: function (bar) { return 'foo' + bar; } };
-        $.subscribe('foo', obj, function (event, arg) {
-          expect(event).to.be('foo');
+        $.subscribe('foo', obj, function (arg) {
           expect(this.foo(arg)).to.be('foobar');
           done();
         });
         $.publish('foo', 'bar');
       });
       it('should implement a tiny pub/sub mechanism: subscribe withoud context', function (done) {
-        $.subscribe('foo', function (event, arg) {
-          expect(event).to.be('foo');
+        $.subscribe('foo', function (arg) {
           expect(arg).to.be('bar');
           done();
         });
@@ -89,6 +87,8 @@ define(function () {
         window.ParsleyConfig = {};
         if ($('#element').length)
           $('#element').remove();
+
+        $.unsubscribeAll('foo');
       });
     });
   }

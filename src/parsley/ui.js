@@ -9,14 +9,14 @@ define('parsley/ui', [
   ParsleyUI.prototype = {
     listen: function () {
       $.subscribe('parsley:field:init', this, this.setup);
-      $.subscribe('parsley:field:validate', this, this.reflow);
+      $.subscribe('parsley:field:validated', this, this.reflow);
       $.subscribe('parsley:field:reset', this, this.reset);
       $.subscribe('parsley:field:destroy', this, this.destroy);
 
       return this;
     },
 
-    reflow: function (event, fieldInstance) {
+    reflow: function (fieldInstance) {
       // diff between two validation results
       var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
 
@@ -70,7 +70,7 @@ define('parsley/ui', [
       }
     },
 
-    setup: function (event, fieldInstance) {
+    setup: function (fieldInstance) {
       var _ui = {};
 
       // give field Parsley id in DOM
@@ -97,11 +97,11 @@ define('parsley/ui', [
       return this;
     },
 
-    reset: function () {
+    reset: function (fieldInstance) {
 
     },
 
-    destroy: function () {
+    destroy: function (fieldInstance) {
 
     }
   };
