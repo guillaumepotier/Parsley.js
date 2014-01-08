@@ -19,13 +19,10 @@ define('parsley/field', [
       this.constraints = [];
       this.$element = $element;
       this.validationResult = [];
-
       this.options = this.parsleyInstance.OptionsFactory.get(this);
-
       this.Validator = this.parsleyInstance.Validator;
 
-      $.publish('parsley:ui:setup', this);
-
+      $.publish('parsley:field:init', this);
       this.bind();
     },
 
@@ -37,8 +34,7 @@ define('parsley/field', [
       else
         this.options.listeners.onFieldError(this);
 
-      console.log('before reflow', this.validationResult)
-      $.publish('parsley:ui:reflow', this);
+      $.publish('parsley:field:validate', this);
 
       return this;
     },
@@ -196,11 +192,11 @@ define('parsley/field', [
     },
 
     reset: function () {
-      $.publish('parsley:ui:reset', this);
+      $.publish('parsley:field:reset', this);
     },
 
     destroy: function () {
-      $.publish('parsley:ui:destroy', this);
+      $.publish('parsley:field:destroy', this);
     },
   };
 

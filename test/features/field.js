@@ -65,9 +65,9 @@ define(function () {
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].name).to.be('notnull');
       });
-      it('should always validate field withoud constraints', function () {
+      it('should return an empty array for fields withoud constraints', function () {
         $('body').append('<input type="text" id="element" value="" />');
-        expect(new Parsley($('#element')).isValid()).to.be(true);
+        expect(new Parsley($('#element')).isValid()).to.eql([]);
       });
       it('should valid simple validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
@@ -78,7 +78,7 @@ define(function () {
         expect(parsleyField.isValid()).to.be(true);
       });
       it('should valid more complex `type` validator', function () {
-        $('body').append('<input type="text" id="element" value="" />');
+        $('body').append('<input type="text" id="element" value="foo" />');
         var parsleyField = new Parsley($('#element'))
           .addConstraint('type', 'email');
         expect(parsleyField.isValid()).to.be(false);
@@ -97,7 +97,7 @@ define(function () {
             return false;
           }, 512)
           .addConstraint('multiple', 2);
-        expect(parsleyField.isValid()).to.be(false);
+        expect(parsleyField.isValid()).to.eql([]);
         $('#element').val('1');
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('2');

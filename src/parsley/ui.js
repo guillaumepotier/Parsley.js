@@ -8,17 +8,17 @@ define('parsley/ui', [
 
   ParsleyUI.prototype = {
     listen: function () {
-      $.subscribe('parsley:ui:setup', this.setup);
-      $.subscribe('parsley:ui:reflow', this.reflow);
-      $.subscribe('parsley:ui:reset', this.reset);
-      $.subscribe('parsley:ui:destroy', this.destroy);
+      $.subscribe('parsley:field:init', this, this.setup);
+      $.subscribe('parsley:field:validate', this, this.reflow);
+      $.subscribe('parsley:field:reset', this, this.reset);
+      $.subscribe('parsley:field:destroy', this, this.destroy);
 
       return this;
     },
 
     reflow: function (event, fieldInstance) {
       // diff between two validation results
-      var diff = window.ParsleyUI.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
+      var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
 
       // then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;

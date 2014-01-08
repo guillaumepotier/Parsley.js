@@ -28,6 +28,8 @@ define('parsley/form', [
     },
 
     validate: function (event) {
+              event.preventDefault();
+
       var isValid = true,
         validationResult = [];
 
