@@ -16,7 +16,7 @@ define([
   'parsley/form',
   'parsley/field',
   'vendors/requirejs-domready/domReady'
-], function(ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField, domReady) {
+], function (ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField, domReady) {
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
@@ -87,22 +87,30 @@ define([
     return new Parsley(this, options);
   };
 
-  // lightweight pub/sub
+  // pub/sub mechanism for parsley UI
   (function($) {
     var o = $({})
       subscribed = {};
 
-    // $.subscribe(name, callback);
-    // $.subscribe(name, contect, callback);
+    // $.subscribe(name, callback, /* parsleyInstance */);
+    // $.subscribe(name, context, callback, /* parsleyInstance */);
     $.subscribe = function (name) {
       if ('undefined' === typeof subscribed[name])
         subscribed[name] = [];
 
-      if ('object' === typeof arguments[1] && 'function' === typeof arguments[2])
-        return subscribed[name].push({'context': arguments[1], 'callback': arguments[2]});
+      var sub;
 
-      if ('function' === typeof arguments[1])
-        return subscribed[name].push({'context': undefined, 'callback': arguments[1]})
+      if ('object' === typeof arguments[1] && 'function' === typeof arguments[2])
+        sub = { 'context': arguments[1], 'callback': arguments[2], 'instance': arguments[3] };
+      else if ('function' === typeof arguments[1])
+        sub = { 'context': undefined, 'callback': arguments[1], 'instance': arguments[2] };
+      else
+        throw new Error('Wrong arguments');
+
+      if ('undefined' !== typeof sub.instance && 'object' !== typeof sub.instance && 'undefined' === typeof sub.instance.parsleyInstance)
+        throw new Error('Instance should be a Parsley Instance');
+
+      subscribed[name].push(sub);
     };
 
     $.unsubscribe = function (name) {
@@ -117,7 +125,7 @@ define([
       } else if ('function' === typeof arguments[1])
         callback = arguments[1];
       else
-        throw new Error('wrong arguments');
+        throw new Error('Wrong arguments');
 
       for (var i = 0; i < subscribed[name].length; i++)
         if (subscribed[name][i]['context'] === context && subscribed[name]['callback'] === callback)
@@ -131,12 +139,16 @@ define([
       delete(subscribed[name]);
     };
 
-    $.publish = function (name) {
+    $.publish = function (name, parsleyInstance) {
       if ('undefined' === typeof subscribed[name])
         return;
 
-      for (var i = 0; i < subscribed[name].length; i++)
+      for (var i = 0; i < subscribed[name].length; i++) {
+        if ('undefined' !== typeof subscribed[name][i].instance && 'undefined' !== typeof parsleyInstance.__id__ && !(subscribed[name][i].instance.__id__ !== parsleyInstance.__id__ || subscribed[name][i].instance.__id__ !== parsleyInstance.parsleyInstance.__id__))
+          continue;
+
         subscribed[name][i]['callback'].apply('undefined' !== typeof subscribed[name][i]['context'] ? subscribed[name][i]['context'] : o, Array.prototype.slice.call(arguments, 1));
+      }
     };
   }(jQuery));
 
