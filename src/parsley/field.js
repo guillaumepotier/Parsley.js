@@ -27,14 +27,12 @@ define('parsley/field', [
     },
 
     validate: function () {
-      this.options.listeners.onFieldValidate(this);
-
       $.publish('parsley:field:validate', this);
 
       if (this.isValid())
-        this.options.listeners.onFieldSuccess(this);
+        $.publish('parsley:field:success', this);
       else
-        this.options.listeners.onFieldError(this);
+        $.publish('parsley:field:error', this);
 
       $.publish('parsley:field:validated', this);
 
