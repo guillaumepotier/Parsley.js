@@ -24,10 +24,20 @@ define('parsley/form', [
 
       // jQuery stuff
       this.$element.attr('novalidate', 'novalidate');
-      this.$element.on('submit.' + this.__class__, false, $.proxy(this.validate, this));
+      this.$element.on('submit.Parsley', false, $.proxy(this.onSubmitValidate, this));
     },
 
-    validate: function (event) {
+    onSubmitValidate: function (event) {
+      this.validate();
+
+      // prevent form submission if validation fails
+      if (false === this.isValid && event instanceof $.Event)
+        event.preventDefault();
+
+      return this;
+    },
+
+    validate: function () {
       this.isValid = true;
       var validationResult = [];
 
@@ -43,10 +53,6 @@ define('parsley/form', [
       }
 
       $.emit('parsley:form:validated', this);
-
-      // prevent form submission if validation fails
-      if (false === this.isValid)
-        event.preventDefault();
 
       return this;
     },
