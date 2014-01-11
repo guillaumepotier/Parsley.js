@@ -24,8 +24,14 @@ define('parsley/abstract', function () {
       return this.registerValidator(name, fn, priority);
     },
 
-    subscribe: function (name, fn, context) {
-      $.subscribe(name, context || this, fn, this);
+    subscribe: function (name, fn) {
+      $.subscribeTo(this, name, fn);
+
+      return this;
+    },
+
+    unsubscribe: function (name) {
+      $.unsubscribeTo(this, name);
 
       return this;
     }

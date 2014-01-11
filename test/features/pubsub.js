@@ -46,7 +46,7 @@ define(function () {
 
         $.emit('foo', $('#element').psly());
       });
-      it('listenTo() Form will listen to its fields', function (done) {
+      it('listenTo() Form will listen to its fields too', function (done) {
         $('body').append(
           '<form id="element" data-parsley-trigger="change">'                 +
             '<input id="field1" type="text" data-parsley-required="true" />'  +
@@ -54,7 +54,7 @@ define(function () {
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
 
-        $.listenTo($('#element').psly(), 'foo', function () {
+        $.listenTo($('#element').psly(), 'foo', function (instance) {
           done();
         });
 
@@ -69,11 +69,12 @@ define(function () {
         $.unsubscribeTo($('#element').psly(), 'foo');
         expect($.subscribed().foo.length).to.be(1);
       });
-      it.skip('unsubscribe()', function () {
+      it('unsubscribe()', function () {
         $.listen('foo', $.noop);
         expect($.subscribed()).to.have.key('foo');
         expect($.subscribed().foo.length).to.be(1);
-        $.unsubscribe('foo');
+        $.unsubscribe('foo', $.noop);
+        expect($.subscribed().foo.length).to.be(0);
       });
       afterEach(function () {
         if ($('#element').length)
