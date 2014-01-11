@@ -28,12 +28,7 @@ define('parsley/field', [
 
     validate: function () {
       $.emit('parsley:field:validate', this);
-
-      if (this.isValid())
-        $.emit('parsley:field:success', this);
-      else
-        $.emit('parsley:field:error', this);
-
+      $.emit('parsley:field:' + (this.isValid() ? 'success' : 'error'), this);
       $.emit('parsley:field:validated', this);
 
       return this;

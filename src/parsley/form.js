@@ -1,7 +1,7 @@
 define('parsley/form', [
   'parsley/abstract',
   'parsley/utils'
-  ], function (ParsleyAbstract, ParsleyUtils) {
+], function (ParsleyAbstract, ParsleyUtils) {
   var ParsleyForm = function(element, parsleyInstance) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
@@ -28,25 +28,24 @@ define('parsley/form', [
     },
 
     validate: function (event) {
-              event.preventDefault();
-
-      var isValid = true,
-        validationResult = [];
+      this.isValid = true;
+      var validationResult = [];
 
       this.refreshFields();
 
+      $.emit('parsley:form:validate', this);
+
       for (var i = 0; i < this.fields.length; i++) {
         validationResult = this.fields[i].validate().validationResult;
-        if (true !== validationResult && validationResult.length > 0 && isValid)
-          isValid = false;
+
+        if (true !== validationResult && validationResult.length > 0 && this.isValid)
+          this.isValid = false;
       }
 
-      // form validation listener.
-      // form submission can be prevented here too, event if form is valid
-      this.options.listeners.onFormValidate(isValid, event, this);
+      $.emit('parsley:form:validated', this);
 
       // prevent form submission if validation fails
-      if (false === isValid)
+      if (false === this.isValid)
         event.preventDefault();
 
       return this;

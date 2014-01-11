@@ -158,13 +158,46 @@ define(function () {
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(3);
       });
-      it.skip('should test onFieldValidate() listener');
-      it.skip('should test onFieldError() listener');
-      it.skip('should test onFieldSuccess() listener');
+      it('should fire parsley:field:validate event', function (done) {
+        $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
+        $.listenTo($('#element').psly(), 'parsley:field:validate', function (instance) {
+          // we are before validation!
+          expect(instance.validationResult.length).to.be(0);
+          done();
+        });
+        $('#element').psly().validate();
+      });
+      it('should fire parsley:field:validated event', function (done) {
+        $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
+        $.listenTo($('#element').psly(), 'parsley:field:validated', function (instance) {
+          // we are after validation!
+          expect(instance.validationResult.length).to.be(1);
+          done();
+        });
+        $('#element').psly().validate();
+      });
+      it('should fire parsley:field:error event', function (done) {
+        $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
+        $.listenTo($('#element').psly(), 'parsley:field:error', function (instance) {
+          expect(instance.validationResult.length).to.be(1);
+          done();
+        });
+        $('#element').psly().validate();
+      });
+      it('should fire parsley:field:success event', function (done) {
+        $('body').append('<input type="email" required id="element" value="foo@bar.baz" />');
+        $.listenTo($('#element').psly(), 'parsley:field:success', function (instance) {
+          expect(instance.validationResult).to.be(true);
+          done();
+        });
+        $('#element').psly().validate();
+      });
       afterEach(function () {
         window.ParsleyConfig = {};
         if ($('#element').length)
           $('#element').remove();
+        if ($('.parsley-errors-list').length)
+          $('.parsley-errors-list').remove();
       });
     });
   }
