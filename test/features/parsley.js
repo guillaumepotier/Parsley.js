@@ -67,28 +67,10 @@ define(function () {
         expect(parsleyInstance.options.namespace).to.be('baz-');
         expect(parsleyInstance.options.foo).to.be('bar');
       });
-      it('should implement a tiny pub/sub mechanism: subscribe with context', function (done) {
-        var obj = { foo: function (bar) { return 'foo' + bar; } };
-        $.subscribe('foo', obj, function (arg) {
-          expect(this.foo(arg)).to.be('foobar');
-          done();
-        });
-        $.publish('foo', 'bar');
-      });
-      it('should implement a tiny pub/sub mechanism: subscribe withoud context', function (done) {
-        $.subscribe('foo', function (arg) {
-          expect(arg).to.be('bar');
-          done();
-        });
-        $.publish('foo', 'bar');
-      });
-      it.skip('should implement a tiny pub/sub mechanism: unsubscribe', function (done) {});
       afterEach(function () {
         window.ParsleyConfig = {};
         if ($('#element').length)
           $('#element').remove();
-
-        $.unsubscribeAll('foo');
       });
     });
   }

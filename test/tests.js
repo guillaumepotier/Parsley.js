@@ -23,15 +23,17 @@ require(['../src/config'], function () {
       require([
         'features/parsley',
         'features/options',
+        'features/pubsub',
         'features/abstract',
         'features/field',
         'features/form',
         'features/ui',
         'features/utils'
-      ], function (parsleyBase, options, abstract, field, form, ui, utils) {
+      ], function (parsleyBase, options, pubsub, abstract, field, form, ui, utils) {
         describe('Unit Tests', function () {
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
+          pubsub();
           abstract(Parsley);
           field(ParsleyField, Parsley);
           form(ParsleyForm, Parsley);

@@ -8,10 +8,10 @@ define('parsley/ui', [
 
   ParsleyUI.prototype = {
     listen: function () {
-      $.subscribe('parsley:field:init', this, this.setup);
-      $.subscribe('parsley:field:validated', this, this.reflow);
-      $.subscribe('parsley:field:reset', this, this.reset);
-      $.subscribe('parsley:field:destroy', this, this.destroy);
+      $.listen('parsley:field:init', this, this.setup);
+      $.listen('parsley:field:validated', this, this.reflow);
+      $.listen('parsley:field:reset', this, this.reset);
+      $.listen('parsley:field:destroy', this, this.destroy);
 
       return this;
     },

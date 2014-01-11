@@ -22,19 +22,19 @@ define('parsley/field', [
       this.options = this.parsleyInstance.OptionsFactory.get(this);
       this.Validator = this.parsleyInstance.Validator;
 
-      $.publish('parsley:field:init', this);
+      $.emit('parsley:field:init', this);
       this.bind();
     },
 
     validate: function () {
-      $.publish('parsley:field:validate', this);
+      $.emit('parsley:field:validate', this);
 
       if (this.isValid())
-        $.publish('parsley:field:success', this);
+        $.emit('parsley:field:success', this);
       else
-        $.publish('parsley:field:error', this);
+        $.emit('parsley:field:error', this);
 
-      $.publish('parsley:field:validated', this);
+      $.emit('parsley:field:validated', this);
 
       return this;
     },
@@ -192,11 +192,11 @@ define('parsley/field', [
     },
 
     reset: function () {
-      $.publish('parsley:field:reset', this);
+      $.emit('parsley:field:reset', this);
     },
 
     destroy: function () {
-      $.publish('parsley:field:destroy', this);
+      $.emit('parsley:field:destroy', this);
     },
   };
 

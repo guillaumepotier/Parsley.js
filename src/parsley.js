@@ -82,7 +82,7 @@ define([
   };
 
   /* jQuery plugin API */
-  $.fn.parsley = function (options) {
+  $.fn.parsley = $.fn.psly = function (options) {
     return new Parsley(this, options);
   };
 

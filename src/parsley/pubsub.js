@@ -7,52 +7,63 @@ define('parsley/pubsub', [
     var o = $({})
       subscribed = {};
 
-    // $.subscribe(name, callback, /* parsleyInstance */);
-    // $.subscribe(name, context, callback, /* parsleyInstance */);
-    $.subscribe = function (name) {
+    // $.listen(name, callback);
+    // $.listen(name, context, callback);
+    $.listen = function (name) {
       if ('undefined' === typeof subscribed[name])
         subscribed[name] = [];
 
-      var sub;
+      if ('string' !== typeof name)
+        throw new Error('Event name must be a string');
+
+      if ('function' === typeof arguments[1])
+        return subscribed[name].push({ fn: arguments[1] });
 
       if ('object' === typeof arguments[1] && 'function' === typeof arguments[2])
-        sub = { 'context': arguments[1], 'callback': arguments[2], 'instance': arguments[3] };
-      else if ('function' === typeof arguments[1])
-        sub = { 'context': undefined, 'callback': arguments[1], 'instance': arguments[2] };
-      else
-        throw new Error('Wrong arguments');
+        return subscribed[name].push({ fn: arguments[2], ctxt: arguments[1] });
 
-      if (sub.instance && !(sub.instance instanceof ParsleyField) && !(sub.instance instanceof ParsleyForm))
-        throw new Error('Instance should be a Parsley Instance');
-
-      subscribed[name].push(sub);
+      throw new Error('Wrong parameters');
     };
 
-    $.unsubscribe = function (name) {
+    // $.listenTo(instance, name, callback);
+    $.listenTo = function (instance, name, fn) {
+      if ('undefined' === typeof subscribed[name])
+        subscribed[name] = [];
+
+      if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
+        throw new Error('Must give Parsley instance');
+
+      if ('string' !== typeof name || 'function' !== typeof fn)
+        throw new Error('Wrong parameters');
+
+      subscribed[name].push({ instance: instance, fn: fn });
+    };
+
+    $.unsubscribe = function (name, fn) {
       var context, callback;
 
       if ('undefined' === typeof subscribed[name])
         return;
 
-      if ('object' === typeof arguments[1] && 'function' === typeof arguments[2]) {
-        context = arguments[1];
-        callback = arguments[2];
-        instance = arguments[3];
-      } else if ('function' === typeof arguments[1]) {
-        callback = arguments[1];
-        instance = arguments[2];
-      } else {
+      if ('string' !== typeof name || 'function' !== typeof fn)
         throw new Error('Wrong arguments');
-      }
 
-      for (var i = 0; i < subscribed[name].length; i++) {
-        if (subscribed[name][i].context === context && subscribed[name][i].callback === callback) {
-          if ('undefined' !== typeof instance && 'undefined' !== typeof subscribed[name][i].instance && instance.__id__ !== subscribed[name][i].instance.__id__)
-            continue;
+      for (var i = 0; i < subscribed[name].length; i++)
+        if (subscribed[name][i].fn === fn)
+          return subscribed[name].splice(i, 1);
+    };
 
-          subscribed[name].splice(i, 1);
-        }
-      }
+    $.unsubscribeTo = function (instance, name) {
+      if ('undefined' === typeof subscribed[name])
+        return;
+
+      if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
+        throw new Error('Must give Parsley instance');
+
+      for (var i = 0; i < subscribed[name].length; i++)
+        if ('undefined' !== typeof subscribed[name][i].instance && subscribed[name][i].instance.__id__ === instance.__id__)
+          return subscribed[name].splice(i, 1);
+
     };
 
     $.unsubscribeAll = function (name) {
@@ -62,25 +73,37 @@ define('parsley/pubsub', [
       delete(subscribed[name]);
     };
 
-    $.publish = function (name) {
+    // $.emit(name [, arguments...]);
+    // $.emit(name, instance [, arguments..]);
+    $.emit = function (name, instance) {
       if ('undefined' === typeof subscribed[name])
         return;
 
-      var instance = arguments[1] instanceof ParsleyField || arguments[1] instanceof ParsleyForm ? arguments[1] : false;
-
+      // loop through registered callbacks for this event
       for (var i = 0; i < subscribed[name].length; i++) {
-        if (instance && 'undefined' !== typeof subscribed[name][i].instance) {
-          // if a ParsleyForm is subscribed, him and his fields share same parsleyInstance.
-          if (subscribed[name][i] instanceof ParsleyForm && subscribed[name][i].instance.parsleyInstance.__id__ !== instance.parsleyInstance.__id__)
-            continue;
-
-          // if a ParsleyField is suscribed
-          if (subscribed[name][i] instanceof ParsleyField && instance instanceof ParsleyField && subscribed[name][i].instance.__id__ !== instance.__id__)
-            continue;
+        // if instance is not registered, simple emit
+        if ('undefined' === typeof subscribed[name][i].instance) {
+          subscribed[name][i].fn.apply('undefined' !== typeof subscribed[name][i].ctxt ? subscribed[name][i].ctxt : o, Array.prototype.slice.call(arguments, 1));
+          continue;
         }
 
-        subscribed[name][i]['callback'].apply('undefined' !== typeof subscribed[name][i]['context'] ? subscribed[name][i]['context'] : o, Array.prototype.slice.call(arguments, 1));
+        // if instance registered but no instance given for the emit, continue
+        if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
+          continue;
+
+        // if instance is registered and same id, emit
+        if (subscribed[name][i].instance.__id__ === instance.__id__) {
+          subscribed[name][i].fn.apply(o, Array.prototype.slice.call(arguments, 1));
+          continue;
+        }
+
+        // if registered instance is a Form, loop over all its fields and emit for all
+        if (subscribed[name][i].instance instanceof ParsleyForm)
+          for (var j = 0; j < subscribed[name][i].instance.fields.length; j++)
+            subscribed[name][i].fn.apply(o, Array.prototype.slice.call(arguments, 1));
       }
     };
+
+    $.subscribed = function () { return subscribed; };
   }(jQuery));
 });
