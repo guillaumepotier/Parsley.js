@@ -17,6 +17,10 @@ define('parsley/ui', [
     },
 
     reflow: function (fieldInstance) {
+      // if this field has not an active UI (case for multiples) don't bother doing something
+      if (false === fieldInstance._ui.active)
+        return;
+
       // diff between two validation results
       var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
 
@@ -40,8 +44,6 @@ define('parsley/ui', [
 
       for (var i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name).html('updated!');
-
-      return this;
     },
 
     diff: function (newResult, oldResult, deep) {
@@ -71,25 +73,35 @@ define('parsley/ui', [
     },
 
     setup: function (fieldInstance) {
-      var _ui = {};
+      var _ui = { active: false };
 
-      // give field Parsley id in DOM
+      // give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
 
-      // generate important UI elements and register them in fieldInstance
+      /** generate important UI elements and store them in fieldInstance **/
+      // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes
       _ui.$errorClassHandler = fieldInstance.options.ui.classHandler(fieldInstance) || fieldInstance.$element;
+      // $errorsContainer is the $element where errorsWrapper and errors would be appended
       _ui.$errorsContainer = $(fieldInstance.options.errorsContainer) || fieldInstance.options.ui.errorsContainer(fieldInstance);
-      _ui.$errorsWrapper = $(fieldInstance.options.ui.errorsWrapper).attr('id', 'parsley-id-' + fieldInstance.__id__);
+      // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
+      _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
+      _ui.$errorsWrapper = $(fieldInstance.options.ui.errorsWrapper).attr('id', _ui.errorsWrapperId);
+      // validationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
       _ui.lastValidationResult = [];
 
-      // insert in DOM errors wrapper in the right container
-      if ('undefined' !== typeof _ui.errorsContainer)
-        $(fieldInstance._ui.errorsContainer.append(fieldInstance._ui.errorsWrapper));
-      else
-        if (fieldInstance.$element.is('input[type=radio], input[type=checkbox]'))
-          fieldInstance.$element.parent().after(_ui.$errorsWrapper);
+      /** Mess with DOM now **/
+      // if do not exist already, insert DOM errors wrapper in the rightful container
+      if (0 === $('#' + _ui.errorsWrapperId).length) {
+        _ui.active = true;
+
+        if ('undefined' !== typeof _ui.$errorsContainer[0])
+          _ui.$errorsContainer.append(_ui.$errorsWrapper);
         else
-          fieldInstance.$element.after(_ui.$errorsWrapper);
+          if (fieldInstance.options.multiple)
+            fieldInstance.$element.parent().after(_ui.$errorsWrapper);
+          else
+            fieldInstance.$element.after(_ui.$errorsWrapper);
+      }
 
       // store it in fieldInstance for later
       fieldInstance._ui = _ui;

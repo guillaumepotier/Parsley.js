@@ -24,6 +24,10 @@ define('parsley/utils', function () {
       return 'undefined' === typeof checkAttr ? obj : false;
     },
 
+    setAttr: function ($element, namespace, attr, value) {
+      $element[0].setAttribute(this.dasherize(namespace + attr), new String(value));
+    },
+
     // Recursive object / array getter
     get: function (obj, path, placeholder) {
       var i = 0,

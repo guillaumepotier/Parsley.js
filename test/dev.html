@@ -18,6 +18,21 @@
     <form id="form" data-parsley-validate >
         Email: <input id="email" type="email" required />
         Number: <input id="fullname" type="text" data-parsley-type="number" />
+
+        Radio:
+        <span>
+            <input type="radio" name="radio" id="radio1" value="yes" required />
+            <input type="radio" name="radio" id="radio2" value="no" />
+        </span>
+
+        Checkboxes:
+        <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" data-parsley-errors-container="#checkoxErrors" required />
+        <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
+        <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" />
+
+        <span id="checkoxErrors">
+        </span>
+
         <input type="submit" />
     </form>
 

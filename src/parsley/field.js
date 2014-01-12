@@ -22,8 +22,15 @@ define('parsley/field', [
       this.options = this.parsleyInstance.OptionsFactory.get(this);
       this.Validator = this.parsleyInstance.Validator;
 
+      // select/checkbox multiple inputs hack
+      if (this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) {
+        this.options.multiple = this.$element.attr('name').replace(/(:|\.|\[|\]|\$)/g, '');
+        ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
+      }
+
       $.emit('parsley:field:init', this);
-      this.bind();
+
+      this.bindConstraints();
     },
 
     validate: function () {
@@ -48,19 +55,21 @@ define('parsley/field', [
 
     // TODO add group validation
     isValid: function () {
+      // sort priorities to validate more important first
       var priorities = this.getConstraintsSortedPriorities();
 
       // recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
 
-      // if a field is empty and not required, it is valid, do not bother to validate something
-      if ('' === this.getVal())
-        if (-1 === this.indexOfConstraint('required') ||
-            (-1 !== this.indexOfConstraint('required') && false === this.constraints[this.indexOfConstraint('required')].requirements)) {
-          return this.validationResult = [];
-        }
+      // if a field is empty and not required, leave it alone, it's just fine
+      if ('' === this.getVal()) {
+        var indexOfRequired = this.indexOfConstraint('required');
 
-      // if we want to validate field against all constraints, just call Validator
+        if (-1 === indexOfRequired || (-1 !== indexOfRequired && false === this.constraints[indexOfRequired].requirements))
+          return this.validationResult = [];
+      }
+
+      // if we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.stopOnFirstFailingConstraint)
         return true === (this.validationResult = this.Validator.validate(this.getVal(), this.constraints, 'Any'));
 
@@ -73,17 +82,26 @@ define('parsley/field', [
     },
 
     getVal: function () {
-      // todo: group (radio, checkboxes..)
+      // value could be overriden in DOM
       if ('undefined' !== typeof this.options.value)
         return this.options.value;
 
+      // radio input case
+      if (this.$element.is('input[type=radio]'))
+        return $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').val() || '';
+
+      // checkbox input case
+      if (this.$element.is('input[type=checkbox]')) {
+        var values = [];
+
+        $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').each(function () {
+          values.push($(this).val());
+        });
+
+        return values.length ? values : '';
+      }
+
       return this.$element.val();
-    },
-
-    bind: function () {
-      this.bindConstraints();
-
-      return this;
     },
 
     refreshConstraints: function () {
