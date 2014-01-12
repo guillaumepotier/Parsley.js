@@ -12,8 +12,6 @@ define('parsley/ui', [
       $.listen('parsley:field:validated', this, this.reflow);
       $.listen('parsley:field:reset', this, this.reset);
       $.listen('parsley:field:destroy', this, this.destroy);
-
-      return this;
     },
 
     reflow: function (fieldInstance) {
@@ -44,6 +42,12 @@ define('parsley/ui', [
 
       for (var i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name).html('updated!');
+
+      // triggers impl
+      this.actualizeTriggers(fieldInstance);
+
+      if (diff.kept.length || diff.added.length)
+        this.manageFailingFieldTrigger(fieldInstance);
     },
 
     diff: function (newResult, oldResult, deep) {
@@ -106,7 +110,35 @@ define('parsley/ui', [
       // store it in fieldInstance for later
       fieldInstance._ui = _ui;
 
-      return this;
+      // bind triggers first time
+      this.actualizeTriggers(fieldInstance);
+    },
+
+    actualizeTriggers: function (fieldInstance) {
+      // remove Parsley events already binded on this field
+      fieldInstance.$element.off('.Parsley');
+
+      // if no trigger is set, all good
+      if (false === fieldInstance.options.trigger)
+        return;
+
+      var triggers = fieldInstance.options.trigger.replace(/^\s+/g , '').replace(/\s+$/g , '');
+
+      if ('' === triggers)
+        return;
+
+      fieldInstance.$element.on(triggers.split(' ').join('.Parsley ') + '.Parsley', false, $.proxy(fieldInstance.validate, fieldInstance));
+    },
+
+    manageFailingFieldTrigger: function (fieldInstance) {
+      // radio and checkboxes fields
+      if (fieldInstance.$element.is('input[type=radio], input[type=checkbox]'))
+        if (!new RegExp('change', 'i').test(fieldInstance.options.trigger || ''))
+          return fieldInstance.$element.on('change.Parsley', false, $.proxy(fieldInstance.validate, fieldInstance));
+
+      // all other inputs fields
+      if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
+        return fieldInstance.$element.on('keyup.Parsley', false, $.proxy(fieldInstance.validate, fieldInstance));
     },
 
     reset: function (fieldInstance) {
