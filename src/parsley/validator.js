@@ -1,17 +1,17 @@
 define('parsley/validator', [
   'validator'
 ], function (Validator) {
-  var ParsleyValidator = function (options) {
+  var ParsleyValidator = function (validators) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
 
-    this.init(options || {});
+    this.init(validators || {});
   };
 
   ParsleyValidator.prototype = {
-    init: function (options) {
-      for (var name in options.validators)
-        this.addValidator(name, options.validators[name].fn, options.validators[name].priority);
+    init: function (validators) {
+      for (var name in validators)
+        this.addValidator(name, validators[name].fn, validators[name].priority);
     },
 
     validate: function () {

@@ -3,7 +3,6 @@ define('parsley/ui', [
 ], function (ParsleyUtils) {
   var ParsleyUI = function (options) {
     this.__class__ = 'ParsleyUI';
-
   };
 
   ParsleyUI.prototype = {

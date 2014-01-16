@@ -39,8 +39,6 @@ define([
       this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
       var options = this.OptionsFactory.staticOptions;
 
-      this.Validator = new ParsleyValidator(options);
-
       // a ParsleyForm instance is obviously a <form> elem but also every node that is not an input and have data-parsley-validate attribute
       if (this.$element.is('form') || ('undefined' !== typeof options.validate && !this.$element.is(options.inputs)))
         return this.bind('parsleyForm', parsleyInstance);
@@ -94,7 +92,7 @@ define([
   // define now some super globals for window
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
-  window.ParsleyValidator = new ParsleyValidator().Validator;
+  window.ParsleyValidator = new ParsleyValidator(ParsleyUtils.get(window.ParsleyConfig, 'validators'));
 
   /* PARSLEY auto-binding. Prevent it by setting ParsleyConfig.autoBind to `false`
   * =================================================== */

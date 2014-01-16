@@ -9,13 +9,13 @@ define('parsley/abstract', function () {
     },
 
     registerValidator: function (name, fn, priority) {
-      this.parsleyInstance.Validator.addValidator(name, fn, priority);
+      window.ParsleyValidator.addValidator(name, fn, priority);
 
       return this;
     },
 
     removeValidator: function (name) {
-      this.parsleyInstance.Validator.removeValidator(name);
+      window.ParsleyValidator.removeValidator(name);
 
       return this;
     },

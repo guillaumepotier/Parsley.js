@@ -20,7 +20,6 @@ define('parsley/field', [
       this.$element = $element;
       this.validationResult = [];
       this.options = this.parsleyInstance.OptionsFactory.get(this);
-      this.Validator = this.parsleyInstance.Validator;
 
       // select/checkbox multiple inputs hack
       if (this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) {
@@ -71,11 +70,11 @@ define('parsley/field', [
 
       // if we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.stopOnFirstFailingConstraint)
-        return true === (this.validationResult = this.Validator.validate(this.getVal(), this.constraints, 'Any'));
+        return true === (this.validationResult = window.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
 
       // else, iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++)
-        if (true !== (this.validationResult = this.Validator.validate(this.getVal(), this.constraints, priorities[i])))
+        if (true !== (this.validationResult = window.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i])))
           return false;
 
       return true;
@@ -168,7 +167,7 @@ define('parsley/field', [
     addConstraint: function (name, requirements, priority, isDomConstraint) {
       name = name.toLowerCase();
 
-      if ('function' === typeof this.Validator.validators[name]) {
+      if ('function' === typeof window.ParsleyValidator.validators[name]) {
         constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
