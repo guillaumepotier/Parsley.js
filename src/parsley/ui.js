@@ -131,21 +131,24 @@ define('parsley/ui', [
 
     manageFailingFieldTrigger: function (fieldInstance) {
       // radio and checkboxes fields
-      if (fieldInstance.$element.is('input[type=radio], input[type=checkbox]'))
-        if (!new RegExp('change', 'i').test(fieldInstance.options.trigger || ''))
-          return fieldInstance.$element.on('change.Parsley', false, $.proxy(fieldInstance.validate, fieldInstance));
+      if (fieldInstance.options.multiple)
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
+          if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
+            return $(this).parsley().$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
+        });
 
       // all other inputs fields
       if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
-        return fieldInstance.$element.on('keyup.Parsley', false, $.proxy(fieldInstance.validate, fieldInstance));
+        return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
     },
 
     reset: function (fieldInstance) {
-
+      fieldInstance.$element.off('.Parsley');
+      fieldInstance.$element.off('.ParsleyFailedOnce');
     },
 
     destroy: function (fieldInstance) {
-
+      this.reset();
     }
   };
 
