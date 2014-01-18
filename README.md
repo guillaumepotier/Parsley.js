@@ -34,6 +34,13 @@ See `CONTRIBUTING.md` file
 grunt build
 ```
 
+## Generate annotated documentation
+
+```
+sudo npm install -g docco
+grunt build-annotated-source
+```
+
 ## Run tests
 
 In the browser: open `test/index.html`

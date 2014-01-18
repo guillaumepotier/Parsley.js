@@ -7,12 +7,24 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
 
+  grunt.loadNpmTasks('grunt-docco');
+
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
     clean: {
       dist: ['./dist']
+    },
+
+    docco: {
+      source: {
+        src: ['src/parsley.js', 'src/parsley/*.js'],
+        options: {
+          output: 'doc/annotated-source/',
+          layout: 'parallel'
+        }
+      }
     },
 
     replace: {
@@ -94,4 +106,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['clean:dist', 'bower:install']);
   grunt.registerTask('build', ['configure', 'requirejs', 'replace', 'uglify:min']);
+
+  grunt.registerTask('build-annotated-source', 'docco:source');
+
 };

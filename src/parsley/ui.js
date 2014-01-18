@@ -14,35 +14,35 @@ define('parsley/ui', [
     },
 
     reflow: function (fieldInstance) {
-      // if this field has not an active UI (case for multiples) don't bother doing something
+      // If this field has not an active UI (case for multiples) don't bother doing something
       if (false === fieldInstance._ui.active)
         return;
 
-      // diff between two validation results
+      // Diff between two validation results
       var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
 
-      // then store current validation result for next reflow
+      // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
 
-      // handle valid / invalid field class
+      // Handle valid / invalid field class
       if (true === fieldInstance.validationResult)
-        fieldInstance.$element.removeClass(fieldInstance.options.ui.errorClass).addClass(fieldInstance.options.ui.successClass);
+        fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
       else if (fieldInstance.validationResult.length > 0)
-        fieldInstance.$element.removeClass(fieldInstance.options.ui.successClass).addClass(fieldInstance.options.ui.errorClass);
+        fieldInstance.$element.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
       else
-        fieldInstance.$element.removeClass(fieldInstance.options.ui.successClass).removeClass(fieldInstance.options.ui.errorClass);
+        fieldInstance.$element.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
 
       // TODO better impl
       for (var i = 0; i < diff.removed.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
 
       for (var i = 0; i < diff.added.length; i++)
-        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.ui.errorTemplate).addClass('parsley-' + diff.added[i].assert.name).html(diff.added[i].assert.name));
+        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate).addClass('parsley-' + diff.added[i].assert.name).html(diff.added[i].assert.name));
 
       for (var i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name).html('updated!');
 
-      // triggers impl
+      // Triggers impl
       this.actualizeTriggers(fieldInstance);
 
       if (diff.kept.length || diff.added.length)
@@ -78,26 +78,34 @@ define('parsley/ui', [
     setup: function (fieldInstance) {
       var _ui = { active: false };
 
-      // give field its Parsley id in DOM
+      // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
 
-      /** generate important UI elements and store them in fieldInstance **/
+      /** Generate important UI elements and store them in fieldInstance **/
       // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes
-      _ui.$errorClassHandler = fieldInstance.options.ui.classHandler(fieldInstance) || fieldInstance.$element;
+      _ui.$errorClassHandler = fieldInstance.options.classHandler(fieldInstance) || fieldInstance.$element;
+
       // $errorsContainer is the $element where errorsWrapper and errors would be appended
-      _ui.$errorsContainer = $(fieldInstance.options.errorsContainer) || fieldInstance.options.ui.errorsContainer(fieldInstance);
+      // `data-parsley-errors-container="#element"`
+      if ('string' === typeof fieldInstance.options.errorsContainer)
+        _ui.$errorsContainer = $(fieldInstance.options.errorsContainer)
+
+      // Advanced configuration by a user cutom function that could be passed in options
+      if ('function' === typeof fieldInstance.options.errorsContainer)
+        _ui.$errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
+
       // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
       _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
-      _ui.$errorsWrapper = $(fieldInstance.options.ui.errorsWrapper).attr('id', _ui.errorsWrapperId);
+      _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
       // validationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
       _ui.lastValidationResult = [];
 
       /** Mess with DOM now **/
-      // if do not exist already, insert DOM errors wrapper in the rightful container
+      // If do not exist already, insert DOM errors wrapper in the rightful container
       if (0 === $('#' + _ui.errorsWrapperId).length) {
         _ui.active = true;
 
-        if ('undefined' !== typeof _ui.$errorsContainer[0])
+        if ('undefined' !== typeof _ui.$errorsContainer && 'undefined' !== typeof _ui.$errorsContainer[0])
           _ui.$errorsContainer.append(_ui.$errorsWrapper);
         else
           if (fieldInstance.options.multiple)
@@ -106,18 +114,18 @@ define('parsley/ui', [
             fieldInstance.$element.after(_ui.$errorsWrapper);
       }
 
-      // store it in fieldInstance for later
+      // Store it in fieldInstance for later
       fieldInstance._ui = _ui;
 
-      // bind triggers first time
+      // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
     },
 
     actualizeTriggers: function (fieldInstance) {
-      // remove Parsley events already binded on this field
+      // Remove Parsley events already binded on this field
       fieldInstance.$element.off('.Parsley');
 
-      // if no trigger is set, all good
+      // If no trigger is set, all good
       if (false === fieldInstance.options.trigger)
         return;
 
@@ -130,14 +138,14 @@ define('parsley/ui', [
     },
 
     manageFailingFieldTrigger: function (fieldInstance) {
-      // radio and checkboxes fields
+      // Radio and checkboxes fields
       if (fieldInstance.options.multiple)
         $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
           if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
             return $(this).parsley().$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
         });
 
-      // all other inputs fields
+      // All other inputs fields
       if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
         return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
     },
