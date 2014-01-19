@@ -16,10 +16,11 @@
     "validator.js": "~0.5.1",
     "almond": "~0.2.7",
     "requirejs": "~2.1.0",
-    "requirejs-domready": "~2.0.0"
+    "requirejs-domready": "~2.0.0",
+    "bootstrap": "~3.0.3"
   },
   "devDependencies": {
-     "sinonjs": "~1.7.3"
+    "sinonjs": "~1.7.3"
   },
   "keywords": [
     "parsley",
