@@ -69,7 +69,7 @@ define('parsley/field', [
       }
 
       // if we want to validate field against all constraints, just call Validator and let it do the job
-      if (false === this.options.stopOnFirstFailingConstraint)
+      if (false === this.options.priorityEnabled)
         return true === (this.validationResult = window.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
 
       // else, iterate over priorities one by one, and validate related asserts one by one

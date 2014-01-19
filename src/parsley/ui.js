@@ -37,16 +37,23 @@ define('parsley/ui', [
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
 
       for (var i = 0; i < diff.added.length; i++)
-        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate).addClass('parsley-' + diff.added[i].assert.name).html(diff.added[i].assert.name));
+        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+          .addClass('parsley-' + diff.added[i].assert.name)
+          .html(this.getErrorMessage(diff.added[i].assert)));
 
       for (var i = 0; i < diff.kept.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name).html('updated!');
+        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
+          .html(this.getErrorMessage(diff.kept[i].assert));
 
       // Triggers impl
       this.actualizeTriggers(fieldInstance);
 
       if (diff.kept.length || diff.added.length)
         this.manageFailingFieldTrigger(fieldInstance);
+    },
+
+    getErrorMessage: function (constraint) {
+      return window.ParsleyValidator.getErrorMessage(constraint);
     },
 
     diff: function (newResult, oldResult, deep) {

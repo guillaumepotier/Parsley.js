@@ -4,6 +4,7 @@ requirejs.config({
     paths: {
       src: './src',
       dist: './dist',
+      i18n: './src/i18n',
       parsley: './src/parsley',
       features: './test/features',
       vendors: './bower_components',

@@ -48,7 +48,7 @@ define(function () {
         expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-parsley-');
 
         // global JS config
-        window.ParsleyConfig = {namespace: 'data-foo-'};
+        window.ParsleyConfig.namespace = 'data-foo-';
         expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-foo-');
 
         // option on the go
@@ -65,7 +65,7 @@ define(function () {
       });
       it('should handle proper options management', function () {
         $('body').append('<form id="element" data-parsley-foo="bar" data-parsley-baz="baz"></form>');
-        window.ParsleyConfig = {bar: "baz", baz:"qux"};
+        window.ParsleyConfig = $.extend(window.ParsleyConfig, {bar: "baz", baz:"qux"});
         var parsleyInstance = new Parsley($('#element'), { qux: "bux" });
         expect(parsleyInstance.options.foo).to.be('bar');
         expect(parsleyInstance.options.baz).to.be('baz');
@@ -80,7 +80,8 @@ define(function () {
         expect(parsleyInstance.options.foo).to.be('bar');
       });
       afterEach(function () {
-        window.ParsleyConfig = {};
+        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n };
+
         if ($('#element').length)
           $('#element').remove();
       });

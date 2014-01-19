@@ -5,6 +5,9 @@ define('parsley/validator', [
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
 
+    // Default Parsley locale is en
+    this.locale = 'en';
+
     this.init(validators || {});
   };
 
@@ -36,6 +39,43 @@ define('parsley/validator', [
       return this;
     },
 
+    // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
+    setLocale: function (locale) {
+      if ('undefined' === typeof window.ParsleyConfig.i18n[locale])
+        throw new Error(locale + ' is not available in i18n dictionary');
+
+      this.locale = locale;
+
+      return this;
+    },
+
+    getErrorMessage: function (constraint) {
+      var message;
+
+      // Type constraints are a bit different, we have to match their requirements too to find right error message
+      if ('type' === constraint.name)
+        message = window.ParsleyConfig.i18n[this.locale].messages[constraint.name][constraint.requirements];
+      else
+        message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale].messages[constraint.name], constraint.requirements);
+
+      return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].messages.defaultMessage;
+    },
+
+    // Kind of `sprintf()` light implementation
+    formatMesssage: function (string, parameters) {
+      if ('object' === typeof parameters) {
+        for (var i in parameters)
+          string = this.formatMesssage(string, parameters[i]);
+
+        return string;
+      }
+
+      return 'string' === typeof string ? string.replace(new RegExp('%s', 'i'), parameters) : '';
+    },
+
+    // Here is the Parsley default validators list.
+    // This is basically Validatorjs validators, with different API for some of them
+    // and a Parsley priority set
     validators: {
       notnull: function () {
         return $.extend(new Validator.Assert().NotNull(), { priority: 2 });
@@ -81,7 +121,16 @@ define('parsley/validator', [
       },
       pattern: function (regexp) {
         return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
-      }
+      },
+      length: function (array) {
+        return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
+      },
+      minlength: function (length) {
+        return $.extend(new Validator.Assert().Length({ min: length }), { priority: 32 });
+      },
+      maxlength: function (length) {
+        return $.extend(new Validator.Assert().Length({ max: length }), { priority: 32 });
+      },
     }
   };
 

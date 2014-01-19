@@ -24,12 +24,11 @@ define([
   'parsley/form',
   // `ParsleyField` Class. Handle field validation
   'parsley/field',
-  // DomReady. Needed to auto-bind inputs with `data-parsley-validated` directive in DOM
-  'vendors/requirejs-domready/domReady',
   // Tiny Parsley Pub / Sub mechanism, used for `ParsleyUI` and Listeners
   'parsley/pubsub',
-], function (ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField, domReady) {
-
+  // Default en constraints messages
+  'i18n/en'
+], function (ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField) {
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
@@ -119,11 +118,13 @@ define([
   window.ParsleyUtils = ParsleyUtils;
   window.ParsleyValidator = new ParsleyValidator(ParsleyUtils.get(window.ParsleyConfig, 'validators'));
 
+  // Notify document when all globals have been defined
+  $(document).trigger('parsley:loaded', true);
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
-    domReady(function () {
+    $(document).ready(function () {
       // Works only on `parsley-validate` and `data-parsley-validate`. We dunno here user specific namespace
       $('[parsley-validate], [data-parsley-validate]').each(function () {
         new Parsley(this);

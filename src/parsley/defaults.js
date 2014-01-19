@@ -17,7 +17,7 @@ define('parsley/defaults', function () {
     excluded: 'input[type=button], input[type=submit], input[type=reset]',
 
     // Stop validating field on highest priority failing constraint
-    stopOnFirstFailingConstraint: true,
+    priorityEnabled: true,
 
     // ### UI
     // Focused field on form validation error. 'fist'|'last'|'none'

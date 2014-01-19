@@ -16,8 +16,9 @@ require(['../src/config'], function () {
       'parsley/form',
       'parsley/field',
       'parsley/ui',
-      'parsley/utils'
-    ], function (Parsley, ParsleyOptionsFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils) {
+      'parsley/utils',
+      'parsley/validator'
+    ], function (Parsley, ParsleyOptionsFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
 
       // load full parsley.js + UT
       require([
@@ -27,9 +28,10 @@ require(['../src/config'], function () {
         'features/abstract',
         'features/field',
         'features/form',
+        'features/validator',
         'features/ui',
         'features/utils'
-      ], function (parsleyBase, options, pubsub, abstract, field, form, ui, utils) {
+      ], function (parsleyBase, options, pubsub, abstract, field, form, validator, ui, utils) {
         describe('Unit Tests', function () {
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
@@ -37,6 +39,7 @@ require(['../src/config'], function () {
           abstract(Parsley);
           field(ParsleyField, Parsley);
           form(ParsleyForm, Parsley);
+          validator(ParsleyValidator);
           ui(ParsleyUI);
           utils(ParsleyUtils);
         });
