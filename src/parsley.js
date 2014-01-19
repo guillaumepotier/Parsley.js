@@ -56,7 +56,7 @@ define([
       var options = this.OptionsFactory.staticOptions;
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
-      if (this.$element.is('form') || ('undefined' !== typeof options.validate && !this.$element.is(options.inputs)))
+      if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs)))
         return this.bind('parsleyForm', parsleyInstance);
 
       // Else every other element that is supported and not excluded is binded as a `ParsleyField`

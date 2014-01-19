@@ -17,6 +17,18 @@ define(function () {
         parsleyForm = new Parsley($('#element'));
         expect(parsleyForm.fields.length).to.be(2);
       });
+      it('should bind parsleyFields children, and not excluded ones', function () {
+        $('body').append(
+          '<form id="element">'                 +
+            '<input id="field1" type="text"/>'  +
+            '<div id="field2"></div>'           +
+            '<textarea id="field2"></textarea>' +
+            '<div data-parsley-validate></div>' + // ParsleyForm, not a valid child
+            '<input type="submit"/>'            + // Excluded field, not valid
+          '</form>');
+        parsleyForm = new Parsley($('#element'));
+        expect(parsleyForm.fields.length).to.be(2);
+      });
       it('should properly bind options for form and children fields', function () {
         $('body').append(
           '<form id="element" data-parsley-trigger="change">'                 +
@@ -32,7 +44,6 @@ define(function () {
         expect(new Parsley('#field3').options).to.have.key('notblank');
         expect(new Parsley('#field3').options).to.not.have.key('required');
       });
-      it('should test onFormValidate() listener');
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();
