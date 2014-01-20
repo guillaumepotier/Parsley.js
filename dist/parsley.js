@@ -1,419 +1,17 @@
-(function () {
-/**
- * almond 0.2.7 Copyright (c) 2011-2012, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/almond for details
- */
-//Going sloppy to avoid 'use strict' string cost, but strict practices should
-//be followed.
-/*jslint sloppy: true */
-/*global setTimeout: false */
+/*!
+* parsley
+* Guillaume Potier - <guillaume@wisembly.com>
+* Version 2.0.0-pre - built Mon Jan 20 2014 10:02:32
+* MIT Licensed
+*
+*/
 
-var requirejs, require, define;
-(function (undef) {
-    var main, req, makeMap, handlers,
-        defined = {},
-        waiting = {},
-        config = {},
-        defining = {},
-        hasOwn = Object.prototype.hasOwnProperty,
-        aps = [].slice;
+(function ($) {
 
-    function hasProp(obj, prop) {
-        return hasOwn.call(obj, prop);
-    }
+  // Neutralize potential useless remaining defines
+  define = function (name, fn) {};
 
-    /**
-     * Given a relative module name, like ./something, normalize it to
-     * a real name that can be mapped to a path.
-     * @param {String} name the relative name
-     * @param {String} baseName a real name that the name arg is relative
-     * to.
-     * @returns {String} normalized name
-     */
-    function normalize(name, baseName) {
-        var nameParts, nameSegment, mapValue, foundMap,
-            foundI, foundStarMap, starI, i, j, part,
-            baseParts = baseName && baseName.split("/"),
-            map = config.map,
-            starMap = (map && map['*']) || {};
-
-        //Adjust any relative paths.
-        if (name && name.charAt(0) === ".") {
-            //If have a base name, try to normalize against it,
-            //otherwise, assume it is a top-level require that will
-            //be relative to baseUrl in the end.
-            if (baseName) {
-                //Convert baseName to array, and lop off the last part,
-                //so that . matches that "directory" and not name of the baseName's
-                //module. For instance, baseName of "one/two/three", maps to
-                //"one/two/three.js", but we want the directory, "one/two" for
-                //this normalization.
-                baseParts = baseParts.slice(0, baseParts.length - 1);
-
-                name = baseParts.concat(name.split("/"));
-
-                //start trimDots
-                for (i = 0; i < name.length; i += 1) {
-                    part = name[i];
-                    if (part === ".") {
-                        name.splice(i, 1);
-                        i -= 1;
-                    } else if (part === "..") {
-                        if (i === 1 && (name[2] === '..' || name[0] === '..')) {
-                            //End of the line. Keep at least one non-dot
-                            //path segment at the front so it can be mapped
-                            //correctly to disk. Otherwise, there is likely
-                            //no path mapping for a path starting with '..'.
-                            //This can still fail, but catches the most reasonable
-                            //uses of ..
-                            break;
-                        } else if (i > 0) {
-                            name.splice(i - 1, 2);
-                            i -= 2;
-                        }
-                    }
-                }
-                //end trimDots
-
-                name = name.join("/");
-            } else if (name.indexOf('./') === 0) {
-                // No baseName, so this is ID is resolved relative
-                // to baseUrl, pull off the leading dot.
-                name = name.substring(2);
-            }
-        }
-
-        //Apply map config if available.
-        if ((baseParts || starMap) && map) {
-            nameParts = name.split('/');
-
-            for (i = nameParts.length; i > 0; i -= 1) {
-                nameSegment = nameParts.slice(0, i).join("/");
-
-                if (baseParts) {
-                    //Find the longest baseName segment match in the config.
-                    //So, do joins on the biggest to smallest lengths of baseParts.
-                    for (j = baseParts.length; j > 0; j -= 1) {
-                        mapValue = map[baseParts.slice(0, j).join('/')];
-
-                        //baseName segment has  config, find if it has one for
-                        //this name.
-                        if (mapValue) {
-                            mapValue = mapValue[nameSegment];
-                            if (mapValue) {
-                                //Match, update name to the new value.
-                                foundMap = mapValue;
-                                foundI = i;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (foundMap) {
-                    break;
-                }
-
-                //Check for a star map match, but just hold on to it,
-                //if there is a shorter segment match later in a matching
-                //config, then favor over this star map.
-                if (!foundStarMap && starMap && starMap[nameSegment]) {
-                    foundStarMap = starMap[nameSegment];
-                    starI = i;
-                }
-            }
-
-            if (!foundMap && foundStarMap) {
-                foundMap = foundStarMap;
-                foundI = starI;
-            }
-
-            if (foundMap) {
-                nameParts.splice(0, foundI, foundMap);
-                name = nameParts.join('/');
-            }
-        }
-
-        return name;
-    }
-
-    function makeRequire(relName, forceSync) {
-        return function () {
-            //A version of a require function that passes a moduleName
-            //value for items that may need to
-            //look up paths relative to the moduleName
-            return req.apply(undef, aps.call(arguments, 0).concat([relName, forceSync]));
-        };
-    }
-
-    function makeNormalize(relName) {
-        return function (name) {
-            return normalize(name, relName);
-        };
-    }
-
-    function makeLoad(depName) {
-        return function (value) {
-            defined[depName] = value;
-        };
-    }
-
-    function callDep(name) {
-        if (hasProp(waiting, name)) {
-            var args = waiting[name];
-            delete waiting[name];
-            defining[name] = true;
-            main.apply(undef, args);
-        }
-
-        if (!hasProp(defined, name) && !hasProp(defining, name)) {
-            throw new Error('No ' + name);
-        }
-        return defined[name];
-    }
-
-    //Turns a plugin!resource to [plugin, resource]
-    //with the plugin being undefined if the name
-    //did not have a plugin prefix.
-    function splitPrefix(name) {
-        var prefix,
-            index = name ? name.indexOf('!') : -1;
-        if (index > -1) {
-            prefix = name.substring(0, index);
-            name = name.substring(index + 1, name.length);
-        }
-        return [prefix, name];
-    }
-
-    /**
-     * Makes a name map, normalizing the name, and using a plugin
-     * for normalization if necessary. Grabs a ref to plugin
-     * too, as an optimization.
-     */
-    makeMap = function (name, relName) {
-        var plugin,
-            parts = splitPrefix(name),
-            prefix = parts[0];
-
-        name = parts[1];
-
-        if (prefix) {
-            prefix = normalize(prefix, relName);
-            plugin = callDep(prefix);
-        }
-
-        //Normalize according
-        if (prefix) {
-            if (plugin && plugin.normalize) {
-                name = plugin.normalize(name, makeNormalize(relName));
-            } else {
-                name = normalize(name, relName);
-            }
-        } else {
-            name = normalize(name, relName);
-            parts = splitPrefix(name);
-            prefix = parts[0];
-            name = parts[1];
-            if (prefix) {
-                plugin = callDep(prefix);
-            }
-        }
-
-        //Using ridiculous property names for space reasons
-        return {
-            f: prefix ? prefix + '!' + name : name, //fullName
-            n: name,
-            pr: prefix,
-            p: plugin
-        };
-    };
-
-    function makeConfig(name) {
-        return function () {
-            return (config && config.config && config.config[name]) || {};
-        };
-    }
-
-    handlers = {
-        require: function (name) {
-            return makeRequire(name);
-        },
-        exports: function (name) {
-            var e = defined[name];
-            if (typeof e !== 'undefined') {
-                return e;
-            } else {
-                return (defined[name] = {});
-            }
-        },
-        module: function (name) {
-            return {
-                id: name,
-                uri: '',
-                exports: defined[name],
-                config: makeConfig(name)
-            };
-        }
-    };
-
-    main = function (name, deps, callback, relName) {
-        var cjsModule, depName, ret, map, i,
-            args = [],
-            callbackType = typeof callback,
-            usingExports;
-
-        //Use name if no relName
-        relName = relName || name;
-
-        //Call the callback to define the module, if necessary.
-        if (callbackType === 'undefined' || callbackType === 'function') {
-            //Pull out the defined dependencies and pass the ordered
-            //values to the callback.
-            //Default to [require, exports, module] if no deps
-            deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
-            for (i = 0; i < deps.length; i += 1) {
-                map = makeMap(deps[i], relName);
-                depName = map.f;
-
-                //Fast path CommonJS standard dependencies.
-                if (depName === "require") {
-                    args[i] = handlers.require(name);
-                } else if (depName === "exports") {
-                    //CommonJS module spec 1.1
-                    args[i] = handlers.exports(name);
-                    usingExports = true;
-                } else if (depName === "module") {
-                    //CommonJS module spec 1.1
-                    cjsModule = args[i] = handlers.module(name);
-                } else if (hasProp(defined, depName) ||
-                           hasProp(waiting, depName) ||
-                           hasProp(defining, depName)) {
-                    args[i] = callDep(depName);
-                } else if (map.p) {
-                    map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
-                    args[i] = defined[depName];
-                } else {
-                    throw new Error(name + ' missing ' + depName);
-                }
-            }
-
-            ret = callback ? callback.apply(defined[name], args) : undefined;
-
-            if (name) {
-                //If setting exports via "module" is in play,
-                //favor that over return value and exports. After that,
-                //favor a non-undefined return value over exports use.
-                if (cjsModule && cjsModule.exports !== undef &&
-                        cjsModule.exports !== defined[name]) {
-                    defined[name] = cjsModule.exports;
-                } else if (ret !== undef || !usingExports) {
-                    //Use the return value from the function.
-                    defined[name] = ret;
-                }
-            }
-        } else if (name) {
-            //May just be an object definition for the module. Only
-            //worry about defining if have a module name.
-            defined[name] = callback;
-        }
-    };
-
-    requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
-        if (typeof deps === "string") {
-            if (handlers[deps]) {
-                //callback in this case is really relName
-                return handlers[deps](callback);
-            }
-            //Just return the module wanted. In this scenario, the
-            //deps arg is the module name, and second arg (if passed)
-            //is just the relName.
-            //Normalize module name, if it contains . or ..
-            return callDep(makeMap(deps, callback).f);
-        } else if (!deps.splice) {
-            //deps is a config object, not an array.
-            config = deps;
-            if (callback.splice) {
-                //callback is an array, which means it is a dependency list.
-                //Adjust args if there are dependencies
-                deps = callback;
-                callback = relName;
-                relName = null;
-            } else {
-                deps = undef;
-            }
-        }
-
-        //Support require(['a'])
-        callback = callback || function () {};
-
-        //If relName is a function, it is an errback handler,
-        //so remove it.
-        if (typeof relName === 'function') {
-            relName = forceSync;
-            forceSync = alt;
-        }
-
-        //Simulate async callback;
-        if (forceSync) {
-            main(undef, deps, callback, relName);
-        } else {
-            //Using a non-zero value because of concern for what old browsers
-            //do, and latest browsers "upgrade" to 4 if lower value is used:
-            //http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout:
-            //If want a value immediately, use require('id') instead -- something
-            //that works in almond on the global level, but not guaranteed and
-            //unlikely to work in other AMD implementations.
-            setTimeout(function () {
-                main(undef, deps, callback, relName);
-            }, 4);
-        }
-
-        return req;
-    };
-
-    /**
-     * Just drops the config on the floor, but returns req in case
-     * the config return value is used.
-     */
-    req.config = function (cfg) {
-        config = cfg;
-        if (config.deps) {
-            req(config.deps, config.callback);
-        }
-        return req;
-    };
-
-    /**
-     * Expose module registry for debugging and tooling
-     */
-    requirejs._defined = defined;
-
-    define = function (name, deps, callback) {
-
-        //This module may not have dependencies
-        if (!deps.splice) {
-            //deps is not an array, so probably means
-            //an object literal or factory function for
-            //the value. Adjust args.
-            callback = deps;
-            deps = [];
-        }
-
-        if (!hasProp(defined, name) && !hasProp(waiting, name)) {
-            waiting[name] = [name, deps, callback];
-        }
-    };
-
-    define.amd = {
-        jQuery: true
-    };
-}());
-
-define("bower_components/almond/almond", function(){});
-
-define('parsley/utils', [],function () {
-  return {
+  var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
     // if attr is given, returns bool if attr present in DOM or not
@@ -502,15 +100,13 @@ define('parsley/utils', [],function () {
              .toLowerCase();
     }
   };
-});
 
 // All these options could be overriden and specified directly in DOM using
 // `data-parsley-` default DOM-API
 // eg: `inputs` can be set in DOM using `data-parsley-inputs="input, textarea"`
 // eg: `data-parsley-stop-on-first-failing-constraint="false"`
 
-define('parsley/defaults', [],function () {
-  return {
+  var ParsleyDefaults = {
     // ### General
 
     // Default data-namespace for DOM API
@@ -550,9 +146,8 @@ define('parsley/defaults', [],function () {
     // li elem that would receive error message
     errorTemplate: '<li></li>'
   };
-});
 
-define('parsley/abstract', [],function () {
+
   var ParsleyAbstract = function(options) {};
 
   ParsleyAbstract.prototype = {
@@ -590,10 +185,6 @@ define('parsley/abstract', [],function () {
       return this;
     }
   };
-
-  return ParsleyAbstract;
-});
-
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
@@ -1610,9 +1201,7 @@ define("vendors/validator.js/dist/validator", (function (global) {
     };
 }(this)));
 
-define('parsley/validator', [
-  'validator'
-], function (Validator) {
+
   var ParsleyValidator = function (validators) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
@@ -1746,12 +1335,6 @@ define('parsley/validator', [
     }
   };
 
-  return ParsleyValidator;
-});
-
-define('parsley/ui', [
-  'parsley/utils'
-], function (ParsleyUtils) {
   var ParsleyUI = function (options) {
     this.__class__ = 'ParsleyUI';
   };
@@ -1918,13 +1501,7 @@ define('parsley/ui', [
     }
   };
 
-  return ParsleyUI;
-});
-
-define('parsley/factory/options', [
-  'parsley/utils'
-], function (ParsleyUtils) {
-  var ParlseyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
+  var ParsleyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
     this.__class__ = 'OptionsFactory';
     this.__id__ = ParsleyUtils.hash(4);
 
@@ -1934,7 +1511,7 @@ define('parsley/factory/options', [
     this.staticOptions = $.extend(true, {}, defaultOptions, globalOptions, userOptions, { namespace: namespace });
   };
 
-  ParlseyOptionsFactory.prototype = {
+  ParsleyOptionsFactory.prototype = {
     get: function (parsleyInstance) {
       if ('undefined' === typeof parsleyInstance.__class__)
         throw new Error('Parsley Instance expected');
@@ -1966,13 +1543,6 @@ define('parsley/factory/options', [
     }
   };
 
-  return ParlseyOptionsFactory;
-});
-
-define('parsley/form', [
-  'parsley/abstract',
-  'parsley/utils'
-], function (ParsleyAbstract, ParsleyUtils) {
   var ParsleyForm = function(element, parsleyInstance) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
@@ -2081,13 +1651,7 @@ define('parsley/form', [
     destroy: function () {}
   };
 
-  return ParsleyForm;
-});
-
-define('parsley/factory/constraint', [
-  'parsley/utils'
-], function (ParsleyUtils) {
-  return ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
+  var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
 
     if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
       throw new Error('ParsleyField instance expected');
@@ -2114,13 +1678,7 @@ define('parsley/factory/constraint', [
       isDomConstraint: isDomConstraint || ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name)
     });
   };
-});
 
-define('parsley/field', [
-    'parsley/factory/constraint',
-    'parsley/ui',
-    'parsley/utils'
-], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
   var ParsleyField = function(field, parsleyInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.hash(4);
@@ -2330,13 +1888,6 @@ define('parsley/field', [
     },
   };
 
-  return ParsleyField;
-});
-
-define('parsley/pubsub', [
-  'parsley/field',
-  'parsley/form'
-], function (ParsleyField, ParsleyForm) {
   var o = $({}), subscribed = {};
 
   // $.listen(name, callback);
@@ -2433,7 +1984,6 @@ define('parsley/pubsub', [
   };
 
   $.subscribed = function () { return subscribed; };
-});
 
 // ParsleyConfig definition if not already set
 window.ParsleyConfig = window.ParsleyConfig || {};
@@ -2474,37 +2024,8 @@ window.ParsleyConfig.i18n['en'] = {
 
 define("i18n/en", function(){});
 
-/*!
-* parsley
-* Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sun Jan 19 2014 20:05:33
-* MIT Licensed
-*
-*/
-
 // ### Requirements
-define('parsley',[
-  // Handy third party functions
-  'parsley/utils',
-  // Parsley default configuration
-  'parsley/defaults',
-  // An abstract class shared by `ParsleyField` and `ParsleyForm`
-  'parsley/abstract',
-  // A proxy between Parsley and [Validator.js](http://validatorjs.org)
-  'parsley/validator',
-  // `ParsleyUI` static class. Handle all UI and UX
-  'parsley/ui',
-  // Handle default javascript config and DOM-API config
-  'parsley/factory/options',
-  // `ParsleyForm` Class. Handle form validation
-  'parsley/form',
-  // `ParsleyField` Class. Handle field validation
-  'parsley/field',
-  // Tiny Parsley Pub / Sub mechanism, used for `ParsleyUI` and Listeners
-  'parsley/pubsub',
-  // Default en constraints messages
-  'i18n/en'
-], function (ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField) {
+
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
@@ -2527,7 +2048,7 @@ define('parsley',[
         return this.$element.data('Parsley');
 
       // Handle 'static' options
-      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
+      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
       var options = this.OptionsFactory.staticOptions;
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
@@ -2551,7 +2072,7 @@ define('parsley',[
       if ('undefined' !== typeof ParsleyUtils.get(window, 'ParsleyConfig.namespace'))
         return window.ParsleyConfig.namespace;
 
-      return ParsleyDefaultOptions.namespace;
+      return ParsleyDefaults.namespace;
     },
 
     // Return proper `ParsleyForm` or `ParsleyField`
@@ -2605,10 +2126,4 @@ define('parsley',[
       $('[parsley-validate], [data-parsley-validate]').each(function () {
         new Parsley(this);
       });
-    });
-
-  return Parsley;
-});
-
-require(["parsley"]);
-}());
+    });})(window.jQuery);

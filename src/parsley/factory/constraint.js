@@ -1,7 +1,7 @@
 define('parsley/factory/constraint', [
   'parsley/utils'
 ], function (ParsleyUtils) {
-  return ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
+  var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
 
     if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
       throw new Error('ParsleyField instance expected');
@@ -28,4 +28,6 @@ define('parsley/factory/constraint', [
       isDomConstraint: isDomConstraint || ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name)
     });
   };
+
+  return ConstraintFactory;
 });

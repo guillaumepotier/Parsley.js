@@ -1,11 +1,3 @@
-/*!
-* @@name
-* @@author
-* Version @@version - built @@timestamp
-* @@license Licensed
-*
-*/
-
 // ### Requirements
 define([
   // Handy third party functions
@@ -28,7 +20,7 @@ define([
   'parsley/pubsub',
   // Default en constraints messages
   'i18n/en'
-], function (ParsleyUtils, ParsleyDefaultOptions, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField) {
+], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField) {
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
@@ -51,7 +43,7 @@ define([
         return this.$element.data('Parsley');
 
       // Handle 'static' options
-      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaultOptions, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
+      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
       var options = this.OptionsFactory.staticOptions;
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
@@ -75,7 +67,7 @@ define([
       if ('undefined' !== typeof ParsleyUtils.get(window, 'ParsleyConfig.namespace'))
         return window.ParsleyConfig.namespace;
 
-      return ParsleyDefaultOptions.namespace;
+      return ParsleyDefaults.namespace;
     },
 
     // Return proper `ParsleyForm` or `ParsleyField`

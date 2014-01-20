@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   /** LOAD Tasks **/
   grunt.loadNpmTasks('grunt-replace');
@@ -66,13 +66,18 @@ module.exports = function(grunt) {
 
     requirejs: {
       options: {
-        name: "./bower_components/almond/almond",
+        // name: "./bower_components/almond/almond",
+        name: "parsley",
         mainConfigFile: "./src/config.js",
 
-        // TODO: find how to give only parsley here :(
-        include: ['parsley'],
-        insertRequire: ['parsley'],
-        wrap: true
+        wrap: {
+          startFile: "src/prepend.js",
+          endFile: "src/append.js"
+        },
+
+        // Avoid breaking semicolons inserted by r.js
+        skipSemiColonInsertion: true,
+        onBuildWrite: convert
       },
       production: {
         options: {
@@ -105,8 +110,42 @@ module.exports = function(grunt) {
   /** Tasks here **/
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['clean:dist', 'bower:install']);
+
   grunt.registerTask('build', ['configure', 'requirejs', 'replace', 'uglify:min']);
 
   grunt.registerTask('build-annotated-source', 'docco:source');
 
 };
+
+var rdefineEnd = /\}\);[^}\w]*$/;
+
+function convert(name, path, contents) {
+  console.log('>>>', path);
+
+  // Convert ParsleyDefaults and ParsleyUtils
+  if (/(defaults|utils)/.test(path)) {
+    var name = (/parsley\/([\w-]+)/.exec(name)[1]);
+
+    return contents
+      .replace(/define\([\w\W]*?return/, "  var Parsley" + name.charAt(0).toUpperCase() + name.slice(1) + " =")
+      .replace(rdefineEnd, "");
+  }
+
+  // Leave original validatorjs untouched
+  if (/(dist\/validator.js)/.test(path)) {
+    return contents;
+  }
+
+  // Ignore returns
+  contents = contents
+    .replace(/\s*return\s+[^\}]+(\}\);[^\w\}]*)$/, "$1")
+    // Multiple exports
+    .replace(/\s*exports\.\w+\s*=\s*\w+;/g, "");
+
+  // Remove define wrappers, closure ends, and empty declarations
+  contents = contents
+    .replace(/define\([^{]*?{/, "")
+    .replace(rdefineEnd, "");
+
+  return contents;
+}

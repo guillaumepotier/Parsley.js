@@ -1,7 +1,7 @@
 define('parsley/factory/options', [
   'parsley/utils'
 ], function (ParsleyUtils) {
-  var ParlseyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
+  var ParsleyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
     this.__class__ = 'OptionsFactory';
     this.__id__ = ParsleyUtils.hash(4);
 
@@ -11,7 +11,7 @@ define('parsley/factory/options', [
     this.staticOptions = $.extend(true, {}, defaultOptions, globalOptions, userOptions, { namespace: namespace });
   };
 
-  ParlseyOptionsFactory.prototype = {
+  ParsleyOptionsFactory.prototype = {
     get: function (parsleyInstance) {
       if ('undefined' === typeof parsleyInstance.__class__)
         throw new Error('Parsley Instance expected');
@@ -43,5 +43,5 @@ define('parsley/factory/options', [
     }
   };
 
-  return ParlseyOptionsFactory;
+  return ParsleyOptionsFactory;
 });
