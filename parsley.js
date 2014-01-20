@@ -2,6 +2,13 @@
  * Parsley.js allows you to verify your form inputs frontend side, without writing a line of javascript. Or so..
  *
  * Author: Guillaume Potier - @guillaumepotier
+ *
+ * Minimal Parsley Installation
+ * <script type="text/javascript" src="jquery.js"></script>
+ * <script type="text/javascript" src="parsley.js"></script>
+ * <form parsley-validate>
+ *   [...]
+ * </form>
 */
 
 !function ($) {
