@@ -37,18 +37,13 @@
     </form>
 
     <script src="../bower_components/jquery/jquery.js"></script>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script> -->
 
-    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script>
-    <!-- <script src="../bower_components/requirejs/require.js" data-main="../dist/parsley"></script> -->
-    <!-- <script src="../dist/parsley.js"></script> -->
     <script src="../src/i18n/fr.js"></script>
+    <script src="../dist/parsley.js"></script>
 
-
-    <script type="text/javascript">
-        // $(document).on('parsley:loaded', function() {
-            // $('#form').parsley();
-            // ParsleyValidator.setLocale('fr');
-        // });
+    <script>
+        ParsleyValidator.setLocale('fr');
     </script>
 </body>
 </html>

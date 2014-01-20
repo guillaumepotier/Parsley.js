@@ -6,6 +6,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.loadNpmTasks('grunt-docco');
 
@@ -104,6 +105,13 @@ module.exports = function (grunt) {
           'dist/parsley.min.js': 'dist/parsley.min.js'
         }
       }
+    },
+
+    watch: {
+      dev: {
+        files: ['src/*.js', 'src/parsley/*.js'],
+        tasks: ['requirejs', 'replace']
+      }
     }
   });
 
@@ -112,17 +120,15 @@ module.exports = function (grunt) {
   grunt.registerTask('configure', ['clean:dist', 'bower:install']);
 
   grunt.registerTask('build', ['configure', 'requirejs', 'replace', 'uglify:min']);
-
   grunt.registerTask('build-annotated-source', 'docco:source');
 
+  grunt.registerTask('build-all', ['build', 'build-annotated-source']);
 };
 
 var rdefineEnd = /\}\);[^}\w]*$/;
 
 function convert(name, path, contents) {
-  console.log('>>>', path);
-
-  // Convert ParsleyDefaults and ParsleyUtils
+  // Convert ParsleyDefaults and ParsleyUtils that needs a special treatment
   if (/(defaults|utils)/.test(path)) {
     var name = (/parsley\/([\w-]+)/.exec(name)[1]);
 

@@ -60,10 +60,10 @@ define(function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
           .addConstraint('required', true)
-          .addConstraint('notnull', true)
+          .addConstraint('notblank', true)
           .removeConstraint('required');
         expect(parsleyField.constraints.length).to.be(1);
-        expect(parsleyField.constraints[0].name).to.be('notnull');
+        expect(parsleyField.constraints[0].name).to.be('notblank');
       });
       it('should return an empty array for fields withoud constraints', function () {
         $('body').append('<input type="text" id="element" value="" />');
