@@ -19,7 +19,6 @@ define('parsley/factory/constraint', [
 
     priority = priority || getPriority(parsleyField, name);
 
-    // TODO add group priority
     return $.extend(window.ParsleyValidator.validators[name](requirements), {
       name: name,
       requirements: requirements,

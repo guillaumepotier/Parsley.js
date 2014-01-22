@@ -44,6 +44,7 @@ define(function () {
         expect(new Parsley('#field3').options).to.have.key('notblank');
         expect(new Parsley('#field3').options).to.not.have.key('required');
       });
+      it.skip('should handle group validation');
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

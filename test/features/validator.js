@@ -34,6 +34,8 @@ define(function () {
         expect(parsleyValidator.validate('foo.bar@bar.baz', parsleyValidator.validators['type']('email'))).to.be(true);
         expect(parsleyValidator.validate('foo.bar@bar.com.ext', parsleyValidator.validators['type']('email'))).to.be(true);
       });
+      it.skip('should handle proper error message for validators');
+      it.skip('should handle proper error message for validators in various languages');
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n };
 

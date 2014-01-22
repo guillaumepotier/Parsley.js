@@ -42,11 +42,11 @@ define('parsley/ui', [
       for (var i = 0; i < diff.added.length; i++)
         fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
           .addClass('parsley-' + diff.added[i].assert.name)
-          .html(this.getErrorMessage(diff.added[i].assert)));
+          .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
 
       for (var i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
-          .html(this.getErrorMessage(diff.kept[i].assert));
+          .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
 
       // Triggers impl
       this.actualizeTriggers(fieldInstance);
@@ -69,7 +69,12 @@ define('parsley/ui', [
       return lastFailingField.$element.focus();
     },
 
-    getErrorMessage: function (constraint) {
+    getErrorMessage: function (fieldInstance, constraint) {
+      var customConstraintErrorMessage = constraint.name + 'Message';
+
+      if ('undefined' !== typeof fieldInstance.options[customConstraintErrorMessage])
+        return fieldInstance.options[customConstraintErrorMessage];
+
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
 

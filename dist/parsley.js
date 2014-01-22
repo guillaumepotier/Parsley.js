@@ -1,7 +1,7 @@
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Wed Jan 22 2014 10:18:36
+* Version 2.0.0-pre - built Wed Jan 22 2014 23:38:58
 * MIT Licensed
 *
 */
@@ -1013,10 +1013,10 @@
       for (var i = 0; i < diff.added.length; i++)
         fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
           .addClass('parsley-' + diff.added[i].assert.name)
-          .html(this.getErrorMessage(diff.added[i].assert)));
+          .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
       for (var i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
-          .html(this.getErrorMessage(diff.kept[i].assert));
+          .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
       // Triggers impl
       this.actualizeTriggers(fieldInstance);
       if (diff.kept.length || diff.added.length)
@@ -1033,7 +1033,10 @@
             var lastFailingField = formInstance.fields[i];
       return lastFailingField.$element.focus();
     },
-    getErrorMessage: function (constraint) {
+    getErrorMessage: function (fieldInstance, constraint) {
+      var customConstraintErrorMessage = constraint.name + 'Message';
+      if ('undefined' !== typeof fieldInstance.options[customConstraintErrorMessage])
+        return fieldInstance.options[customConstraintErrorMessage];
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
     diff: function (newResult, oldResult, deep) {
@@ -1247,7 +1250,6 @@
       return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority', 2);
     };
     priority = priority || getPriority(parsleyField, name);
-    // TODO add group priority
     return $.extend(window.ParsleyValidator.validators[name](requirements), {
       name: name,
       requirements: requirements,
