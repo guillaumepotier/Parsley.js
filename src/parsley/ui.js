@@ -8,7 +8,10 @@ define('parsley/ui', [
   ParsleyUI.prototype = {
     listen: function () {
       $.listen('parsley:field:init', this, this.setup);
+
       $.listen('parsley:field:validated', this, this.reflow);
+      $.listen('parsley:form:validated', this, this.focus);
+
       $.listen('parsley:field:reset', this, this.reset);
       $.listen('parsley:field:destroy', this, this.destroy);
     },
@@ -50,6 +53,20 @@ define('parsley/ui', [
 
       if (diff.kept.length || diff.added.length)
         this.manageFailingFieldTrigger(fieldInstance);
+    },
+
+    focus: function (formInstance) {
+      if (true === formInstance.isValid || 'none' === formInstance.options.focus)
+        return;
+
+      for (var i = 0; i < formInstance.fields.length; i++)
+        if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0)
+          if ('first' === formInstance.options.focus)
+            return formInstance.fields[i].$element.focus();
+          else
+            var lastFailingField = formInstance.fields[i];
+
+      return lastFailingField.$element.focus();
     },
 
     getErrorMessage: function (constraint) {

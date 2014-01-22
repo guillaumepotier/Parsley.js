@@ -1,16 +1,11 @@
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Mon Jan 20 2014 23:47:32
+* Version 2.0.0-pre - built Wed Jan 22 2014 10:18:36
 * MIT Licensed
 *
 */
-
-(function ($) {
-
-  // Neutralize potential useless remaining defines
-  define = function (name, fn) {};
-
+(function(window, undefined) {
   var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -19,56 +14,44 @@
       var attribute,
         obj = {},
         regex = new RegExp('^' + namespace, 'i');
-
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
         return {};
-
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
         if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
           if ('undefined' !== typeof checkAttr && new RegExp(checkAttr, 'i').test(attribute.name))
               return true;
-
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
         }
       }
-
       return 'undefined' === typeof checkAttr ? obj : false;
     },
-
     setAttr: function ($element, namespace, attr, value) {
       $element[0].setAttribute(this.dasherize(namespace + attr), new String(value));
     },
-
     // Recursive object / array getter
     get: function (obj, path, placeholder) {
       var i = 0,
       paths = (path || '').split('.');
-
       while (this.isObject(obj) || this.isArray(obj)) {
         obj = obj[paths[i++]];
         if (i === paths.length)
           return obj || placeholder;
       }
-
       return placeholder;
     },
-
     hash: function (length) {
       return new String(Math.random()).substring(2, length ? length + 2 : 9);
     },
-
     /** Third party functions **/
     // Underscore isArray
     isArray: function (mixed) {
       return Object.prototype.toString.call(mixed) === '[object Array]';
     },
-
     // Underscore isObject
     isObject: function (mixed) {
       return mixed === Object(mixed);
     },
-
     // Zepto deserialize function
     deserializeValue: function (value) {
       var num
@@ -83,14 +66,12 @@
           : value;
       } catch (e) { return value; }
     },
-
     // Zepto camelize function
     camelize: function (str) {
       return str.replace(/-+(.)?/g, function(match, chr) {
         return chr ? chr.toUpperCase() : '';
       });
     },
-
     // Zepto dasherize function
     dasherize: function (str) {
       return str.replace(/::/g, '/')
@@ -100,88 +81,62 @@
              .toLowerCase();
     }
   };
-
 // All these options could be overriden and specified directly in DOM using
 // `data-parsley-` default DOM-API
 // eg: `inputs` can be set in DOM using `data-parsley-inputs="input, textarea"`
 // eg: `data-parsley-stop-on-first-failing-constraint="false"`
-
   var ParsleyDefaults = {
     // ### General
-
     // Default data-namespace for DOM API
     namespace: 'data-parsley-',
-
     // Supported inputs by default
     inputs: 'input, textarea, select',
-
     // Excluded inputs by default
     excluded: 'input[type=button], input[type=submit], input[type=reset]',
-
     // Stop validating field on highest priority failing constraint
     priorityEnabled: true,
-
     // ### UI
     // Focused field on form validation error. 'fist'|'last'|'none'
     focus: 'first',
-
     // `$.Event()` that will trigger validation. eg: `keyup`, `change`..
     trigger: false,
-
     // Class that would be added on every failing validation Parsley field
     errorClass: 'parsley-error',
-
     // Same for success validation
     successClass: 'parsley-success',
-
     // Return the `$element` that will receive these above success or error classes
     classHandler: function (ParsleyField) {},
-
     // Return the `$element` where errors will be appended
     errorsContainer: function (ParsleyField) {},
-
     // ul elem that would receive errors' list
     errorsWrapper: '<ul class="parsley-errors-list"></ul>',
-
     // li elem that would receive error message
     errorTemplate: '<li></li>'
   };
 
-
   var ParsleyAbstract = function(options) {};
-
   ParsleyAbstract.prototype = {
     actualizeOptions: function () {
       this.options = this.parsleyInstance.OptionsFactory.get(this);
-
       return this;
     },
-
     registerValidator: function (name, fn, priority) {
       window.ParsleyValidator.addValidator(name, fn, priority);
-
       return this;
     },
-
     removeValidator: function (name) {
       window.ParsleyValidator.removeValidator(name);
-
       return this;
     },
-
     updateValidator: function (name, fn, priority) {
       return this.registerValidator(name, fn, priority);
     },
-
     subscribe: function (name, fn) {
       $.subscribeTo(this, name, fn);
-
       return this;
     },
-
     unsubscribe: function (name) {
       $.unsubscribeTo(this, name);
-
       return this;
     }
   };
@@ -192,26 +147,19 @@
 * MIT Licensed
 *
 */
-
 ( function ( exports ) {
-
   /**
   * Validator
   */
-
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
     this.__version__ = '0.5.1';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
-
     return this;
   };
-
   Validator.prototype = {
-
     constructor: Validator,
-
     /*
     * Validate string: validate( string, string ) || validate( string, [ string, string] )
     * Validate object: validate( object, constraint, string ) || validate( object, constraint, [ string, string ] )
@@ -220,94 +168,69 @@
     validate: function ( objectOrString, AssertsOrConstraintOrGroup, group ) {
       if ( 'string' !== typeof objectOrString && 'object' !== typeof objectOrString )
         throw new Error( 'You must validate an object or a string' );
-
       // string validation
       if ( 'string' === typeof objectOrString )
         return this._validateString( objectOrString, AssertsOrConstraintOrGroup, group );
-
       // binded object validation
       if ( this.isBinded( objectOrString ) )
         return this._validateBindedObject( objectOrString, AssertsOrConstraintOrGroup );
-
       // regular object validation
       return this._validateObject( objectOrString, AssertsOrConstraintOrGroup, group );
     },
-
     bind: function ( object, constraint ) {
       if ( 'object' !== typeof object )
         throw new Error( 'Must bind a Constraint to an object' );
-
       object[ this.bindingKey ] = new Constraint( constraint );
-
       return this;
     },
-
     unbind: function ( object ) {
       if ( 'undefined' === typeof object._validatorjsConstraint )
         return this;
-
       delete object[ this.bindingKey ];
-
       return this;
     },
-
     isBinded: function ( object ) {
       return 'undefined' !== typeof object[ this.bindingKey ];
     },
-
     getBinded: function ( object ) {
       return this.isBinded( object ) ? object[ this.bindingKey ] : null;
     },
-
     _validateString: function ( string, assert, group ) {
       var result, failures = [];
-
       if ( !_isArray( assert ) )
         assert = [ assert ];
-
       for ( var i = 0; i < assert.length; i++ ) {
         if ( ! ( assert[ i ] instanceof Assert) )
           throw new Error( 'You must give an Assert or an Asserts array to validate a string' );
-
         result = assert[ i ].check( string, group );
-
         if ( result instanceof Violation )
           failures.push( result );
       }
-
       return failures.length ? failures : true;
     },
-
     _validateObject: function ( object, constraint, group ) {
       if ( 'object' !== typeof constraint )
         throw new Error( 'You must give a constraint to validate an object' );
-
       if ( constraint instanceof Constraint )
         return constraint.check( object, group );
-
       return new Constraint( constraint ).check( object, group );
     },
-
     _validateBindedObject: function ( object, group ) {
       return object[ this.bindingKey ].check( object, group );
     }
   };
-
   Validator.errorCode = {
     must_be_a_string: 'must_be_a_string',
     must_be_an_array: 'must_be_an_array',
     must_be_a_number: 'must_be_a_number'
   };
-
   /**
   * Constraint
   */
-
   var Constraint = function ( data, options ) {
     this.__class__ = 'Constraint';
     this.options = options || {};
     this.nodes = {};
-
     if ( data ) {
       try {
         this._bootstrap( data );
@@ -315,26 +238,19 @@
         throw new Error( 'Should give a valid mapping object to Constraint', err, data );
       }
     }
-
     return this;
   };
-
   Constraint.prototype = {
-
     constructor: Constraint,
-
     check: function ( object, group ) {
       var result, failures = {};
-
       // check all constraint nodes if strict validation enabled. Else, only object nodes that have a constraint
       for ( var property in this.options.strict ? this.nodes : object ) {
         if ( this.options.strict ? this.has( property, object ) : this.has( property ) ) {
           result = this._check( property, object[ property ], group );
-
           // check returned an array of Violations or an object mapping Violations
           if ( ( _isArray( result ) && result.length > 0 ) || ( !_isArray( result ) && !_isEmptyObject( result ) ) )
             failures[ property ] = result;
-
         // in strict mode, get a violation for each constraint node not in object
         } else if ( this.options.strict ) {
           try {
@@ -345,80 +261,58 @@
           }
         }
       }
-
       return _isEmptyObject(failures) ? true : failures;
     },
-
     add: function ( node, object ) {
       if ( object instanceof Assert  || ( _isArray( object ) && object[ 0 ] instanceof Assert ) ) {
         this.nodes[ node ] = object;
-
         return this;
       }
-
       if ( 'object' === typeof object && !_isArray( object ) ) {
         this.nodes[ node ] = object instanceof Constraint ? object : new Constraint( object );
-
         return this;
       }
-
       throw new Error( 'Should give an Assert, an Asserts array, a Constraint', object );
     },
-
     has: function ( node, nodes ) {
       var nodes = 'undefined' !== typeof nodes ? nodes : this.nodes;
       return 'undefined' !== typeof nodes[ node ];
     },
-
     get: function ( node, placeholder ) {
       return this.has( node ) ? this.nodes[ node ] : placeholder || null;
     },
-
     remove: function ( node ) {
       var _nodes = [];
-
       for ( var i in this.nodes )
         if ( i !== node )
           _nodes[ i ] = this.nodes[ i ];
-
       this.nodes = _nodes;
-
       return this;
     },
-
     _bootstrap: function ( data ) {
       if ( data instanceof Constraint )
         return this.nodes = data.nodes;
-
       for ( var node in data )
         this.add( node, data[ node ] );
     },
-
     _check: function ( node, value, group ) {
       // Assert
       if ( this.nodes[ node ] instanceof Assert )
         return this._checkAsserts( value, [ this.nodes[ node ] ], group );
-
       // Asserts
       if ( _isArray( this.nodes[ node ] ) )
         return this._checkAsserts( value, this.nodes[ node ], group );
-
       // Constraint -> check api
       if ( this.nodes[ node ] instanceof Constraint )
         return this.nodes[ node ].check( value, group );
-
       throw new Error( 'Invalid node', this.nodes[ node ] );
     },
-
     _checkAsserts: function ( value, asserts, group ) {
       var result, failures = [];
-
       for ( var i = 0; i < asserts.length; i++ ) {
         result = asserts[ i ].check( value, group );
-
         if ( 'undefined' !== typeof result && true !== result )
           failures.push( result );
-
         // Some asserts (Collection for example) could return an object
         // if ( result && ! ( result instanceof Violation ) )
         //   return result;
@@ -427,642 +321,447 @@
         // if ( result instanceof Violation )
         //   failures.push( result );
       }
-
       return failures;
     }
   };
-
   /**
   * Violation
   */
-
   var Violation = function ( assert, value, violation ) {
     this.__class__ = 'Violation';
-
     if ( ! ( assert instanceof Assert ) )
       throw new Error( 'Should give an assertion implementing the Assert interface' );
-
     this.assert = assert;
     this.value = value;
-
     if ( 'undefined' !== typeof violation )
       this.violation = violation;
   };
-
   Violation.prototype = {
     show: function () {
       var show =  {
         assert: this.assert.__class__,
         value: this.value
       };
-
       if ( this.violation )
         show.violation = this.violation;
-
       return show;
     },
-
     __toString: function () {
       if ( 'undefined' !== typeof this.violation )
         var violation = '", ' + this.getViolation().constraint + ' expected was ' + this.getViolation().expected;
-
       return this.assert.__class__ + ' assert failed for "' + this.value + violation || '';
     },
-
     getViolation: function () {
       var constraint, expected;
-
       for ( constraint in this.violation )
         expected = this.violation[ constraint ];
-
       return { constraint: constraint, expected: expected };
     }
   };
-
   /**
   * Assert
   */
-
   var Assert = function ( group ) {
     this.__class__ = 'Assert';
     this.__parentClass__ = this.__class__;
     this.groups = [];
-
     if ( 'undefined' !== typeof group )
       this.addGroup( group );
-
     return this;
   };
-
   Assert.prototype = {
-
     construct: Assert,
-
     check: function ( value, group ) {
       if ( group && !this.hasGroup( group ) )
         return;
-
       if ( !group && this.hasGroups() )
         return;
-
       try {
         return this.validate( value, group );
       } catch ( violation ) {
         return violation;
       }
     },
-
     hasGroup: function ( group ) {
       if ( _isArray( group ) )
         return this.hasOneOf( group );
-
       // All Asserts respond to "Any" group
       if ( 'Any' === group )
         return true;
-
       // Asserts with no group also respond to "Default" group. Else return false
       if ( !this.hasGroups() )
         return 'Default' === group;
-
       return -1 !== this.groups.indexOf( group );
     },
-
     hasOneOf: function ( groups ) {
       for ( var i = 0; i < groups.length; i++ )
         if ( this.hasGroup( groups[ i ] ) )
           return true;
-
       return false;
     },
-
     hasGroups: function () {
       return this.groups.length > 0;
     },
-
     addGroup: function ( group ) {
       if ( _isArray( group ) )
         return this.addGroups( group );
-
       if ( !this.hasGroup( group ) )
         this.groups.push( group );
-
       return this;
     },
-
     removeGroup: function ( group ) {
       var _groups = [];
-
       for ( var i = 0; i < this.groups.length; i++ )
         if ( group !== this.groups[ i ] )
           _groups.push( this.groups[ i ] );
-
       this.groups = _groups;
-
       return this;
     },
-
     addGroups: function ( groups ) {
       for ( var i = 0; i < groups.length; i++ )
         this.addGroup( groups[ i ] );
-
       return this;
     },
-
     /**
     * Asserts definitions
     */
-
     HaveProperty: function ( node ) {
       this.__class__ = 'HaveProperty';
       this.node = node;
-
       this.validate = function ( object ) {
         if ( 'undefined' === typeof object[ this.node ] )
           throw new Violation( this, object, { value: this.node } );
-
         return true;
       };
-
       return this;
     },
-
     Blank: function () {
       this.__class__ = 'Blank';
-
       this.validate = function ( value ) {
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-
         if ( '' !== value.replace( /^\s+/g, '' ).replace( /\s+$/g, '' ) )
           throw new Violation( this, value );
-
         return true;
       };
-
       return this;
     },
-
     Callback: function ( fn ) {
       this.__class__ = 'Callback';
       this.arguments = Array.prototype.slice.call( arguments );
-
       if ( 1 === this.arguments.length )
         this.arguments = []
       else
         this.arguments.splice( 0, 1 );
-
       if ( 'function' !== typeof fn )
         throw new Error( 'Callback must be instanciated with a function' );
-
       this.fn = fn;
-
       this.validate = function ( value ) {
         var arguments = [ value ].concat( this.arguments) ;
         var result = this.fn.apply( this, arguments );
-
         if ( true !== result )
           throw new Violation( this, value, { result: result } );
-
         return true;
       };
-
       return this;
     },
-
     Choice: function ( list ) {
       this.__class__ = 'Choice';
-
       if ( !_isArray( list ) && 'function' !== typeof list )
         throw new Error( 'Choice must be instanciated with an array or a function' );
-
       this.list = list;
-
       this.validate = function ( value ) {
         var list = 'function' === typeof this.list ? this.list() : this.list;
-
         for ( var i = 0; i < list.length; i++ )
           if ( value === list[ i ] )
             return true;
-
         throw new Violation( this, value, { choices: list } );
       };
-
       return this;
     },
-
     Collection: function ( constraint ) {
       this.__class__ = 'Collection';
       this.constraint = 'undefined' !== typeof constraint ? new Constraint( constraint ) : false;
-
       this.validate = function ( collection, group ) {
         var result, validator = new Validator(), count = 0, failures = {}, groups = this.groups.length ? this.groups : group;
-
         if ( !_isArray( collection ) )
           throw new Violation( this, array, { value: Validator.errorCode.must_be_an_array } );
-
         for ( var i = 0; i < collection.length; i++ ) {
           result = this.constraint ?
             validator.validate( collection[ i ], this.constraint, groups ) :
             validator.validate( collection[ i ], groups );
-
           if ( !_isEmptyObject( result ) )
             failures[ count ] = result;
-
           count++;
         }
-
         return !_isEmptyObject( failures ) ? failures : true;
       };
-
       return this;
     },
-
     Count: function ( count ) {
       this.__class__ = 'Count';
       this.count = count;
-
       this.validate = function ( array ) {
         if ( !_isArray( array ) )
           throw new Violation( this, array, { value: Validator.errorCode.must_be_an_array } );
-
         var count = 'function' === typeof this.count ? this.count( array ) : this.count;
-
         if ( isNaN( Number( count ) ) )
           throw new Error( 'Count must be a valid interger', count );
-
         if ( count !== array.length )
           throw new Violation( this, array, { count: count } );
-
         return true;
       };
-
       return this;
     },
-
     Email: function () {
       this.__class__ = 'Email';
-
       this.validate = function ( value ) {
         var regExp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i;
-
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-
         if ( !regExp.test( value ) )
           throw new Violation( this, value );
-
         return true;
       };
-
       return this;
     },
-
     Eql: function ( eql ) {
       this.__class__ = 'Eql';
-
       if ( 'undefined' === typeof eql )
         throw new Error( 'Equal must be instanciated with an Array or an Object' );
-
       this.eql = eql;
-
       this.validate = function ( value ) {
         var eql = 'function' === typeof this.eql ? this.eql( value ) : this.eql;
-
         if ( !expect.eql( eql, value ) )
           throw new Violation( this, value, { eql: eql } );
-
         return true;
       };
-
       return this;
     },
-
     EqualTo: function ( reference ) {
       this.__class__ = 'EqualTo';
-
       if ( 'undefined' === typeof reference )
         throw new Error( 'EqualTo must be instanciated with a value or a function' );
-
       this.reference = reference;
-
       this.validate = function ( value ) {
         var reference = 'function' === typeof this.reference ? this.reference( value ) : this.reference;
-
         if ( reference !== value )
           throw new Violation( this, value, { value: reference } );
-
         return true;
       };
-
       return this;
     },
-
     GreaterThan: function ( threshold ) {
       this.__class__ = 'GreaterThan';
-
       if ( 'undefined' === typeof threshold )
         throw new Error( 'Should give a threshold value' );
-
       this.threshold = threshold;
-
       this.validate = function ( value ) {
         if ( isNaN( Number( value ) ) )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_number } );
-
         if ( this.threshold >= value )
           throw new Violation( this, value, { threshold: this.threshold } );
-
         return true;
       };
-
       return this;
     },
-
     GreaterThanOrEqual: function ( threshold ) {
       this.__class__ = 'GreaterThanOrEqual';
-
       if ( 'undefined' === typeof threshold )
         throw new Error( 'Should give a threshold value' );
-
       this.threshold = threshold;
-
       this.validate = function ( value ) {
         if ( this.threshold > value )
           throw new Violation( this, value, { threshold: this.threshold } );
-
         return true;
       };
-
       return this;
     },
-
     InstanceOf: function ( classRef ) {
       this.__class__ = 'InstanceOf';
-
       if ( 'undefined' === typeof classRef )
         throw new Error( 'InstanceOf must be instanciated with a value' );
-
       this.classRef = classRef;
-
       this.validate = function ( value ) {
         if ( true !== (value instanceof this.classRef) )
           throw new Violation( this, value, { classRef: this.classRef } );
-
         return true;
       };
-
       return this;
     },
-
     IPv4: function () {
       this.__class__ = 'IPv4';
-
       this.validate = function ( value ) {
         var regExp = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-
         if ( !regExp.test( value ) )
           throw new Violation( this, value );
-
         return true;
       };
-
       return this;
     },
-
     Length: function ( boundaries ) {
       this.__class__ = 'Length';
-
       if ( !boundaries.min && !boundaries.max )
         throw new Error( 'Lenth assert must be instanciated with a { min: x, max: y } object' );
-
       this.min = boundaries.min;
       this.max = boundaries.max;
-
       this.validate = function ( value ) {
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-
         if ( 'undefined' !== typeof this.min && this.min === this.max && value.length !== this.min )
           throw new Violation( this, value, { min: this.min, max: this.max } );
-
         if ( 'undefined' !== typeof this.max && value.length > this.max )
           throw new Violation( this, value, { max: this.max } );
-
         if ( 'undefined' !== typeof this.min && value.length < this.min )
           throw new Violation( this, value, { min: this.min } );
-
         return true;
       };
-
       return this;
     },
-
     LessThan: function ( threshold ) {
       this.__class__ = 'LessThan';
-
       if ( 'undefined' === typeof threshold )
         throw new Error( 'Should give a threshold value' );
-
       this.threshold = threshold;
-
       this.validate = function ( value ) {
         if ( isNaN( Number( value ) ) )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_number } );
-
         if ( this.threshold <= value )
           throw new Violation( this, value, { threshold: this.threshold } );
-
         return true;
       };
-
       return this;
     },
-
     LessThanOrEqual: function ( threshold ) {
       this.__class__ = 'LessThanOrEqual';
-
       if ( 'undefined' === typeof threshold )
         throw new Error( 'Should give a threshold value' );
-
       this.threshold = threshold;
-
       this.validate = function ( value ) {
         if ( this.threshold < value )
           throw new Violation( this, value, { threshold: this.threshold } );
-
         return true;
       };
-
       return this;
     },
-
     Mac: function () {
       this.__class__ = 'Mac';
-
       this.validate = function ( value ) {
         var regExp = /^(?:[0-9A-F]{2}:){5}[0-9A-F]{2}$/i;
-
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-
         if ( !regExp.test( value ) )
           throw new Violation( this, value );
-
         return true;
       };
-
       return this;
     },
-
     NotNull: function () {
       this.__class__ = 'NotNull';
-
       this.validate = function ( value ) {
         if ( null === value || 'undefined' === typeof value )
           throw new Violation( this, value );
-
         return true;
       };
-
       return this;
     },
-
     NotBlank: function () {
       this.__class__ = 'NotBlank';
-
       this.validate = function ( value ) {
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-
         if ( '' === value.replace( /^\s+/g, '' ).replace( /\s+$/g, '' ) )
           throw new Violation( this, value );
-
         return true;
       };
-
       return this;
     },
-
     Null: function () {
       this.__class__ = 'Null';
-
       this.validate = function ( value ) {
         if ( null !== value )
           throw new Violation( this, value );
-
         return true;
       };
-
       return this;
     },
-
     Range: function ( min, max ) {
       if ( !min || !max )
         throw new Error( 'Range assert expects min and max values' );
-
       this.LengthValidator = new Assert().Length( { min: min, max: max } );
       this.__class__ = 'Range';
-
       this.validate = function ( value ) {
         try {
           this.LengthValidator.validate( value );
         } catch ( violation ) {
           throw new Violation( this, value, violation.violation );
         }
-
         return true;
       };
-
       return this;
     },
-
     Regexp: function ( regexp, flag ) {
       this.__class__ = 'Regexp';
-
       if ( 'undefined' === typeof regexp )
         throw new Error( 'You must give a regexp' );
-
       this.regexp = regexp;
       this.flag = flag || '';
-
       this.validate = function ( value ) {
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-
         if ( !new RegExp( this.regexp ).test( value, this.flag ) )
           throw new Violation( this, value, { regexp: this.regexp, flag: this.flag } );
-
         return true;
       };
-
       return this;
     },
-
     Required: function () {
       this.__class__ = 'Required';
-
       this.validate = function ( value ) {
         if ( 'undefined' === typeof value )
           throw new Violation( this, value );
-
         if ( 'string' === typeof value )
           try {
             new Assert().NotNull().validate( value ) && new Assert().NotBlank().validate( value );
           } catch ( violation ) {
             throw new Violation( this, value );
           }
-
         return true;
       };
-
       return this;
     },
-
     // Unique() or Unique ( { key: foo } )
     Unique: function ( object ) {
       this.__class__ = 'Unique';
-
       if ( 'object' === typeof object )
         this.key = object.key;
-
       this.validate = function ( array ) {
         var value, store = [];
-
         if ( !_isArray( array ) )
           throw new Violation( this, array, { value: Validator.errorCode.must_be_an_array } );
-
         for ( var i = 0; i < array.length; i++ ) {
           value = 'object' === typeof array[ i ] ? array[ i ][ this.key ] : array[ i ];
-
           if ( 'undefined' === typeof value )
             continue;
-
           if ( -1 !== store.indexOf( value ) )
             throw new Violation( this, array, { value: value } );
-
           store.push( value );
         }
-
         return true;
       };
-
       return this;
     }
   };
-
   // expose to the world these awesome classes
   exports.Assert = Assert;
   exports.Validator = Validator;
   exports.Violation = Violation;
   exports.Constraint = Constraint;
-
   /**
   * Some useful object prototypes / functions here
   */
-
   // IE8<= compatibility
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
@@ -1096,19 +795,15 @@
         }
         return -1;
     };
-
   // Test if object is empty, useful for Constraint violations check
   var _isEmptyObject = function ( obj ) {
     for ( var property in obj )
       return false;
-
     return true;
   };
-
   var _isArray = function ( obj ) {
     return Object.prototype.toString.call( obj ) === '[object Array]';
   }
-
   // https://github.com/LearnBoost/expect.js/blob/master/expect.js
   var expect = {
     eql: function ( actual, expected ) {
@@ -1117,10 +812,8 @@
       } else if ( 'undefined' !== typeof Buffer
           && Buffer.isBuffer( actual ) && Buffer.isBuffer( expected ) ) {
         if ( actual.length !== expected.length ) return false;
-
         for ( var i = 0; i < actual.length; i++ )
           if ( actual[i] !== expected[i] ) return false;
-
         return true;
       } else if ( actual instanceof Date && expected instanceof Date ) {
         return actual.getTime() === expected.getTime();
@@ -1140,140 +833,101 @@
     keys: function ( obj ) {
       if ( Object.keys )
         return Object.keys( obj );
-
       var keys = [];
-
       for ( var i in obj )
         if ( Object.prototype.hasOwnProperty.call( obj, i ) )
           keys.push(i);
-
       return keys;
     },
     objEquiv: function ( a, b ) {
       if ( this.isUndefinedOrNull( a ) || this.isUndefinedOrNull( b ) )
         return false;
-
       if ( a.prototype !== b.prototype ) return false;
-
       if ( this.isArguments( a ) ) {
         if ( !this.isArguments( b ) )
           return false;
-
         return eql( pSlice.call( a ) , pSlice.call( b ) );
       }
-
       try {
         var ka = this.keys( a ), kb = this.keys( b ), key, i;
       } catch ( e ) {
         return false;
       }
-
       if ( ka.length !== kb.length )
         return false;
-
       ka.sort();
       kb.sort();
-
       for ( i = ka.length - 1; i >= 0; i-- )
         if ( ka[ i ] != kb[ i ] )
           return false;
-
       for ( i = ka.length - 1; i >= 0; i-- ) {
         key = ka[i];
         if ( !this.eql( a[ key ], b[ key ] ) )
            return false;
       }
-
       return true;
     }
   };
-
   // AMD Compliance
   if ( "function" === typeof define && define.amd ) {
     define( 'validator', [],function() { return exports; } );
   }
 } )( 'undefined' === typeof exports ? this[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = {} : exports );
 
-define("vendors/validator.js/dist/validator", (function (global) {
-    return function () {
-        var ret, fn;
-        return ret || global.Validator;
-    };
-}(this)));
-
 
   var ParsleyValidator = function (validators) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
-
     // Default Parsley locale is en
     this.locale = 'en';
-
     this.init(validators || {});
   };
-
   ParsleyValidator.prototype = {
     init: function (validators) {
       for (var name in validators)
         this.addValidator(name, validators[name].fn, validators[name].priority);
     },
-
     validate: function () {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
     },
-
     addValidator: function (name, fn, priority) {
       this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
       }
-
       return this;
     },
-
     updateValidator: function (name, fn, priority) {
       return addValidator(name, fn, priority);
     },
-
     removeValidator: function (name) {
       delete(this.validators[name]);
-
       return this;
     },
-
     // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
     setLocale: function (locale) {
       if ('undefined' === typeof window.ParsleyConfig.i18n[locale])
         throw new Error(locale + ' is not available in i18n dictionary');
-
       this.locale = locale;
-
       return this;
     },
-
     getErrorMessage: function (constraint) {
       var message;
-
       // Type constraints are a bit different, we have to match their requirements too to find right error message
       if ('type' === constraint.name)
         message = window.ParsleyConfig.i18n[this.locale].messages[constraint.name][constraint.requirements];
       else
         message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale].messages[constraint.name], constraint.requirements);
-
       return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].messages.defaultMessage;
     },
-
     // Kind of `sprintf()` light implementation
     formatMesssage: function (string, parameters) {
       if ('object' === typeof parameters) {
         for (var i in parameters)
           string = this.formatMesssage(string, parameters[i]);
-
         return string;
       }
-
       return 'string' === typeof string ? string.replace(new RegExp('%s', 'i'), parameters) : '';
     },
-
     // Here is the Parsley default validators list.
     // This is basically Validatorjs validators, with different API for some of them
     // and a Parsley priority set
@@ -1286,7 +940,6 @@ define("vendors/validator.js/dist/validator", (function (global) {
       },
       type: function (type) {
         var assert;
-
         switch (type) {
           case 'email':
             assert = new Validator.Assert().Email();
@@ -1311,7 +964,6 @@ define("vendors/validator.js/dist/validator", (function (global) {
           default:
             throw new Error('validator type `' + type + '` is not supported');
         }
-
         return $.extend(assert, { priority: 256 });
       },
       pattern: function (regexp) {
@@ -1332,26 +984,22 @@ define("vendors/validator.js/dist/validator", (function (global) {
   var ParsleyUI = function (options) {
     this.__class__ = 'ParsleyUI';
   };
-
   ParsleyUI.prototype = {
     listen: function () {
       $.listen('parsley:field:init', this, this.setup);
       $.listen('parsley:field:validated', this, this.reflow);
+      $.listen('parsley:form:validated', this, this.focus);
       $.listen('parsley:field:reset', this, this.reset);
       $.listen('parsley:field:destroy', this, this.destroy);
     },
-
     reflow: function (fieldInstance) {
       // If this field has not an active UI (case for multiples) don't bother doing something
       if (false === fieldInstance._ui.active)
         return;
-
       // Diff between two validation results
       var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
-
       // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
-
       // Handle valid / invalid field class
       if (true === fieldInstance.validationResult)
         fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
@@ -1359,87 +1007,79 @@ define("vendors/validator.js/dist/validator", (function (global) {
         fieldInstance.$element.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
       else
         fieldInstance.$element.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
-
       // TODO better impl
       for (var i = 0; i < diff.removed.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
-
       for (var i = 0; i < diff.added.length; i++)
         fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
           .addClass('parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(diff.added[i].assert)));
-
       for (var i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
           .html(this.getErrorMessage(diff.kept[i].assert));
-
       // Triggers impl
       this.actualizeTriggers(fieldInstance);
-
       if (diff.kept.length || diff.added.length)
         this.manageFailingFieldTrigger(fieldInstance);
     },
-
+    focus: function (formInstance) {
+      if (true === formInstance.isValid || 'none' === formInstance.options.focus)
+        return;
+      for (var i = 0; i < formInstance.fields.length; i++)
+        if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0)
+          if ('first' === formInstance.options.focus)
+            return formInstance.fields[i].$element.focus();
+          else
+            var lastFailingField = formInstance.fields[i];
+      return lastFailingField.$element.focus();
+    },
     getErrorMessage: function (constraint) {
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
-
     diff: function (newResult, oldResult, deep) {
       var added = [],
         kept = [];
-
       for (var i = 0; i < newResult.length; i++) {
         var found = false;
-
         for (var j = 0; j < oldResult.length; j++)
           if (newResult[i].assert.name === oldResult[j].assert.name) {
             found = true;
             break;
           }
-
         if (found)
           kept.push(newResult[i]);
         else
           added.push(newResult[i]);
       }
-
       return {
         kept: kept,
         added: added,
         removed: !deep ? this.diff(oldResult, newResult, true).added : []
       }
     },
-
     setup: function (fieldInstance) {
       var _ui = { active: false };
-
       // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
-
       /** Generate important UI elements and store them in fieldInstance **/
       // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes
       _ui.$errorClassHandler = fieldInstance.options.classHandler(fieldInstance) || fieldInstance.$element;
-
       // $errorsContainer is the $element where errorsWrapper and errors would be appended
       // `data-parsley-errors-container="#element"`
       if ('string' === typeof fieldInstance.options.errorsContainer)
         _ui.$errorsContainer = $(fieldInstance.options.errorsContainer)
-
       // Advanced configuration by a user cutom function that could be passed in options
       if ('function' === typeof fieldInstance.options.errorsContainer)
         _ui.$errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
-
       // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
       _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
       _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
       // validationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
       _ui.lastValidationResult = [];
-
       /** Mess with DOM now **/
       // If do not exist already, insert DOM errors wrapper in the rightful container
       if (0 === $('#' + _ui.errorsWrapperId).length) {
         _ui.active = true;
-
         if ('undefined' !== typeof _ui.$errorsContainer && 'undefined' !== typeof _ui.$errorsContainer[0])
           _ui.$errorsContainer.append(_ui.$errorsWrapper);
         else
@@ -1448,30 +1088,22 @@ define("vendors/validator.js/dist/validator", (function (global) {
           else
             fieldInstance.$element.after(_ui.$errorsWrapper);
       }
-
       // Store it in fieldInstance for later
       fieldInstance._ui = _ui;
-
       // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
     },
-
     actualizeTriggers: function (fieldInstance) {
       // Remove Parsley events already binded on this field
       fieldInstance.$element.off('.Parsley');
-
       // If no trigger is set, all good
       if (false === fieldInstance.options.trigger)
         return;
-
       var triggers = fieldInstance.options.trigger.replace(/^\s+/g , '').replace(/\s+$/g , '');
-
       if ('' === triggers)
         return;
-
       fieldInstance.$element.on(triggers.split(' ').join('.Parsley ') + '.Parsley', false, $.proxy(fieldInstance.validate, fieldInstance));
     },
-
     manageFailingFieldTrigger: function (fieldInstance) {
       // Radio and checkboxes fields
       if (fieldInstance.options.multiple)
@@ -1479,17 +1111,14 @@ define("vendors/validator.js/dist/validator", (function (global) {
           if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
             return $(this).parsley().$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
         });
-
       // All other inputs fields
       if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
         return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
     },
-
     reset: function (fieldInstance) {
       fieldInstance.$element.off('.Parsley');
       fieldInstance.$element.off('.ParsleyFailedOnce');
     },
-
     destroy: function (fieldInstance) {
       this.reset();
     }
@@ -1498,18 +1127,14 @@ define("vendors/validator.js/dist/validator", (function (global) {
   var ParsleyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
     this.__class__ = 'OptionsFactory';
     this.__id__ = ParsleyUtils.hash(4);
-
     this.formOptions = null;
     this.fieldOptions = null;
-
     this.staticOptions = $.extend(true, {}, defaultOptions, globalOptions, userOptions, { namespace: namespace });
   };
-
   ParsleyOptionsFactory.prototype = {
     get: function (parsleyInstance) {
       if ('undefined' === typeof parsleyInstance.__class__)
         throw new Error('Parsley Instance expected');
-
       switch (parsleyInstance.__class__) {
         case 'Parsley':
           return this.staticOptions;
@@ -1521,17 +1146,13 @@ define("vendors/validator.js/dist/validator", (function (global) {
           throw new Error('Instance ' + parsleyInstance.__class__ + ' is not supported');
       }
     },
-
     getFormOptions: function (formInstance) {
       this.formOptions = ParsleyUtils.attr(formInstance.$element, this.staticOptions.namespace);
-
       // not deep extend, since formOptions is a 1 level deep object
       return $.extend({}, this.staticOptions, this.formOptions);
     },
-
     getFieldOptions: function (fieldInstance) {
       this.fieldOptions = ParsleyUtils.attr(fieldInstance.$element, this.staticOptions.namespace);
-
       // not deep extend, since formOptions and fieldOptions is a 1 level deep object
       return $.extend({}, this.staticOptions, this.formOptions, this.fieldOptions);
     }
@@ -1540,129 +1161,92 @@ define("vendors/validator.js/dist/validator", (function (global) {
   var ParsleyForm = function(element, parsleyInstance) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
-
     if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
       throw new Error('You must give a Parsley instance');
-
     this.parsleyInstance = parsleyInstance;
     this.init($(element));
   };
-
   ParsleyForm.prototype = {
     init: function ($element) {
       this.$element = $element;
       this.validationResult = null;
-
       this.options = this.parsleyInstance.OptionsFactory.get(this);
-
       this.bindFields();
-
       // jQuery stuff
       this.$element.attr('novalidate', 'novalidate');
       this.$element.on('submit.Parsley', false, $.proxy(this.onSubmitValidate, this));
     },
-
     onSubmitValidate: function (event) {
       this.validate(undefined, event);
-
       // prevent form submission if validation fails
       if (false === this.isValid && event instanceof $.Event)
         event.preventDefault();
-
       return this;
     },
-
     validate: function (group, event) {
       this.isValid = true;
       this.submitEvent = event;
-
       var validationResult = [];
-
       this.refreshFields();
-
       $.emit('parsley:form:validate', this);
-
       // loop through fields to validate them one by one
       for (var i = 0; i < this.fields.length; i++) {
-
         // do not validate a field if not the same as given validation group
         if (group && group !== this.fields[i].options.group)
           continue;
-
         validationResult = this.fields[i].validate().validationResult;
-
         if (true !== validationResult && validationResult.length > 0 && this.isValid)
           this.isValid = false;
       }
-
       $.emit('parsley:form:validated', this);
-
       return this;
     },
-
     isValid: function (group) {
       this.refreshFields();
-
       for (var i = 0; i < this.fields.length; i++) {
         // do not validate a field if not the same as given validation group
         if (group && group !== this.fields[i].options.group)
           continue;
-
         if (false === this.fields[i].isValid())
           return false;
       }
-
       return true;
     },
-
     refreshFields: function () {
       return this.actualizeOptions().bindFields();
     },
-
     bindFields: function () {
       var self = this;
       this.fields = [];
-
       this.$element.find(this.options.inputs).each(function () {
         self.addField(this);
       });
-
       return this;
     },
-
     addField: function (field) {
       var fieldInstance = new window.Parsley(field, {}, this.parsleyInstance);
-
       // only add valid field children
       if ('ParsleyField' === fieldInstance.__class__)
         this.fields.push(fieldInstance);
-
       return this;
     },
-
     removeField: function (field) {},
     reset: function () {},
     destroy: function () {}
   };
 
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
-
     if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
       throw new Error('ParsleyField instance expected');
-
     if ('function' !== typeof window.ParsleyValidator.validators[name] &&
       'Assert' !== window.ParsleyValidator.validators[name](requirements).__parentClass__)
       throw new Error('Valid validator expected');
-
     var getPriority = function (parsleyField, name) {
       if ('undefined' !== typeof parsleyField.options[name + 'Priority'])
         return parsleyField.options[name + 'Priority'];
-
       return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority', 2);
     };
-
     priority = priority || getPriority(parsleyField, name);
-
     // TODO add group priority
     return $.extend(window.ParsleyValidator.validators[name](requirements), {
       name: name,
@@ -1676,155 +1260,116 @@ define("vendors/validator.js/dist/validator", (function (global) {
   var ParsleyField = function(field, parsleyInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.hash(4);
-
     if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
       throw new Error('You must give a Parsley instance');
-
     this.parsleyInstance = parsleyInstance;
     this.init($(field), parsleyInstance.options);
   };
-
   ParsleyField.prototype = {
     init: function ($element, options) {
       this.constraints = [];
       this.$element = $element;
       this.validationResult = [];
       this.options = this.parsleyInstance.OptionsFactory.get(this);
-
       // select/checkbox multiple inputs hack
       if (this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) {
         this.options.multiple = this.$element.attr('name').replace(/(:|\.|\[|\]|\$)/g, '');
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
       }
-
       $.emit('parsley:field:init', this);
-
       this.bindConstraints();
     },
-
     validate: function () {
       $.emit('parsley:field:validate', this);
       $.emit('parsley:field:' + (this.isValid() ? 'success' : 'error'), this);
       $.emit('parsley:field:validated', this);
-
       return this;
     },
-
     getConstraintsSortedPriorities: function () {
       var priorities = [];
-
       for (var i = 0; i < this.constraints.length; i++)
         if (-1 === priorities.indexOf(this.constraints[i].priority))
           priorities.push(this.constraints[i].priority);
-
       priorities.sort(function (a, b) { return b - a; });
-
       return priorities;
     },
-
     // TODO add group validation
     isValid: function () {
       // sort priorities to validate more important first
       var priorities = this.getConstraintsSortedPriorities();
-
       // recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
-
       // if a field is empty and not required, leave it alone, it's just fine
       if ('' === this.getVal()) {
         var indexOfRequired = this.indexOfConstraint('required');
-
         if (-1 === indexOfRequired || (-1 !== indexOfRequired && false === this.constraints[indexOfRequired].requirements))
           return this.validationResult = [];
       }
-
       // if we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
         return true === (this.validationResult = window.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
-
       // else, iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++)
         if (true !== (this.validationResult = window.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i])))
           return false;
-
       return true;
     },
-
     getVal: function () {
       // value could be overriden in DOM
       if ('undefined' !== typeof this.options.value)
         return this.options.value;
-
       // radio input case
       if (this.$element.is('input[type=radio]'))
         return $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').val() || '';
-
       // checkbox input case
       if (this.$element.is('input[type=checkbox]')) {
         var values = [];
-
         $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').each(function () {
           values.push($(this).val());
         });
-
         return values.length ? values : '';
       }
-
       return this.$element.val();
     },
-
     refreshConstraints: function () {
       return this.actualizeOptions().bindConstraints();
     },
-
     bindConstraints: function () {
       var constraints = [];
-
       // clean all existing DOM constraints to only keep javascript user constraints
       for (var i = 0; i < this.constraints.length; i++)
         if (false === this.constraints[i].isDomConstraint)
           constraints.push(this.constraints[i]);
-
       this.constraints = constraints;
-
       // then re-add Parsley DOM-API constraints
       for (var name in this.options)
         this.addConstraint(name, this.options[name]);
-
       // finally, bind special HTML5 constraints
       return this.bindHtml5Constraints();
     },
-
     bindHtml5Constraints: function () {
       // html5 required
       if (this.$element.hasClass('required') || this.$element.attr('required'))
         this.addConstraint('required', true, undefined, true);
-
       // html5 pattern
       if ('string' === typeof this.$element.attr('pattern'))
         this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
-
       // html5 types
       var type = this.$element.attr('type');
       if ('undefined' !== typeof type && new RegExp(type, 'i').test('email url number range tel')) {
         this.addConstraint('type', type, undefined, true);
-
         // number and range types could have min and/or max values
         if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
           return this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
-
         // min value
         if ('undefined' !== typeof this.$element.attr('min'))
           return this.addConstraint('min', this.$element.attr('min'), undefined, true);
-
         // max value
         if ('undefined' !== typeof this.$element.attr('max'))
           return this.addConstraint('max', this.$element.attr('max'), undefined, true);
       }
-
       return this;
     },
-
     /**
     * Add a new constraint to a field
     *
@@ -1836,119 +1381,90 @@ define("vendors/validator.js/dist/validator", (function (global) {
     */
     addConstraint: function (name, requirements, priority, isDomConstraint) {
       name = name.toLowerCase();
-
       if ('function' === typeof window.ParsleyValidator.validators[name]) {
         constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
-
         // if constraint already exist, delete it and push new version
         if (-1 !== this.indexOfConstraint(constraint.name))
           this.removeConstraint(constraint.name);
-
         this.constraints.push(constraint);
       }
-
       return this;
     },
-
     removeConstraint: function (name) {
       for (var i = 0; i < this.constraints.length; i++)
         if (name === this.constraints[i].name) {
           this.constraints.splice(i, 1);
           break;
         }
-
       return this;
     },
-
     updateConstraint: function (name, parameters, priority) {
       return this.removeConstraint(name)
         .addConstraint(name, parameters, priority);
     },
-
     indexOfConstraint: function (name) {
       for (var i = 0; i < this.constraints.length; i++)
         if (name === this.constraints[i].name)
           return i;
-
       return -1;
     },
-
     reset: function () {
       $.emit('parsley:field:reset', this);
     },
-
     destroy: function () {
       $.emit('parsley:field:destroy', this);
     },
   };
 
   var o = $({}), subscribed = {};
-
   // $.listen(name, callback);
   // $.listen(name, context, callback);
   $.listen = function (name) {
     if ('undefined' === typeof subscribed[name])
       subscribed[name] = [];
-
     if ('function' === typeof arguments[1])
       return subscribed[name].push({ fn: arguments[1] });
-
     if ('object' === typeof arguments[1] && 'function' === typeof arguments[2])
       return subscribed[name].push({ fn: arguments[2], ctxt: arguments[1] });
-
     throw new Error('Wrong parameters');
   };
-
   $.listenTo = function (instance, name, fn) {
     if ('undefined' === typeof subscribed[name])
       subscribed[name] = [];
-
     if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
       throw new Error('Must give Parsley instance');
-
     if ('string' !== typeof name || 'function' !== typeof fn)
       throw new Error('Wrong parameters');
-
     subscribed[name].push({ instance: instance, fn: fn });
   };
-
   $.unsubscribe = function (name, fn) {
     if ('undefined' === typeof subscribed[name])
       return;
-
     if ('string' !== typeof name || 'function' !== typeof fn)
       throw new Error('Wrong arguments');
-
     for (var i = 0; i < subscribed[name].length; i++)
       if (subscribed[name][i].fn === fn)
         return subscribed[name].splice(i, 1);
   };
-
   $.unsubscribeTo = function (instance, name) {
     if ('undefined' === typeof subscribed[name])
       return;
-
     if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
       throw new Error('Must give Parsley instance');
-
     for (var i = 0; i < subscribed[name].length; i++)
       if ('undefined' !== typeof subscribed[name][i].instance && subscribed[name][i].instance.__id__ === instance.__id__)
         return subscribed[name].splice(i, 1);
   };
-
   $.unsubscribeAll = function (name) {
     if ('undefined' === typeof subscribed[name])
       return;
-
     delete(subscribed[name]);
   };
-
   // $.emit(name [, arguments...]);
   // $.emit(name, instance [, arguments..]);
   $.emit = function (name, instance) {
     if ('undefined' === typeof subscribed[name])
       return;
-
     // loop through registered callbacks for this event
     for (var i = 0; i < subscribed[name].length; i++) {
       // if instance is not registered, simple emit
@@ -1956,17 +1472,14 @@ define("vendors/validator.js/dist/validator", (function (global) {
         subscribed[name][i].fn.apply('undefined' !== typeof subscribed[name][i].ctxt ? subscribed[name][i].ctxt : o, Array.prototype.slice.call(arguments, 1));
         continue;
       }
-
       // if instance registered but no instance given for the emit, continue
       if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
         continue;
-
       // if instance is registered and same id, emit
       if (subscribed[name][i].instance.__id__ === instance.__id__) {
         subscribed[name][i].fn.apply(o, Array.prototype.slice.call(arguments, 1));
         continue;
       }
-
       // if registered instance is a Form and fired one is a Field, loop over all its fields and emit if field found
       if (subscribed[name][i].instance instanceof ParsleyForm && instance instanceof ParsleyField)
         for (var j = 0; j < subscribed[name][i].instance.fields.length; j++)
@@ -1976,13 +1489,11 @@ define("vendors/validator.js/dist/validator", (function (global) {
           }
     }
   };
-
   $.subscribed = function () { return subscribed; };
 
 // ParsleyConfig definition if not already set
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
-
 // Define then the messages
 window.ParsleyConfig.i18n['en'] = {
   messages: {
@@ -2015,47 +1526,34 @@ window.ParsleyConfig.i18n['en'] = {
   }
 };
 
-
-define("i18n/en", function(){});
-
 // ### Requirements
-
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
     this.__version__ = '2.0.0-pre';
     this.__id__ = ParsleyUtils.hash(4);
-
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
       throw new Error('You must give an element');
-
     return this.init($(element), options, parsleyInstance);
   };
-
   Parsley.prototype = {
     init: function ($element, options, parsleyInstance) {
       this.$element = $element;
-
       // If element have already been binded, returns its Parsley instance
       if (this.$element.data('Parsley'))
         return this.$element.data('Parsley');
-
       // Handle 'static' options
       this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
       var options = this.OptionsFactory.staticOptions;
-
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs)))
         return this.bind('parsleyForm', parsleyInstance);
-
       // Else every other element that is supported and not excluded is binded as a `ParsleyField`
       else if (this.$element.is(options.inputs) && !this.$element.is(options.excluded))
         return this.bind('parsleyField', parsleyInstance);
-
       return this;
     },
-
     // Retrieve namespace used for DOM-API
     getNamespace: function (options) {
       // `data-parsley-namespace=<namespace>`
@@ -2065,10 +1563,8 @@ define("i18n/en", function(){});
         return options.namespace;
       if ('undefined' !== typeof ParsleyUtils.get(window, 'ParsleyConfig.namespace'))
         return window.ParsleyConfig.namespace;
-
       return ParsleyDefaults.namespace;
     },
-
     // Return proper `ParsleyForm` or `ParsleyField`
     bind: function (type, parentParsleyInstance) {
       switch (type) {
@@ -2081,14 +1577,11 @@ define("i18n/en", function(){});
         default:
           throw new Error(type + 'is not a supported Parsley type');
       }
-
       // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
       this.$element.data('Parsley', parsleyInstance);
-
       return parsleyInstance;
     }
   };
-
 
   // ### jQuery API
   // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
@@ -2096,21 +1589,16 @@ define("i18n/en", function(){});
     return new Parsley(this, options);
   };
 
-
   // ### ParsleyUI
   // UI is a class apart that only listen to some events and them modify DOM accordingly
   // Could be overriden by defining a `window.ParsleyConfig.ParsleyUI` appropriate class (with `listen()` method basically)
   ParsleyUI = 'function' === typeof ParsleyUtils.get(window.ParsleyConfig, 'ParsleyUI') ?
     new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
 
-
   // ### Globals
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
   window.ParsleyValidator = new ParsleyValidator(ParsleyUtils.get(window.ParsleyConfig, 'validators'));
-
-  // Notify document when all globals have been defined
-  $(document).trigger('parsley:loaded', true);
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
@@ -2120,4 +1608,5 @@ define("i18n/en", function(){});
       $('[parsley-validate], [data-parsley-validate]').each(function () {
         new Parsley(this);
       });
-    });})(window.jQuery);
+    });
+})(window);

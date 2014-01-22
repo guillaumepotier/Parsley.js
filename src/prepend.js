@@ -6,7 +6,4 @@
 *
 */
 
-(function ($) {
-
-  // Neutralize potential useless remaining defines
-  define = function (name, fn) {};
+(function(window, undefined) {

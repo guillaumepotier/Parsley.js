@@ -29,10 +29,6 @@ requirejs.config({
         deps: ['jquery'],
         exports: 'Parsley'
       },
-      'dist/parsley': {
-        deps: ['jquery'],
-        exports: 'Parsley'
-      },
       'modules/mocha/mocha': {
         deps: ['expect', 'sinon'],
         exports: 'mocha'

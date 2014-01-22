@@ -33,4 +33,3 @@ window.ParsleyConfig.i18n['en'] = {
     equalto:        "This value should be the same."
   }
 };
-

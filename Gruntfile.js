@@ -51,6 +51,20 @@ module.exports = function (grunt) {
             {
               match: 'license',
               replacement: '<%= pkg.license %>'
+            },
+            // Remove useless define statements that r.js add after concatenation, and not matched by convert callback
+            {
+              match: /define\("((?!\);)[\s\S])*\);/ig,
+              replacement: function () {
+                return '';
+              }
+            },
+            // Remove useless double line breaks
+            {
+              match: /\n\n/ig,
+              replacement: function () {
+                return "\n";
+              }
             }
           ]
         },
@@ -138,9 +152,8 @@ function convert(name, path, contents) {
   }
 
   // Leave original validatorjs untouched
-  if (/(dist\/validator.js)/.test(path)) {
+  if (/(dist\/validator.js)/.test(path))
     return contents;
-  }
 
   // Ignore returns
   contents = contents
@@ -151,7 +164,7 @@ function convert(name, path, contents) {
   // Remove define wrappers, closure ends, and empty declarations
   contents = contents
     .replace(/define\([^{]*?{/, "")
-    .replace(rdefineEnd, "");
+    .replace(rdefineEnd, "\n");
 
   return contents;
 }

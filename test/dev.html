@@ -15,8 +15,8 @@
     </style>
 </head>
 <body>
-    <form id="form" data-parsley-validate>
-        Email: <input id="email" type="email" data-parsley-length="[5, 20]" data-parsley-priority-enabled="false" data-parsley-trigger="keyup change" required />
+    <form id="form" data-parsley-validate data-parsley-focus="last">
+        Email: <input id="email" type="email" data-parsley-length="[5, 20]" data-parsley-trigger="keyup change" required />
         Number: <input id="fullname" type="text" data-parsley-type="number" />
 
         Radio:
@@ -37,13 +37,8 @@
     </form>
 
     <script src="../bower_components/jquery/jquery.js"></script>
-    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script> -->
-
     <script src="../src/i18n/fr.js"></script>
     <script src="../dist/parsley.js"></script>
 
-    <script>
-        ParsleyValidator.setLocale('fr');
-    </script>
 </body>
 </html>

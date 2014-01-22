@@ -110,8 +110,6 @@ define([
   window.ParsleyUtils = ParsleyUtils;
   window.ParsleyValidator = new ParsleyValidator(ParsleyUtils.get(window.ParsleyConfig, 'validators'));
 
-  // Notify document when all globals have been defined
-  $(document).trigger('parsley:loaded', true);
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
