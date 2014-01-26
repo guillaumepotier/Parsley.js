@@ -17,6 +17,7 @@ define(function () {
       it.skip('should handle triggers');
       it.skip('should auto bind error triggers on field error');
       it.skip('should handle trigger keyup tresshold validation');
+      it.skip('should handle UI disabling');
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

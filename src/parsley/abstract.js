@@ -34,6 +34,25 @@ define('parsley/abstract', function () {
       $.unsubscribeTo(this, name);
 
       return this;
+    },
+
+    reset: function () {
+      if ('ParsleyField' === this.__class__)
+        return $.emit('parsley:field:reset', this);
+
+      for (var i = 0; i < this.fields.length; i++)
+        this.fields[i].reset();
+    },
+
+    destroy: function () {
+      if ('ParsleyField' === this.__class__) {
+        $.emit('parsley:field:destroy', this);
+        this.$element.removeData('Parsley');
+        return;
+      }
+
+      for (var i = 0; i < this.fields.length; i++)
+        this.fields[i].destroy();
     }
   };
 

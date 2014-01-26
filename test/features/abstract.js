@@ -18,6 +18,8 @@ define(function () {
       it.skip('should use registerValidator()');
       it.skip('should use removeValidator()');
       it.skip('should use updateValidator()');
+      it.skip('should use reset()');
+      it.skip('should use destroy()');
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

@@ -20,6 +20,12 @@ define('parsley/defaults', function () {
     priorityEnabled: true,
 
     // ### UI
+    // Enable\Disable error messages
+    UIEnabled: true,
+
+    // key events treshold before validation
+    validationTresshold: 3,
+
     // Focused field on form validation error. 'fist'|'last'|'none'
     focus: 'first',
 

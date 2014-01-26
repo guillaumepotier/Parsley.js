@@ -7,7 +7,8 @@ define('parsley/ui', [
 
   ParsleyUI.prototype = {
     listen: function () {
-      $.listen('parsley:field:init', this, this.setup);
+      $.listen('parsley:field:init', this, this.setupField);
+      $.listen('parsley:form:init', this, this.setupForm);
 
       $.listen('parsley:field:validated', this, this.reflow);
       $.listen('parsley:form:validated', this, this.focus);
@@ -29,11 +30,11 @@ define('parsley/ui', [
 
       // Handle valid / invalid field class
       if (true === fieldInstance.validationResult)
-        fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
+        this._successClass(fieldInstance);
       else if (fieldInstance.validationResult.length > 0)
-        fieldInstance.$element.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
+        this._errorClass(fieldInstance);
       else
-        fieldInstance.$element.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
+        this._resetClass(fieldInstance);
 
       // TODO better impl
       for (var i = 0; i < diff.removed.length; i++)
@@ -104,8 +105,18 @@ define('parsley/ui', [
       }
     },
 
-    setup: function (fieldInstance) {
+    setupForm: function (formInstance) {
+      // jQuery stuff
+      formInstance.$element.attr('novalidate', 'novalidate');
+      formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
+    },
+
+    setupField: function (fieldInstance) {
       var _ui = { active: false };
+
+      // UI could be disabled
+      if (false === fieldInstance.options.UIEnabled)
+        return;
 
       // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
@@ -163,7 +174,16 @@ define('parsley/ui', [
       if ('' === triggers)
         return;
 
-      fieldInstance.$element.on(triggers.split(' ').join('.Parsley ') + '.Parsley', false, $.proxy(fieldInstance.validate, fieldInstance));
+      fieldInstance.$element.on(triggers.split(' ').join('.Parsley ') + '.Parsley', false, $.proxy(this.eventValidate, fieldInstance));
+    },
+
+    // Called through $.proxy with fieldInstance. `this` context is ParsleyField
+    eventValidate: function(event) {
+      if (new RegExp('key').test(event.type))
+        if (this.getVal().length <= this.options.validationTresshold)
+          return;
+
+      this.validate();
     },
 
     manageFailingFieldTrigger: function (fieldInstance) {
@@ -180,12 +200,33 @@ define('parsley/ui', [
     },
 
     reset: function (fieldInstance) {
+      // Reset all event listeners
       fieldInstance.$element.off('.Parsley');
       fieldInstance.$element.off('.ParsleyFailedOnce');
+
+      // Reset all errors' li
+      fieldInstance._ui.$errorsWrapper.children().each(function () {
+        $(this).remove();
+      });
+
+      // Reset validation class
+      this._resetClass(fieldInstance);
     },
 
     destroy: function (fieldInstance) {
-      this.reset();
+      this.reset(fieldInstance);
+      fieldInstance._ui.$errorsWrapper.remove();
+      delete(fieldInstance._ui);
+    },
+
+    _successClass: function (fieldInstance) {
+      fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
+    },
+    _errorClass: function (fieldInstance) {
+      fieldInstance.$element.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
+    },
+    _resetClass: function (fieldInstance) {
+      fieldInstance.$element.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
     }
   };
 

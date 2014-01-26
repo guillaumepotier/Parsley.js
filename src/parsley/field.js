@@ -201,15 +201,7 @@ define('parsley/field', [
           return i;
 
       return -1;
-    },
-
-    reset: function () {
-      $.emit('parsley:field:reset', this);
-    },
-
-    destroy: function () {
-      $.emit('parsley:field:destroy', this);
-    },
+    }
   };
 
   return ParsleyField;

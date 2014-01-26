@@ -22,9 +22,7 @@ define('parsley/form', [
 
       this.bindFields();
 
-      // jQuery stuff
-      this.$element.attr('novalidate', 'novalidate');
-      this.$element.on('submit.Parsley', false, $.proxy(this.onSubmitValidate, this));
+      $.emit('parsley:form:init', this);
     },
 
     onSubmitValidate: function (event) {

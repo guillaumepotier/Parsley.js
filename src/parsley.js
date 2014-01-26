@@ -115,8 +115,8 @@ define([
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
     $(document).ready(function () {
-      // Works only on `parsley-validate` and `data-parsley-validate`. We dunno here user specific namespace
-      $('[parsley-validate], [data-parsley-validate]').each(function () {
+      // Works only on `data-parsley-validate`. We dunno here user specific namespace
+      $('[data-parsley-validate]').each(function () {
         new Parsley(this);
       });
     });
