@@ -8,24 +8,8 @@ define('parsley/abstract', function () {
       return this;
     },
 
-    registerValidator: function (name, fn, priority) {
-      window.ParsleyValidator.addValidator(name, fn, priority);
-
-      return this;
-    },
-
-    removeValidator: function (name) {
-      window.ParsleyValidator.removeValidator(name);
-
-      return this;
-    },
-
-    updateValidator: function (name, fn, priority) {
-      return this.registerValidator(name, fn, priority);
-    },
-
     subscribe: function (name, fn) {
-      $.subscribeTo(this, name, fn);
+      $.listenTo(this, name, fn);
 
       return this;
     },
@@ -37,22 +21,32 @@ define('parsley/abstract', function () {
     },
 
     reset: function () {
+      // Field case
       if ('ParsleyField' === this.__class__)
         return $.emit('parsley:field:reset', this);
 
+      // Form case
       for (var i = 0; i < this.fields.length; i++)
-        this.fields[i].reset();
+        $.emit('parsley:field:reset', this.fields[i]);
+
+      $.emit('parsley:form:reset', this);
     },
 
     destroy: function () {
+      // Field case: emit destroy event to clean UI and then destroy stored instance
       if ('ParsleyField' === this.__class__) {
         $.emit('parsley:field:destroy', this);
         this.$element.removeData('Parsley');
+
         return;
       }
 
+      // Form case: destroy all its fields and then destroy stored instance
       for (var i = 0; i < this.fields.length; i++)
         this.fields[i].destroy();
+
+      $.emit('parsley:form:destroy', this);
+      this.$element.removeData('Parsley');
     }
   };
 

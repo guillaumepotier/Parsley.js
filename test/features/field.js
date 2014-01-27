@@ -89,13 +89,14 @@ define(function () {
       });
       it('should valid most complex Callback() validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
-        var parsleyField = new Parsley($('#element'))
-          .registerValidator('multiple', function (value, multiple) {
-            if (!isNaN(parseFloat(value)) && isFinite(value))
-              return !(new Number(value) % multiple);
+        ParsleyValidator.addValidator('multiple', function (value, multiple) {
+          if (!isNaN(parseFloat(value)) && isFinite(value))
+            return !(new Number(value) % multiple);
 
-            return false;
-          }, 512)
+          return false;
+        }, 512);
+
+        var parsleyField = new Parsley($('#element'))
           .addConstraint('multiple', 2);
         expect(parsleyField.isValid()).to.eql([]);
         $('#element').val('1');
@@ -109,24 +110,13 @@ define(function () {
       });
       it('should properly compute constraints on each validation', function () {
         $('body').append('<input type="email" data-parsley-required id="element" />');
-        var parsleyField = new Parsley($('#element'), {
-          validators : {
-            multiple: {
-              fn: function (value, multiple) {
-                if (!isNaN(parseFloat(value)) && isFinite(value))
-                  return !(new Number(value) % multiple);
-
-                return false;
-              },
-              priority: 64
-            }
-          }
-        })
-        .registerValidator('foobazer', function (value) {
+        ParsleyValidator.addValidator('foobazer', function (value) {
           return 'foobar' === value;
-        }, 2)
-        .addConstraint('multiple', 4)
-        .addConstraint('foobazer', true);
+        }, 2);
+
+        var parsleyField = new Parsley($('#element'))
+          .addConstraint('multiple', 4)
+          .addConstraint('foobazer', true);
         parsleyField.bindConstraints();
         expect(parsleyField.constraints.length).to.be(4);
         $('#element').removeAttr('data-parsley-required');

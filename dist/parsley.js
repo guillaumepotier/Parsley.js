@@ -1,7 +1,7 @@
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sun Jan 26 2014 23:58:02
+* Version 2.0.0-pre - built Mon Jan 27 2014 23:06:32
 * MIT Licensed
 *
 */
@@ -124,17 +124,6 @@
       this.options = this.parsleyInstance.OptionsFactory.get(this);
       return this;
     },
-    registerValidator: function (name, fn, priority) {
-      window.ParsleyValidator.addValidator(name, fn, priority);
-      return this;
-    },
-    removeValidator: function (name) {
-      window.ParsleyValidator.removeValidator(name);
-      return this;
-    },
-    updateValidator: function (name, fn, priority) {
-      return this.registerValidator(name, fn, priority);
-    },
     subscribe: function (name, fn) {
       $.subscribeTo(this, name, fn);
       return this;
@@ -144,19 +133,26 @@
       return this;
     },
     reset: function () {
+      // Field case
       if ('ParsleyField' === this.__class__)
         return $.emit('parsley:field:reset', this);
+      // Form case
       for (var i = 0; i < this.fields.length; i++)
-        this.fields[i].reset();
+        $.emit('parsley:field:reset', this.fields[i]);
+      $.emit('parsley:form:reset', this);
     },
     destroy: function () {
+      // Field case: emit destroy event to clean UI and then destroy stored instance
       if ('ParsleyField' === this.__class__) {
         $.emit('parsley:field:destroy', this);
         this.$element.removeData('Parsley');
         return;
       }
+      // Form case: destroy all its fields and then destroy stored instance
       for (var i = 0; i < this.fields.length; i++)
         this.fields[i].destroy();
+      $.emit('parsley:form:destroy', this);
+      this.$element.removeData('Parsley');
     }
   };
 /*!
@@ -1005,11 +1001,12 @@
   };
   ParsleyUI.prototype = {
     listen: function () {
-      $.listen('parsley:field:init', this, this.setupField);
       $.listen('parsley:form:init', this, this.setupForm);
+      $.listen('parsley:field:init', this, this.setupField);
       $.listen('parsley:field:validated', this, this.reflow);
       $.listen('parsley:form:validated', this, this.focus);
       $.listen('parsley:field:reset', this, this.reset);
+      $.listen('parsley:form:destroy', this, this.destroy);
       $.listen('parsley:field:destroy', this, this.destroy);
     },
     reflow: function (fieldInstance) {
@@ -1105,7 +1102,7 @@
       // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
       _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
       _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
-      // validationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
+      // ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
       _ui.lastValidationResult = [];
       /** Mess with DOM now **/
       // If do not exist already, insert DOM errors wrapper in the rightful container
@@ -1153,21 +1150,27 @@
       if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
         return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
     },
-    reset: function (fieldInstance) {
+    reset: function (parsleyInstance) {
       // Reset all event listeners
-      fieldInstance.$element.off('.Parsley');
-      fieldInstance.$element.off('.ParsleyFailedOnce');
+      parsleyInstance.$element.off('.Parsley');
+      parsleyInstance.$element.off('.ParsleyFailedOnce');
+      if ('ParsleyForm' === parsleyInstance.__class__)
+        return;
       // Reset all errors' li
-      fieldInstance._ui.$errorsWrapper.children().each(function () {
+      parsleyInstance._ui.$errorsWrapper.children().each(function () {
         $(this).remove();
       });
       // Reset validation class
-      this._resetClass(fieldInstance);
+      this._resetClass(parsleyInstance);
+      // Reset lastValidationResult
+      parsleyInstance._ui.lastValidationResult = [];
     },
-    destroy: function (fieldInstance) {
-      this.reset(fieldInstance);
-      fieldInstance._ui.$errorsWrapper.remove();
-      delete(fieldInstance._ui);
+    destroy: function (parsleyInstance) {
+      this.reset(parsleyInstance);
+      if ('ParsleyForm' === parsleyInstance.__class__)
+        return;
+      parsleyInstance._ui.$errorsWrapper.remove();
+      delete(parsleyInstance._ui);
     },
     _successClass: function (fieldInstance) {
       fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
