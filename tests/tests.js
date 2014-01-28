@@ -1250,6 +1250,15 @@ var testSuite = function () {
          triggerSubmitValidation( '#beforeDate', '4/15/1990' );
          expect( $( '#beforeDate' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
+       it ( 'onorbeforeDate', function () {
+         triggerSubmitValidation( '#onorbeforeDate', '04/15/2015' );
+         expect( $( '#onorbeforeDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#onorbeforeDate', 'onorbeforeDate') ).to.be( 'This date should be on or before #onorbeforeDate-model.' );
+         triggerSubmitValidation( '#onorbeforeDate', '4/15/1990' );
+         expect( $( '#onorbeforeDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+         triggerSubmitValidation( '#onorbeforeDate', '1/1/2014' );
+         expect( $( '#onorbeforeDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+       } )
        it ( 'afterDate', function () {
          triggerSubmitValidation( '#afterDate', '4/15/1990' );
          expect( $( '#afterDate' ).hasClass( 'parsley-error' ) ).to.be( true );
@@ -1257,6 +1266,15 @@ var testSuite = function () {
          triggerSubmitValidation( '#afterDate', '04/15/2015' );
          expect( $( '#afterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
        } )
+       it ( 'onorafterDate', function () {
+         triggerSubmitValidation( '#onorafterDate', '4/15/1990' );
+         expect( $( '#onorafterDate' ).hasClass( 'parsley-error' ) ).to.be( true );
+         expect( getErrorMessage( '#onorafterDate', 'onorafterDate') ).to.be( 'This date should be on or after #onorafterDate-model.' );
+         triggerSubmitValidation( '#onorafterDate', '4/15/2015' );
+         expect( $( '#onorafterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+         triggerSubmitValidation( '#onorafterDate', '1/1/2014' );
+         expect( $( '#onorafterDate' ).hasClass( 'parsley-success' ) ).to.be( true );
+        } )
        it ( 'luhn', function () {
          triggerSubmitValidation( '#luhn', '4000000000000000' );
          expect( $( '#luhn' ).hasClass( 'parsley-error' ) ).to.be( true );

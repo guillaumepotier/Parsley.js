@@ -66,10 +66,26 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , priority: 32
         }
       }
+      , onorbeforedate: function() {
+        return {
+          validate: function ( val, elem) {
+            return Date.parse(val) <= Date.parse($(elem).val());
+          }
+          , priority: 32
+        }
+      }
       , afterdate: function () {
         return {
-          validate: function ( val, elem, self) {
+          validate: function ( val, elem) {
             return Date.parse($(elem).val()) < Date.parse(val);
+          }
+          , priority: 32
+        }
+      }
+      , onorafterdate: function() {
+        return {
+          validate: function ( val, elem) {
+            return Date.parse($(elem).val()) <= Date.parse(val);
           }
           , priority: 32
         }
@@ -141,7 +157,9 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , greaterthan:    "This value should be greater than %s."
       , lessthan:       "This value should be less than %s."
       , beforedate:     "This date should be before %s."
+      , onorbeforedate: "This date should be on or before %s."
       , afterdate:      "This date should be after %s."
+      , onorafterdate:  "This date should be on or after %s."
       , luhn:           "This value should pass the luhn test."
       , americandate:	"This value should be a valid date (MM/DD/YYYY)."
     }
