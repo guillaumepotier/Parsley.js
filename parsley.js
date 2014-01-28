@@ -228,7 +228,7 @@
               if (false === isConstraintValid) {
                   self.options.listeners.onFieldError( self.element, self.constraints, self );
               } else if (true === isConstraintValid && false === self.options.listeners.onFieldSuccess( self.element, self.constraints, self )) {
-                  // if onFieldSuccess returns (bool) false, consider that field si invalid
+                  // if onFieldSuccess returns (bool) false, consider that field is invalid
                   isConstraintValid = false;
               }
 
