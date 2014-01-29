@@ -29,7 +29,7 @@ window.ParsleyConfig.i18n['en'] = {
     length:         "This value length is invalid. It should be between %s and %s characters long.",
     mincheck:       "You must select at least %s choices.",
     maxcheck:       "You must select %s choices or less.",
-    rangecheck:     "You must select between %s and %s choices.",
+    check:          "You must select between %s and %s choices.",
     equalto:        "This value should be the same."
   }
 };

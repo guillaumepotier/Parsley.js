@@ -60,7 +60,7 @@ define('parsley/pubsub', [
     if ('undefined' === typeof subscribed[name])
       return;
 
-    delete(subscribed[name]);
+    delete subscribed[name];
   };
 
   // $.emit(name [, arguments...]);

@@ -13,8 +13,7 @@
   ],
   "dependencies": {
     "jquery": "~1.10.0",
-    "validator.js": "~0.5.1",
-    "almond": "~0.2.7",
+    "validator.js": "~0.5.3",
     "requirejs": "~2.1.0",
     "bootstrap": "~3.0.3"
   },

@@ -34,7 +34,7 @@ define('parsley/validator', [
     },
 
     removeValidator: function (name) {
-      delete(this.validators[name]);
+      delete this.validators[name];
 
       return this;
     },
@@ -125,6 +125,15 @@ define('parsley/validator', [
       maxlength: function (length) {
         return $.extend(new Validator.Assert().Length({ max: length }), { priority: 32 });
       },
+      mincheck: function (length) {
+        return this.minlength(length);
+      },
+      maxcheck: function (length) {
+        return this.maxlength(length);
+      },
+      check: function (array) {
+        return this.length(array);
+      }
     }
   };
 

@@ -228,7 +228,7 @@ define('parsley/ui', [
         return;
 
       parsleyInstance._ui.$errorsWrapper.remove();
-      delete(parsleyInstance._ui);
+      delete parsleyInstance._ui;
     },
 
     _successClass: function (fieldInstance) {

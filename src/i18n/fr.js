@@ -29,7 +29,7 @@ window.ParsleyConfig.i18n['fr'] = {
       equalto:      "Cette valeur devrait être identique.",
       mincheck:     "Vous devez sélectionner au moins %s choix.",
       maxcheck:     "Vous devez sélectionner %s choix maximum.",
-      rangecheck:   "Vous devez sélectionner entre %s et %s choix."
+      check:        "Vous devez sélectionner entre %s et %s choix."
     }
 };
 

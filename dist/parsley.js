@@ -1,7 +1,7 @@
 /*!
 * parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Mon Jan 27 2014 23:06:32
+* Version 2.0.0-pre - built Wed Jan 29 2014 23:48:37
 * MIT Licensed
 *
 */
@@ -125,7 +125,7 @@
       return this;
     },
     subscribe: function (name, fn) {
-      $.subscribeTo(this, name, fn);
+      $.listenTo(this, name, fn);
       return this;
     },
     unsubscribe: function (name) {
@@ -158,7 +158,7 @@
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.5.1 - built Sun Jan 05 2014 17:05:46
+* Version 0.5.3 - built Wed Jan 29 2014 23:29:01
 * MIT Licensed
 *
 */
@@ -168,7 +168,7 @@
   */
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '0.5.1';
+    this.__version__ = '0.5.3';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
     return this;
@@ -176,15 +176,15 @@
   Validator.prototype = {
     constructor: Validator,
     /*
-    * Validate string: validate( string, string ) || validate( string, [ string, string] )
-    * Validate object: validate( object, constraint, string ) || validate( object, constraint, [ string, string ] )
-    * Validate binded object: validate( object, string ) || validate( object, [ string, string] )
+    * Validate string: validate( string, Assert, string ) || validate( string, [ Assert, Assert ], [ string, string ] )
+    * Validate object: validate( object, Constraint, string ) || validate( object, Constraint, [ string, string ] )
+    * Validate binded object: validate( object, string ) || validate( object, [ string, string ] )
     */
     validate: function ( objectOrString, AssertsOrConstraintOrGroup, group ) {
       if ( 'string' !== typeof objectOrString && 'object' !== typeof objectOrString )
         throw new Error( 'You must validate an object or a string' );
-      // string validation
-      if ( 'string' === typeof objectOrString )
+      // string / array validation
+      if ( 'string' === typeof objectOrString || _isArray(objectOrString) )
         return this._validateString( objectOrString, AssertsOrConstraintOrGroup, group );
       // binded object validation
       if ( this.isBinded( objectOrString ) )
@@ -237,7 +237,8 @@
   Validator.errorCode = {
     must_be_a_string: 'must_be_a_string',
     must_be_an_array: 'must_be_an_array',
-    must_be_a_number: 'must_be_a_number'
+    must_be_a_number: 'must_be_a_number',
+    must_be_a_string_or_array: 'must_be_a_string_or_array'
   };
   /**
   * Constraint
@@ -623,8 +624,8 @@
       this.min = boundaries.min;
       this.max = boundaries.max;
       this.validate = function ( value ) {
-        if ( 'string' !== typeof value )
-          throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
+        if ( 'string' !== typeof value && !_isArray( value ) )
+          throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string_or_array } );
         if ( 'undefined' !== typeof this.min && this.min === this.max && value.length !== this.min )
           throw new Violation( this, value, { min: this.min, max: this.max } );
         if ( 'undefined' !== typeof this.max && value.length > this.max )
@@ -915,7 +916,7 @@
       return addValidator(name, fn, priority);
     },
     removeValidator: function (name) {
-      delete(this.validators[name]);
+      delete this.validators[name];
       return this;
     },
     // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
@@ -993,6 +994,15 @@
       maxlength: function (length) {
         return $.extend(new Validator.Assert().Length({ max: length }), { priority: 32 });
       },
+      mincheck: function (length) {
+        return this.minlength(length);
+      },
+      maxcheck: function (length) {
+        return this.maxlength(length);
+      },
+      check: function (array) {
+        return this.length(array);
+      }
     }
   };
 
@@ -1170,7 +1180,7 @@
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
       parsleyInstance._ui.$errorsWrapper.remove();
-      delete(parsleyInstance._ui);
+      delete parsleyInstance._ui;
     },
     _successClass: function (fieldInstance) {
       fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
@@ -1508,7 +1518,7 @@
   $.unsubscribeAll = function (name) {
     if ('undefined' === typeof subscribed[name])
       return;
-    delete(subscribed[name]);
+    delete subscribed[name];
   };
   // $.emit(name [, arguments...]);
   // $.emit(name, instance [, arguments..]);
@@ -1571,7 +1581,7 @@ window.ParsleyConfig.i18n['en'] = {
     length:         "This value length is invalid. It should be between %s and %s characters long.",
     mincheck:       "You must select at least %s choices.",
     maxcheck:       "You must select %s choices or less.",
-    rangecheck:     "You must select between %s and %s choices.",
+    check:          "You must select between %s and %s choices.",
     equalto:        "This value should be the same."
   }
 };

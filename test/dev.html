@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <form id="form" data-parsley-focus="last">
+    <form id="form" data-parsley-focus="last" data-parsley-validate>
         Email: <input id="email" type="email" data-parsley-length="[5, 20]" data-parsley-trigger="keyup change" required data-parsley-required-message="Super message!"/>
         Number: <input id="fullname" type="text" data-parsley-type="number" />
 
@@ -26,7 +26,7 @@
         </span>
 
         Checkboxes:
-        <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" data-parsley-errors-container="#checkoxErrors" required />
+        <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" data-parsley-errors-container="#checkoxErrors" data-parsley-mincheck="2" required />
         <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
         <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" />
 
