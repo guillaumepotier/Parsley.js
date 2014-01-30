@@ -44,7 +44,20 @@ define(function () {
         expect(new Parsley('#field3').options).to.have.key('notblank');
         expect(new Parsley('#field3').options).to.not.have.key('required');
       });
-      it.skip('should handle group validation');
+      it('should handle group validation', function () {
+        $('body').append(
+          '<form id="element">'                                                                        +
+            '<input id="field1" type="text" data-parsley-group="foo" data-parsley-required="true" />'  +
+            '<div id="field2"></div>'                                                                  +
+            '<textarea id="field3" data-parsley-group="bar" data-parsley-required="true"></textarea>'  +
+          '</form>');
+          parsleyForm = new Parsley($('#element'));
+          expect(parsleyForm.isValid()).to.be(false);
+          $('#field1').val('value');
+          expect(parsleyForm.isValid()).to.be(false);
+          expect(parsleyForm.isValid('foo')).to.be(true);
+          expect(parsleyForm.isValid('bar')).to.be(false);
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();
