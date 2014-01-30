@@ -8,30 +8,36 @@ define('parsley/abstract', function () {
       return this;
     },
 
+    // Subscribe an event and a handler for a specific field or a specific form
+    // If on a ParsleyForm instance, it will be attached to form instance and also
+    // To every field instance for this form
     subscribe: function (name, fn) {
-      $.listenTo(this, name, fn);
+      $.listenTo(this, 'parsley:' + name.toLowerCase(), fn);
 
       return this;
     },
 
+    // Same as subscribe above. Unsubscribe an event for field, or form + its fields
     unsubscribe: function (name) {
-      $.unsubscribeTo(this, name);
+      $.unsubscribeTo(this, 'parsley:' + name.toLowerCase());
 
       return this;
     },
 
+    // Reset UI
     reset: function () {
-      // Field case
+      // Field case: just emit a reset event for UI
       if ('ParsleyField' === this.__class__)
         return $.emit('parsley:field:reset', this);
 
-      // Form case
+      // Form case: emit a reset event for each field
       for (var i = 0; i < this.fields.length; i++)
         $.emit('parsley:field:reset', this.fields[i]);
 
       $.emit('parsley:form:reset', this);
     },
 
+    // Destroy Parsley instance (+ UI)
     destroy: function () {
       // Field case: emit destroy event to clean UI and then destroy stored instance
       if ('ParsleyField' === this.__class__) {
