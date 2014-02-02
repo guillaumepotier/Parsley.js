@@ -1,0 +1,45 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Parsleyjs Developpement Tests</title>
+    <style>
+        #element {
+            display: none;
+        }
+        .parsley-success {
+            border: 1px solid green;
+        }
+        .parsley-error {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <form id="form" data-parsley-validate>
+        Email: <input id="email" type="email" data-parsley-length="[5, 20]" data-parsley-trigger="keyup change" required data-parsley-required-message="Super message!"/>
+
+        Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST"}' required />
+
+        Radio:
+        <span>
+            <input type="radio" name="radio" id="radio1" value="yes" required />
+            <input type="radio" name="radio" id="radio2" value="no" />
+        </span>
+
+        Checkboxes:
+        <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" data-parsley-errors-container="#checkoxErrors" data-parsley-mincheck="2" required />
+        <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
+        <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" />
+
+        <span id="checkoxErrors">
+        </span>
+
+        <input type="submit" />
+    </form>
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../src/i18n/fr.js"></script>
+    <script src="../src/parsley.remote.js"></script>
+    <!-- <script src="../dist/parsley.min.js"></script> -->
+    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+</html>

@@ -1,86 +1,54 @@
-﻿#Parsley.js
+# Parsley2
 
-[![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guillaumepotier/parsley.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+Next [Parsley](http://parsleyjs.org) version, still in heavy development.
 
-Javascript form validation, without actually writing a single line of javascript!
+## Version
 
-#TODOs
+2.0.0-dev
 
-See TODO.md
+## Doc
 
-#Curent Stable Version
+See `doc/`
 
-1.2.3
+## Install
 
-# Browser compatibility
+```
+npm install
+npm install -g grunt-cli
+grunt configure
+```
 
-  - IE 7/8 (used with jQuery 1.x)
-  - IE 9+ (latest jQuery and Zepto)
-  - FF 14+
-  - Chrome
+## Requirements
 
-# Min requirements
+jQuery > 1.8
 
-jQuery 1.7+
 
-#Install dependencies for documentation and tests
+## Contributing
 
-`bower install jquery`
-`bower install bootstrap`
+See `CONTRIBUTING.md` file
 
-#Run tests
 
-* In your browser: go to `tests/index.html`
-* Headless tests: install mocha-phantomjs with npm: `npm install -g mocha-phantomjs` and then run `./bin/test-suite.sh`
+## Build dist versions
 
-#Make production minified versions
+```
+grunt build
+```
 
-You'll need ruby, and Google Closure compiler: `gem install closure-compiler`. Then, just call:
+## Generate annotated documentation
 
-* Linux/Mac: `./bin/build.sh version` where version is the build release. eg: `./bin/build.sh 1.1.2`
-* Windows: `./bin/build.ps1 version` where version is the build release. eg: `./bin/build.ps1 1.1.2`
+```
+sudo npm install -g docco
+grunt build-annotated-source
+```
 
-They'll be created and dumped in the dist/ directory
+## Run tests
 
-#Contribute!
+In the browser: open `test/index.html`
 
-##Validators
+In the terminal: `npm test`
 
-Add new validators in `parsley.extend.js` and minify it. No validators will be allowed directly into parsley.js
-(but great validators could move from extra to parsley ;))
 
-##Localization
+## License
 
-If file does not exist, create it into `ì18n/` directory with same syntax as others.
-Reference file is _messages.en.js
-
-##Integrations
-
-Create integration with other framework as a separate Github repo and send a pull request for including here.
-Some integrations are
-
-* [Django](https://github.com/agiliq/django-parsley)
-* [Rails](https://github.com/mekishizufu/parsley-rails)
-* [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
-* [WTForms](https://github.com/johannes-gehrs/wtforms-parsleyjs)
-* [Cascade Framework](https://github.com/jslegers/cascadeframework/)
-
-##Conditional Logic
-
-If you want to show and hide form elements based on answers to certain fields, the library below extends parsely.js adding conditional logic.
-
-* [Parsely-conditions](http://themonk.github.io/parsely-conditions/)
-
-## Global
-
-* fork repository
-* add your changes to parsley.js
-* add / update tests to test suite (tests/index.html / tests/tests.js)
-* run tests (see above)
-* create new minified versions with minify script (see above) (use next tag-dev as version. Ie: if 1.1.1, use 1.1.2-dev)
-* make a Pull Request!
-
-#Licence
-
-See LICENCE.md
+Released under the MIT License. See the bundled `LICENSE` file for
+details.

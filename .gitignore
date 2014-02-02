@@ -1,4 +1,4 @@
 .DS_Store
-
-bower_components/*
-doc/*
+node_modules/
+bower_components/
+doc/annotated-source/

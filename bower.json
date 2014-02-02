@@ -1,12 +1,29 @@
 {
-  "name": "parsleyjs",
-  "version": "1.2.2",
+  "name": "parsley2",
+  "version": "2.0.0-pre",
   "ignore": [
-      "bin",
-      "tests",
-      "bower.json"
-    ],
+    "**/.*",
+    "build",
+    "test",
+    "*.md",
+    "AUTHORS.txt",
+    "Gruntfile.js",
+    "package.json",
+    "bower.json"
+  ],
   "dependencies": {
-      "jquery": ">1.10.0"
-    }
+    "jquery": "~1.10.0",
+    "validator.js": "~0.5.3",
+    "requirejs": "~2.1.0",
+    "bootstrap": "~3.0.3"
+  },
+  "devDependencies": {
+    "sinonjs": "~1.7.3"
+  },
+  "keywords": [
+    "parsley",
+    "form",
+    "validatation",
+    "library"
+  ]
 }
