@@ -35,7 +35,7 @@ module.exports = function (grunt) {
           patterns: [
             {
               match: 'name',
-              replacement: '<%= pkg.name %>'
+              replacement: '<%= pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) %>'
             },
             {
               match: 'version',
@@ -73,7 +73,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             flatten: true,
-            src: ['dist/parsley.js', 'dist/parsley.min.js'],
+            src: 'dist/parsley.js',
             dest: 'dist/'
           }
         ]
@@ -81,43 +81,38 @@ module.exports = function (grunt) {
     },
 
     requirejs: {
-      options: {
-        // name: "./bower_components/almond/almond",
-        name: "parsley",
-        mainConfigFile: "./src/config.js",
-
-        wrap: {
-          startFile: "src/wrap/prepend.js",
-          endFile: "src/wrap/append.js"
-        },
-
-        // Avoid breaking semicolons inserted by r.js
-        skipSemiColonInsertion: true,
-        onBuildWrite: convert
-      },
-      production: {
+      compile: {
         options: {
-          out: "dist/<%= pkg.name %>.min.js",
-          findNestedDependencies: true
-        }
-      },
-      development: {
-        options: {
+          // name: "./bower_components/almond/almond",
+          name: "parsley",
+          mainConfigFile: "./src/config.js",
+
+          wrap: {
+            startFile: "src/wrap/prepend.js",
+            endFile: "src/wrap/append.js"
+          },
+
+          optimize: 'none',
           out: "dist/<%= pkg.name %>.js",
           findNestedDependencies: true,
-          optimize: 'none'
+
+          // Avoid breaking semicolons inserted by r.js
+          skipSemiColonInsertion: true,
+          onBuildWrite: convert
         }
       }
     },
 
     uglify: {
+      options: {
+        report: 'gzip',
+        preserveComments: function (pos, node) {
+          return new RegExp('^!').test(node.value) && RegExp('parsley', 'i').test(node.value);
+        }
+      },
       min: {
-        options: {
-          report: 'gzip',
-          preserveComments: function (pos, node) { return new RegExp('^!').test(node.value); }
-        },
         files: {
-          'dist/parsley.min.js': 'dist/parsley.min.js'
+          'dist/parsley.min.js': 'dist/parsley.js'
         }
       }
     },

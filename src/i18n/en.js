@@ -30,6 +30,6 @@ window.ParsleyConfig.i18n['en'] = {
     mincheck:       "You must select at least %s choices.",
     maxcheck:       "You must select %s choices or less.",
     check:          "You must select between %s and %s choices.",
-    equalto:        "This value should be the same.",
+    equalto:        "This value should be the same."
   }
 };

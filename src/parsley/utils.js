@@ -59,7 +59,8 @@ define('parsley/utils', function () {
 
     // Zepto deserialize function
     deserializeValue: function (value) {
-      var num
+      var num;
+
       try {
         return value ?
           value == "true" ||

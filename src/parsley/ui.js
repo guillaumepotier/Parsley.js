@@ -45,12 +45,12 @@ define('parsley/ui', [
       for (var i = 0; i < diff.removed.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
 
-      for (var i = 0; i < diff.added.length; i++)
+      for (i = 0; i < diff.added.length; i++)
         fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
           .addClass('parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
 
-      for (var i = 0; i < diff.kept.length; i++)
+      for (i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
 
@@ -65,12 +65,15 @@ define('parsley/ui', [
       if (true === formInstance.isValid || 'none' === formInstance.options.focus)
         return;
 
+      var lastFailingField;
+
       for (var i = 0; i < formInstance.fields.length; i++)
-        if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0)
+        if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0) {
           if ('first' === formInstance.options.focus)
             return formInstance.fields[i].$element.focus();
-          else
-            var lastFailingField = formInstance.fields[i];
+
+          lastFailingField = formInstance.fields[i];
+        }
 
       return lastFailingField.$element.focus();
     },
@@ -107,7 +110,7 @@ define('parsley/ui', [
         kept: kept,
         added: added,
         removed: !deep ? this.diff(oldResult, newResult, true).added : []
-      }
+      };
     },
 
     setupForm: function (formInstance) {

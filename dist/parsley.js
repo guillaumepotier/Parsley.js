@@ -1,7 +1,7 @@
 /*!
-* parsley
+* Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sat Feb 01 2014 23:25:05
+* Version 2.0.0-pre - built Sun Feb 02 2014 22:31:25
 * MIT Licensed
 *
 */
@@ -54,7 +54,7 @@
     },
     // Zepto deserialize function
     deserializeValue: function (value) {
-      var num
+      var num;
       try {
         return value ?
           value == "true" ||
@@ -1038,6 +1038,8 @@
       var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
       // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
+      // Field have been validated at least once if here. Useful for binded key events..
+      fieldInstance._ui.eventValidatedOnce = true;
       // Handle valid / invalid field class
       if (true === fieldInstance.validationResult)
         this._successClass(fieldInstance);
@@ -1048,11 +1050,11 @@
       // TODO better impl
       for (var i = 0; i < diff.removed.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
-      for (var i = 0; i < diff.added.length; i++)
+      for (i = 0; i < diff.added.length; i++)
         fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
           .addClass('parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
-      for (var i = 0; i < diff.kept.length; i++)
+      for (i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
       // Triggers impl
@@ -1063,12 +1065,13 @@
     focus: function (formInstance) {
       if (true === formInstance.isValid || 'none' === formInstance.options.focus)
         return;
+      var lastFailingField;
       for (var i = 0; i < formInstance.fields.length; i++)
-        if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0)
+        if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0) {
           if ('first' === formInstance.options.focus)
             return formInstance.fields[i].$element.focus();
-          else
-            var lastFailingField = formInstance.fields[i];
+          lastFailingField = formInstance.fields[i];
+        }
       return lastFailingField.$element.focus();
     },
     getErrorMessage: function (fieldInstance, constraint) {
@@ -1096,7 +1099,7 @@
         kept: kept,
         added: added,
         removed: !deep ? this.diff(oldResult, newResult, true).added : []
-      }
+      };
     },
     setupForm: function (formInstance) {
       // jQuery stuff
@@ -1151,13 +1154,22 @@
       var triggers = fieldInstance.options.trigger.replace(/^\s+/g , '').replace(/\s+$/g , '');
       if ('' === triggers)
         return;
-      fieldInstance.$element.on(triggers.split(' ').join('.Parsley ') + '.Parsley', false, $.proxy(this.eventValidate, fieldInstance));
+      // Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise
+      fieldInstance.$element
+        .on(
+          triggers.split(' ').join('.Parsley ') + '.Parsley',
+          false,
+          $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
     },
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
     eventValidate: function(event) {
+      // For keyup, keypress, keydown.. events that could be a little bit obstrusive
+      // do not validate if val length < min tresshold on first validation. Once field have been validated once,
+      // always validate with this trigger to reflect every yalidation change.
       if (new RegExp('key').test(event.type))
-        if (this.getValue().length <= this.options.validationTresshold)
+        if ('undefined' === typeof this._ui.eventValidatedOnce && this.getValue().length <= this.options.validationTresshold)
           return;
+      this._ui.eventValidatedOnce = true;
       this.validate();
     },
     manageFailingFieldTrigger: function (fieldInstance) {
@@ -1260,6 +1272,7 @@
         event.preventDefault();
       return this;
     },
+    // Iterate over over every field and emit UI events
     validate: function (group, event) {
       this.isValid = true;
       this.submitEvent = event;
@@ -1278,6 +1291,7 @@
       $.emit('parsley:form:validated', this);
       return this;
     },
+    // Iterate over refreshed fields, and stop on first failure
     isValid: function (group) {
       this.refreshFields();
       for (var i = 0; i < this.fields.length; i++) {
@@ -1595,8 +1609,7 @@ window.ParsleyConfig.i18n['en'] = {
     mincheck:       "You must select at least %s choices.",
     maxcheck:       "You must select %s choices or less.",
     check:          "You must select between %s and %s choices.",
-    equalto:        "This value should be the same.",
-    remote:         "Remote!"
+    equalto:        "This value should be the same."
   }
 };
 
