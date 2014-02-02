@@ -86,8 +86,8 @@ module.exports = function (grunt) {
         mainConfigFile: "./src/config.js",
 
         wrap: {
-          startFile: "src/prepend.js",
-          endFile: "src/append.js"
+          startFile: "src/wrap/prepend.js",
+          endFile: "src/wrap/append.js"
         },
 
         // Avoid breaking semicolons inserted by r.js
@@ -123,7 +123,7 @@ module.exports = function (grunt) {
 
     watch: {
       dev: {
-        files: ['src/*.js', 'src/parsley/*.js'],
+        files: ['src/parsley.js', 'src/wrap/*.js', 'src/parsley/*.js'],
         tasks: ['requirejs', 'replace']
       }
     }

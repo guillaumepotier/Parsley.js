@@ -30,6 +30,9 @@ define('parsley/ui', [
       // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
 
+      // Field have been validated at least once if here. Useful for binded key events..
+      fieldInstance._ui.eventValidatedOnce = true;
+
       // Handle valid / invalid field class
       if (true === fieldInstance.validationResult)
         this._successClass(fieldInstance);
@@ -176,15 +179,24 @@ define('parsley/ui', [
       if ('' === triggers)
         return;
 
-      fieldInstance.$element.on(triggers.split(' ').join('.Parsley ') + '.Parsley', false, $.proxy(this.eventValidate, fieldInstance));
+      // Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise
+      fieldInstance.$element
+        .on(
+          triggers.split(' ').join('.Parsley ') + '.Parsley',
+          false,
+          $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
     },
 
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
     eventValidate: function(event) {
+      // For keyup, keypress, keydown.. events that could be a little bit obstrusive
+      // do not validate if val length < min tresshold on first validation. Once field have been validated once,
+      // always validate with this trigger to reflect every yalidation change.
       if (new RegExp('key').test(event.type))
-        if (this.getVal().length <= this.options.validationTresshold)
+        if ('undefined' === typeof this._ui.eventValidatedOnce && this.getValue().length <= this.options.validationTresshold)
           return;
 
+      this._ui.eventValidatedOnce = true;
       this.validate();
     },
 

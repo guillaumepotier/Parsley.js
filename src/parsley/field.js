@@ -27,8 +27,6 @@ define('parsley/field', [
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
       }
 
-      $.emit('parsley:field:init', this);
-
       this.bindConstraints();
     },
 
@@ -43,49 +41,54 @@ define('parsley/field', [
     getConstraintsSortedPriorities: function () {
       var priorities = [];
 
+      // Create array unique of priorities
       for (var i = 0; i < this.constraints.length; i++)
         if (-1 === priorities.indexOf(this.constraints[i].priority))
           priorities.push(this.constraints[i].priority);
 
+      // Sort them by priority DESC
       priorities.sort(function (a, b) { return b - a; });
 
       return priorities;
     },
 
-    // TODO add group validation
     isValid: function () {
-      // sort priorities to validate more important first
-      var priorities = this.getConstraintsSortedPriorities();
+      // Sort priorities to validate more important first
+      var priorities = this.getConstraintsSortedPriorities(),
+        value = this.getValue();
 
-      // recompute options and rebind constraints to have latest changes
+      // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
 
-      // if a field is empty and not required, leave it alone, it's just fine
-      if ('' === this.getVal()) {
-        var indexOfRequired = this.indexOfConstraint('required');
-
-        if (-1 === indexOfRequired || (-1 !== indexOfRequired && false === this.constraints[indexOfRequired].requirements))
+      // If a field is empty and not required, leave it alone, it's just fine
+      if ('' === value && !this.isRequired())
           return this.validationResult = [];
-      }
 
-      // if we want to validate field against all constraints, just call Validator and let it do the job
+      // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
-        return true === (this.validationResult = window.ParsleyValidator.validate(this.getVal(), this.constraints, 'Any'));
+        return true === (this.validationResult = this.validateThroughValidator(value, this.constraints, 'Any'));
 
-      // else, iterate over priorities one by one, and validate related asserts one by one
+      // Else, iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++)
-        if (true !== (this.validationResult = window.ParsleyValidator.validate(this.getVal(), this.constraints, priorities[i])))
+        if (true !== (this.validationResult = this.validateThroughValidator(value, this.constraints, priorities[i])))
           return false;
 
       return true;
     },
 
-    getVal: function () {
-      // value could be overriden in DOM
+    // Field is required if have required constraint without `false` value
+    isRequired: function () {
+      var indexOfRequired = this.indexOfConstraint('required');
+
+      return !(-1 === indexOfRequired || (-1 !== indexOfRequired && false === this.constraints[indexOfRequired].requirements));
+    },
+
+    getValue: function () {
+      // Value could be overriden in DOM
       if ('undefined' !== typeof this.options.value)
         return this.options.value;
 
-      // radio input case
+      // Radio input case
       if (this.$element.is('input[type=radio]'))
         return $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').val() || '';
 

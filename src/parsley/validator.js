@@ -15,9 +15,11 @@ define('parsley/validator', [
     init: function (validators) {
       for (var name in validators)
         this.addValidator(name, validators[name].fn, validators[name].priority);
+
+      $.emit('parsley:validator:init');
     },
 
-    validate: function () {
+    validate: function (value, constraints, priority) {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
     },
 

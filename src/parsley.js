@@ -74,10 +74,10 @@ define([
     bind: function (type, parentParsleyInstance) {
       switch (type) {
         case 'parsleyForm':
-          parsleyInstance = $.extend(new ParsleyForm(this.$element, parentParsleyInstance || this), new ParsleyAbstract());
+          parsleyInstance = $.extend(new ParsleyForm(this.$element, parentParsleyInstance || this), new ParsleyAbstract(), window.ParsleyExtend);
           break;
         case 'parsleyField':
-          parsleyInstance = $.extend(new ParsleyField(this.$element, parentParsleyInstance || this), new ParsleyAbstract());
+          parsleyInstance = $.extend(new ParsleyField(this.$element, parentParsleyInstance || this), new ParsleyAbstract(), window.ParsleyExtend);
           break;
         default:
           throw new Error(type + 'is not a supported Parsley type');
@@ -85,6 +85,9 @@ define([
 
       // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
       this.$element.data('Parsley', parsleyInstance);
+
+      // Tell the world we got a new Parsley instance!
+      $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);
 
       return parsleyInstance;
     }
@@ -110,6 +113,10 @@ define([
   window.ParsleyUtils = ParsleyUtils;
   window.ParsleyValidator = new ParsleyValidator(ParsleyUtils.get(window.ParsleyConfig, 'validators'));
 
+
+  // ### ParsleyField and ParsleyForm extension
+  if ('undefined' === typeof window.ParsleyExtend)
+    window.ParsleyExtend = {};
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`

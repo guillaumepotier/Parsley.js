@@ -8,6 +8,11 @@ define('parsley/abstract', function () {
       return this;
     },
 
+    // ParsleyValidator validate proxy function . Could be replaced by third party scripts, like parsley.ajax.js
+    validateThroughValidator: function (value, constraints, priority) {
+      return window.ParsleyValidator.validate.apply(window.ParsleyValidator, arguments);
+    },
+
     // Subscribe an event and a handler for a specific field or a specific form
     // If on a ParsleyForm instance, it will be attached to form instance and also
     // To every field instance for this form

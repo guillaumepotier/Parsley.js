@@ -21,8 +21,6 @@ define('parsley/form', [
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
       this.bindFields();
-
-      $.emit('parsley:form:init', this);
     },
 
     onSubmitValidate: function (event) {
@@ -35,6 +33,7 @@ define('parsley/form', [
       return this;
     },
 
+    // Iterate over over every field and emit UI events
     validate: function (group, event) {
       this.isValid = true;
       this.submitEvent = event;
@@ -63,10 +62,12 @@ define('parsley/form', [
       return this;
     },
 
+    // Iterate over refreshed fields, and stop on first failure
     isValid: function (group) {
       this.refreshFields();
 
       for (var i = 0; i < this.fields.length; i++) {
+
         // do not validate a field if not the same as given validation group
         if (group && group !== this.fields[i].options.group)
           continue;
