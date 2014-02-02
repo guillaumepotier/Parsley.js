@@ -15,7 +15,6 @@
 
     <!-- Custom styles for this template -->
     <link href="doc/assets/justified-nav.css" rel="stylesheet">
-    <link href="doc/assets/colors.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -60,8 +59,13 @@
         color: #FF851B;
       }
       .row p {
-        width: 90%;
         text-align: justify;
+      }
+      .argument {
+        min-height: 90px;
+      }
+      .argument.shorter {
+        min-height: 70px;
       }
     </style>
   </head>
@@ -74,11 +78,11 @@
         <h3 class="text-muted"><a href="">Parsley2</a></h3>
         <ul class="nav nav-justified">
           <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">Examples</a></li>
-          <li><a href="#">Documentation</a></li>
-          <li><a href="#">Download</a></li>
-          <li><a href="doc/annotated-source/parsley.html">Annotated&nbsp;source</a></li>
-          <li><a href="test/index.html">Tests</a></li>
+          <li><a href="doc/examples.html">Examples</a></li>
+          <li><a href="doc/index.html">Documentation</a></li>
+          <li><a href="doc/download.html">Download</a></li>
+          <li><a href="doc/annotated-source/parsley.html" target="_blank">Annotated&nbsp;source</a></li>
+          <li><a href="doc/tests.html">Tests</a></li>
         </ul>
       </div>
 
@@ -91,40 +95,42 @@
 
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-lg-4">
-          <h2>Highly customizable</h2>
-          <p>Like no other javascript form validation library, Parsley has a full support for #UX concerns and detailed options. <strong>Override almost every Parsley default behaviors</strong> to fit your <strong>exact needs</strong>.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View documentation &raquo;</a></p>
-        </div>
+
         <div class="col-lg-4">
           <h2>Intuitive DOM API</h2>
-          <p>Like no other form validation library. </p>
-          <p><a class="btn btn-primary" href="#" role="button">View example &raquo;</a></p>
+          <p class="argument">Like no other form validation library, simply <strong>write in English your requirements inside your form HTML tags</strong>, Parsley will do the rest! <strong>Never write anymore a single javascript line for simple form validation.</strong></p>
+          <p><a href="doc/examples.html">View example &raquo;</a></p>
        </div>
         <div class="col-lg-4">
           <h2>Dynamic form validation</h2>
-          <p>Talk here about how Parsley2 rocks with dynamic forms. </p>
-          <p><a class="btn btn-primary" href="#" role="button">View example &raquo;</a></p>
+          <p class="argument">Parsley is now smarter, <strong>it automatically detect your forms' modifications</strong> and adapts its validation accordingly. Simply add, remove or edit fields, Parsley validation will follow!</p>
+          <p><a href="doc/examples.html">View example &raquo;</a></p>
+        </div>
+        <div class="col-lg-4">
+          <h2>Tons of built-in validators</h2>
+          <p class="argument">Parsley is <strong>shipped with more than a dozen useful validators</strong>. If not enough, use the <strong>awesome Parsley extra Ajax validator</strong> or tons of other extended validors provided by the community. </p>
+          <p><a href="doc/index.html">View details &raquo;</a></p>
         </div>
       </div>
 
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-lg-4">
+          <h2>UX Focused</h2>
+          <p class="argument shorter">Parsley strongly focus on #UI and #UX.<strong> Override almost every Parsley default behaviors</strong> to fit your <strong>exact needs</strong>.</p>
+          <p><a href="doc/index.html">View documentation &raquo;</a></p>
+        </div>
+        <div class="col-lg-4">
           <h2>Super reliable</h2>
-          <p>Still shipped almost bugs free.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View tests &raquo;</a></p>
+          <p class="argument shorter">Still <em>shipped almost bugs free</em>. Parsley is <strong>strongly tested</strong>, and <strong>aimed to work on every browser since IE7.</strong></p>
+          <p><a href="doc/tests.html">View tests &raquo;</a></p>
         </div>
         <div class="col-lg-4">
-          <h2>Built on top of <a href="http://validatorjs.org" title="Validatorjs, Powerful objects and strings validation in javascript for Node and the browser">Validator.js</a></h2>
-          <p>Talk here about built-in validators Parsley have. Talk about Validator.js maybe ?</p>
-          <p><a class="btn btn-primary" href="#" role="button">View documentation &raquo;</a></p>
+          <h2>Free</h2>
+          <p class="argument shorter">Parsley is <strong>Open Source, MIT licensed</strong>, and developed to help everyone. It will <strong>stay that way.</strong> <a href="#">Join us on Github!</a></p>
+          <p><a href="#">View license &raquo;</a></p>
         </div>
-        <div class="col-lg-4">
-          <h2>Tons of built-in validators</h2>
-          <p>Talk here about built-in validators Parsley have.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-        </div>
+
       </div>
 
       <!-- Site footer -->

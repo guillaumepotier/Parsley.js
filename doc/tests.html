@@ -10,6 +10,9 @@
 
     <title>Parsley2</title>
 
+    <!-- Mochat tests css -->
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+
     <!-- Bootstrap core CSS -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
@@ -64,8 +67,10 @@
       .argument {
         min-height: 90px;
       }
-      .argument.shorter {
-        min-height: 70px;
+      #mocha-stats .progress {
+        height: 40px;
+        background-color: transparent;
+        box-shadow: none;
       }
     </style>
   </head>
@@ -79,12 +84,15 @@
         <ul class="nav nav-justified">
           <li><a href="../index.html">Home</a></li>
           <li><a href="examples.html">Examples</a></li>
-          <li class="active"><a href="index.html">Documentation</a></li>
+          <li><a href="index.html">Documentation</a></li>
           <li><a href="download.html">Download</a></li>
           <li><a href="annotated-source/parsley.html" target="_blank">Annotated&nbsp;source</a></li>
-          <li><a href="tests.html">Tests</a></li>
+          <li class="active"><a href="tests.html">Tests</a></li>
         </ul>
       </div>
-    </div>
-  </body>
-</body>
+
+
+    <div id="info"></div>
+    <div id="mocha"></div>
+    <script src="../bower_components/requirejs/require.js" data-main="../test/tests.js"></script>  </body>
+</html>
