@@ -81,6 +81,6 @@ If you want to show and hide form elements based on answers to certain fields, t
 * create new minified versions with minify script (see above) (use next tag-dev as version. Ie: if 1.1.1, use 1.1.2-dev)
 * make a Pull Request!
 
-#Licence
+#License
 
-See LICENCE.md
+See LICENSE.md
