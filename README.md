@@ -1,4 +1,4 @@
-# Parsley2
+# Parsley
 
 Next [Parsley](http://parsleyjs.org) version, still in heavy development.
 
