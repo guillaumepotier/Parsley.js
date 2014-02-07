@@ -114,16 +114,20 @@ define('parsley/ui', [
     },
 
     setupForm: function (formInstance) {
-      // jQuery stuff
-      formInstance.$element.attr('novalidate', 'novalidate');
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
+
+      // UI could be disabled
+      if (false === formInstance.options.uiEnabled)
+        return;
+
+      formInstance.$element.attr('novalidate', 'novalidate');
     },
 
     setupField: function (fieldInstance) {
       var _ui = { active: false };
 
       // UI could be disabled
-      if (false === fieldInstance.options.UIEnabled)
+      if (false === fieldInstance.options.uiEnabled)
         return;
 
       // Give field its Parsley id in DOM

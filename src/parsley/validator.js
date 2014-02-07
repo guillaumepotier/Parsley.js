@@ -118,14 +118,14 @@ define('parsley/validator', [
       pattern: function (regexp) {
         return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
       },
-      length: function (array) {
-        return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
-      },
       minlength: function (length) {
-        return $.extend(new Validator.Assert().Length({ min: length }), { priority: 32 });
+        return $.extend(new Validator.Assert().Length({ min: length }), { priority: 30 });
       },
       maxlength: function (length) {
-        return $.extend(new Validator.Assert().Length({ max: length }), { priority: 32 });
+        return $.extend(new Validator.Assert().Length({ max: length }), { priority: 30 });
+      },
+      length: function (array) {
+        return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
       },
       mincheck: function (length) {
         return this.minlength(length);
@@ -135,6 +135,15 @@ define('parsley/validator', [
       },
       check: function (array) {
         return this.length(array);
+      },
+      min: function (value) {
+        return $.extend(new Validator.Assert().GreaterThanOrEqual(value), { priority: 30 });
+      },
+      max: function (value) {
+        return $.extend(new Validator.Assert().LessThanOrEqual(value), { priority: 30 });
+      },
+      range: function (array) {
+        return $.extend(new Validator.Assert().Range(array[0], array[1]), { priority: 32 });
       }
     }
   };

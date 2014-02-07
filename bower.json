@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "jquery": "~1.10.0",
-    "validator.js": "~0.5.3",
+    "validator.js": "~0.5.5",
     "requirejs": "~2.1.0",
     "bootstrap": "~3.0.3"
   },
