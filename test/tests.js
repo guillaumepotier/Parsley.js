@@ -17,7 +17,8 @@ require(['../src/config'], function () {
       'parsley/field',
       'parsley/ui',
       'parsley/utils',
-      'parsley/validator'
+      'parsley/validator',
+      'i18n/fr'
     ], function (Parsley, ParsleyOptionsFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
 
       // load full parsley.js + UT
@@ -30,8 +31,9 @@ require(['../src/config'], function () {
         'features/form',
         'features/validator',
         'features/ui',
-        'features/utils'
-      ], function (parsleyBase, options, pubsub, abstract, field, form, validator, ui, utils) {
+        'features/utils',
+        'features/remote'
+      ], function (parsleyBase, options, pubsub, abstract, field, form, validator, ui, utils, remote) {
         describe('Unit Tests', function () {
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
@@ -42,6 +44,7 @@ require(['../src/config'], function () {
           validator(ParsleyValidator);
           ui(ParsleyUI);
           utils(ParsleyUtils);
+          remote(Parsley);
         });
 
         // load then functionnal tests

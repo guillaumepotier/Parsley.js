@@ -86,5 +86,5 @@ define(function () {
           $('#element').remove();
       });
     });
-  }
+  };
 });

@@ -140,7 +140,7 @@ define('parsley/ui', [
       // $errorsContainer is the $element where errorsWrapper and errors would be appended
       // `data-parsley-errors-container="#element"`
       if ('string' === typeof fieldInstance.options.errorsContainer)
-        _ui.$errorsContainer = $(fieldInstance.options.errorsContainer)
+        _ui.$errorsContainer = $(fieldInstance.options.errorsContainer);
 
       // Advanced configuration by a user cutom function that could be passed in options
       if ('function' === typeof fieldInstance.options.errorsContainer)

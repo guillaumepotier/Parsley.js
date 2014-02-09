@@ -26,7 +26,7 @@ define('parsley/validator', [
     addValidator: function (name, fn, priority) {
       this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
-      }
+      };
 
       return this;
     },
@@ -63,7 +63,7 @@ define('parsley/validator', [
       return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].messages.defaultMessage;
     },
 
-    // Kind of `sprintf()` light implementation
+    // Kind of light `sprintf()` implementation
     formatMesssage: function (string, parameters) {
       if ('object' === typeof parameters) {
         for (var i in parameters)
@@ -99,15 +99,7 @@ define('parsley/validator', [
             assert = new Validator.Assert().Regexp('^\\d+$');
             break;
           case 'alphanum':
-            assert = new Validator.Asser().Regexp('^\\w+$', 'i');
-            break;
-          // TODO
-          case 'url':
-          case 'urlstrict':
-            break;
-          case 'dateIso':
-            break;
-          case 'tel':
+            assert = new Validator.Assert().Regexp('^\\w+$', 'i');
             break;
           default:
             throw new Error('validator type `' + type + '` is not supported');

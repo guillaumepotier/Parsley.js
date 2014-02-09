@@ -25,7 +25,7 @@ define('parsley/utils', function () {
     },
 
     setAttr: function ($element, namespace, attr, value) {
-      $element[0].setAttribute(this.dasherize(namespace + attr), new String(value));
+      $element[0].setAttribute(this.dasherize(namespace + attr), String(value));
     },
 
     // Recursive object / array getter
@@ -43,7 +43,7 @@ define('parsley/utils', function () {
     },
 
     hash: function (length) {
-      return new String(Math.random()).substring(2, length ? length + 2 : 9);
+      return String(Math.random()).substring(2, length ? length + 2 : 9);
     },
 
     /** Third party functions **/
@@ -83,10 +83,10 @@ define('parsley/utils', function () {
     // Zepto dasherize function
     dasherize: function (str) {
       return str.replace(/::/g, '/')
-             .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-             .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-             .replace(/_/g, '-')
-             .toLowerCase();
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+        .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+        .replace(/_/g, '-')
+        .toLowerCase();
     }
   };
 });
