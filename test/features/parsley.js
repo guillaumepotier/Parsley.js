@@ -1,7 +1,7 @@
 define(function () {
   return function (Parsley) {
     describe('ParsleyBase', function () {
-      it('should be an function', function () {
+      it('should be a function', function () {
         expect(Parsley).to.be.a('function');
       });
       it('should register some window globals', function () {

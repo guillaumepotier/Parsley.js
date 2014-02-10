@@ -1,7 +1,7 @@
 define(function () {
   return function (ParsleyField, Parsley) {
     describe('ParsleyField', function () {
-      it('should be an function', function () {
+      it('should be a function', function () {
         expect(ParsleyField).to.be.a('function');
       });
       it('should throw an error if no parsleyInstance given', function () {
@@ -91,7 +91,7 @@ define(function () {
         $('body').append('<input type="text" id="element" value="" />');
         ParsleyValidator.addValidator('multiple', function (value, multiple) {
           if (!isNaN(parseFloat(value)) && isFinite(value))
-            return !(new Number(value) % multiple);
+            return !(Number(value) % multiple);
 
           return false;
         }, 512);
@@ -191,5 +191,5 @@ define(function () {
           $('.parsley-errors-list').remove();
       });
     });
-  }
+  };
 });

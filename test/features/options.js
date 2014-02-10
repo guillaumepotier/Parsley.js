@@ -5,7 +5,7 @@ define(function () {
         ParsleyUtils._attr = ParsleyUtils.attr;
         ParsleyUtils.attr = sinon.stub().returns({ bar: 'bar', qux: 'bux' });
       });
-      it('should be an function', function () {
+      it('should be a function', function () {
         expect(ParlseyOptionsFactory).to.be.a('function');
       });
       it('should handle simple instanciation', function () {
@@ -41,5 +41,5 @@ define(function () {
         delete(ParsleyUtils._attr);
       });
     });
-  }
+  };
 });

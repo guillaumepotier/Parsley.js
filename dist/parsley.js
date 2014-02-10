@@ -1,7 +1,7 @@
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sun Feb 02 2014 23:12:09
+* Version 2.0.0-pre - built Mon Feb 10 2014 12:53:33
 * MIT Licensed
 *
 */
@@ -27,7 +27,7 @@
       return 'undefined' === typeof checkAttr ? obj : false;
     },
     setAttr: function ($element, namespace, attr, value) {
-      $element[0].setAttribute(this.dasherize(namespace + attr), new String(value));
+      $element[0].setAttribute(this.dasherize(namespace + attr), String(value));
     },
     // Recursive object / array getter
     get: function (obj, path, placeholder) {
@@ -41,7 +41,7 @@
       return placeholder;
     },
     hash: function (length) {
-      return new String(Math.random()).substring(2, length ? length + 2 : 9);
+      return String(Math.random()).substring(2, length ? length + 2 : 9);
     },
     /** Third party functions **/
     // Underscore isArray
@@ -75,10 +75,10 @@
     // Zepto dasherize function
     dasherize: function (str) {
       return str.replace(/::/g, '/')
-             .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-             .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-             .replace(/_/g, '-')
-             .toLowerCase();
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+        .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+        .replace(/_/g, '-')
+        .toLowerCase();
     }
   };
 // All these options could be overriden and specified directly in DOM using
@@ -168,7 +168,7 @@
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.5.3 - built Wed Jan 29 2014 23:29:01
+* Version 0.5.5 - built Fri Feb 07 2014 16:52:20
 * MIT Licensed
 *
 */
@@ -178,7 +178,7 @@
   */
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '0.5.3';
+    this.__version__ = '0.5.5';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
     return this;
@@ -583,7 +583,7 @@
         throw new Error( 'Should give a threshold value' );
       this.threshold = threshold;
       this.validate = function ( value ) {
-        if ( isNaN( Number( value ) ) )
+        if ( '' === value || isNaN( Number( value ) ) )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_number } );
         if ( this.threshold >= value )
           throw new Violation( this, value, { threshold: this.threshold } );
@@ -597,6 +597,8 @@
         throw new Error( 'Should give a threshold value' );
       this.threshold = threshold;
       this.validate = function ( value ) {
+        if ( '' === value || isNaN( Number( value ) ) )
+          throw new Violation( this, value, { value: Validator.errorCode.must_be_a_number } );
         if ( this.threshold > value )
           throw new Violation( this, value, { threshold: this.threshold } );
         return true;
@@ -652,7 +654,7 @@
         throw new Error( 'Should give a threshold value' );
       this.threshold = threshold;
       this.validate = function ( value ) {
-        if ( isNaN( Number( value ) ) )
+        if ( '' === value || isNaN( Number( value ) ) )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_number } );
         if ( this.threshold <= value )
           throw new Violation( this, value, { threshold: this.threshold } );
@@ -666,6 +668,8 @@
         throw new Error( 'Should give a threshold value' );
       this.threshold = threshold;
       this.validate = function ( value ) {
+        if ( '' === value || isNaN( Number( value ) ) )
+          throw new Violation( this, value, { value: Validator.errorCode.must_be_a_number } );
         if ( this.threshold < value )
           throw new Violation( this, value, { threshold: this.threshold } );
         return true;
@@ -714,16 +718,23 @@
       return this;
     },
     Range: function ( min, max ) {
+      this.__class__ = 'Range';
       if ( !min || !max )
         throw new Error( 'Range assert expects min and max values' );
-      this.LengthValidator = new Assert().Length( { min: min, max: max } );
-      this.__class__ = 'Range';
+      this.min = min;
+      this.max = max;
       this.validate = function ( value ) {
-        try {
-          this.LengthValidator.validate( value );
-        } catch ( violation ) {
-          throw new Violation( this, value, violation.violation );
-        }
+          try {
+            // validate strings and objects with their Length
+            if ( ( 'string' === typeof value && isNaN( Number( value ) ) ) || _isArray( value ) )
+              new Assert().Length( { min: this.min, max: this.max } ).validate( value );
+            // validate numbers with their value
+            else
+              new Assert().GreaterThanOrEqual( this.min ).validate( value ) && new Assert().LessThanOrEqual( this.max ).validate( value );
+            return true;
+          } catch ( violation ) {
+            throw new Violation( this, value, violation.violation );
+          }
         return true;
       };
       return this;
@@ -792,7 +803,7 @@
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-
+        
         if (this == null) {
             throw new TypeError();
         }
@@ -920,7 +931,7 @@
     addValidator: function (name, fn, priority) {
       this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
-      }
+      };
       return this;
     },
     updateValidator: function (name, fn, priority) {
@@ -946,7 +957,7 @@
         message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale].messages[constraint.name], constraint.requirements);
       return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].messages.defaultMessage;
     },
-    // Kind of `sprintf()` light implementation
+    // Kind of light `sprintf()` implementation
     formatMesssage: function (string, parameters) {
       if ('object' === typeof parameters) {
         for (var i in parameters)
@@ -978,15 +989,7 @@
             assert = new Validator.Assert().Regexp('^\\d+$');
             break;
           case 'alphanum':
-            assert = new Validator.Asser().Regexp('^\\w+$', 'i');
-            break;
-          // TODO
-          case 'url':
-          case 'urlstrict':
-            break;
-          case 'dateIso':
-            break;
-          case 'tel':
+            assert = new Validator.Assert().Regexp('^\\w+$', 'i');
             break;
           default:
             throw new Error('validator type `' + type + '` is not supported');
@@ -996,14 +999,14 @@
       pattern: function (regexp) {
         return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
       },
-      length: function (array) {
-        return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
-      },
       minlength: function (length) {
-        return $.extend(new Validator.Assert().Length({ min: length }), { priority: 32 });
+        return $.extend(new Validator.Assert().Length({ min: length }), { priority: 30 });
       },
       maxlength: function (length) {
-        return $.extend(new Validator.Assert().Length({ max: length }), { priority: 32 });
+        return $.extend(new Validator.Assert().Length({ max: length }), { priority: 30 });
+      },
+      length: function (array) {
+        return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
       },
       mincheck: function (length) {
         return this.minlength(length);
@@ -1013,6 +1016,15 @@
       },
       check: function (array) {
         return this.length(array);
+      },
+      min: function (value) {
+        return $.extend(new Validator.Assert().GreaterThanOrEqual(value), { priority: 30 });
+      },
+      max: function (value) {
+        return $.extend(new Validator.Assert().LessThanOrEqual(value), { priority: 30 });
+      },
+      range: function (array) {
+        return $.extend(new Validator.Assert().Range(array[0], array[1]), { priority: 32 });
       }
     }
   };
@@ -1048,15 +1060,24 @@
       else
         this._resetClass(fieldInstance);
       // TODO better impl
-      for (var i = 0; i < diff.removed.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
-      for (i = 0; i < diff.added.length; i++)
-        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
-          .addClass('parsley-' + diff.added[i].assert.name)
-          .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
-      for (i = 0; i < diff.kept.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
-          .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
+      if ('undefined' !== typeof fieldInstance.options.errorMessage && (diff.added.length || diff.kept.length)) {
+        if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
+          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+            .addClass('parsley-custom-error-message'));
+        fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message')
+          .html(fieldInstance.options.errorMessage);
+      } else {
+        // TODO better impl too..
+        for (var i = 0; i < diff.removed.length; i++)
+          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
+        for (i = 0; i < diff.added.length; i++)
+          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+            .addClass('parsley-' + diff.added[i].assert.name)
+            .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
+        for (i = 0; i < diff.kept.length; i++)
+          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
+            .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
+      }
       // Triggers impl
       this.actualizeTriggers(fieldInstance);
       if (diff.kept.length || diff.added.length)
@@ -1102,9 +1123,11 @@
       };
     },
     setupForm: function (formInstance) {
-      // jQuery stuff
-      formInstance.$element.attr('novalidate', 'novalidate');
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
+      // UI could be disabled
+      if (false === formInstance.options.uiEnabled)
+        return;
+      formInstance.$element.attr('novalidate', 'novalidate');
     },
     setupField: function (fieldInstance) {
       var _ui = { active: false };
@@ -1119,7 +1142,7 @@
       // $errorsContainer is the $element where errorsWrapper and errors would be appended
       // `data-parsley-errors-container="#element"`
       if ('string' === typeof fieldInstance.options.errorsContainer)
-        _ui.$errorsContainer = $(fieldInstance.options.errorsContainer)
+        _ui.$errorsContainer = $(fieldInstance.options.errorsContainer);
       // Advanced configuration by a user cutom function that could be passed in options
       if ('function' === typeof fieldInstance.options.errorsContainer)
         _ui.$errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
@@ -1632,7 +1655,7 @@ window.ParsleyConfig.i18n['en'] = {
         return this.$element.data('Parsley');
       // Handle 'static' options
       this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
-      var options = this.OptionsFactory.staticOptions;
+      options = this.OptionsFactory.staticOptions;
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs)))
         return this.bind('parsleyForm', parsleyInstance);

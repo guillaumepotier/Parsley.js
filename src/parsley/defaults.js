@@ -21,7 +21,7 @@ define('parsley/defaults', function () {
 
     // ### UI
     // Enable\Disable error messages
-    uiEnabled: true,
+    uiEnable: true,
 
     // key events treshold before validation
     validationTresshold: 3,

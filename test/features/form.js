@@ -1,7 +1,7 @@
 define(function () {
   return function (ParsleyForm, Parsley) {
     describe('ParsleyForm', function () {
-      it('should be an function', function () {
+      it('should be a function', function () {
         expect(ParsleyForm).to.be.a('function');
       });
       it('should throw an error if no element given', function () {
@@ -63,5 +63,5 @@ define(function () {
           $('#element').remove();
       });
     });
-  }
+  };
 });

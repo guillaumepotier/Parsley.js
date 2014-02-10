@@ -21,7 +21,7 @@ define('parsley/ui', [
 
     reflow: function (fieldInstance) {
       // If this field has not an active UI (case for multiples) don't bother doing something
-      if (false === fieldInstance._ui.active)
+      if ('undefined' === typeof fieldInstance._ui || false === fieldInstance._ui.active)
         return;
 
       // Diff between two validation results
@@ -42,17 +42,27 @@ define('parsley/ui', [
         this._resetClass(fieldInstance);
 
       // TODO better impl
-      for (var i = 0; i < diff.removed.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
+      if ('undefined' !== typeof fieldInstance.options.errorMessage && (diff.added.length || diff.kept.length)) {
+        if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
+          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+            .addClass('parsley-custom-error-message'));
 
-      for (i = 0; i < diff.added.length; i++)
-        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
-          .addClass('parsley-' + diff.added[i].assert.name)
-          .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
+        fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message')
+          .html(fieldInstance.options.errorMessage);
+      } else {
+        // TODO better impl too..
+        for (var i = 0; i < diff.removed.length; i++)
+          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
 
-      for (i = 0; i < diff.kept.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
-          .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
+        for (i = 0; i < diff.added.length; i++)
+          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+            .addClass('parsley-' + diff.added[i].assert.name)
+            .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
+
+        for (i = 0; i < diff.kept.length; i++)
+          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
+            .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
+      }
 
       // Triggers impl
       this.actualizeTriggers(fieldInstance);
@@ -117,17 +127,17 @@ define('parsley/ui', [
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
 
       // UI could be disabled
-      if (false === formInstance.options.uiEnabled)
+      if (false === formInstance.options.uiEnable)
         return;
 
-      formInstance.$element.attr('novalidate', 'novalidate');
+      formInstance.$element.attr('novalidate', '');
     },
 
     setupField: function (fieldInstance) {
       var _ui = { active: false };
 
       // UI could be disabled
-      if (false === fieldInstance.options.uiEnabled)
+      if (false === fieldInstance.options.uiEnable)
         return;
 
       // Give field its Parsley id in DOM

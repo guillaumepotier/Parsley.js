@@ -40,7 +40,7 @@ define(function () {
           '</form>');
 
         $.listenTo($('#element').psly(), 'foo', function (parsleyInstance) {
-          expect($('#element').psly().__id__ === parsleyInstance.__id__)
+          expect($('#element').psly().__id__ === parsleyInstance.__id__);
           done();
         });
 

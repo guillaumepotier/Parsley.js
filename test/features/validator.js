@@ -3,7 +3,7 @@ define(function () {
     describe('ParsleyValidator', function () {
       var parsleyValidator = new ParsleyValidator();
 
-      it('should be an function', function () {
+      it('should be a function', function () {
         expect(ParsleyValidator).to.be.a('function');
       });
       it('should bind global config validators if given in constructor', function () {
