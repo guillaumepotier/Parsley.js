@@ -29,6 +29,10 @@ requirejs.config({
         deps: ['jquery'],
         exports: 'Parsley'
       },
+      'src/parsley.remote': {
+        deps: ['jquery'],
+        exports: 'ParsleyExtend'
+      },
       'modules/mocha/mocha': {
         deps: ['expect', 'sinon'],
         exports: 'mocha'

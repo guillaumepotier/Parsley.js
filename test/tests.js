@@ -44,7 +44,7 @@ require(['../src/config'], function () {
           validator(ParsleyValidator);
           ui(ParsleyUI);
           utils(ParsleyUtils);
-          remote(Parsley);
+          remote();
         });
 
         // load then functionnal tests

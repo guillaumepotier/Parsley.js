@@ -59,7 +59,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     return $.when.apply($, promises);
   },
 
-  _asyncIsValidForm: function () {
+  _asyncIsValidForm: function (group) {
     var promises = [];
     this.refreshFields();
 
@@ -82,13 +82,13 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
 
     return this._asyncIsValidField()
       .done(function () {
-        $.emit('parsley:field:success', that)
+        $.emit('parsley:field:success', that);
       })
       .fail(function () {
-        $.emit('parsley:field:error', that)
+        $.emit('parsley:field:error', that);
       })
       .always(function () {
-        $.emit('parsley:field:validated', that)
+        $.emit('parsley:field:validated', that);
       });
   },
 
@@ -137,7 +137,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       .done(function () {
         that._remote[csr] = true;
         that.validationResult = false !== that.validationResult;
-        deferred.resolveWith(that)
+        deferred.resolveWith(that);
       })
       .fail(function () {
         that._remote[csr] = false;
@@ -149,7 +149,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
           )
         ];
 
-        deferred.rejectWith(that)
+        deferred.rejectWith(that);
       });
   }
 });
