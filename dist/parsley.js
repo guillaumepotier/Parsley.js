@@ -1,7 +1,7 @@
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Mon Feb 10 2014 12:53:33
+* Version 2.0.0-pre - built Thu Feb 13 2014 10:51:05
 * MIT Licensed
 *
 */
@@ -97,7 +97,7 @@
     priorityEnabled: true,
     // ### UI
     // Enable\Disable error messages
-    uiEnabled: true,
+    uiEnable: true,
     // key events treshold before validation
     validationTresshold: 3,
     // Focused field on form validation error. 'fist'|'last'|'none'
@@ -1044,7 +1044,7 @@
     },
     reflow: function (fieldInstance) {
       // If this field has not an active UI (case for multiples) don't bother doing something
-      if (false === fieldInstance._ui.active)
+      if ('undefined' === typeof fieldInstance._ui || false === fieldInstance._ui.active)
         return;
       // Diff between two validation results
       var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
@@ -1125,14 +1125,14 @@
     setupForm: function (formInstance) {
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
       // UI could be disabled
-      if (false === formInstance.options.uiEnabled)
+      if (false === formInstance.options.uiEnable)
         return;
-      formInstance.$element.attr('novalidate', 'novalidate');
+      formInstance.$element.attr('novalidate', '');
     },
     setupField: function (fieldInstance) {
       var _ui = { active: false };
       // UI could be disabled
-      if (false === fieldInstance.options.uiEnabled)
+      if (false === fieldInstance.options.uiEnable)
         return;
       // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
