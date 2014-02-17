@@ -1,7 +1,7 @@
 define(function () {
   return function (ParsleyValidator) {
     describe('ParsleyValidator', function () {
-      var parsleyValidator = new ParsleyValidator();
+      var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators || {}, window.ParsleyConfig.i18n || {});
 
       it('should be a function', function () {
         expect(ParsleyValidator).to.be.a('function');
@@ -71,6 +71,16 @@ define(function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('alphanum'))).to.be(true);
         expect(parsleyValidator.validate('foo bar', parsleyValidator.validators.type('alphanum'))).not.to.be(true);
         expect(parsleyValidator.validate('foo$', parsleyValidator.validators.type('alphanum'))).not.to.be(true);
+      });
+      it('should have a type="url" validator', function () {
+        expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('url'))).not.to.be(true);
+        expect(parsleyValidator.validate('foo bar', parsleyValidator.validators.type('url'))).not.to.be(true);
+        expect(parsleyValidator.validate('http://', parsleyValidator.validators.type('url'))).not.to.be(true);
+        expect(parsleyValidator.validate('foo.bar', parsleyValidator.validators.type('url'))).to.be(true);
+        expect(parsleyValidator.validate('www.foo.bar', parsleyValidator.validators.type('url'))).to.be(true);
+        expect(parsleyValidator.validate('http://www.foo.bar', parsleyValidator.validators.type('url'))).to.be(true);
+        expect(parsleyValidator.validate('https://www.foo.bar', parsleyValidator.validators.type('url'))).to.be(true);
+        expect(parsleyValidator.validate('https://www.foobarbaz.barbazbar.bazbar', parsleyValidator.validators.type('url'))).not.to.be(true);
       });
       it('should have a pattern validator', function () {
         expect(parsleyValidator.validate('a', parsleyValidator.validators.pattern('[a-z]+'))).to.be(true);

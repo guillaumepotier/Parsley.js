@@ -21,9 +21,22 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+
+    <link href="http://yandex.st/highlightjs/7.3/styles/github.min.css" rel="stylesheet">
+
+    <link href="../src/parsley.css" rel="stylesheet">
     <style>
       body {
         color: #111111;
+      }
+      .row {
+        margin-top: 10px;
+      }
+      .code-block {
+        margin-top: 40px;
+      }
+      .hidden {
+        display: none;
       }
     </style>
   </head>
@@ -34,7 +47,7 @@
 
       <div class="masthead">
         <div class="header">
-          <h3 class="text-muted"><a href="#">Parsley</a></h3>
+          <h3 class="text-muted"><a href="../">Parsley</a></h3>
 
           <span class="social-buttons inline-block">
             <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://parsleyjs.org" data-text="Parsley, the ultimate javascript form validation library" data-via="guillaumepotier" data-related="guillaumepotier" data-hashtags="parsleyjs">Tweet</a>
@@ -44,20 +57,130 @@
 
             <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=Parsley.js&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
           </span>
-
         </div>
-
-        <ul class="nav nav-justified">
-          <li><a href="../index.html">Home</a></li>
-          <li class="active"><a href="examples.html">Examples</a></li>
-          <li><a href="index.html">Documentation</a></li>
-          <li><a href="download.html">Download</a></li>
-          <li><a href="annotated-source/parsley.html" target="_blank">Annotated&nbsp;source</a></li>
-          <li><a href="tests.html">Tests</a></li>
-        </ul>
       </div>
+
+      <ul class="nav nav-justified">
+        <li><a href="../index.html">Home</a></li>
+        <li class="active"><a href="examples.html">Examples</a></li>
+        <li><a href="index.html">Documentation</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="annotated-source/parsley.html" target="_blank">Annotated&nbsp;source</a></li>
+        <li><a href="tests.html">Tests</a></li>
+      </ul>
+
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Simple form example</h2>
+          <hr></hr>
+          <div class="form-group">
+            <form id="demo-form" data-parsley-validate>
+              <label for="fullname">Full Name * :</label>
+              <input type="text" class="form-control" name="fullname" required />
+
+              <label for="email">Email * :</label>
+              <input type="email" class="form-control" name="email" data-parsley-trigger="change" required />
+
+              <label for="website">Website :</label>
+              <input type="text" class="form-control" name="website" data-parsley-type="url" data-parsley-error-message="A <strong>real</strong> url pretty please" />
+
+              <label for="message">Message (20 chars min, 100 max) :</label>
+              <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-tresshold="10"></textarea>
+
+              <br/>
+              <span class="btn btn-default">validate</span>
+            </form>
+          </div>
+          <div class="bs-callout bs-callout-warning hidden">
+            <h4>Oh snap!</h4>
+            <p>This form seems far to be valid :(</p>
+          </div>
+
+          <div class="bs-callout bs-callout-info hidden">
+            <h4>Yay!</h4>
+            <p>Everything seems to be ok :)</p>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="code-block">
+<pre><code>&lt;!-- tell Parsley to validate this form and its fields -->
+&lt;form id="demo-form" data-parsley-validate>
+
+  &lt;label for="fullname">Full Name * :&lt;/label>
+  &lt;!-- this field is just required, it would be validated on form submit -->
+  &lt;input type="text" name="fullname" required />
+
+  &lt;label for="email">Email * :&lt;/label>
+  &lt;!-- this required field must be an email, and validation will be run on
+  field change -->
+  &lt;input type="email" name="email" data-parsley-trigger="change" required />
+
+  &lt;label for="website">Website :&lt;/label>
+  &lt;!-- this optional field must be an url, and have a custom html error
+  message -->
+  &lt;input type="text" name="website"
+  data-parsley-type="url"
+  data-parsley-error-message="A &lt;strong>real&lt;/strong> url pretty please" />
+
+  &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
+  &lt;!-- this optional textarea have a length validator that would be checked
+  on keyup after 10 first characters, with a custom message only for minlength
+  validator -->
+  &lt;textarea name="message"
+  data-parsley-trigger="keyup"
+  data-parsley-length="[20, 100]"
+  data-parsley-validation-tresshold="10"
+  data-parsley-minlength-message = "Come on! You need to enter at least a 20
+  caracters long comment..">&lt;/textarea>
+
+  &lt;input type="submit" />
+&lt;/form>
+</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="../bower_components/bootstrap/js/affix.js"></script>
+    <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+    <script type="text/javascript" src="../dist/parsley.js"></script>
+    <script type="text/javascript">
+
+      $.listen('parsley:field:validate', function () {
+        validate();
+      });
+
+      $('#demo-form .btn').on('click', function () {
+        $('#demo-form').psly().validate();
+        validate();
+      });
+
+      var validate = function () {
+        if (true === $('#demo-form').psly().isValid()) {
+          $('.bs-callout-info').removeClass('hidden');
+          $('.bs-callout-warning').addClass('hidden');
+        } else {
+          $('.bs-callout-info').addClass('hidden');
+          $('.bs-callout-warning').removeClass('hidden');
+        }
+      };
+
+      try {
+        hljs.initHighlightingOnLoad();
+      } catch ( err ) {}
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-37229467-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
   </body>
 </html>

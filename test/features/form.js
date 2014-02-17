@@ -44,6 +44,19 @@ define(function () {
         expect(new Parsley('#field3').options).to.have.key('notblank');
         expect(new Parsley('#field3').options).to.not.have.key('required');
       });
+      it('should properly store validation state after `validate()`', function () {
+        $('body').append(
+          '<form id="element" data-parsley-trigger="change">'                 +
+            '<input id="field1" type="text" data-parsley-required="true" />'  +
+            '<div id="field2"></div>'                                         +
+            '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
+          '</form>');
+          parsleyForm = new Parsley($('#element')).validate();
+          expect(parsleyForm.valid).to.be(false);
+          $('#field1').val('foo');
+          $('#field3').val('foo');
+          expect(parsleyForm.validate().valid).to.be(true);
+      });
       it('should handle group validation', function () {
         $('body').append(
           '<form id="element">'                                                                        +

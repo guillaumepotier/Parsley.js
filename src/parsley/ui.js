@@ -31,17 +31,33 @@ define('parsley/ui', [
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
 
       // Field have been validated at least once if here. Useful for binded key events..
-      fieldInstance._ui.eventValidatedOnce = true;
+      fieldInstance._ui.validatedOnce = true;
 
-      // Handle valid / invalid field class
+      // Handle valid / invalid / none field class
+      this.manageStatusClass(fieldInstance);
+
+      // Add, remove, updated errors messages
+      this.manageErrorsMessages(fieldInstance, diff);
+
+      // Triggers impl
+      this.actualizeTriggers(fieldInstance);
+
+      // If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user
+      if ((diff.kept.length || diff.added.length) && 'undefined' === typeof fieldInstance._ui.failedOnce)
+        this.manageFailingFieldTrigger(fieldInstance);
+    },
+
+    manageStatusClass: function (fieldInstance) {
       if (true === fieldInstance.validationResult)
         this._successClass(fieldInstance);
       else if (fieldInstance.validationResult.length > 0)
         this._errorClass(fieldInstance);
       else
         this._resetClass(fieldInstance);
+    },
 
-      // TODO better impl
+    manageErrorsMessages: function (fieldInstance, diff) {
+      // Case where we have errorMessage option that configure an unique field error message, regardless failing validators
       if ('undefined' !== typeof fieldInstance.options.errorMessage && (diff.added.length || diff.kept.length)) {
         if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
           fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
@@ -49,30 +65,26 @@ define('parsley/ui', [
 
         fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message')
           .html(fieldInstance.options.errorMessage);
-      } else {
-        // TODO better impl too..
-        for (var i = 0; i < diff.removed.length; i++)
-          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
 
-        for (i = 0; i < diff.added.length; i++)
-          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
-            .addClass('parsley-' + diff.added[i].assert.name)
-            .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
-
-        for (i = 0; i < diff.kept.length; i++)
-          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
-            .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
+        return;
       }
 
-      // Triggers impl
-      this.actualizeTriggers(fieldInstance);
+      // Show, hide, update failing constraints messages
+      for (var i = 0; i < diff.removed.length; i++)
+        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
 
-      if (diff.kept.length || diff.added.length)
-        this.manageFailingFieldTrigger(fieldInstance);
+      for (i = 0; i < diff.added.length; i++)
+        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+          .addClass('parsley-' + diff.added[i].assert.name)
+          .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
+
+      for (i = 0; i < diff.kept.length; i++)
+        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
+          .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
     },
 
     focus: function (formInstance) {
-      if (true === formInstance.isValid || 'none' === formInstance.options.focus)
+      if (true === formInstance.valid || 'none' === formInstance.options.focus)
         return;
 
       var lastFailingField;
@@ -161,6 +173,8 @@ define('parsley/ui', [
       _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
       // ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
       _ui.lastValidationResult = [];
+      _ui.validatedOnce = false;
+      _ui.validationInformationVisible = false;
 
       /** Mess with DOM now **/
       // If do not exist already, insert DOM errors wrapper in the rightful container
@@ -207,17 +221,19 @@ define('parsley/ui', [
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
     eventValidate: function(event) {
       // For keyup, keypress, keydown.. events that could be a little bit obstrusive
-      // do not validate if val length < min tresshold on first validation. Once field have been validated once,
-      // always validate with this trigger to reflect every yalidation change.
+      // do not validate if val length < min tresshold on first validation. Once field have been validated once and info
+      // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
       if (new RegExp('key').test(event.type))
-        if ('undefined' === typeof this._ui.eventValidatedOnce && this.getValue().length <= this.options.validationTresshold)
+        if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationTresshold)
           return;
 
-      this._ui.eventValidatedOnce = true;
+      this._ui.validatedOnce = true;
       this.validate();
     },
 
     manageFailingFieldTrigger: function (fieldInstance) {
+      fieldInstance._ui.failedOnce = true;
+
       // Radio and checkboxes fields
       if (fieldInstance.options.multiple)
         $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
@@ -246,8 +262,10 @@ define('parsley/ui', [
       // Reset validation class
       this._resetClass(parsleyInstance);
 
-      // Reset lastValidationResult
+      // Reset validation flags and last validation result
+      parsleyInstance._ui.validatedOnce = false;
       parsleyInstance._ui.lastValidationResult = [];
+      parsleyInstance._ui.validationInformationVisible = false;
     },
 
     destroy: function (parsleyInstance) {
@@ -261,9 +279,11 @@ define('parsley/ui', [
     },
 
     _successClass: function (fieldInstance) {
+      fieldInstance._ui.validationInformationVisible = true;
       fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
     },
     _errorClass: function (fieldInstance) {
+      fieldInstance._ui.validationInformationVisible = true;
       fieldInstance.$element.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
     },
     _resetClass: function (fieldInstance) {

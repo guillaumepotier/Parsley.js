@@ -1,0 +1,22 @@
+input.parsley-success,
+select.parsley-success,
+textarea..parsley-success {
+  color: #468847;
+  background-color: #DFF0D8;
+  border: 1px solid #D6E9C6;
+}
+
+input.parsley-error,
+select.parsley-error,
+textarea.parsley-error {
+  color: #B94A48;
+  background-color: #F2DEDE;
+  border: 1px solid #EED3D7;
+}
+
+ul.parsley-errors-list {
+  font-size: 0.9em;
+  margin: 2px;
+  padding: 0px;
+  list-style-type: none;
+}

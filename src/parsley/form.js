@@ -27,7 +27,7 @@ define('parsley/form', [
       this.validate(undefined, event);
 
       // prevent form submission if validation fails
-      if (false === this.isValid && event instanceof $.Event)
+      if (false === this.valid && event instanceof $.Event)
         event.preventDefault();
 
       return this;
@@ -35,7 +35,7 @@ define('parsley/form', [
 
     // Iterate over over every field and emit UI events
     validate: function (group, event) {
-      this.isValid = true;
+      this.valid = true;
       this.submitEvent = event;
 
       var validationResult = [];
@@ -53,8 +53,8 @@ define('parsley/form', [
 
         validationResult = this.fields[i].validate().validationResult;
 
-        if (true !== validationResult && validationResult.length > 0 && this.isValid)
-          this.isValid = false;
+        if (true !== validationResult && validationResult.length > 0 && this.valid)
+          this.valid = false;
       }
 
       $.emit('parsley:form:validated', this);

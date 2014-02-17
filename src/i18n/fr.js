@@ -1,3 +1,4 @@
+// ParsleyConfig definition if not already set
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
@@ -33,3 +34,6 @@ window.ParsleyConfig.i18n['fr'] = {
     }
 };
 
+// If file is loaded after Parsley main file, auto-load locale
+if ('undefined' !== typeof window.ParsleyValidator)
+  window.ParsleyValidator.addLocaleMessages('fr', window.ParsleyConfig.i18n['fr'], true);

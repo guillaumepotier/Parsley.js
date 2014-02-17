@@ -33,3 +33,7 @@ window.ParsleyConfig.i18n['en'] = {
     equalto:        "This value should be the same."
   }
 };
+
+// If file is loaded after Parsley main file, auto-load locale
+if ('undefined' !== typeof window.ParsleyValidator)
+  window.ParsleyValidator.addLocaleMessages('en', window.ParsleyConfig.i18n['en'], true);

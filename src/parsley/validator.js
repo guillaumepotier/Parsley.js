@@ -1,22 +1,44 @@
 define('parsley/validator', [
   'validator'
 ], function (Validator) {
-  var ParsleyValidator = function (validators) {
+  var ParsleyValidator = function (validators, catalog) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
 
     // Default Parsley locale is en
     this.locale = 'en';
 
-    this.init(validators || {});
+    this.init(validators || {}, catalog || {});
   };
 
   ParsleyValidator.prototype = {
-    init: function (validators) {
+    init: function (validators, catalog) {
+      this.catalog = catalog;
+
       for (var name in validators)
         this.addValidator(name, validators[name].fn, validators[name].priority);
 
       $.emit('parsley:validator:init');
+    },
+
+    // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
+    setLocale: function (locale) {
+      if ('undefined' === typeof this.catalog[locale])
+        throw new Error(locale + ' is not available in the catalog');
+
+      this.locale = locale;
+
+      return this;
+    },
+
+    addLocaleMessages: function (locale, messages, set) {
+      if ('object' === typeof messages)
+        this.catalog[locale] = messages;
+
+      if (true === set)
+        return this.setLocale(locale);
+
+      return this;
     },
 
     validate: function (value, constraints, priority) {
@@ -37,16 +59,6 @@ define('parsley/validator', [
 
     removeValidator: function (name) {
       delete this.validators[name];
-
-      return this;
-    },
-
-    // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
-    setLocale: function (locale) {
-      if ('undefined' === typeof window.ParsleyConfig.i18n[locale])
-        throw new Error(locale + ' is not available in i18n dictionary');
-
-      this.locale = locale;
 
       return this;
     },
@@ -100,6 +112,9 @@ define('parsley/validator', [
             break;
           case 'alphanum':
             assert = new Validator.Assert().Regexp('^\\w+$', 'i');
+            break;
+          case 'url':
+            assert = new Validator.Assert().Regexp('(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)', 'i');
             break;
           default:
             throw new Error('validator type `' + type + '` is not supported');

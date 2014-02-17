@@ -1,7 +1,7 @@
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Thu Feb 13 2014 10:51:05
+* Version 2.0.0-pre - built Mon Feb 17 2014 23:45:43
 * MIT Licensed
 *
 */
@@ -912,18 +912,33 @@
 } )( 'undefined' === typeof exports ? this[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = {} : exports );
 
 
-  var ParsleyValidator = function (validators) {
+  var ParsleyValidator = function (validators, catalog) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
     // Default Parsley locale is en
     this.locale = 'en';
-    this.init(validators || {});
+    this.init(validators || {}, catalog || {});
   };
   ParsleyValidator.prototype = {
-    init: function (validators) {
+    init: function (validators, catalog) {
+      this.catalog = catalog;
       for (var name in validators)
         this.addValidator(name, validators[name].fn, validators[name].priority);
       $.emit('parsley:validator:init');
+    },
+    // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
+    setLocale: function (locale) {
+      if ('undefined' === typeof this.catalog[locale])
+        throw new Error(locale + ' is not available in the catalog');
+      this.locale = locale;
+      return this;
+    },
+    addLocaleMessages: function (locale, messages, set) {
+      if ('object' === typeof messages)
+        this.catalog[locale] = messages;
+      if (true === set)
+        return this.setLocale(locale);
+      return this;
     },
     validate: function (value, constraints, priority) {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
@@ -939,13 +954,6 @@
     },
     removeValidator: function (name) {
       delete this.validators[name];
-      return this;
-    },
-    // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
-    setLocale: function (locale) {
-      if ('undefined' === typeof window.ParsleyConfig.i18n[locale])
-        throw new Error(locale + ' is not available in i18n dictionary');
-      this.locale = locale;
       return this;
     },
     getErrorMessage: function (constraint) {
@@ -990,6 +998,9 @@
             break;
           case 'alphanum':
             assert = new Validator.Assert().Regexp('^\\w+$', 'i');
+            break;
+          case 'url':
+            assert = new Validator.Assert().Regexp('(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)', 'i');
             break;
           default:
             throw new Error('validator type `' + type + '` is not supported');
@@ -1051,40 +1062,48 @@
       // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
       // Field have been validated at least once if here. Useful for binded key events..
-      fieldInstance._ui.eventValidatedOnce = true;
-      // Handle valid / invalid field class
+      fieldInstance._ui.validatedOnce = true;
+      // Handle valid / invalid / none field class
+      this.manageStatusClass(fieldInstance);
+      // Add, remove, updated errors messages
+      this.manageErrorsMessages(fieldInstance, diff);
+      // Triggers impl
+      this.actualizeTriggers(fieldInstance);
+      // If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user
+      if ((diff.kept.length || diff.added.length) && 'undefined' === typeof fieldInstance._ui.failedOnce)
+        this.manageFailingFieldTrigger(fieldInstance);
+    },
+    manageStatusClass: function (fieldInstance) {
       if (true === fieldInstance.validationResult)
         this._successClass(fieldInstance);
       else if (fieldInstance.validationResult.length > 0)
         this._errorClass(fieldInstance);
       else
         this._resetClass(fieldInstance);
-      // TODO better impl
+    },
+    manageErrorsMessages: function (fieldInstance, diff) {
+      // Case where we have errorMessage option that configure an unique field error message, regardless failing validators
       if ('undefined' !== typeof fieldInstance.options.errorMessage && (diff.added.length || diff.kept.length)) {
         if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
           fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
             .addClass('parsley-custom-error-message'));
         fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message')
           .html(fieldInstance.options.errorMessage);
-      } else {
-        // TODO better impl too..
-        for (var i = 0; i < diff.removed.length; i++)
-          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
-        for (i = 0; i < diff.added.length; i++)
-          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
-            .addClass('parsley-' + diff.added[i].assert.name)
-            .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
-        for (i = 0; i < diff.kept.length; i++)
-          fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
-            .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
+        return;
       }
-      // Triggers impl
-      this.actualizeTriggers(fieldInstance);
-      if (diff.kept.length || diff.added.length)
-        this.manageFailingFieldTrigger(fieldInstance);
+      // Show, hide, update failing constraints messages
+      for (var i = 0; i < diff.removed.length; i++)
+        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
+      for (i = 0; i < diff.added.length; i++)
+        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+          .addClass('parsley-' + diff.added[i].assert.name)
+          .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
+      for (i = 0; i < diff.kept.length; i++)
+        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
+          .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
     },
     focus: function (formInstance) {
-      if (true === formInstance.isValid || 'none' === formInstance.options.focus)
+      if (true === formInstance.valid || 'none' === formInstance.options.focus)
         return;
       var lastFailingField;
       for (var i = 0; i < formInstance.fields.length; i++)
@@ -1151,6 +1170,8 @@
       _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
       // ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
       _ui.lastValidationResult = [];
+      _ui.validatedOnce = false;
+      _ui.validationInformationVisible = false;
       /** Mess with DOM now **/
       // If do not exist already, insert DOM errors wrapper in the rightful container
       if (0 === $('#' + _ui.errorsWrapperId).length) {
@@ -1187,15 +1208,16 @@
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
     eventValidate: function(event) {
       // For keyup, keypress, keydown.. events that could be a little bit obstrusive
-      // do not validate if val length < min tresshold on first validation. Once field have been validated once,
-      // always validate with this trigger to reflect every yalidation change.
+      // do not validate if val length < min tresshold on first validation. Once field have been validated once and info
+      // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
       if (new RegExp('key').test(event.type))
-        if ('undefined' === typeof this._ui.eventValidatedOnce && this.getValue().length <= this.options.validationTresshold)
+        if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationTresshold)
           return;
-      this._ui.eventValidatedOnce = true;
+      this._ui.validatedOnce = true;
       this.validate();
     },
     manageFailingFieldTrigger: function (fieldInstance) {
+      fieldInstance._ui.failedOnce = true;
       // Radio and checkboxes fields
       if (fieldInstance.options.multiple)
         $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
@@ -1218,8 +1240,10 @@
       });
       // Reset validation class
       this._resetClass(parsleyInstance);
-      // Reset lastValidationResult
+      // Reset validation flags and last validation result
+      parsleyInstance._ui.validatedOnce = false;
       parsleyInstance._ui.lastValidationResult = [];
+      parsleyInstance._ui.validationInformationVisible = false;
     },
     destroy: function (parsleyInstance) {
       this.reset(parsleyInstance);
@@ -1229,9 +1253,11 @@
       delete parsleyInstance._ui;
     },
     _successClass: function (fieldInstance) {
+      fieldInstance._ui.validationInformationVisible = true;
       fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
     },
     _errorClass: function (fieldInstance) {
+      fieldInstance._ui.validationInformationVisible = true;
       fieldInstance.$element.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
     },
     _resetClass: function (fieldInstance) {
@@ -1291,13 +1317,13 @@
     onSubmitValidate: function (event) {
       this.validate(undefined, event);
       // prevent form submission if validation fails
-      if (false === this.isValid && event instanceof $.Event)
+      if (false === this.valid && event instanceof $.Event)
         event.preventDefault();
       return this;
     },
     // Iterate over over every field and emit UI events
     validate: function (group, event) {
-      this.isValid = true;
+      this.valid = true;
       this.submitEvent = event;
       var validationResult = [];
       this.refreshFields();
@@ -1308,8 +1334,8 @@
         if (group && group !== this.fields[i].options.group)
           continue;
         validationResult = this.fields[i].validate().validationResult;
-        if (true !== validationResult && validationResult.length > 0 && this.isValid)
-          this.isValid = false;
+        if (true !== validationResult && validationResult.length > 0 && this.valid)
+          this.valid = false;
       }
       $.emit('parsley:form:validated', this);
       return this;
@@ -1635,6 +1661,9 @@ window.ParsleyConfig.i18n['en'] = {
     equalto:        "This value should be the same."
   }
 };
+// If file is loaded after Parsley main file, auto-load locale
+if ('undefined' !== typeof window.ParsleyValidator)
+  window.ParsleyValidator.addLocaleMessages('en', window.ParsleyConfig.i18n['en'], true);
 
 // ### Requirements
   // ### Parsley factory
@@ -1694,27 +1723,28 @@ window.ParsleyConfig.i18n['en'] = {
       return parsleyInstance;
     }
   };
-
   // ### jQuery API
   // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
   $.fn.parsley = $.fn.psly = function (options) {
     return new Parsley(this, options);
   };
-
   // ### ParsleyUI
   // UI is a class apart that only listen to some events and them modify DOM accordingly
   // Could be overriden by defining a `window.ParsleyConfig.ParsleyUI` appropriate class (with `listen()` method basically)
   ParsleyUI = 'function' === typeof ParsleyUtils.get(window.ParsleyConfig, 'ParsleyUI') ?
     new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
-
+  // ### ParsleyField and ParsleyForm extension
+  // Ensure that defined if not already the case
+  if ('undefined' === typeof window.ParsleyExtend)
+    window.ParsleyExtend = {};
+  // ### ParsleyConfig
+  // Ensure that defined if not already the case
+  if ('undefined' === typeof window.ParsleyConfig)
+    window.ParsleyConfig = {};
   // ### Globals
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
-  window.ParsleyValidator = new ParsleyValidator(ParsleyUtils.get(window.ParsleyConfig, 'validators'));
-
-  // ### ParsleyField and ParsleyForm extension
-  if ('undefined' === typeof window.ParsleyExtend)
-    window.ParsleyExtend = {};
+  window.ParsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))

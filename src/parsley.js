@@ -93,13 +93,11 @@ define([
     }
   };
 
-
   // ### jQuery API
   // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
   $.fn.parsley = $.fn.psly = function (options) {
     return new Parsley(this, options);
   };
-
 
   // ### ParsleyUI
   // UI is a class apart that only listen to some events and them modify DOM accordingly
@@ -107,16 +105,20 @@ define([
   ParsleyUI = 'function' === typeof ParsleyUtils.get(window.ParsleyConfig, 'ParsleyUI') ?
     new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
 
+  // ### ParsleyField and ParsleyForm extension
+  // Ensure that defined if not already the case
+  if ('undefined' === typeof window.ParsleyExtend)
+    window.ParsleyExtend = {};
+
+  // ### ParsleyConfig
+  // Ensure that defined if not already the case
+  if ('undefined' === typeof window.ParsleyConfig)
+    window.ParsleyConfig = {};
 
   // ### Globals
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
-  window.ParsleyValidator = new ParsleyValidator(ParsleyUtils.get(window.ParsleyConfig, 'validators'));
-
-
-  // ### ParsleyField and ParsleyForm extension
-  if ('undefined' === typeof window.ParsleyExtend)
-    window.ParsleyExtend = {};
+  window.ParsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
