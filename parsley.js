@@ -1052,16 +1052,24 @@
         return true;
       } else if ( false === this.valid ) {
         if ( true === this.options.priorityEnabled ) {
-          var maxPriority = 0, constraint, priority;
+          var maxPriority = 0, constraint, priority, error, errorArr = [];
           for ( var i = 0; i < errors.length; i++ ) {
-            priority = this.Validator.validators[ errors[ i ].name ]().priority;
+            error = this.Validator.validators[ errors[ i ].name ]();
+            priority = error.priority;
+            errorArr.push(errors[ i ]);
 
             if ( priority > maxPriority ) {
               constraint = errors[ i ];
               maxPriority = priority;
             }
           }
-          this.UI.manageError( constraint );
+          for ( var i = 0; i < errorArr.length; i++ ) {
+            if ( constraint === errorArr[ i ] ) {
+              this.UI.manageError( constraint );
+            } else {
+              this.UI.removeError( errorArr[ i ].name );
+            }
+          }
         } else {
           for ( var i = 0; i < errors.length; i++ )
             this.UI.manageError( errors[ i ] );
