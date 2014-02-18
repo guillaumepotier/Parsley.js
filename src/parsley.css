@@ -19,4 +19,18 @@ ul.parsley-errors-list {
   margin: 2px;
   padding: 0px;
   list-style-type: none;
+
+  opacity: 0;
+  -moz-opacity: 0;
+  -webkit-opacity: 0;
+
+  transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  -ms-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -webkit-transition: all .3s ease-in-out;
+}
+
+ul.parsley-errors-list.filled {
+  opacity: 1;
 }

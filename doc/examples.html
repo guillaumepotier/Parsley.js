@@ -149,16 +149,16 @@
     <script type="text/javascript">
 
       $.listen('parsley:field:validate', function () {
-        validate();
+        validateFront();
       });
 
       $('#demo-form .btn').on('click', function () {
-        $('#demo-form').psly().validate();
-        validate();
+        $('#demo-form').parsley().validate();
+        validateFront();
       });
 
-      var validate = function () {
-        if (true === $('#demo-form').psly().isValid()) {
+      var validateFront = function () {
+        if (true === $('#demo-form').parsley().isValid()) {
           $('.bs-callout-info').removeClass('hidden');
           $('.bs-callout-warning').addClass('hidden');
         } else {

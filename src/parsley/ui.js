@@ -71,20 +71,26 @@ define('parsley/ui', [
 
       // Show, hide, update failing constraints messages
       for (var i = 0; i < diff.removed.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
+        fieldInstance._ui.$errorsWrapper
+          .removeClass('filled')
+          .find('.parsley-' + diff.removed[i].assert.name).remove();
 
       for (i = 0; i < diff.added.length; i++)
-        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+        fieldInstance._ui.$errorsWrapper
+          .addClass('filled')
+          .append($(fieldInstance.options.errorTemplate)
           .addClass('parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
 
       for (i = 0; i < diff.kept.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
+        fieldInstance._ui.$errorsWrapper
+          .addClass('filled')
+          .find('.parsley-' + diff.kept[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
     },
 
     focus: function (formInstance) {
-      if (true === formInstance.valid || 'none' === formInstance.options.focus)
+      if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
         return;
 
       var lastFailingField;

@@ -52,10 +52,10 @@ define(function () {
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
           parsleyForm = new Parsley($('#element')).validate();
-          expect(parsleyForm.valid).to.be(false);
+          expect(parsleyForm.validationResult).to.be(false);
           $('#field1').val('foo');
           $('#field3').val('foo');
-          expect(parsleyForm.validate().valid).to.be(true);
+          expect(parsleyForm.validate().validationResult).to.be(true);
       });
       it('should handle group validation', function () {
         $('body').append(
