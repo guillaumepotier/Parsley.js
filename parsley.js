@@ -226,7 +226,7 @@
               }
 
               if (false === isConstraintValid) {
-                  self.options.listeners.onFieldError( self.element, self.constraints, self );
+                  self.options.listeners.onFieldError( self.element, [message], self );
               } else if (true === isConstraintValid && false === self.options.listeners.onFieldSuccess( self.element, self.constraints, self )) {
                   // if onFieldSuccess returns (bool) false, consider that field is invalid
                   isConstraintValid = false;
@@ -534,12 +534,9 @@
       // TODO: refacto error name w/ proper & readable function
       var constraintName = constraint.name
         , liClass = false !== this.options.errorMessage ? 'custom-error-message' : constraintName
-        , liError = {}
-        , message = false !== this.options.errorMessage ? this.options.errorMessage : ( constraint.name === 'type' ?
-            this.ParsleyInstance.Validator.messages[ constraintName ][ constraint.requirements ] : ( 'undefined' === typeof this.ParsleyInstance.Validator.messages[ constraintName ] ?
-              this.ParsleyInstance.Validator.messages.defaultMessage : this.ParsleyInstance.Validator.formatMesssage( this.ParsleyInstance.Validator.messages[ constraintName ], constraint.requirements ) ) );
+        , liError = {};
 
-      liError[ liClass ] = message;
+      liError[ liClass ] = this.ParsleyInstance.extractErrorMessage(constraint);
 
       // add liError if not shown. update if already exist
       !$( this.ulError + ' .' + liClass ).length ? this.addError( liError ) : this.updateError( liError );
@@ -1011,13 +1008,66 @@
 
       // listeners' ballet
       if (false === valid) {
-        this.options.listeners.onFieldError( this.element, this.constraints, this );
+        this.options.listeners.onFieldError( this.element, this.errorsForListeners(), this );
       } else if (true === valid && false === this.options.listeners.onFieldSuccess( this.element, this.constraints, this )) {
         // if onFieldSuccess returns (bool) false, consider that field si invalid
         valid = false;
       }
 
       return valid;
+    }
+
+    /**
+    */
+    , errorsForListeners: function() {
+      var errorsForListeners = []
+        , invalidConstraints = [];
+
+      for ( var constraint in this.constraints ) {
+        if ( false === this.constraints[ constraint ].valid )
+          invalidConstraints.push( this.constraints[ constraint ]);
+      }
+
+      if ( true === this.options.priorityEnabled && invalidConstraints.length > 1 ) {
+        var priority
+          , maxPriority = 0
+          , fpConstraint
+          , validator;
+
+        for ( var constraint in invalidConstraints ) {
+          validator = this.Validator.validators[ invalidConstraints[ constraint ].name ]();
+          priority = validator.priority;
+
+          if ( priority > maxPriority ) {
+            fpConstraint = invalidConstraints[constraint];
+            maxPriority = priority;
+          }
+        }
+        invalidConstraints = [fpConstraint];
+      }
+
+      for ( var i = 0; i < invalidConstraints.length; i++ )
+        errorsForListeners.push(this.extractErrorMessage(invalidConstraints[ i ]));
+
+      return errorsForListeners;
+    }
+
+    /**
+    */
+    , extractErrorMessage: function(constraint) {
+      var validator = this.Validator
+          , messages = validator.messages;
+
+      if (this.options.errorMessage !== false)
+        return this.options.errorMessage;
+
+      if (constraint.name === 'type')
+        return messages[ constraint.name ][ constraint.requirements ];
+
+      if (typeof messages[ constraint.name ] === 'undefined')
+        return messages.defaultMessage;
+
+      return validator.formatMesssage(messages[ constraint.name ], constraint.requirements);
     }
 
     /**
