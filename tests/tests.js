@@ -1073,7 +1073,7 @@ var testSuite = function () {
           expect( $( '#onFieldValidate-form' ).hasClass( 'this-form-is-invalid' ) ).to.be( true );
         } )
         it ( 'test onFieldError()', function () {
-          expect( $( '#onFieldValidate2' ).data('error_message') ).to.be( 'This value should be a valid email. This value is required.' );
+          expect( $( '#onFieldValidate2' ).attr('data-error_message') ).to.be( 'This value should be a valid email. This value is required.' );
         } )
         it ( 'test onFieldSuccess()', function () {
           // if onFieldSuccess returns false, consider field as invalid
