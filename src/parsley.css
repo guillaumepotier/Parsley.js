@@ -14,7 +14,7 @@ textarea.parsley-error {
   border: 1px solid #EED3D7;
 }
 
-ul.parsley-errors-list {
+.parsley-errors-list {
   font-size: 0.9em;
   margin: 2px;
   padding: 0px;
@@ -24,13 +24,13 @@ ul.parsley-errors-list {
   -moz-opacity: 0;
   -webkit-opacity: 0;
 
-  transition: all .3s ease-in-out;
-  -o-transition: all .3s ease-in-out;
-  -ms-transition: all .3s ease-in-out;
-  -moz-transition: all .3s ease-in-out;
-  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in;
+  -o-transition: all .3s ease-in;
+  -ms-transition: all .3s ease-in-;
+  -moz-transition: all .3s ease-in;
+  -webkit-transition: all .3s ease-in;
 }
 
-ul.parsley-errors-list.filled {
+.parsley-errors-list.filled {
   opacity: 1;
 }

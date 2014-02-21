@@ -1,7 +1,7 @@
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Mon Feb 17 2014 23:45:43
+* Version 2.0.0-pre - built Fri Feb 21 2014 17:56:30
 * MIT Licensed
 *
 */
@@ -993,6 +993,9 @@
           case 'number':
             assert = new Validator.Assert().Regexp('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
             break;
+          case 'integer':
+            assert = new Validator.Assert().Regexp('^-?\\d+$');
+            break;
           case 'digits':
             assert = new Validator.Assert().Regexp('^\\d+$');
             break;
@@ -1093,17 +1096,23 @@
       }
       // Show, hide, update failing constraints messages
       for (var i = 0; i < diff.removed.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.removed[i].assert.name).remove();
+        fieldInstance._ui.$errorsWrapper
+          .removeClass('filled')
+          .find('.parsley-' + diff.removed[i].assert.name).remove();
       for (i = 0; i < diff.added.length; i++)
-        fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
+        fieldInstance._ui.$errorsWrapper
+          .addClass('filled')
+          .append($(fieldInstance.options.errorTemplate)
           .addClass('parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
       for (i = 0; i < diff.kept.length; i++)
-        fieldInstance._ui.$errorsWrapper.find('.parsley-' + diff.kept[i].assert.name)
+        fieldInstance._ui.$errorsWrapper
+          .addClass('filled')
+          .find('.parsley-' + diff.kept[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
     },
     focus: function (formInstance) {
-      if (true === formInstance.valid || 'none' === formInstance.options.focus)
+      if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
         return;
       var lastFailingField;
       for (var i = 0; i < formInstance.fields.length; i++)
@@ -1323,9 +1332,9 @@
     },
     // Iterate over over every field and emit UI events
     validate: function (group, event) {
-      this.valid = true;
       this.submitEvent = event;
-      var validationResult = [];
+      this.validationResult = true;
+      var fieldValidationResult = [];
       this.refreshFields();
       $.emit('parsley:form:validate', this);
       // loop through fields to validate them one by one
@@ -1333,9 +1342,9 @@
         // do not validate a field if not the same as given validation group
         if (group && group !== this.fields[i].options.group)
           continue;
-        validationResult = this.fields[i].validate().validationResult;
-        if (true !== validationResult && validationResult.length > 0 && this.valid)
-          this.valid = false;
+        fieldValidationResult = this.fields[i].validate().validationResult;
+        if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
+          this.validationResult = false;
       }
       $.emit('parsley:form:validated', this);
       return this;
@@ -1496,21 +1505,22 @@
       // html5 pattern
       if ('string' === typeof this.$element.attr('pattern'))
         this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
+      // HTML5 min
+      if ('undefined' !== typeof this.$element.attr('min'))
+        this.addConstraint('min', this.$element.attr('min'), undefined, true);
+      // HTML5 max
+      if ('undefined' !== typeof this.$element.attr('max'))
+        this.addConstraint('max', this.$element.attr('max'), undefined, true);
       // html5 types
       var type = this.$element.attr('type');
-      if ('undefined' !== typeof type && new RegExp(type, 'i').test('email url number range tel')) {
-        this.addConstraint('type', type, undefined, true);
-        // number and range types could have min and/or max values
-        if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
-          return this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
-        // min value
-        if ('undefined' !== typeof this.$element.attr('min'))
-          return this.addConstraint('min', this.$element.attr('min'), undefined, true);
-        // max value
-        if ('undefined' !== typeof this.$element.attr('max'))
-          return this.addConstraint('max', this.$element.attr('max'), undefined, true);
-      }
-      return this;
+      if ('undefined' === typeof type)
+        return this;
+      // Small special case here for HTML5 number, that is in fact an integer validator
+      if ('number' === type)
+        return this.addConstraint('type', 'integer', undefined, true);
+      // Regular other HTML5 supported types
+      else if (new RegExp(type, 'i').test('email url range'))
+        return this.addConstraint('type', type, undefined, true);
     },
     /**
     * Add a new constraint to a field

@@ -137,25 +137,27 @@ define('parsley/field', [
       if ('string' === typeof this.$element.attr('pattern'))
         this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
 
+      // HTML5 min
+      if ('undefined' !== typeof this.$element.attr('min'))
+        this.addConstraint('min', this.$element.attr('min'), undefined, true);
+
+      // HTML5 max
+      if ('undefined' !== typeof this.$element.attr('max'))
+        this.addConstraint('max', this.$element.attr('max'), undefined, true);
+
       // html5 types
       var type = this.$element.attr('type');
-      if ('undefined' !== typeof type && new RegExp(type, 'i').test('email url number range tel')) {
-        this.addConstraint('type', type, undefined, true);
 
-        // number and range types could have min and/or max values
-        if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
-          return this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
+      if ('undefined' === typeof type)
+        return this;
 
-        // min value
-        if ('undefined' !== typeof this.$element.attr('min'))
-          return this.addConstraint('min', this.$element.attr('min'), undefined, true);
+      // Small special case here for HTML5 number, that is in fact an integer validator
+      if ('number' === type)
+        return this.addConstraint('type', 'integer', undefined, true);
 
-        // max value
-        if ('undefined' !== typeof this.$element.attr('max'))
-          return this.addConstraint('max', this.$element.attr('max'), undefined, true);
-      }
-
-      return this;
+      // Regular other HTML5 supported types
+      else if (new RegExp(type, 'i').test('email url range'))
+        return this.addConstraint('type', type, undefined, true);
     },
 
     /**

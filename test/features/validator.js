@@ -63,9 +63,17 @@ define(function () {
       it('should have a type="digits" validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('digits'))).not.to.be(true);
         expect(parsleyValidator.validate('1', parsleyValidator.validators.type('digits'))).to.be(true);
+        expect(parsleyValidator.validate('-1', parsleyValidator.validators.type('digits'))).not.to.be(true);
         expect(parsleyValidator.validate('1.5', parsleyValidator.validators.type('digits'))).not.to.be(true);
         expect(parsleyValidator.validate('-1.5', parsleyValidator.validators.type('digits'))).not.to.be(true);
         expect(parsleyValidator.validate('1,500.642', parsleyValidator.validators.type('digits'))).not.to.be(true);
+      });
+      it('should have a type="integer" validator', function () {
+        expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('integer'))).not.to.be(true);
+        expect(parsleyValidator.validate('1', parsleyValidator.validators.type('integer'))).to.be(true);
+        expect(parsleyValidator.validate('-1', parsleyValidator.validators.type('integer'))).to.be(true);
+        expect(parsleyValidator.validate('1.5', parsleyValidator.validators.type('integer'))).not.to.be(true);
+        expect(parsleyValidator.validate('-1.5', parsleyValidator.validators.type('integer'))).not.to.be(true);
       });
       it('should have a type="alphanum" validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('alphanum'))).to.be(true);

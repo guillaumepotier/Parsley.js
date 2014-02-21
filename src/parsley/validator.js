@@ -107,6 +107,9 @@ define('parsley/validator', [
           case 'number':
             assert = new Validator.Assert().Regexp('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
             break;
+          case 'integer':
+            assert = new Validator.Assert().Regexp('^-?\\d+$');
+            break;
           case 'digits':
             assert = new Validator.Assert().Regexp('^\\d+$');
             break;
