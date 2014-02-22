@@ -15,7 +15,9 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
 
   onSubmitValidate: function (event) {
     var that = this;
-    event.preventDefault();
+
+    if ( event instanceof $.Event)
+      event.preventDefault();
 
     return this._asyncValidateForm(undefined, event)
       .done(function () {

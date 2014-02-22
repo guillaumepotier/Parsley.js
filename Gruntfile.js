@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 
     docco: {
       source: {
-        src: ['src/parsley.js', 'src/parsley/*.js'],
+        src: ['src/parsley.js', 'src/parsley/*.js', 'src/parsley.remote.js'],
         options: {
           output: 'doc/annotated-source/',
           layout: 'parallel'
@@ -30,6 +30,26 @@ module.exports = function (grunt) {
     },
 
     replace: {
+      doc: {
+        options: {
+          patterns: [
+            {
+              match: /<div id="jump_page">/ig,
+              replacement: function () {
+                return '<div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>';
+              }
+            }
+          ]
+        },
+        files: [
+          {
+            expand: true,
+            flatten: true,
+            src: 'doc/annotated-source/*.html',
+            dest: 'doc/annotated-source/'
+          }
+        ]
+      },
       dist: {
         options: {
           patterns: [
@@ -135,10 +155,8 @@ module.exports = function (grunt) {
   /** Tasks here **/
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['clean:dist', 'bower:install']);
-
-  grunt.registerTask('build', ['configure', 'requirejs', 'replace', 'uglify:min']);
-  grunt.registerTask('build-annotated-source', 'docco:source');
-
+  grunt.registerTask('build', ['configure', 'requirejs', 'replace:dist', 'uglify:min']);
+  grunt.registerTask('build-annotated-source', ['docco:source', 'replace:doc']);
   grunt.registerTask('build-all', ['build', 'build-annotated-source']);
 };
 
@@ -147,7 +165,7 @@ var rdefineEnd = /\}\);[^}\w]*$/;
 function convert(name, path, contents) {
   // Convert ParsleyDefaults and ParsleyUtils that needs a special treatment
   if (/(defaults|utils)/.test(path)) {
-    var name = (/parsley\/([\w-]+)/.exec(name)[1]);
+    name = (/parsley\/([\w-]+)/.exec(name)[1]);
 
     return contents
       .replace(/define\([\w\W]*?return/, "  var Parsley" + name.charAt(0).toUpperCase() + name.slice(1) + " =")

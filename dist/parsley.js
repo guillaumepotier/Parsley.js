@@ -1,7 +1,7 @@
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sat Feb 22 2014 13:01:55
+* Version 2.0.0-pre - built Sat Feb 22 2014 16:17:44
 * MIT Licensed
 *
 */
@@ -1337,7 +1337,7 @@
     onSubmitValidate: function (event) {
       this.validate(undefined, event);
       // prevent form submission if validation fails
-      if (false === this.valid && event instanceof $.Event)
+      if (false === this.validationResult && event instanceof $.Event)
         event.preventDefault();
       return this;
     },
