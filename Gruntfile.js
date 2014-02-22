@@ -134,6 +134,11 @@ module.exports = function (grunt) {
         files: {
           'dist/parsley.min.js': 'dist/parsley.js'
         }
+      },
+      remote: {
+        files: {
+          'dist/parsley+remote.min.js': 'dist/parsley+remote.js'
+        }
       }
     },
 
@@ -146,8 +151,8 @@ module.exports = function (grunt) {
 
     concat: {
       remote: {
-        src: ['src/parsley.ajax.js', 'dist/parsley.js'],
-        dest: 'dist/parsley_with_remote.js'
+        src: ['src/parsley.remote.js', 'dist/parsley.js'],
+        dest: 'dist/parsley+remote.js'
       }
     }
   });
@@ -156,8 +161,9 @@ module.exports = function (grunt) {
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['clean:dist', 'bower:install']);
   grunt.registerTask('build', ['configure', 'requirejs', 'replace:dist', 'uglify:min']);
+  grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
   grunt.registerTask('build-annotated-source', ['docco:source', 'replace:doc']);
-  grunt.registerTask('build-all', ['build', 'build-annotated-source']);
+  grunt.registerTask('build-all', ['build', 'build-remote', 'build-annotated-source']);
 };
 
 var rdefineEnd = /\}\);[^}\w]*$/;

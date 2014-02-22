@@ -299,7 +299,7 @@
             <p>Parsley let you use validator.js in <code>window.ParsleyValidator.Validator</code></p>
           </div>
 
-          <h4>Parsley validators</h4>
+          <h3 id="validators-list">List and examples</h3>
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
@@ -541,10 +541,68 @@
                 <td><code>data-parsley-check="[1, 3]"</code></td>
                 <td>Validates that the number of checked checkboxes in a group is with a certain range.</td>
               </tr>
+              <tr>
+                <td>
+                  <a name="psly-validator-equalto"></a>
+                  Check <version>#2.0</version>
+                </td>
+                <td><code>data-parsley-equalto="#anotherfield"</code></td>
+                <td>Validates that value is identical to another field value (useful or password confirmation check).</td>
+              </tr>
             </tbody>
           </table>
 
+          <h3 id="validators-craft">Craft yours!</h3>
+          <p>Of course, Parsley built-in validators are well used and usual validators, and you'll need some more that fit your specific forms and validations. That's why Parsley let you easily create your own validators.</p>
+          <p>
+          <p>Here again, like localizations, configuring your custom validators and error messages comes with two flavors:
+          <ul>
+            <li>By registering them in some globals <strong>before</strong> calling <code>parsley.js</code>:
+<pre><code>&lt;input type="text" data-parsley-multiple="3" />
+[...]
+&lt;script type="text/javascript">
+window.ParsleyConfig = {
+  validators: {
+    multiple: {
+      fn: function (value, requirement) {
+        return 0 === value % requirement;
+      },
+      priority: 32
+    }
+  },
+  i18n: {
+    en: {
+      multiple: 'This value should be a multiple of %s'
+    },
+    fr: {
+      multiple: 'Cette valeur doit être un multiple de %s'
+    }
+  }
+};
+&lt;/script>
+</code></pre>
+            </li>
+            <li>By registering them in <code>ParsleyValidator</code> <strong>after</strong> that <code>parsley.js</code> is loaded:
+
+<pre><code>&lt;input type="text" data-parsley-multiple="3" />
+[...]
+&lt;script type="text/javascript">
+window.ParsleyValidator
+  .addValidator('multiple', function (value, requirement) {
+    return 0 === value % requirement;
+  }, 32)
+  .addMessage('en', 'multiple', 'This value should be a multiple of %s')
+  .addMessage('fr', 'multiple', 'Cette valeur doit être un multiple de %s');
+&lt;/script>
+</code></pre></li>
+          </ul>
+          </p>
         </div>
+
+        <!-- ****************** BUILT-IN VALIDATORS ****************** -->
+        <h1 id="ui" class="page-header">UI/UX</h1>
+        <h3 id="ui-overview">Overview</h3>
+
       </div>
 
       <div class="col-md-3">
@@ -573,8 +631,6 @@
                   <li><a href="#usage-overview">Overview</a></li>
                   <li><a href="#usage-form">Form</a></li>
                   <li><a href="#usage-field">Field</a></li>
-                  <li><a href="#usage-ui">UI</a></li>
-                  <li><a href="#usage-validator">Validator</a></li>
                 </ul>
               </li>
               <li>
@@ -582,7 +638,7 @@
                 <ul class="nav">
                   <li><a href="#validators-overview">Overview</a></li>
                   <li><a href="#validators-list">List & examples</a></li>
-                  <li><a href="#validators-craft">Craft yours</a></li>
+                  <li><a href="#validators-craft">Craft yours!</a></li>
                 </ul>
               </li>
               <li>

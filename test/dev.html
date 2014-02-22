@@ -21,15 +21,24 @@
         <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
         <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" />
 
-        <span id="checkoxErrors">
-        </span>
+        <span id="checkoxErrors"></span>
+
+        FooBar:
+        <input type="text" data-parsley-foobar="baz" required />
 
         <input type="submit" />
     </form>
 
-    <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
+    <script src="../bower_components/jquery/jquery.js"></script>
     <!-- <script src="../src/parsley.remote.js"></script> -->
-    <!-- <script src="../dist/parsley.js"></script> -->
-    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+    <script src="../dist/parsley.js"></script>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
     <script src="../src/i18n/fr.js"></script>
+    <script type="text/javascript">
+        window.ParsleyValidator
+            .addValidator('foobar', function (value, requirement) {
+                return new RegExp('foobar', 'ig').test(value) && new RegExp(requirement, 'ig').test(value);
+            }, 32)
+            .addMessage('fr', 'foobar', 'salut');
+    </script>
 </html>

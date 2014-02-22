@@ -31,7 +31,8 @@ define('parsley/validator', [
       return this;
     },
 
-    addLocaleMessages: function (locale, messages, set) {
+    // Add a new messages catalog for a given locale. Set locale for this catalog if set === `true`
+    addCatalog: function (locale, messages, set) {
       if ('object' === typeof messages)
         this.catalog[locale] = messages;
 
@@ -41,10 +42,19 @@ define('parsley/validator', [
       return this;
     },
 
+    // Add a specific message for a given constraint in a given locale
+    addMessage: function (locale, name, message) {
+      if (undefined === typeof this.catalog[locale])
+        this.catalog[locale] = {};
+
+      this.catalog[locale][name] = message;
+    },
+
     validate: function (value, constraints, priority) {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
     },
 
+    // Add a new validator
     addValidator: function (name, fn, priority) {
       this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
@@ -68,11 +78,11 @@ define('parsley/validator', [
 
       // Type constraints are a bit different, we have to match their requirements too to find right error message
       if ('type' === constraint.name)
-        message = window.ParsleyConfig.i18n[this.locale].messages[constraint.name][constraint.requirements];
+        message = window.ParsleyConfig.i18n[this.locale][constraint.name][constraint.requirements];
       else
-        message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale].messages[constraint.name], constraint.requirements);
+        message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale][constraint.name], constraint.requirements);
 
-      return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].messages.defaultMessage;
+      return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].defaultMessage;
     },
 
     // Kind of light `sprintf()` implementation
@@ -154,6 +164,11 @@ define('parsley/validator', [
       },
       range: function (array) {
         return $.extend(new Validator.Assert().Range(array[0], array[1]), { priority: 32 });
+      },
+      equalto: function (identifier) {
+        return $.extend(new Validator.Assert().Callback(function (value, identifier) {
+          return value === $(identifier).val();
+        }, identifier), { priority: 32 });
       }
     }
   };

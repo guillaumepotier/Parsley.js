@@ -15,6 +15,15 @@ define(function () {
         expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(1);
         expect($('ul#parsley-id-' + parsleyField.__id__).hasClass('parsley-errors-list')).to.be(true);
       });
+      it('should handle errors-container option', function () {
+        $('body').append(
+          '<form id="element">'                                                                      +
+            '<input id="field1" type="text" required data-parsley-errors-container="#container" />'  +
+            '<div id="container"></div>'                                                             +
+          '</form>');
+        $('#element').psly();
+        expect($('#container .parsley-errors-list').length).to.be(1);
+      });
       it('should add proper parsley class on success or failure', function () {
         $('body').append('<input type="text" id="element" required />');
         var parsleyField = $('#element').psly().validate();
