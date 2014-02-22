@@ -59,6 +59,8 @@ define(function () {
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('baz');
         $('#element').val('foo').psly().validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('baz');
+        $('#element').val('foo@bar.baz').psly().validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
       });
       it('should handle simple triggers (change, focus..)', function () {
         $('body').append('<input type="email" id="element" required data-parsley-trigger="change" />');

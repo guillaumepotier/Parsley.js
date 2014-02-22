@@ -1,7 +1,7 @@
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Fri Feb 21 2014 17:56:30
+* Version 2.0.0-pre - built Sat Feb 22 2014 13:01:55
 * MIT Licensed
 *
 */
@@ -1086,24 +1086,35 @@
     },
     manageErrorsMessages: function (fieldInstance, diff) {
       // Case where we have errorMessage option that configure an unique field error message, regardless failing validators
-      if ('undefined' !== typeof fieldInstance.options.errorMessage && (diff.added.length || diff.kept.length)) {
-        if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
-          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
-            .addClass('parsley-custom-error-message'));
-        fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message')
-          .html(fieldInstance.options.errorMessage);
+      if ('undefined' !== typeof fieldInstance.options.errorMessage) {
+        if ((diff.added.length || diff.kept.length)) {
+          if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
+            fieldInstance._ui.$errorsWrapper
+              .append($(fieldInstance.options.errorTemplate)
+              .addClass('parsley-error parsley-custom-error-message'));
+          fieldInstance._ui.$errorsWrapper
+            .addClass('filled')
+            .find('.parsley-custom-error-message')
+            .html(fieldInstance.options.errorMessage);
+        } else {
+          fieldInstance._ui.$errorsWrapper
+            .removeClass('filled')
+            .find('.parsley-custom-error-message')
+            .remove();
+        }
         return;
       }
       // Show, hide, update failing constraints messages
       for (var i = 0; i < diff.removed.length; i++)
         fieldInstance._ui.$errorsWrapper
           .removeClass('filled')
-          .find('.parsley-' + diff.removed[i].assert.name).remove();
+          .find('.parsley-' + diff.removed[i].assert.name)
+          .remove();
       for (i = 0; i < diff.added.length; i++)
         fieldInstance._ui.$errorsWrapper
           .addClass('filled')
           .append($(fieldInstance.options.errorTemplate)
-          .addClass('parsley-' + diff.added[i].assert.name)
+          .addClass('parsley-error parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
       for (i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper

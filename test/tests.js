@@ -1,4 +1,4 @@
-require(['../src/config'], function () {
+require(['config'], function () {
   // load expect, mocha and sinon stuff
   require([
     'expect',
@@ -31,9 +31,8 @@ require(['../src/config'], function () {
         'features/form',
         'features/validator',
         'features/ui',
-        'features/utils',
-        'features/remote'
-      ], function (parsleyBase, options, pubsub, abstract, field, form, validator, ui, utils, remote) {
+        'features/utils'
+      ], function (parsleyBase, options, pubsub, abstract, field, form, validator, ui, utils) {
         describe('Unit Tests', function () {
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
@@ -44,16 +43,12 @@ require(['../src/config'], function () {
           validator(ParsleyValidator);
           ui(ParsleyUI);
           utils(ParsleyUtils);
-          remote();
         });
 
-        // load then functionnal tests
         require([
-          // 'features/instances'
-        ], function (instances) {
-          describe('Functional Tests', function () {
-            // instances();
-          });
+          'features/remote'
+        ], function (remote) {
+          remote();
 
           // run mocha
           if (window.mochaPhantomJS)

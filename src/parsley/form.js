@@ -27,7 +27,7 @@ define('parsley/form', [
       this.validate(undefined, event);
 
       // prevent form submission if validation fails
-      if (false === this.valid && event instanceof $.Event)
+      if (false === this.validationResult && event instanceof $.Event)
         event.preventDefault();
 
       return this;

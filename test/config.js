@@ -6,13 +6,18 @@ requirejs.config({
       dist: './dist',
       i18n: './src/i18n',
       parsley: './src/parsley',
-      vendors: './bower_components'
+      features: './test/features',
+      vendors: './bower_components',
+      modules: './node_modules'
     },
 
     map: {
       '*': {
+        'validator': 'vendors/validator.js/dist/validator',
         'jquery': 'vendors/jquery/jquery',
-        'validator': 'vendors/validator.js/dist/validator'
+        'expect': 'modules/expect.js/index',
+        'mocha': 'modules/mocha/mocha',
+        'sinon': 'vendors/sinonjs/sinon'
       }
     },
 
@@ -27,6 +32,10 @@ requirejs.config({
       'src/parsley.remote': {
         deps: ['jquery'],
         exports: 'ParsleyExtend'
+      },
+      'modules/mocha/mocha': {
+        deps: ['expect', 'sinon'],
+        exports: 'mocha'
       },
       'vendors/validator.js/dist/validator': {
         exports: 'Validator'

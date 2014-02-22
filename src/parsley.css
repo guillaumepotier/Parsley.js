@@ -14,10 +14,14 @@ textarea.parsley-error {
   border: 1px solid #EED3D7;
 }
 
-.parsley-errors-list {
+.parsley-error {
   font-size: 0.9em;
-  margin: 2px;
-  padding: 0px;
+  line-height: 0.9em;
+}
+
+.parsley-errors-list {
+  margin: 2px 0 3px 0;
+  padding: 0;
   list-style-type: none;
 
   opacity: 0;

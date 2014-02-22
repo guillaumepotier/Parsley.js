@@ -71,6 +71,26 @@ define(function () {
           expect(parsleyForm.isValid('foo')).to.be(true);
           expect(parsleyForm.isValid('bar')).to.be(false);
       });
+      it('should handle `onFormSubmit` validation', function () {
+        $('body').append(
+          '<form id="element" data-parsley-trigger="change">'                 +
+            '<input id="field1" type="text" data-parsley-required="true" />'  +
+            '<div id="field2"></div>'                                         +
+            '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
+          '</form>');
+          parsleyForm = new Parsley($('#element'));
+          var event = $.Event();
+          event.preventDefault = sinon.spy();
+          parsleyForm.onSubmitValidate(event);
+          expect(event.preventDefault.called).to.be(true);
+
+          $('#field1').val('foo');
+          $('#field3').val('foo');
+          event = $.Event();
+          event.preventDefault = sinon.spy();
+          parsleyForm.onSubmitValidate(event);
+          expect(event.preventDefault.called).to.be(false);
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

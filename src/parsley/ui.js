@@ -58,13 +58,23 @@ define('parsley/ui', [
 
     manageErrorsMessages: function (fieldInstance, diff) {
       // Case where we have errorMessage option that configure an unique field error message, regardless failing validators
-      if ('undefined' !== typeof fieldInstance.options.errorMessage && (diff.added.length || diff.kept.length)) {
-        if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
-          fieldInstance._ui.$errorsWrapper.append($(fieldInstance.options.errorTemplate)
-            .addClass('parsley-custom-error-message'));
+      if ('undefined' !== typeof fieldInstance.options.errorMessage) {
+        if ((diff.added.length || diff.kept.length)) {
+          if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
+            fieldInstance._ui.$errorsWrapper
+              .append($(fieldInstance.options.errorTemplate)
+              .addClass('parsley-error parsley-custom-error-message'));
 
-        fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message')
-          .html(fieldInstance.options.errorMessage);
+          fieldInstance._ui.$errorsWrapper
+            .addClass('filled')
+            .find('.parsley-custom-error-message')
+            .html(fieldInstance.options.errorMessage);
+        } else {
+          fieldInstance._ui.$errorsWrapper
+            .removeClass('filled')
+            .find('.parsley-custom-error-message')
+            .remove();
+        }
 
         return;
       }
@@ -73,13 +83,14 @@ define('parsley/ui', [
       for (var i = 0; i < diff.removed.length; i++)
         fieldInstance._ui.$errorsWrapper
           .removeClass('filled')
-          .find('.parsley-' + diff.removed[i].assert.name).remove();
+          .find('.parsley-' + diff.removed[i].assert.name)
+          .remove();
 
       for (i = 0; i < diff.added.length; i++)
         fieldInstance._ui.$errorsWrapper
           .addClass('filled')
           .append($(fieldInstance.options.errorTemplate)
-          .addClass('parsley-' + diff.added[i].assert.name)
+          .addClass('parsley-error parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
 
       for (i = 0; i < diff.kept.length; i++)

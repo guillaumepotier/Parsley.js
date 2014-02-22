@@ -1,10 +1,16 @@
 define('features/remote', [
   'src/parsley.remote',
-  'src/parsley'
-], function (ParsleyExtend, Parsley) {
+], function (ParsleyExtend) {
+
+  // Preseve ParsleyExtend in order to load it only when needed by this suite and do not alter other tests runned before
+  window._remoteParsleyExtend = window.ParsleyExtend;
+  window.ParsleyExtend = {};
+
   return function () {
     describe('ParsleyRemote', function () {
       before(function () {
+        // Restore ParsleyExtend from remote
+        window.ParsleyExtend = window._remoteParsleyExtend;
         sinon.stub($, 'ajax');
       });
       it('should have window.ParsleyExtend defined', function () {
