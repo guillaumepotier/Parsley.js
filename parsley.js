@@ -941,8 +941,8 @@
       var val = this.getVal()
         , valid = null;
 
-      // do not even bother trying validating a field w/o constraints
-      if ( !this.hasConstraints() ) {
+      // do not even bother trying validating a field w/o constraints, or if field is excluded
+      if ( !this.hasConstraints() || this.element.is( this.options.excluded ) ) {
         return null;
       }
 
