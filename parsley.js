@@ -1333,6 +1333,14 @@
       this.focusedField = false;
 
       for ( var item = 0; item < this.items.length; item++ ) {
+        // remove the element that removed from DOM
+        if ( !$.contains( document.documentElement, this.items[ item ].$element[0] ) ) {
+          this.items[ item ].destroy();
+          this.items.splice( item, 1 );
+          item--;
+          continue;
+        }
+        
         if ( 'undefined' !== typeof this.items[ item ] && false === this.items[ item ].validate() ) {
           valid = false;
 
