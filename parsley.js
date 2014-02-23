@@ -304,6 +304,9 @@
     * Register custom validators and messages
     */
     , init: function ( options ) {
+      // Deep clone of the Validator.validators so each instance has its own copy
+      this.validators = $.extend(true, {}, this.validators)
+
       var customValidators = options.validators
         , customMessages = options.messages
         , key;
