@@ -1,4 +1,6 @@
-﻿#Parsley.js
+﻿### This `master` branch is for 1.x versions. In a few days, `2.0-dev` branch will be merged and will release 2.0-rc1 stable version. You are strongly encouraged to base your contributions uppon `2.0-dev` branches.
+
+#Parsley.js
 
 [![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guillaumepotier/parsley.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
