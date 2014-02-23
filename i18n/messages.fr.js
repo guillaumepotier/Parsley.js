@@ -11,7 +11,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
           , urlstrict:  "Cette valeur n'est pas une URL valide."
           , number:     "Cette valeur doit être un nombre."
           , digits:     "Cette valeur doit être numérique."
-          , dateIso:    "Cette valeur n'est pas une date valide (YYYY-MM-DD)."
+          , dateIso:    "Cette valeur n'est pas une date valide (AAAA-MM-JJ)."
           , alphanum:   "Cette valeur doit être alphanumérique."
         }
       , notnull:        "Cette valeur ne peut pas être nulle."
