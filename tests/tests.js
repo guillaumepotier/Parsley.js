@@ -82,10 +82,8 @@ $( '#onFieldValidate-form' ).parsley( { listeners: {
 
     return false;
   },
-  onFieldError: function ( field, constraints ) {
-    for ( var i in constraints ) {
-      $( field ).addClass( 'error-' + constraints[ i ].name + '_' + constraints[ i ].requirements );
-    }
+  onFieldError: function ( field, errors ) {
+    $( field ).attr( 'data-error_message', errors.join(" ") );
   },
   onFieldSuccess: function ( field ) {
     if ('foo@foo.foo' === field.val()) {
@@ -1044,27 +1042,27 @@ var testSuite = function () {
       it ( 'allow to call form methods', function () {
         expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( true );
         expect( $( '#programmableField' ).hasClass( 'parsley-success' ) ).to.be( true );
-        
+
         $( '#api-calls-form' ).parsley( 'reset' );
         expect( $( '#programmableField' ).hasClass( 'parsley-success' ) ).to.be( false );
       } )
-      
+
       it ( 'allow to call field methods', function() {
         $( '#programmableField' ).val( '12345' );
         expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( true );
-        
+
         expect( $( '#programmableField' ).parsley( 'addConstraint', { minlength: 8 } ) );
         expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( false );
-        
+
         expect( $( '#programmableField' ).parsley( 'updateConstraint', { minlength: 3 } ) );
         expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( true );
-        
+
         expect( $( '#programmableField' ).parsley( 'updateConstraint', { minlength: 8 }, "Less than 8 is not enough" ) );
         expect( $( '#api-calls-form' ).parsley( 'validate' ) ).to.be( false );
         expect( $( '#api-calls-form .parsley-error-list .minlength' ).text() ).to.be( "Less than 8 is not enough" );
       } )
     } )
-    
+
     describe ( 'Test custom listeners', function () {
       describe ( 'Test overriding listeners in config', function () {
         it ( 'test onFieldValidate()', function () {
@@ -1081,7 +1079,7 @@ var testSuite = function () {
           expect( $( '#onFieldValidate-form' ).hasClass( 'this-form-is-invalid' ) ).to.be( true );
         } )
         it ( 'test onFieldError()', function () {
-          expect( $( '#onFieldValidate2' ).hasClass( 'error-type_email' ) ).to.be( true );
+          expect( $( '#onFieldValidate2' ).attr('data-error_message') ).to.be( 'This value should be a valid email. This value is required.' );
         } )
         it ( 'test onFieldSuccess()', function () {
           // if onFieldSuccess returns false, consider field as invalid
