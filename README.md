@@ -4,7 +4,7 @@ Next [Parsley](http://parsleyjs.org) version, still in heavy development.
 
 ## Version
 
-2.0.0-dev
+2.0.0-rc1
 
 ## Doc
 
@@ -20,7 +20,7 @@ grunt configure
 
 ## Requirements
 
-jQuery > 1.8
+jQuery >= 1.6
 
 
 ## Contributing
@@ -32,12 +32,19 @@ See `CONTRIBUTING.md` file
 
 ```
 grunt build
+grunt build-remote
 ```
 
 ## Generate annotated documentation
 
+First time:
 ```
 sudo npm install -g docco
+
+```
+
+then
+```
 grunt build-annotated-source
 ```
 

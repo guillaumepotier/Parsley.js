@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     },
 
     replace: {
-      doc: {
+      annotated: {
         options: {
           patterns: [
             {
@@ -172,7 +172,7 @@ module.exports = function (grunt) {
   grunt.registerTask('configure', ['bower:install']);
   grunt.registerTask('build', ['configure', 'requirejs', 'replace:dist', 'uglify:min']);
   grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
-  grunt.registerTask('build-annotated-source', ['docco:source', 'replace:doc']);
+  grunt.registerTask('build-annotated-source', ['docco:source', 'replace:annotated']);
   grunt.registerTask('build-all', ['build', 'build-remote', 'build-annotated-source']);
 };
 

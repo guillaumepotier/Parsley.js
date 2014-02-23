@@ -4,15 +4,14 @@ window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
 window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
-  // parsley //////////////////////////////////////
   defaultMessage: "This value seems to be invalid.",
   type: {
-    email:      "This value should be a valid email.",
-    url:        "This value should be a valid url.",
-    number:     "This value should be a valid number.",
-    integer:    "This value should be a valid integer.",
-    digits:     "This value should be digits.",
-    alphanum:   "This value should be alphanumeric."
+    email:        "This value should be a valid email.",
+    url:          "This value should be a valid url.",
+    number:       "This value should be a valid number.",
+    integer:      "This value should be a valid integer.",
+    digits:       "This value should be digits.",
+    alphanum:     "This value should be alphanumeric."
   },
   notblank:       "This value should not be blank.",
   required:       "This value is required.",
