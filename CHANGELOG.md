@@ -1,5 +1,9 @@
 #Changelog
 
+**1.2.4**
+
+  - fixed priorityEnabled with triggered events (#510)
+
 **1.2.3**
 
   - added useHtml5Constraint option (#459)
