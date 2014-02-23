@@ -145,7 +145,7 @@ module.exports = function (grunt) {
     watch: {
       dev: {
         files: ['src/parsley.js', 'src/parsley.css', 'src/wrap/*.js', 'src/parsley/*.js'],
-        tasks: ['requirejs', 'replace']
+        tasks: ['requirejs', 'replace:dist']
       }
     },
 

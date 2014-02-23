@@ -172,7 +172,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sat Feb 22 2014 16:17:44
+* Version 2.0.0-pre - built Sun Feb 23 2014 01:51:07
 * MIT Licensed
 *
 */
@@ -268,7 +268,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     priorityEnabled: true,
     // ### UI
     // Enable\Disable error messages
-    uiEnable: true,
+    uiEnabled: true,
     // key events treshold before validation
     validationTresshold: 3,
     // Focused field on form validation error. 'fist'|'last'|'none'
@@ -1104,16 +1104,24 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       this.locale = locale;
       return this;
     },
-    addLocaleMessages: function (locale, messages, set) {
+    // Add a new messages catalog for a given locale. Set locale for this catalog if set === `true`
+    addCatalog: function (locale, messages, set) {
       if ('object' === typeof messages)
         this.catalog[locale] = messages;
       if (true === set)
         return this.setLocale(locale);
       return this;
     },
+    // Add a specific message for a given constraint in a given locale
+    addMessage: function (locale, name, message) {
+      if (undefined === typeof this.catalog[locale])
+        this.catalog[locale] = {};
+      this.catalog[locale][name] = message;
+    },
     validate: function (value, constraints, priority) {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
     },
+    // Add a new validator
     addValidator: function (name, fn, priority) {
       this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
@@ -1131,10 +1139,10 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       var message;
       // Type constraints are a bit different, we have to match their requirements too to find right error message
       if ('type' === constraint.name)
-        message = window.ParsleyConfig.i18n[this.locale].messages[constraint.name][constraint.requirements];
+        message = window.ParsleyConfig.i18n[this.locale][constraint.name][constraint.requirements];
       else
-        message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale].messages[constraint.name], constraint.requirements);
-      return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].messages.defaultMessage;
+        message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale][constraint.name], constraint.requirements);
+      return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].defaultMessage;
     },
     // Kind of light `sprintf()` implementation
     formatMesssage: function (string, parameters) {
@@ -1210,6 +1218,11 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       },
       range: function (array) {
         return $.extend(new Validator.Assert().Range(array[0], array[1]), { priority: 32 });
+      },
+      equalto: function (identifier) {
+        return $.extend(new Validator.Assert().Callback(function (value, identifier) {
+          return value === $(identifier).val();
+        }, identifier), { priority: 32 });
       }
     }
   };
@@ -1335,14 +1348,14 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     setupForm: function (formInstance) {
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
       // UI could be disabled
-      if (false === formInstance.options.uiEnable)
+      if (false === formInstance.options.uiEnabled)
         return;
       formInstance.$element.attr('novalidate', '');
     },
     setupField: function (fieldInstance) {
       var _ui = { active: false };
       // UI could be disabled
-      if (false === fieldInstance.options.uiEnable)
+      if (false === fieldInstance.options.uiEnabled)
         return;
       // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
@@ -1824,38 +1837,33 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 // Define then the messages
 window.ParsleyConfig.i18n['en'] = {
-  messages: {
-    // parsley //////////////////////////////////////
-    defaultMessage: "This value seems to be invalid.",
-      type: {
-        email:      "This value should be a valid email.",
-        url:        "This value should be a valid url.",
-        urlstrict:  "This value should be a valid url.",
-        number:     "This value should be a valid number.",
-        digits:     "This value should be digits.",
-        dateIso:    "This value should be a valid date (YYYY-MM-DD).",
-        alphanum:   "This value should be alphanumeric.",
-        tel:        "This value should be a valid phone number."
-      },
-    notnull:        "This value should not be null.",
-    notblank:       "This value should not be blank.",
-    required:       "This value is required.",
-    pattern:        "This value seems to be invalid.",
-    min:            "This value should be greater than or equal to %s.",
-    max:            "This value should be lower than or equal to %s.",
-    range:          "This value should be between %s and %s.",
-    minlength:      "This value is too short. It should have %s characters or more.",
-    maxlength:      "This value is too long. It should have %s characters or less.",
-    length:         "This value length is invalid. It should be between %s and %s characters long.",
-    mincheck:       "You must select at least %s choices.",
-    maxcheck:       "You must select %s choices or less.",
-    check:          "You must select between %s and %s choices.",
-    equalto:        "This value should be the same."
-  }
+  // parsley //////////////////////////////////////
+  defaultMessage: "This value seems to be invalid.",
+  type: {
+    email:      "This value should be a valid email.",
+    url:        "This value should be a valid url.",
+    number:     "This value should be a valid number.",
+    integer:    "This value should be a valid integer.",
+    digits:     "This value should be digits.",
+    alphanum:   "This value should be alphanumeric."
+  },
+  notblank:       "This value should not be blank.",
+  required:       "This value is required.",
+  pattern:        "This value seems to be invalid.",
+  min:            "This value should be greater than or equal to %s.",
+  max:            "This value should be lower than or equal to %s.",
+  range:          "This value should be between %s and %s.",
+  minlength:      "This value is too short. It should have %s characters or more.",
+  maxlength:      "This value is too long. It should have %s characters or less.",
+  length:         "This value length is invalid. It should be between %s and %s characters long.",
+  mincheck:       "You must select at least %s choices.",
+  maxcheck:       "You must select %s choices or less.",
+  check:          "You must select between %s and %s choices.",
+  equalto:        "This value should be the same."
 };
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addLocaleMessages('en', window.ParsleyConfig.i18n['en'], true);
+  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n['en'], true);
 
 // ### Requirements
   // ### Parsley factory

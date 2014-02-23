@@ -1,7 +1,7 @@
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sat Feb 22 2014 17:58:33
+* Version 2.0.0-pre - built Sun Feb 23 2014 01:51:07
 * MIT Licensed
 *
 */
@@ -97,7 +97,7 @@
     priorityEnabled: true,
     // ### UI
     // Enable\Disable error messages
-    uiEnable: true,
+    uiEnabled: true,
     // key events treshold before validation
     validationTresshold: 3,
     // Focused field on form validation error. 'fist'|'last'|'none'
@@ -1177,14 +1177,14 @@
     setupForm: function (formInstance) {
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
       // UI could be disabled
-      if (false === formInstance.options.uiEnable)
+      if (false === formInstance.options.uiEnabled)
         return;
       formInstance.$element.attr('novalidate', '');
     },
     setupField: function (fieldInstance) {
       var _ui = { active: false };
       // UI could be disabled
-      if (false === fieldInstance.options.uiEnable)
+      if (false === fieldInstance.options.uiEnabled)
         return;
       // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);

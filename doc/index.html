@@ -205,6 +205,11 @@
                 <td><code></code></td>
                 <td>Auto bind your form with Parsley validation on document load.</td>
               </tr>
+              <tr>
+                <td><code>data-parsley-priority-enabled</code> <version>#2.0</version></td>
+                <td><code>true</code></td>
+                <td>Either validate higher priority constraints first and stop on first failure (<code>true</code>), or validate all constraints simultaneously and show all failing ones (<code>false</code>).</td>
+              </tr>
             </tbody>
           </table>
 
@@ -602,7 +607,80 @@ window.ParsleyValidator
         <!-- ****************** BUILT-IN VALIDATORS ****************** -->
         <h1 id="ui" class="page-header">UI/UX</h1>
         <h3 id="ui-overview">Overview</h3>
+        <p>
+        Parsley ships a UI/UX component that is the only one responsible for classes, error messages, focus or trigger events that alterate your page. It strives to be the most UX friendly. Here are the main motto for ParsleyUI:
+        <ol>
+          <li><strong>Min char validation</strong>: Parsley by default does not proceed with field validation when less than 3 chars have been input. Do not assault your users with error messages too soon!.</li>
+          <li><strong>One error at the time</strong>: constraints are prioritized in Parsley, and if many of them are not met for a field on validation, only show the most important one.</li>
+          <li><strong>Quick error removal</strong>: when a field is detected and shown as invalid, further checks are done on each keypress to try to quickly remove error messages once the field is ok.</li>
+          <li><strong>Control focusing on error</strong>: on form submission, the first error field is focused to allow the user to easily start fixing errors.</li>
+        </ol>
+        </p>
+        <p>Naturaly, all this is absolutely customizable, you'll see below how to configure your desired UX behavior.</p>
 
+        <h3 id="ui-classes">Classes and templates</h3>
+        <p>Parsley adds its share of classes and elements. to be continued..</p>
+
+        <h3 id="ui-for-form">UI for form</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-3">Name</th>
+              <th class="col-md-1">API</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>UI Enabled <version>#2.0</version></td>
+              <td><code>data-parsley-ui-enabled="false"</code></td>
+              <td>Activate or deactivate UI</td>
+            </tr>
+            <tr>
+              <td>Focus <version>#2.0</version></td>
+              <td><code>data-parsley-forcus="first"</code></td>
+              <td>Focus failing field on form validation. Possible values: <code>'first' | 'last' | 'none'<code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="ui-for-field">UI for field</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-3">Name</th>
+              <th class="col-md-1">API</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Trigger <version>#2.0</version></td>
+              <td><code>data-parsley-trigger="change"</code></td>
+              <td>Specify one or many javascript events that will trigger item validation. To set multiple events, separate them by a space <code>data-parsley-trigger="focusin focusout"</code>. <a href="http://api.jquery.com/category/events/" target="_blank">See the various events supported by jQuery.</a></td>
+            </tr>
+            <tr>
+              <td>Validation tresshold <version>#2.0</version></td>
+              <td><code>data-parsley-validation-tresshold="10"</code></td>
+              <td>Used with trigger option above, for all <code>key</code>- events, do not validate until field have a certain number of characters. Default is <code>3</code></td>
+            </tr>
+            <tr>
+              <td>Errors container <version>#2.0</version></td>
+              <td><code>data-parsley-errors-container="#element"</code></td>
+              <td>Specify the existing DOM container where ParsleyUI should put the errors.</td>
+            </tr>
+            <tr>
+              <td>Error message <version>#2.0</version></td>
+              <td><code>data-parsley-error-message="my message"</code></td>
+              <td>Customize an unique global message for the field.</td>
+            </tr>
+            <tr>
+              <td>Validator error message <version>#2.0</version></td>
+              <td><code>data-parsley-`constraint`-message="my message"</code></td>
+              <td>Customize the error message for the field constraint. eg: data-parsley-required-message="this field is required"</code></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="col-md-3">
@@ -645,7 +723,7 @@ window.ParsleyValidator
                 <a href="#ui">UI/UX</a>
                 <ul class="nav">
                   <li><a href="#ui-overview">Overview</a></li>
-                  <li><a href="#ui-class">Class & templates</a></li>
+                  <li><a href="#ui-classes">Class & templates</a></li>
                   <li><a href="#ui-for-form">UI for Form</a></li>
                   <li><a href="#ui-for-field">UI for Field</a></li>
                 </ul>

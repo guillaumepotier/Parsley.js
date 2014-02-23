@@ -107,7 +107,7 @@ define(function () {
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
       });
       it('should handle UI disabling', function () {
-        $('body').append('<input type="email" id="element" data-parsley-ui-enable="false" required data-parsley-trigger="keyup" />');
+        $('body').append('<input type="email" id="element" data-parsley-ui-enabled="false" required data-parsley-trigger="keyup" />');
         var parsleyField = $('#element').psly();
         expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(0);
         parsleyField.validate();
