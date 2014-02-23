@@ -288,7 +288,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     // li elem that would receive error message
     errorTemplate: '<li></li>'
   };
-
   var ParsleyAbstract = function(options) {};
   ParsleyAbstract.prototype = {
     actualizeOptions: function () {
@@ -1082,7 +1081,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
   }
 } )( 'undefined' === typeof exports ? this[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = {} : exports );
 
-
   var ParsleyValidator = function (validators, catalog) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
@@ -1226,7 +1224,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       }
     }
   };
-
   var ParsleyUI = function (options) {
     this.__class__ = 'ParsleyUI';
   };
@@ -1468,7 +1465,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       fieldInstance.$element.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
     }
   };
-
   var ParsleyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
     this.__class__ = 'OptionsFactory';
     this.__id__ = ParsleyUtils.hash(4);
@@ -1502,7 +1498,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return $.extend({}, this.staticOptions, this.formOptions, this.fieldOptions);
     }
   };
-
   var ParsleyForm = function(element, parsleyInstance) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
@@ -1578,7 +1573,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     reset: function () {},
     destroy: function () {}
   };
-
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
     if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
       throw new Error('ParsleyField instance expected');
@@ -1599,7 +1593,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       isDomConstraint: isDomConstraint || ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name)
     });
   };
-
   var ParsleyField = function(field, parsleyInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.hash(4);
@@ -1759,7 +1752,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return -1;
     }
   };
-
   var o = $({}), subscribed = {};
   // $.listen(name, callback);
   // $.listen(name, context, callback);
@@ -1834,7 +1826,6 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     }
   };
   $.subscribed = function () { return subscribed; };
-
 // ParsleyConfig definition if not already set
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
@@ -1867,7 +1858,6 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
-
 // ### Requirements
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {

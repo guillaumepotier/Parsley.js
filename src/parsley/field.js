@@ -30,12 +30,16 @@ define('parsley/field', [
       this.bindConstraints();
     },
 
+    // Returns validationResult. For field, it could be:
+    //  - `true` if all green
+    //  - `[]` if non required field and empty
+    //  - `[Violation, [Violation..]]` if errors
     validate: function () {
       $.emit('parsley:field:validate', this);
       $.emit('parsley:field:' + (this.isValid() ? 'success' : 'error'), this);
       $.emit('parsley:field:validated', this);
 
-      return this;
+      return this.validationResult;
     },
 
     getConstraintsSortedPriorities: function () {
@@ -52,6 +56,7 @@ define('parsley/field', [
       return priorities;
     },
 
+    // Same @return as `validate()`
     isValid: function () {
       // Sort priorities to validate more important first
       var priorities = this.getConstraintsSortedPriorities(),

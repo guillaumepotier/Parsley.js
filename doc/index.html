@@ -258,8 +258,8 @@
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
-                <th class="col-md-3">Method</th>
-                <th class="col-md-1">Returns</th>
+                <th class="col-md-2">Method</th>
+                <th class="col-md-2">Returns</th>
                 <th class="col-md-4">Description</th>
               </tr>
             </thead>
@@ -267,12 +267,14 @@
               <tr>
                 <td><code>isValid()</code> <version>#2.0</version></td>
                 <td><code>boolean</code></td>
-                <td>Returns if the Form is valid or not. Does not affect UI.</td>
+                <td>Returns if the Form is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong></td>
               </tr>
               <tr>
                 <td><code>validate(group)</code> <version>#2.0</version></td>
-                <td><code>ParsleyForm</code></td>
-                <td>Validate form. Prevent submission if not valid. Affect UI. You can only validate a certain group of fields by specifing optional <code>group</code> string parameter.</td>
+                <td>
+                  <code>boolean</code>
+                </td>
+                <td>Validate form. Prevent submission if not valid. <strong>Fires <a href="#events">events</a> and affect UI.</strong>. You can only validate a certain group of fields by specifing optional <code>group</code> string parameter.</td>
               </tr>
             </tbody>
           </table>
@@ -313,8 +315,8 @@
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
-                <th class="col-md-3">Method</th>
-                <th class="col-md-1">Returns</th>
+                <th class="col-md-2">Method</th>
+                <th class="col-md-2">Returns</th>
                 <th class="col-md-4">Description</th>
               </tr>
             </thead>
@@ -322,12 +324,16 @@
               <tr>
                 <td><code>isValid()</code> <version>#2.0</version></td>
                 <td><code>boolean</code></td>
-                <td>Returns if the Field is valid or not. Does not affect UI.</td>
+                <td>Returns if the Field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong></td>
               </tr>
               <tr>
                 <td><code>validate()</code> <version>#2.0</version></td>
-                <td><code>ParsleyField</code></td>
-                <td>Validate Field. Affect UI.</td>
+                <td>
+                  <code>true</code> if all ok<br/>
+                  <code>[]</code> if empty optional field<br/>
+                  <code>[Violation [, Violation..]]</code> if fails
+                </td>
+                <td>Validate Field. <strong>Fires <a href="#events">events</a> and affect UI.</strong></td>
               </tr>
             </tbody>
           </table>

@@ -33,7 +33,7 @@ define('parsley/form', [
       return this;
     },
 
-    // Iterate over over every field and emit UI events
+    // @returns boolean
     validate: function (group, event) {
       this.submitEvent = event;
       this.validationResult = true;
@@ -51,7 +51,7 @@ define('parsley/form', [
         if (group && group !== this.fields[i].options.group)
           continue;
 
-        fieldValidationResult = this.fields[i].validate().validationResult;
+        fieldValidationResult = this.fields[i].validate();
 
         if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
           this.validationResult = false;
@@ -59,7 +59,7 @@ define('parsley/form', [
 
       $.emit('parsley:form:validated', this);
 
-      return this;
+      return this.validationResult;
     },
 
     // Iterate over refreshed fields, and stop on first failure

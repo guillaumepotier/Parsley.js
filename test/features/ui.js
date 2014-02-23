@@ -26,16 +26,18 @@ define(function () {
       });
       it('should add proper parsley class on success or failure', function () {
         $('body').append('<input type="text" id="element" required />');
-        var parsleyField = $('#element').psly().validate();
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
         expect($('#element').hasClass('parsley-error')).to.be(true);
         expect($('#element').hasClass('parsley-success')).to.be(false);
-        parsleyField = $('#element').val('foo').psly().validate();
+        $('#element').val('foo').psly().validate();
         expect($('#element').hasClass('parsley-success')).to.be(true);
         expect($('#element').hasClass('parsley-error')).to.be(false);
       });
       it('should show higher priority error message by default', function () {
         $('body').append('<input type="email" id="element" required />');
-        var parsleyField = $('#element').psly().validate();
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
         expect($('#element').hasClass('parsley-error')).to.be(true);
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-required')).to.be(true);
@@ -46,7 +48,8 @@ define(function () {
       });
       it('should show all errors message if priority enabled set to false', function () {
         $('body').append('<input type="email" id="element" required data-parsley-priority-enabled="false"/>');
-        var parsleyField = $('#element').psly().validate();
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(2);
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').eq(0).hasClass('parsley-required')).to.be(true);
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').eq(1).hasClass('parsley-type')).to.be(true);
@@ -57,14 +60,16 @@ define(function () {
       });
       it('should show custom error message by validator', function () {
         $('body').append('<input type="email" id="element" required data-parsley-required-message="foo" data-parsley-type-message="bar"/>');
-        var parsleyField = $('#element').psly().validate();
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('foo');
         $('#element').val('foo').psly().validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('bar');
       });
       it('should show custom error message for whole field', function () {
         $('body').append('<input type="email" id="element" required data-parsley-error-message="baz"/>');
-        var parsleyField = $('#element').psly().validate();
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('baz');
         $('#element').val('foo').psly().validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('baz');

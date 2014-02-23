@@ -29,7 +29,8 @@ define(function () {
       it.skip('should use unsubscribe()');
       it('should use reset() on field', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
-        var parsleyField = new Parsley('#element').validate();
+        var parsleyField = new Parsley('#element');
+        parsleyField.validate();
         expect($('#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
 
         parsleyField.reset();
@@ -42,7 +43,8 @@ define(function () {
             '<div id="field2"></div>'                     +
             '<textarea id="field2"></textarea>'           +
           '</form>');
-        parsleyForm = new Parsley($('#element')).validate();
+        parsleyForm = new Parsley($('#element'));
+        parsleyForm.validate();
         expect($('#parsley-id-' + $('#field1').psly().__id__ + ' li').length).to.be(1);
 
         parsleyForm.subscribe('form:reset', function () {
