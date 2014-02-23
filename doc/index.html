@@ -329,7 +329,7 @@
             <p>Parsley let you use validator.js in <code>window.ParsleyValidator.Validator</code></p>
           </div>
 
-          <h3 id="validators-list">List and examples</h3>
+          <h3 id="validators-list">Validators list</h3>
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
@@ -582,6 +582,10 @@
             </tbody>
           </table>
 
+          <p>
+            These validators are shipped in <code>parsley.js</code>. Have a look at <a href="#remote">Parsley Remote</a> plugin and <a href="#extras">Parsley Extras</a> for more validators.
+          </p>
+
           <h3 id="validators-craft">Craft yours!</h3>
           <p>Of course, Parsley built-in validators are well used and usual validators, and you'll need some more that fit your specific forms and validations. That's why Parsley let you easily create your own validators.</p>
           <p>
@@ -799,6 +803,29 @@ window.ParsleyValidator
             </tr>
           </tbody>
         </table>
+
+        <!-- ****************** Remote ****************** -->
+        <h1 id="remote" class="page-header">Parsely Remote</h1>
+        <p>
+          <a href="annotated-source/parsley.remote.html" target="_blank">Parsley remote</a> is a handy plugin that adds an unique ajax asynchronous validator: <code>data-parsley-remote="http://url.ext"</code>. It adds these asynchronous methods to Parsley: <code>.asyncIsValid()</code> and <code>.asyncValidate()</code>.
+        </p>
+        <p>
+          By default, it will make a <code>GET</code> request to the url given in the DOM, and send as parameter the field's value within its name or id. Standard jQuery <code>$.ajax</code> options could be passed with <code>data-parsley-remote-options</code>.
+        </p>
+        <p>
+<pre><code>&lt;input name="q" type="text" data-parsley-remote="http://myapi.com" data-parsley-remote-options='{ method: "POST", dataType: "jsonp" }' value="foo" /></code>
+</code></pre>
+          The above code will make a <code>POST</code> querry to <code>http://myapi.com</code> sending <code>q='foo'</code>.
+        </p>
+        <p>
+          To use this plugin, either load <code>parsley.remote.js</code> <strong>before</strong> loading <code>parsley.js</code>, either directly load <code>parsley+remote.js</code>.
+        </p>
+
+        <!-- ****************** Remote ****************** -->
+        <h1 id="extras" class="page-header">Parsely Extras</h1>
+        <p>
+          You'll find in the <code>src/extra/</code> directory in Parsley .zip or Github projects many more or less useful validators crafted by the community. A doc here is coming.
+        </p>
       </div>
 
       <div class="col-md-3">
@@ -833,7 +860,7 @@ window.ParsleyValidator
                 <a href="#validators">Built-in validators</a>
                 <ul class="nav">
                   <li><a href="#validators-overview">Overview</a></li>
-                  <li><a href="#validators-list">List & examples</a></li>
+                  <li><a href="#validators-list">Validators list</a></li>
                   <li><a href="#validators-craft">Craft yours!</a></li>
                 </ul>
               </li>

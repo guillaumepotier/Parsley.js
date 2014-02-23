@@ -11,8 +11,31 @@
       target: '.sidebar'
     });
 
+    // update window hash on scroll, based on scrollspy events, prefixed
+    $body.on('activate.bs.scrollspy', function (event) {
+      if (1 === event.target.childNodes.length) {
+        window.location.hash = 'psly-' + $(event.target.children[0]).attr('href').slice(1);
+      }
+    });
+
+    // analyse prefixed hash on load and redirect to right anchor
     $window.on('load', function () {
       $body.scrollspy('refresh');
+      if (/^#psly-/i.test(window.location.hash)) {
+        var h = window.location.hash.replace('psly-', '');
+
+        if ($(h).length)
+          window.location.hash = h;
+      }
+    });
+
+    // back to top hack with scrollipsy
+    $('.back-to-top').on('click', function () {
+      $('.sidebar .active').each(function () {
+        $(this).removeClass('active');
+      });
+
+      $('.sidebar ul:first li:first').addClass('active');
     });
 
     // back to top

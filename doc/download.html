@@ -66,8 +66,9 @@
           <div class="col-md-6"><a href="../dist/parsley.js" class="download" data-version="parsley.js">parsley.js</a> (75ko)</div>
           <div class="col-md-6"><a href="../dist/parsley.min.js" class="download" data-version="parsley.min.js">parsley.min.js</a> (38ko)</div>
 
-          <div class="col-md-6"><a href="../dist/parsley+remote.js" class="download" data-version="parsley+remote.js">parsley+remote.js</a> (80ko)</div>
-          <div class="col-md-6"><a href="../dist/parsley+remote.min.js" class="download" data-version="parsley+remote.min.js">parsley+remote.min.js</a> (40ko)</div>
+          <div class="col-md-4"><a href="../src/parsley.remote.js" class="download" data-version="parsley.remote.js">parsley.remote.js</a> (5ko)</div>
+          <div class="col-md-4"><a href="../dist/parsley+remote.js" class="download" data-version="parsley+remote.js">parsley+remote.js</a> (80ko)</div>
+          <div class="col-md-4"><a href="../dist/parsley+remote.min.js" class="download" data-version="parsley+remote.min.js">parsley+remote.min.js</a> (40ko)</div>
       </div>
 
       <div class="clearfix"></div>
@@ -82,7 +83,7 @@
     <script type="text/javascript">
       $(document).ready(function () {
         $('.download').on('click', function (event) {
-          _gaq.push(['_trackEvent','download', $(this).data('version')]);
+          _gaq.push(['_trackEvent','download', 'download', $(this).data('version')]);
         });
       });
     </script>
