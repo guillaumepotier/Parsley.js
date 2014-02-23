@@ -238,6 +238,12 @@ var testSuite = function () {
         // 15 chars min length validator here
         expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li.minlength' ).length ).to.be( 1 );
       } )
+      it ( 'Only show highest priority error after change', function () {
+        $( '#priorityValidator' ).val('notanemail');
+        $( '#priorityForm' ).parsley( 'validate' );
+        $( '#priorityValidator' ).val('foo@bar.baz').trigger( 'change' );
+        expect( $( '#' + $( '#priorityValidator' ).parsley( 'getHash' ) + ' li' ).length ).to.be( 1 );
+      })
     } )
 
     /***************************************
