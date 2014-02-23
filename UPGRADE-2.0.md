@@ -31,6 +31,8 @@
   - `required` validator accepts now `false` value and become innactive
   - `rangelength` validator is now renamed as `length`. Same Requirements
   - `rangecheck` validator is now renamed as `check`. Same Requirements
+  - `notnull`, `type="urlstrict"`, `type="tel"` have disapeared from built-ins
+    validators
 
 
 ## Listeners
@@ -42,4 +44,6 @@
 
 ## Misc
 
-  -
+  - parsley `remote` validator is shipped now in parsley.remote.js
+  - parsley.extend is no more. Instead, extra validators are now placed in a
+    dir and could be builded with a script in a single file

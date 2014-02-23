@@ -80,7 +80,7 @@ define(function () {
         expect(parsleyInstance.options.foo).to.be('bar');
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n };
+        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 
         if ($('#element').length)
           $('#element').remove();

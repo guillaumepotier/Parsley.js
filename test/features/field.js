@@ -72,7 +72,11 @@ define(function () {
       it('should properly bind HTML5 supported constraints', function () {
         $('body').append('<input type="email" pattern="\\w+" id="element" required min="5" max="100" />');
         var parsleyField = new Parsley($('#element'));
-        expect(parsleyField.constraints.length).to.be(5);
+        // 4 validators: type=email, pattern, required and (min+max => range)
+        expect(parsleyField.constraints.length).to.be(4);
+        $('#element').removeAttr('min');
+        // still 4 validators, with max instead of range now
+        expect(parsleyField.actualizeOptions().constraints.length).to.be(4);
       });
       it('should properly bind special HTML5 `number` type', function () {
         $('body').append('<input type="number" id="element" />');
@@ -193,7 +197,7 @@ define(function () {
         $('#element').psly().validate();
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n };
+        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 
         if ($('#element').length)
           $('#element').remove();

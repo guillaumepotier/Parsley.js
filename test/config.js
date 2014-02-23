@@ -5,6 +5,7 @@ requirejs.config({
       src: './src',
       dist: './dist',
       i18n: './src/i18n',
+      extra: './src/extra',
       parsley: './src/parsley',
       features: './test/features',
       vendors: './bower_components',

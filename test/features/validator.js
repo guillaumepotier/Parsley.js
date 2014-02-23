@@ -9,14 +9,16 @@ define(function () {
       it('should bind global config validators if given in constructor', function () {
         window.ParsleyConfig = {
           i18n : window.ParsleyConfig.i18n,
-          validators: {
+          validators: $.extend(window.ParsleyConfig.validators, {
             foo: { fn: function () {}, priority: 42 },
             bar: { fn: function () {}, priority: 12 }
-          }
+          })
         };
         var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators);
         expect(parsleyValidator.validators).to.have.key('foo');
         expect(parsleyValidator.validators).to.have.key('bar');
+        delete window.ParsleyConfig.validators.foo;
+        delete window.ParsleyConfig.validators.bar;
       });
       it('should have a required validator', function () {
         expect(parsleyValidator.validate('', parsleyValidator.validators.required())).not.to.be(true);
@@ -136,7 +138,7 @@ define(function () {
         expect(parsleyValidator.getErrorMessage({ name: 'notexisting' })).to.be('Cette valeur semble non valide.');
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n };
+        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 
         if ($('#element').length)
           $('#element').remove();

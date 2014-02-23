@@ -168,7 +168,7 @@ define('parsley/validator', [
       equalto: function (identifier) {
         return $.extend(new Validator.Assert().Callback(function (value, identifier) {
           return value === $(identifier).val();
-        }, identifier), { priority: 32 });
+        }, identifier), { priority: 256 });
       }
     }
   };

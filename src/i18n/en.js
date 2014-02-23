@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n['en'] = {
+window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
   // parsley //////////////////////////////////////
   defaultMessage: "This value seems to be invalid.",
   type: {
@@ -27,8 +27,8 @@ window.ParsleyConfig.i18n['en'] = {
   maxcheck:       "You must select %s choices or less.",
   check:          "You must select between %s and %s choices.",
   equalto:        "This value should be the same."
-};
+});
 
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n['en'], true);
+  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);

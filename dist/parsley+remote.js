@@ -172,7 +172,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 /*!
 * Parsley
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sun Feb 23 2014 01:51:07
+* Version 2.0.0-pre - built Sun Feb 23 2014 10:32:34
 * MIT Licensed
 *
 */
@@ -1222,7 +1222,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       equalto: function (identifier) {
         return $.extend(new Validator.Assert().Callback(function (value, identifier) {
           return value === $(identifier).val();
-        }, identifier), { priority: 32 });
+        }, identifier), { priority: 256 });
       }
     }
   };
@@ -1700,11 +1700,14 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       // html5 pattern
       if ('string' === typeof this.$element.attr('pattern'))
         this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
+      // range
+      if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
+        this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
       // HTML5 min
-      if ('undefined' !== typeof this.$element.attr('min'))
+      else if ('undefined' !== typeof this.$element.attr('min'))
         this.addConstraint('min', this.$element.attr('min'), undefined, true);
       // HTML5 max
-      if ('undefined' !== typeof this.$element.attr('max'))
+      else if ('undefined' !== typeof this.$element.attr('max'))
         this.addConstraint('max', this.$element.attr('max'), undefined, true);
       // html5 types
       var type = this.$element.attr('type');
@@ -1836,7 +1839,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 // Define then the messages
-window.ParsleyConfig.i18n['en'] = {
+window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
   // parsley //////////////////////////////////////
   defaultMessage: "This value seems to be invalid.",
   type: {
@@ -1860,10 +1863,10 @@ window.ParsleyConfig.i18n['en'] = {
   maxcheck:       "You must select %s choices or less.",
   check:          "You must select between %s and %s choices.",
   equalto:        "This value should be the same."
-};
+});
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n['en'], true);
+  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
 // ### Requirements
   // ### Parsley factory

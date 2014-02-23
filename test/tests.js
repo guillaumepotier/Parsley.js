@@ -1,10 +1,11 @@
 require(['config'], function () {
   // load expect, mocha and sinon stuff
   require([
+    'jquery',
     'expect',
     'mocha',
     'sinon'
-  ], function (expect, mocha, sinon) {
+  ], function (jquery, expect, mocha, sinon) {
     // setup mocha
     mocha.setup('bdd');
     mocha.reporter('html');
@@ -33,7 +34,7 @@ require(['config'], function () {
         'features/ui',
         'features/utils'
       ], function (parsleyBase, options, pubsub, abstract, field, form, validator, ui, utils) {
-        describe('Unit Tests', function () {
+        describe('ParsleyStandard', function () {
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
           pubsub();
@@ -50,11 +51,17 @@ require(['config'], function () {
         ], function (remote) {
           remote();
 
-          // run mocha
-          if (window.mochaPhantomJS)
-            mochaPhantomJS.run();
-          else
-            mocha.run();
+          require([
+            'features/extra'
+          ], function (extra) {
+            extra(ParsleyValidator);
+
+            // run mocha
+            if (window.mochaPhantomJS)
+              mochaPhantomJS.run();
+            else
+              mocha.run();
+          });
         });
       });
     });

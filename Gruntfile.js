@@ -159,7 +159,7 @@ module.exports = function (grunt) {
 
   /** Tasks here **/
   grunt.registerTask('default', []);
-  grunt.registerTask('configure', ['clean:dist', 'bower:install']);
+  grunt.registerTask('configure', ['bower:install']);
   grunt.registerTask('build', ['configure', 'requirejs', 'replace:dist', 'uglify:min']);
   grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
   grunt.registerTask('build-annotated-source', ['docco:source', 'replace:doc']);
