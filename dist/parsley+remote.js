@@ -170,9 +170,9 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 });
 
 /*!
-* Parsley
+* Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-pre - built Sun Feb 23 2014 10:32:34
+* Version 2.0.0-rc1 - built Sun Feb 23 2014 18:57:43
 * MIT Licensed
 *
 */
@@ -288,6 +288,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     // li elem that would receive error message
     errorTemplate: '<li></li>'
   };
+
   var ParsleyAbstract = function(options) {};
   ParsleyAbstract.prototype = {
     actualizeOptions: function () {
@@ -1081,6 +1082,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
   }
 } )( 'undefined' === typeof exports ? this[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = {} : exports );
 
+
   var ParsleyValidator = function (validators, catalog) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
@@ -1224,6 +1226,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       }
     }
   };
+
   var ParsleyUI = function (options) {
     this.__class__ = 'ParsleyUI';
   };
@@ -1465,6 +1468,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       fieldInstance.$element.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
     }
   };
+
   var ParsleyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
     this.__class__ = 'OptionsFactory';
     this.__id__ = ParsleyUtils.hash(4);
@@ -1498,6 +1502,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return $.extend({}, this.staticOptions, this.formOptions, this.fieldOptions);
     }
   };
+
   var ParsleyForm = function(element, parsleyInstance) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
@@ -1520,7 +1525,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
         event.preventDefault();
       return this;
     },
-    // Iterate over over every field and emit UI events
+    // @returns boolean
     validate: function (group, event) {
       this.submitEvent = event;
       this.validationResult = true;
@@ -1532,12 +1537,12 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
         // do not validate a field if not the same as given validation group
         if (group && group !== this.fields[i].options.group)
           continue;
-        fieldValidationResult = this.fields[i].validate().validationResult;
+        fieldValidationResult = this.fields[i].validate();
         if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
           this.validationResult = false;
       }
       $.emit('parsley:form:validated', this);
-      return this;
+      return this.validationResult;
     },
     // Iterate over refreshed fields, and stop on first failure
     isValid: function (group) {
@@ -1573,6 +1578,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     reset: function () {},
     destroy: function () {}
   };
+
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
     if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
       throw new Error('ParsleyField instance expected');
@@ -1593,6 +1599,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       isDomConstraint: isDomConstraint || ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name)
     });
   };
+
   var ParsleyField = function(field, parsleyInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.hash(4);
@@ -1614,11 +1621,15 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       }
       this.bindConstraints();
     },
+    // Returns validationResult. For field, it could be:
+    //  - `true` if all green
+    //  - `[]` if non required field and empty
+    //  - `[Violation, [Violation..]]` if errors
     validate: function () {
       $.emit('parsley:field:validate', this);
       $.emit('parsley:field:' + (this.isValid() ? 'success' : 'error'), this);
       $.emit('parsley:field:validated', this);
-      return this;
+      return this.validationResult;
     },
     getConstraintsSortedPriorities: function () {
       var priorities = [];
@@ -1630,6 +1641,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       priorities.sort(function (a, b) { return b - a; });
       return priorities;
     },
+    // Same @return as `validate()`
     isValid: function () {
       // Sort priorities to validate more important first
       var priorities = this.getConstraintsSortedPriorities(),
@@ -1752,6 +1764,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return -1;
     }
   };
+
   var o = $({}), subscribed = {};
   // $.listen(name, callback);
   // $.listen(name, context, callback);
@@ -1826,20 +1839,20 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     }
   };
   $.subscribed = function () { return subscribed; };
+
 // ParsleyConfig definition if not already set
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 // Define then the messages
 window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
-  // parsley //////////////////////////////////////
   defaultMessage: "This value seems to be invalid.",
   type: {
-    email:      "This value should be a valid email.",
-    url:        "This value should be a valid url.",
-    number:     "This value should be a valid number.",
-    integer:    "This value should be a valid integer.",
-    digits:     "This value should be digits.",
-    alphanum:   "This value should be alphanumeric."
+    email:        "This value should be a valid email.",
+    url:          "This value should be a valid url.",
+    number:       "This value should be a valid number.",
+    integer:      "This value should be a valid integer.",
+    digits:       "This value should be digits.",
+    alphanum:     "This value should be alphanumeric."
   },
   notblank:       "This value should not be blank.",
   required:       "This value is required.",
@@ -1858,11 +1871,16 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
-// ### Requirements
+
+//     Parsley.js 2.0.0-rc1
+//     http://parsleyjs.org
+//     (c) 20012-2014 Guillaume Potier, Wisembly
+//     Parsley may be freely distributed under the MIT license.
+
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.0-pre';
+    this.__version__ = '2.0.0-rc1';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)

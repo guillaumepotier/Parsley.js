@@ -123,7 +123,7 @@ module.exports = function (grunt) {
           },
 
           optimize: 'none',
-          out: "dist/<%= pkg.name %>.js",
+          out: "dist/parsley.js",
           findNestedDependencies: true,
 
           // Avoid breaking semicolons inserted by r.js
@@ -173,7 +173,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['configure', 'requirejs', 'replace:dist', 'uglify:min']);
   grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
   grunt.registerTask('build-annotated-source', ['docco:source', 'replace:annotated']);
-  grunt.registerTask('build-all', ['build', 'build-remote', 'build-annotated-source']);
+  grunt.registerTask('build-all', ['clean:dist', 'build', 'build-remote', 'build-annotated-source']);
 };
 
 var rdefineEnd = /\}\);[^}\w]*$/;
