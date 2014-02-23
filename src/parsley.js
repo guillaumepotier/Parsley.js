@@ -1,5 +1,12 @@
-// ### Requirements
+//     Parsley.js @@version
+//     http://parsleyjs.org
+//     (c) 20012-2014 Guillaume Potier, Wisembly
+//     Parsley may be freely distributed under the MIT license.
+
 define([
+
+  // ### Requirements
+
   // Handy third party functions
   'parsley/utils',
   // Parsley default configuration

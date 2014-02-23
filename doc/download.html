@@ -61,13 +61,41 @@
       <div class="jumbotron">
         <h1>Download <em>Parsley</em> <small>v2.0-dev</small></h1>
           <hr></hr>
-          <div class="col-md-6"><a href="../dist/parsley.js">parsley.js</a> (75ko)</div>
-          <div class="col-md-6"><a href="../dist/parsley.min.js">parsley.min.js</a> (38ko)</div>
+          <div class="col-md-12"><a href="https://github.com/guillaumepotier/Parsley.js/archive/master.zip" class="download" data-version="zipball">parsley.zip</a> (250ko)</div>
 
-          <div class="col-md-6"><a href="../dist/parsley+remote.js">parsley+remote.js</a> (80ko)</div>
-          <div class="col-md-6"><a href="../dist/parsley+remote.min.js">parsley+remote.min.js</a> (40ko)</div>
+          <div class="col-md-6"><a href="../dist/parsley.js" class="download" data-version="parsley.js">parsley.js</a> (75ko)</div>
+          <div class="col-md-6"><a href="../dist/parsley.min.js" class="download" data-version="parsley.min.js">parsley.min.js</a> (38ko)</div>
+
+          <div class="col-md-6"><a href="../dist/parsley+remote.js" class="download" data-version="parsley+remote.js">parsley+remote.js</a> (80ko)</div>
+          <div class="col-md-6"><a href="../dist/parsley+remote.min.js" class="download" data-version="parsley+remote.min.js">parsley+remote.min.js</a> (40ko)</div>
       </div>
 
+      <div class="clearfix"></div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p>&copy; <a href="https://twitter.com/guillaumepotier" title="Guillaume Potier on Twitter">Guillaume Potier</a> 2014</p>
+      </div>
     </div>
+
+    <script type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('.download').on('click', function (event) {
+          _gaq.push(['_trackEvent','download', $(this).data('version')]);
+        });
+      });
+    </script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-37229467-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
   </body>
-</body>
+</html>

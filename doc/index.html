@@ -29,7 +29,7 @@
     <div class="container">
       <div class="masthead">
         <div class="header">
-          <h3 class="text-muted"><a href="#">Parsley</a></h3>
+          <h3 class="text-muted"><a href="../index.html">Parsley</a></h3>
 
           <span class="social-buttons inline-block">
             <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://parsleyjs.org" data-text="Parsley, the ultimate javascript form validation library" data-via="guillaumepotier" data-related="guillaumepotier" data-hashtags="parsleyjs">Tweet</a>
@@ -58,10 +58,21 @@
           <h1 id="overview" class="page-header">Overview</h1>
           <h3 id="frontend-form-validation">Frontend form validation</h3>
           <p>
-            Parsley is a javascript form validation. It helps you providing your users feedbacks on their form submission before sending it to your server. It saves you bandwith, server load and it saves time for your user.<br>
-            This javascript form validation is not necessary, and if used, this <strong>do not replace a strong backend server validation.</strong><br>
+            Parsley is a javascript form validation. It helps you providing your users feedbacks on their form submission before sending it to your server. It saves you bandwith, server load and it saves time for your user.
+          </p>
+          <p>
+            This javascript form validation is not necessary, and if used, this <strong>do not replace a strong backend server validation.</strong>
+          </p>
+          <p>
             That's why Parsley is here: to let you define your general form validation, implement it on the backend side, and simply port it frontend-side, with maximum respect to user experience best practices.
           </p>
+
+          <div class="bs-callout bs-callout-info">
+            <h4>Parsley 1.x versions</h4>
+            <p>
+              Parsley curent stable and supported versions are 2.x. If you still use a 1.x version, <a href="http://parsleyjs.github.io/Parsley-1.x" target="_blank">here is the related doc</a>. But don't forget to <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/UPGRADE-2.0.md" target="_blank">upgrade</a>!
+            </p>
+          </div>
 
           <h3 id="data-attrs">Data attributes</h3>
           <p>
@@ -71,9 +82,9 @@
           <div class="bs-callout bs-callout-warning">
             <h4>More on Parsley DOM API</h4>
             <ol>
-              <li>For composed property names, we use camelization, like jQuery <code>$.data()</code> does. That means that <code>data-parsley-composed-property</code> will correspond in code to <code>composedProperty</code>, and reciprocally</li>
-              <li>Every property set in DOM will be stored in <code>this.options</code> for each Parsley instance</li>
-              <li>You can change the DOM API namespace directly in DOM (inception), by doing <code>data-parsley-namespace="data-my-namespace-"</code> and then your Parsley DOM attributes will look like <code>data-my-namespace-property="value"</code></li>
+              <li>For composed property names, Parsley uses camelization, like jQuery <code>$.data()</code> does. That means that <code>data-parsley-composed-property</code> will correspond in code to <code>composedProperty</code>, and reciprocally.</li>
+              <li>Every property set in DOM will be stored in <code>this.options</code> for each Parsley instance.</li>
+              <li>You can change the DOM API namespace directly in DOM (inception), by doing <code>data-parsley-namespace="data-my-namespace-"</code> and then your Parsley DOM attributes will look like <code>data-my-namespace-property="value"</code>.</li>
             </ol>
           </div>
 
@@ -87,7 +98,13 @@
           <h1 id="installation" class="page-header">Installation</h1>
           <h3 id="installation-basic">Basic installation</h3>
           <p>
-            Parsley currently rely on <strong>jQuery (> 1.4)</strong> that would need to be called before including Parsley. Then, you can either use <code>parsley.js</code> unminified file or <code>parsley.min.js</code> minified one. Finally, add <code>data-parsley-validate</code> to each <code>&lt;form></code> you want to be validated.
+            Parsley rely on <strong><a href="http://jquery.com/" target="_blank">jQuery</a> (> 1.4)</strong> that would need to be called before including Parsley.
+          </p>
+          <p>
+            Then, you can either use <code>parsley.js</code> unminified file or <code>parsley.min.js</code> minified one. These files and other builds (<a href="#remote">Remote</a>, <a href="#extras">Extras</a>..) are <a href="download.html">available here</a>.
+          </p>
+          <p>
+            Finally, add <code>data-parsley-validate</code> to each <code>&lt;form></code> you want to be validated.
           </p>
           <p>That would look pretty much like this:
 <pre><code>&lt;script src="jquery.js">&lt;/script>
@@ -164,15 +181,23 @@
           </p>
           <p>Current available plugins are:
             <ul>
-              <li><a href="#ajax">Parsley Remote</a>: provide an ajax validator and an asynchronous validation</li>
-              <li><a href="#extend">Parsley Extend</a>: provide some extra useful validators</li>
+              <li><a href="#remote">Parsley Remote</a>: provide an ajax validator and an asynchronous validation</li>
+              <li><a href="#extras">Parsley Extras</a>: provide some extras useful validators</li>
             </ul>
           </p>
 
           <!-- ****************** USAGE ****************** -->
           <h1 id="usage" class="page-header">Usage</h1>
           <h3 id="usage-overview">Overview</h3>
-          <p>Parsley is a decoupled library that uses differents classes to do the heavy work. You'll see here the different protagonists involved and how you can configure them to fit your desired validation</p>
+          <p>
+            Parsley is a decoupled library that uses differents classes to do the heavy work. You'll see here the different protagonists involved and how you can configure them to fit your desired validation.
+          </p>
+          <div class="bs-callout bs-callout-warning">
+            <h4>Look at the source code!</h4>
+            <p>
+              Of course, this documentation strive to be the most exhaustive possible and relatively easy to understand. This documentation also provide the <a href="annotated-source/parsley.html">complete annotated source</a>. Please take 5 minutes of your time to have a quick glance at it, and at least understand the architecture (Parsley, ParsleyForm, ParsleyField, ParsleyValidator, ParsleyUI, Utils, Pub/Sub..), it will heavily ease the lecture below.
+            </p>
+          </div>
 
           <h3 id="usage-form">Form</h3>
           <p>
@@ -604,7 +629,7 @@ window.ParsleyValidator
           </p>
         </div>
 
-        <!-- ****************** BUILT-IN VALIDATORS ****************** -->
+        <!-- ****************** UI/ UX ****************** -->
         <h1 id="ui" class="page-header">UI/UX</h1>
         <h3 id="ui-overview">Overview</h3>
         <p>
@@ -681,6 +706,99 @@ window.ParsleyValidator
             </tr>
           </tbody>
         </table>
+
+        <!-- ****************** UI/ UX ****************** -->
+        <h1 id="events" class="page-header">Events</h1>
+        <h3 id="events-overview">Overview</h3>
+        <p>Parsley comes with a tiny <a href="annotated-source/pubsub.html" target="_blank">pub/sub mechanism</a> that allows ParsleyUI to work. Further more, it could allow you to do some powerful magic if you listen properly to the right events!</p>
+
+        <h3 id="events-list">Events List</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-2">Name</th>
+              <th class="col-md-1">Instance</th>
+              <th class="col-md-1">Fired by</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>parsley:form:init</code> <version>#2.0</version></td>
+              <td><code>ParsleyForm</code></td>
+              <td><code>new Parsley()</code></td>
+              <td>Fired when a Form is binded for the first time.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:form:validate</code> <version>#2.0</version></td>
+              <td><code>ParsleyForm</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired when a form validation is triggered, <strong>before</strong> its validation.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:form:validated</code> <version>#2.0</version></td>
+              <td><code>ParsleyForm</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired when a form validation is triggered, <strong>after</strong> its validation.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:field:init</code> <version>#2.0</version></td>
+              <td><code>ParsleyField</code></td>
+              <td><code>new Parsley()</code></td>
+              <td>Fired when a Field is binded for the first time.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:field:validate</code> <version>#2.0</version></td>
+              <td><code>ParsleyField</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired when a field validation is triggered, <strong>before</strong> its validation.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:field:success</code> <version>#2.0</version></td>
+              <td><code>ParsleyField</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired when a field validation went well.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:field:error</code> <version>#2.0</version></td>
+              <td><code>ParsleyField</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired when a field validation failed.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="events-usage">Usage</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-3">Method</th>
+              <th class="col-md-6">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>$.listen('name', callback)</code> <version>#2.0</version></td>
+              <td>Listen a specific event. Fire a callback function.</td>
+            </tr>
+            <tr>
+              <td><code>$.listen('name', context, callback)</code> <version>#2.0</version></td>
+              <td>Listen a specific event. Fire a callback function that would have a specific context.</td>
+            </tr>
+            <tr>
+              <td><code>.subscribe('name', callback)</code> <version>#2.0</version></td>
+              <td>On a <code>ParsleyField</code>, it would only be fired if the specific event is fired by the specific field. On a <code>ParsleyForm</code>, it would be fired if the event is fired by the form, or <strong>by any of its fields</strong>.</td>
+            </tr>
+            <tr>
+              <td><code>.unsubscribe('name')</code> <version>#2.0</version></td>
+              <td>Unsubscribe all callbacks subscribed to an event name.</td>
+            </tr>
+            <tr>
+              <td><code>$.emit('name')</code> <version>#2.0</version></td>
+              <td>Emit an event for listeners and subscribers.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="col-md-3">
@@ -730,17 +848,30 @@ window.ParsleyValidator
               </li>
               <li>
                 <a href="#events">Events</a>
+                <ul class="nav">
+                  <li><a href="#events-overview">Overview</a></li>
+                  <li><a href="#events-list">List</a></li>
+                  <li><a href="#events-usage">Usage</a></li>
+                </ul>
               </li>
               <li>
-                <a href="#ajax">Parsley Remote</a>
+                <a href="#remote">Parsley Remote</a>
               </li>
               <li>
-                <a href="#extend">Parsley Extend</a>
+                <a href="#extras">Parsley Extras</a>
               </li>
           </ul>
+          <a class="back-to-top" href="#top">
+              Back to top
+          </a>
         </div>
       </div>
+      <div class="clearfix"></div>
 
+      <!-- Site footer -->
+      <div class="footer">
+        <p>&copy; <a href="https://twitter.com/guillaumepotier" title="Guillaume Potier on Twitter">Guillaume Potier</a> 2014</p>
+      </div>
     </div>
 
     <script type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
@@ -764,7 +895,6 @@ window.ParsleyValidator
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-
     </script>
 
   </body>

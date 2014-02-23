@@ -2,44 +2,42 @@
 
   $(function () {
 
-    var $window = $(window)
-    var $body   = $(document.body)
+    var $window = $(window);
+    var $body   = $(document.body);
 
     var navHeight = $('.navbar').outerHeight(true) + 10;
-    console.log(navHeight);
 
     $body.scrollspy({
-      target: '.sidebar',
-      // offset: 45
-    })
+      target: '.sidebar'
+    });
 
     $window.on('load', function () {
-      $body.scrollspy('refresh')
-    })
+      $body.scrollspy('refresh');
+    });
 
     // back to top
     setTimeout(function () {
-      var $sideBar = $('.sidebar')
+      var $sideBar = $('.sidebar');
 
       $sideBar.affix({
         offset: {
           top: function () {
-            var offsetTop      = $sideBar.offset().top
-            var sideBarMargin  = parseInt($sideBar.children(0).css('margin-top'), 10)
-            var navOuterHeight = 10
+            var offsetTop      = $sideBar.offset().top;
+            var sideBarMargin  = parseInt($sideBar.children(0).css('margin-top'), 10);
+            var navOuterHeight = 10;
 
-            return (this.top = offsetTop - navOuterHeight - sideBarMargin)
+            return (this.top = offsetTop - navOuterHeight - sideBarMargin);
           },
           bottom: function () {
-            return (this.bottom = $('.footer').outerHeight(true))
+            return (this.bottom = $('.footer').outerHeight(true));
           }
         }
-      })
-    }, 100)
+      });
+    }, 100);
 
     setTimeout(function () {
-      $('.top').affix()
-    }, 100)
-  })
+      $('.top').affix();
+    }, 100);
+  });
 
-}(jQuery)
+}(window.jQuery);
