@@ -33,6 +33,9 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , rangewords:     "Die Eingabe muss zwischen %s und %s Wörter enthalten."
       , greaterthan:    "Die Eingabe muss größer als %s sein."
       , lessthan:       "Die Eingabe muss kleiner als %s sein."
+      , beforedate:     "Die Eingabe muss vor %s sein."
+      , afterdate:      "Die Eingabe muss nach %s sein."
+      , americandate:   "Die Eingabe muss ein gültiges Datum sein (MM/DD/YYYY)."
     }
   });
 }(window.jQuery || window.Zepto));
