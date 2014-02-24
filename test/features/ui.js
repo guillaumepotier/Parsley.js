@@ -20,9 +20,16 @@ define(function () {
           '<form id="element">'                                                                      +
             '<input id="field1" type="text" required data-parsley-errors-container="#container" />'  +
             '<div id="container"></div>'                                                             +
+            '<div id="container2"></div>'                                                            +
           '</form>');
         $('#element').psly();
         expect($('#container .parsley-errors-list').length).to.be(1);
+        $('#element').psly().destroy();
+        $('#field1').removeAttr('data-parsley-errors-container');
+        $('#element').psly({
+          errorsContainer: function () { return $('#container2'); }
+        }).validate();
+        expect($('#container2 .parsley-errors-list').length).to.be(1);
       });
       it('should add proper parsley class on success or failure', function () {
         $('body').append('<input type="text" id="element" required />');
@@ -33,6 +40,22 @@ define(function () {
         $('#element').val('foo').psly().validate();
         expect($('#element').hasClass('parsley-success')).to.be(true);
         expect($('#element').hasClass('parsley-error')).to.be(false);
+      });
+      it('should handle class-handler option', function () {
+        $('body').append(
+          '<form id="element">'                                                                 +
+            '<input id="field1" type="email" data-parsley-class-handler="#field2" required />'  +
+            '<div id="field2"></div>'                                                           +
+            '<div id="field3"></div>'                                                           +
+          '</form>');
+        $('#element').psly().validate();
+        expect($('#field2').hasClass('parsley-error')).to.be(true);
+        $('#element').psly().destroy();
+        $('#field1').removeAttr('data-parsley-class-handler');
+        $('#element').psly({
+          classHandler: function () { return $('#field3'); }
+        }).validate();
+        expect($('#field3').hasClass('parsley-error')).to.be(true);
       });
       it('should show higher priority error message by default', function () {
         $('body').append('<input type="email" id="element" required />');

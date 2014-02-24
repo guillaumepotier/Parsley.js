@@ -191,7 +191,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc1 - built Mon Feb 24 2014 12:17:12
+* Version 2.0.0-rc1 - built Mon Feb 24 2014 19:01:48
 * MIT Licensed
 *
 */
@@ -299,8 +299,10 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     // Same for success validation
     successClass: 'parsley-success',
     // Return the `$element` that will receive these above success or error classes
+    // Could also be (and given directly from DOM) a valid selector like `'#div'`
     classHandler: function (ParsleyField) {},
     // Return the `$element` where errors will be appended
+    // Could also be (and given directly from DOM) a valid selector like `'#div'`
     errorsContainer: function (ParsleyField) {},
     // ul elem that would receive errors' list
     errorsWrapper: '<ul class="parsley-errors-list"></ul>',
@@ -1294,7 +1296,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
           if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
             fieldInstance._ui.$errorsWrapper
               .append($(fieldInstance.options.errorTemplate)
-              .addClass('parsley-error parsley-custom-error-message'));
+              .addClass('parsley-custom-error-message'));
           fieldInstance._ui.$errorsWrapper
             .addClass('filled')
             .find('.parsley-custom-error-message')
@@ -1317,7 +1319,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
         fieldInstance._ui.$errorsWrapper
           .addClass('filled')
           .append($(fieldInstance.options.errorTemplate)
-          .addClass('parsley-error parsley-' + diff.added[i].assert.name)
+          .addClass('parsley-' + diff.added[i].assert.name)
           .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
       for (i = 0; i < diff.kept.length; i++)
         fieldInstance._ui.$errorsWrapper
@@ -1380,18 +1382,12 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       // UI could be disabled
       if (false === fieldInstance.options.uiEnabled)
         return;
+      _ui.active = true;
       // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
       /** Generate important UI elements and store them in fieldInstance **/
       // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes
-      _ui.$errorClassHandler = fieldInstance.options.classHandler(fieldInstance) || fieldInstance.$element;
-      // $errorsContainer is the $element where errorsWrapper and errors would be appended
-      // `data-parsley-errors-container="#element"`
-      if ('string' === typeof fieldInstance.options.errorsContainer)
-        _ui.$errorsContainer = $(fieldInstance.options.errorsContainer);
-      // Advanced configuration by a user cutom function that could be passed in options
-      if ('function' === typeof fieldInstance.options.errorsContainer)
-        _ui.$errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
+      _ui.$errorClassHandler = this._manageClassHandler(fieldInstance);
       // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
       _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
       _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
@@ -1399,22 +1395,28 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       _ui.lastValidationResult = [];
       _ui.validatedOnce = false;
       _ui.validationInformationVisible = false;
-      /** Mess with DOM now **/
-      // If do not exist already, insert DOM errors wrapper in the rightful container
-      if (0 === $('#' + _ui.errorsWrapperId).length) {
-        _ui.active = true;
-        if ('undefined' !== typeof _ui.$errorsContainer && 'undefined' !== typeof _ui.$errorsContainer[0])
-          _ui.$errorsContainer.append(_ui.$errorsWrapper);
-        else
-          if (fieldInstance.options.multiple)
-            fieldInstance.$element.parent().after(_ui.$errorsWrapper);
-          else
-            fieldInstance.$element.after(_ui.$errorsWrapper);
-      }
       // Store it in fieldInstance for later
       fieldInstance._ui = _ui;
+      /** Mess with DOM now **/
+      this._insertErrorWrapper(fieldInstance);
       // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
+    },
+    _manageClassHandler: function (fieldInstance) {
+      if ('string' === typeof fieldInstance.options.classHandler && $(fieldInstance.options.classHandler).length)
+        return $(fieldInstance.options.classHandler);
+      var $handler = fieldInstance.options.classHandler(fieldInstance);
+      if ('undefined' !== typeof $handler && $handler.length)
+        return $handler;
+      return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element : fieldInstance.$element.parent();
+    },
+    _insertErrorWrapper: function (fieldInstance) {
+      if ('string' === typeof fieldInstance.options.errorsContainer && $(fieldInstance.options.errorsContainer).length)
+        return $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
+      var $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
+      if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
+        return $errorsContainer.append(fieldInstance._ui.$errorsWrapper);
+      return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element.after(fieldInstance._ui.$errorsWrapper) : fieldInstance.$element.parent().after(fieldInstance._ui.$errorsWrapper);
     },
     actualizeTriggers: function (fieldInstance) {
       // Remove Parsley events already binded on this field
@@ -1481,14 +1483,14 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     },
     _successClass: function (fieldInstance) {
       fieldInstance._ui.validationInformationVisible = true;
-      fieldInstance.$element.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
+      fieldInstance._ui.$errorClassHandler.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
     },
     _errorClass: function (fieldInstance) {
       fieldInstance._ui.validationInformationVisible = true;
-      fieldInstance.$element.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
+      fieldInstance._ui.$errorClassHandler.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
     },
     _resetClass: function (fieldInstance) {
-      fieldInstance.$element.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
+      fieldInstance._ui.$errorClassHandler.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
     }
   };
 

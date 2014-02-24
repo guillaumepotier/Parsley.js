@@ -39,9 +39,11 @@ define('parsley/defaults', function () {
     successClass: 'parsley-success',
 
     // Return the `$element` that will receive these above success or error classes
+    // Could also be (and given directly from DOM) a valid selector like `'#div'`
     classHandler: function (ParsleyField) {},
 
     // Return the `$element` where errors will be appended
+    // Could also be (and given directly from DOM) a valid selector like `'#div'`
     errorsContainer: function (ParsleyField) {},
 
     // ul elem that would receive errors' list

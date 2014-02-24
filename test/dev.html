@@ -5,31 +5,33 @@
     <link href="../src/parsley.css" rel="stylesheet">
 </head>
 <body>
-    <form id="form" data-parsley-validate data-parsley-focus="last">
-        Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!"/>
+    <form id="form" data-parsley-focus="last">
+        <div class="parent">
+            Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!" data-parsley-class-handler=".parent" />
 
-        Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST", "data": {"foo": "bar"} }' data-parsley-remote-reverse="true" required />
+            Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST", "data": {"foo": "bar"} }' data-parsley-remote-reverse="true" required />
 
-        Radio:
-        <span>
-            <input type="radio" name="radio" id="radio1" value="yes" required />
-            <input type="radio" name="radio" id="radio2" value="no" />
-        </span>
+            Radio:
+            <span>
+                <input type="radio" name="radio" id="radio1" value="yes" required />
+                <input type="radio" name="radio" id="radio2" value="no" />
+            </span>
 
-        Checkboxes:
-        <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" data-parsley-errors-container="#checkoxErrors" data-parsley-mincheck="2" required />
-        <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
-        <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" />
+            Checkboxes:
+            <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" data-parsley-errors-container="#checkoxErrors" data-parsley-mincheck="2" required />
+            <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
+            <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" />
 
-        <span id="checkoxErrors"></span>
+            <span id="checkoxErrors"></span>
 
-        FooBar:
-        <input type="text" data-parsley-foobar="baz" required />
+            FooBar:
+            <input type="text" data-parsley-foobar="baz" required />
 
-        Extra
-        <input type="text" data-parsley-dateiso data-parsley-no-focus required />
+            Extra
+            <input type="text" data-parsley-dateiso data-parsley-no-focus required />
 
-        <input type="submit" />
+            <input type="submit" />
+        </div>
     </form>
 
     <script src="../bower_components/jquery/jquery.js"></script>
@@ -45,5 +47,15 @@
                 return new RegExp('foobar', 'ig').test(value) && new RegExp(requirement, 'ig').test(value);
             }, 32)
             .addMessage('fr', 'foobar', 'salut');
+        $('#form').parsley().validate();
+        $('#form').parsley().destroy();
+        $('#form').parsley({
+            classHandler: function (parsleyfield) {
+                return parsleyfield.$element.parent();
+            },
+            errorsContainer: function (parsleyfield) {
+                return parsleyfield.$element.parent();
+            }
+        });
     </script>
 </html>
