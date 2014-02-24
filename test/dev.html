@@ -5,8 +5,8 @@
     <link href="../src/parsley.css" rel="stylesheet">
 </head>
 <body>
-    <form id="form" data-parsley-validate>
-        Email: <input id="email" type="email" data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!"/>
+    <form id="form" data-parsley-validate data-parsley-focus="last">
+        Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!"/>
 
         Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST", "data": {"foo": "bar"} }' data-parsley-remote-reverse="true" required />
 
@@ -27,7 +27,7 @@
         <input type="text" data-parsley-foobar="baz" required />
 
         Extra
-        <input type="text" data-parsley-dateiso required />
+        <input type="text" data-parsley-dateiso data-parsley-no-focus required />
 
         <input type="submit" />
     </form>

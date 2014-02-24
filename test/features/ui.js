@@ -128,6 +128,7 @@ define(function () {
         parsleyForm = new Parsley($('#element'));
         expect($('#element').attr('novalidate')).not.to.be(undefined);
       });
+      it('should test the no-focus option');
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

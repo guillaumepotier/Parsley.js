@@ -58,7 +58,10 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       promises.push(this.fields[i]._asyncValidateField());
     }
 
-    return $.when.apply($, promises);
+    return $.when.apply($, promises)
+      .always(function () {
+        $.emit('parsley:form:validated', that);
+      });
   },
 
   _asyncIsValidForm: function (group) {
