@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc1 - built Mon Feb 24 2014 19:01:48
+* Version 2.0.0-rc1 - built Mon Feb 24 2014 19:13:16
 * MIT Licensed
 *
 */
@@ -99,7 +99,7 @@
     // Enable\Disable error messages
     uiEnabled: true,
     // key events treshold before validation
-    validationTresshold: 3,
+    validationThreshold: 3,
     // Focused field on form validation error. 'fist'|'last'|'none'
     focus: 'first',
     // `$.Event()` that will trigger validation. eg: `keyup`, `change`..
@@ -1247,10 +1247,10 @@
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
     eventValidate: function(event) {
       // For keyup, keypress, keydown.. events that could be a little bit obstrusive
-      // do not validate if val length < min tresshold on first validation. Once field have been validated once and info
+      // do not validate if val length < min threshold on first validation. Once field have been validated once and info
       // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
       if (new RegExp('key').test(event.type))
-        if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationTresshold)
+        if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationThreshold)
           return;
       this._ui.validatedOnce = true;
       this.validate();

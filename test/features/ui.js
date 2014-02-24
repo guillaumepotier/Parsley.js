@@ -125,8 +125,8 @@ define(function () {
         $('#element').val('foob').trigger($.Event('keyup'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
       });
-      it('should handle trigger keyup tresshold validation', function () {
-        $('body').append('<input type="email" id="element" data-parsley-validation-tresshold="2" required data-parsley-trigger="keyup" />');
+      it('should handle trigger keyup threshold validation', function () {
+        $('body').append('<input type="email" id="element" data-parsley-validation-threshold="2" required data-parsley-trigger="keyup" />');
         var parsleyField = $('#element').psly();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
         $('#element').val('fo').trigger($.Event('keyup'));

@@ -19,7 +19,7 @@
     - `messages`
     - `validateIfUnchanged`
   These options have been renamed:
-    - `validationMinlength` into `validationTresshold`
+    - `validationMinlength` into `validationTreshold`
     - `errors.classHandler` into `classHandler`
     - `errors.container` into `errorsContainer`
     - `errors.errorsWrapper` into `errorsWrapper`
