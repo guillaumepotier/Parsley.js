@@ -42,6 +42,8 @@ define('features/remote', [
 
       it.skip('should handle properly validation with remote validator', function () {});
       it.skip('should save some calls for querries already done');
+      it.skip('should handle remote reverse option');
+      it.skip('should handle remote options');
 
       afterEach(function () {
         if ($('#element').length)

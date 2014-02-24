@@ -128,31 +128,47 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     else {
       data[that.$element.attr('name') || that.$element.attr('id')] = value;
 
-      promise = $.ajax($.extend({
+      promise = $.ajax($.extend(true, {}, {
         url: that.options.remote,
         data: data,
         type: 'GET'
       }, that.options.remoteOptions || {}));
     }
+
     // Depending on promise result, manage `validationResult` for UI
     promise
       .done(function () {
-        that._remote[csr] = true;
-        that.validationResult = false !== that.validationResult;
-        deferred.resolveWith(that);
+        that._handleRemoteResult(true, deferred, csr);
       })
       .fail(function () {
-        that._remote[csr] = false;
-        that.validationResult = [
-          new window.ParsleyValidator.Validator.Violation(
-            that.constraints[that.indexOfConstraint('remote')],
-            value,
-            null
-          )
-        ];
-
-        deferred.rejectWith(that);
+        that._handleRemoteResult(false, deferred, csr);
       });
+  },
+
+  _handleRemoteResult: function (status, deferred, csr) {
+    // Store remote call result to avoid next calls
+    this._remote[csr] = status;
+
+    // If reverse option is set, a failing ajax request is considered successful
+    if ('undefined' !== typeof this.options.remoteReverse && true === this.options.remoteReverse)
+      status = !status;
+
+    // If true, simply resolve and exit
+    if (status) {
+      deferred.resolveWith(this);
+      return;
+    }
+
+    // Else, create a proper remote validation Violation to trigger right UI
+    this.validationResult = [
+      new window.ParsleyValidator.Validator.Violation(
+        this.constraints[this.indexOfConstraint('remote')],
+        this.getValue(),
+        null
+      )
+    ];
+
+    deferred.rejectWith(this);
   }
 });
 
@@ -172,7 +188,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc1 - built Sun Feb 23 2014 18:57:43
+* Version 2.0.0-rc1 - built Mon Feb 24 2014 11:39:30
 * MIT Licensed
 *
 */

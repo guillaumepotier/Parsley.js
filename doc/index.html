@@ -835,9 +835,9 @@ window.ParsleyValidator
           By default, it will make a <code>GET</code> request to the url given in the DOM, and send as parameter the field's value within its name or id. Standard jQuery <code>$.ajax</code> options could be passed with <code>data-parsley-remote-options</code>.
         </p>
         <p>
-<pre><code>&lt;input name="q" type="text" data-parsley-remote="http://myapi.com" data-parsley-remote-options='{ method: "POST", dataType: "jsonp" }' value="foo" /></code>
+<pre><code>&lt;input name="q" type="text" data-parsley-remote-reverse="true" data-parsley-remote="http://myapi.com" data-parsley-remote-options='{ method: "POST", dataType: "jsonp", "data": { "anothervar": "value" } }' value="foo" /></code>
 </code></pre>
-          The above code will make a <code>POST</code> querry to <code>http://myapi.com</code> sending <code>q='foo'</code>.
+          The above code will make a <code>POST</code> querry to <code>http://myapi.com</code> sending <code>q='foo'</code> and <code>anothervar=value</code>. By default, a non 2xx ajax response is considered as a failure, but sometimes (when a call is needed to see if an email, a pseudo is available) a 404 API answer could be the right answer, that's why the <code>reverse</code> option is here, to throw an error if the request is a success.
         </p>
         <p>
           To use this plugin, either load <code>parsley.remote.js</code> <strong>before</strong> loading <code>parsley.js</code>, either directly load <code>parsley+remote.js</code>.
