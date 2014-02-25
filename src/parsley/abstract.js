@@ -17,14 +17,14 @@ define('parsley/abstract', function () {
     // If on a ParsleyForm instance, it will be attached to form instance and also
     // To every field instance for this form
     subscribe: function (name, fn) {
-      $.listenTo(this, 'parsley:' + name.toLowerCase(), fn);
+      $.listenTo(this, name.toLowerCase(), fn);
 
       return this;
     },
 
     // Same as subscribe above. Unsubscribe an event for field, or form + its fields
     unsubscribe: function (name) {
-      $.unsubscribeTo(this, 'parsley:' + name.toLowerCase());
+      $.unsubscribeTo(this, name.toLowerCase());
 
       return this;
     },

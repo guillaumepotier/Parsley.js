@@ -32,7 +32,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
     if (new RegExp('key').test(event.type))
-      if (!this._ui.validationInformationVisible  && this.getValue().length <= this.options.validationTreshold)
+      if (!this._ui.validationInformationVisible  && this.getValue().length <= this.options.validationThreshold)
         return;
 
     this._ui.validatedOnce = true;
@@ -191,7 +191,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc1 - built Mon Feb 24 2014 19:13:16
+* Version 2.0.0-rc1 - built Tue Feb 25 2014 09:48:30
 * MIT Licensed
 *
 */
@@ -288,7 +288,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     // ### UI
     // Enable\Disable error messages
     uiEnabled: true,
-    // key events treshold before validation
+    // key events threshold before validation
     validationThreshold: 3,
     // Focused field on form validation error. 'fist'|'last'|'none'
     focus: 'first',
@@ -324,12 +324,12 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     // If on a ParsleyForm instance, it will be attached to form instance and also
     // To every field instance for this form
     subscribe: function (name, fn) {
-      $.listenTo(this, 'parsley:' + name.toLowerCase(), fn);
+      $.listenTo(this, name.toLowerCase(), fn);
       return this;
     },
     // Same as subscribe above. Unsubscribe an event for field, or form + its fields
     unsubscribe: function (name) {
-      $.unsubscribeTo(this, 'parsley:' + name.toLowerCase());
+      $.unsubscribeTo(this, name.toLowerCase());
       return this;
     },
     // Reset UI

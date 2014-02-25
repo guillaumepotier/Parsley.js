@@ -5,11 +5,11 @@
     <link href="../src/parsley.css" rel="stylesheet">
 </head>
 <body>
-    <form id="form" data-parsley-focus="last">
+    <form id="form" data-parsley-validate>
         <div class="parent">
-            Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!" data-parsley-class-handler=".parent" />
+            Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!" />
 
-            Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST", "data": {"foo": "bar"} }' data-parsley-remote-reverse="true" required />
+<!--             Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST", "data": {"foo": "bar"} }' data-parsley-remote-reverse="true" required />
 
             Radio:
             <span>
@@ -28,14 +28,14 @@
             <input type="text" data-parsley-foobar="baz" required />
 
             Extra
-            <input type="text" data-parsley-dateiso data-parsley-no-focus required />
+            <input type="text" data-parsley-dateiso data-parsley-no-focus required /> -->
 
             <input type="submit" />
         </div>
     </form>
 
     <script src="../bower_components/jquery/jquery.js"></script>
-    <script src="../src/parsley.remote.js"></script>
+    <!-- <script src="../src/parsley.remote.js"></script> -->
     <script src="../src/extra/dateiso.js"></script>
     <script src="../src/i18n/fr.extra.js"></script>
     <script src="../dist/parsley.js"></script>
@@ -47,15 +47,8 @@
                 return new RegExp('foobar', 'ig').test(value) && new RegExp(requirement, 'ig').test(value);
             }, 32)
             .addMessage('fr', 'foobar', 'salut');
-        $('#form').parsley().validate();
-        $('#form').parsley().destroy();
-        $('#form').parsley({
-            classHandler: function (parsleyfield) {
-                return parsleyfield.$element.parent();
-            },
-            errorsContainer: function (parsleyfield) {
-                return parsleyfield.$element.parent();
-            }
-        });
+        $('#form').psly().subscribe('parsley:form:validated', function(formInstance) {
+            formInstance.submitEvent.preventDefault();
+        })
     </script>
 </html>
