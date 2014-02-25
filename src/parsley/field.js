@@ -11,7 +11,7 @@ define('parsley/field', [
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
-    this.init($(field), parsleyInstance.options);
+    return this.init($(field), parsleyInstance.options);
   };
 
   ParsleyField.prototype = {
@@ -21,13 +21,20 @@ define('parsley/field', [
       this.validationResult = [];
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
-      // select/checkbox multiple inputs hack
+      // Select / checkbox multiple inputs hack
       if (this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) {
+        if ('undefined' === typeof this.$element.attr('name')) {
+          if (window.console && window.console.warn)
+            window.console.warn('To be binded by Parsley, a radio or checkbox input must have either a name or a multiple option.', this.$element);
+
+          return this.parsleyInstance;
+        }
+
         this.options.multiple = this.$element.attr('name').replace(/(:|\.|\[|\]|\$)/g, '');
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
       }
 
-      this.bindConstraints();
+      return this.bindConstraints();
     },
 
     // Returns validationResult. For field, it could be:

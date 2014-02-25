@@ -93,8 +93,9 @@ define([
       // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
       this.$element.data('Parsley', parsleyInstance);
 
-      // Tell the world we got a new Parsley instance!
-      $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);
+      // Tell the world we got a new ParsleyForm or Field instance!
+      if ('ParsleyForm' === parsleyInstance.__class__ || 'ParsleyField' === parsleyInstance.__class__)
+        $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);
 
       return parsleyInstance;
     }

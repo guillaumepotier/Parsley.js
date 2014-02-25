@@ -79,6 +79,13 @@ define(function () {
         expect(parsleyInstance.options.namespace).to.be('baz-');
         expect(parsleyInstance.options.foo).to.be('bar');
       });
+      it('should not bind radio or checkboxes withoud a name or a multiple option', function () {
+        $('body').append('<input type="radio" id="element" required />');
+        window.console.warn = sinon.spy();
+        parsleyInstance = $('#element').psly();
+        expect(parsleyInstance.__class__).to.be('Parsley');
+        expect(window.console.warn.called).to.be(true);
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 
