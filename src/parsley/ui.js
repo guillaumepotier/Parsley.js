@@ -17,6 +17,8 @@ define('parsley/ui', [
 
       $.listen('parsley:form:destroy', this, this.destroy);
       $.listen('parsley:field:destroy', this, this.destroy);
+
+      return this;
     },
 
     reflow: function (fieldInstance) {
@@ -25,7 +27,7 @@ define('parsley/ui', [
         return;
 
       // Diff between two validation results
-      var diff = this.diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
+      var diff = this._diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
 
       // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
@@ -81,23 +83,50 @@ define('parsley/ui', [
 
       // Show, hide, update failing constraints messages
       for (var i = 0; i < diff.removed.length; i++)
-        fieldInstance._ui.$errorsWrapper
-          .removeClass('filled')
-          .find('.parsley-' + diff.removed[i].assert.name)
-          .remove();
+        this.removeError(fieldInstance, diff.removed[i].assert.name, true);
 
       for (i = 0; i < diff.added.length; i++)
-        fieldInstance._ui.$errorsWrapper
-          .addClass('filled')
-          .append($(fieldInstance.options.errorTemplate)
-          .addClass('parsley-' + diff.added[i].assert.name)
-          .html(this.getErrorMessage(fieldInstance, diff.added[i].assert)));
+        this.addError(fieldInstance, diff.added[i].assert.name, undefined, diff.added[i].assert, true);
 
       for (i = 0; i < diff.kept.length; i++)
-        fieldInstance._ui.$errorsWrapper
-          .addClass('filled')
-          .find('.parsley-' + diff.kept[i].assert.name)
-          .html(this.getErrorMessage(fieldInstance, diff.kept[i].assert));
+        this.updateError(fieldInstance, diff.kept[i].assert.name, undefined, diff.kept[i].assert, true);
+    },
+
+    // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
+    // but a little bit complex for above internal usage, with forced undefined parametter..
+    addError: function (fieldInstance, name, message, assert, doNotUpdateClass) {
+      fieldInstance._ui.$errorsWrapper
+        .addClass('filled')
+        .append($(fieldInstance.options.errorTemplate)
+        .addClass('parsley-' + name)
+        .html(message || this._getErrorMessage(fieldInstance, assert)));
+
+      if (true !== doNotUpdateClass)
+        this._errorClass(fieldInstance);
+    },
+
+    // Same as above
+    updateError: function (fieldInstance, name, message, assert, doNotUpdateClass) {
+      fieldInstance._ui.$errorsWrapper
+        .addClass('filled')
+        .find('.parsley-' + name)
+        .html(message || this._getErrorMessage(fieldInstance, assert));
+
+      if (true !== doNotUpdateClass)
+        this._errorClass(fieldInstance);
+    },
+
+    // Same as above twice
+    removeError: function (fieldInstance, name, doNotUpdateClass) {
+      fieldInstance._ui.$errorsWrapper
+        .removeClass('filled')
+        .find('.parsley-' + name)
+        .remove();
+
+      // edge case possible here: remove a standard Parsley error that is still failing in fieldInstance.validationResult
+      // but highly improbable cuz' manually removing a well Parsley handled error makes no sense.
+      if (true !== doNotUpdateClass)
+        this.manageStatusClass(fieldInstance);
     },
 
     focus: function (formInstance) {
@@ -122,7 +151,7 @@ define('parsley/ui', [
       lastFailingField.$element.focus();
     },
 
-    getErrorMessage: function (fieldInstance, constraint) {
+    _getErrorMessage: function (fieldInstance, constraint) {
       var customConstraintErrorMessage = constraint.name + 'Message';
 
       if ('undefined' !== typeof fieldInstance.options[customConstraintErrorMessage])
@@ -131,7 +160,7 @@ define('parsley/ui', [
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
 
-    diff: function (newResult, oldResult, deep) {
+    _diff: function (newResult, oldResult, deep) {
       var added = [],
         kept = [];
 
@@ -153,7 +182,7 @@ define('parsley/ui', [
       return {
         kept: kept,
         added: added,
-        removed: !deep ? this.diff(oldResult, newResult, true).added : []
+        removed: !deep ? this._diff(oldResult, newResult, true).added : []
       };
     },
 

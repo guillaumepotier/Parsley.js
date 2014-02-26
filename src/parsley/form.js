@@ -20,7 +20,7 @@ define('parsley/form', [
 
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
-      return this.bindFields();
+      return this._bindFields();
     },
 
     onSubmitValidate: function (event) {
@@ -40,7 +40,7 @@ define('parsley/form', [
 
       var fieldValidationResult = [];
 
-      this.refreshFields();
+      this._refreshFields();
 
       $.emit('parsley:form:validate', this);
 
@@ -64,7 +64,7 @@ define('parsley/form', [
 
     // Iterate over refreshed fields, and stop on first failure
     isValid: function (group) {
-      this.refreshFields();
+      this._refreshFields();
 
       for (var i = 0; i < this.fields.length; i++) {
 
@@ -79,11 +79,11 @@ define('parsley/form', [
       return true;
     },
 
-    refreshFields: function () {
-      return this.actualizeOptions().bindFields();
+    _refreshFields: function () {
+      return this.actualizeOptions()._bindFields();
     },
 
-    bindFields: function () {
+    _bindFields: function () {
       var self = this;
       this.fields = [];
 

@@ -689,7 +689,7 @@ window.ParsleyValidator
             </tr>
             <tr>
               <td>Focus <version>#2.0</version></td>
-              <td><code>data-parsley-forcus="first"</code></td>
+              <td><code>data-parsley-focus="first"</code></td>
               <td>Focus failing field on form validation. Possible values: <code>'first' | 'last' | 'none'<code></td>
             </tr>
           </tbody>
@@ -742,7 +742,32 @@ window.ParsleyValidator
           </tbody>
         </table>
 
-        <!-- ****************** UI/ UX ****************** -->
+        <h3 id="ui-for-javascript">UI for javascript</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-3">Name</th>
+              <th class="col-md-1">Method</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Add error <version>#2.0</version></td>
+              <td><code>window.ParsleyUI.addError(parsleyInstance, name, message);</code></td>
+              <td>Manually add an error message.</td>
+            </tr>
+            <td>Update error <version>#2.0</version></td>
+              <td><code>window.ParsleyUI.updateError(parsleyInstance, name, message);</code></td>
+              <td>Manually edit an error message.</td>
+            </tr>
+            <td>Remove error <version>#2.0</version></td>
+              <td><code>window.ParsleyUI.removeError(parsleyInstance, name);</code></td>
+              <td>Manually remove an error message.</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- ****************** Events ****************** -->
         <h1 id="events" class="page-header">Events</h1>
         <h3 id="events-overview">Overview</h3>
         <p>Parsley comes with a tiny <a href="annotated-source/pubsub.html" target="_blank">pub/sub mechanism</a> that allows ParsleyUI to work. Further more, it could allow you to do some powerful magic if you listen properly to the right events!</p>
@@ -836,7 +861,7 @@ window.ParsleyValidator
         </table>
 
         <!-- ****************** Remote ****************** -->
-        <h1 id="remote" class="page-header">Parsely Remote</h1>
+        <h1 id="remote" class="page-header">Parsley Remote</h1>
         <p>
           <a href="annotated-source/parsley.remote.html" target="_blank">Parsley remote</a> is a handy plugin that adds an unique ajax asynchronous validator: <code>data-parsley-remote="http://url.ext"</code>. It adds these asynchronous methods to Parsley: <code>.asyncIsValid()</code> and <code>.asyncValidate()</code>.
         </p>
@@ -853,7 +878,7 @@ window.ParsleyValidator
         </p>
 
         <!-- ****************** Remote ****************** -->
-        <h1 id="extras" class="page-header">Parsely Extras</h1>
+        <h1 id="extras" class="page-header">Parsley Extras</h1>
         <p>
           You'll find in the <code>src/extra/</code> directory in Parsley .zip or Github projects many more or less useful validators crafted by the community. A doc here is coming.
         </p>
@@ -902,6 +927,7 @@ window.ParsleyValidator
                   <li><a href="#ui-classes">Class & templates</a></li>
                   <li><a href="#ui-for-form">UI for Form</a></li>
                   <li><a href="#ui-for-field">UI for Field</a></li>
+                  <li><a href="#ui-for-javascript">UI for javascript</a></li>
                 </ul>
               </li>
               <li>

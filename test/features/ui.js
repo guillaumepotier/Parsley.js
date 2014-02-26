@@ -152,6 +152,23 @@ define(function () {
         expect($('#element').attr('novalidate')).not.to.be(undefined);
       });
       it('should test the no-focus option');
+      it('should test the manual add / update / remove error', function () {
+        $('body').append('<input type="text" id="element" />');
+        var parsleyField = $('#element').parsley();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
+        expect($('#element').hasClass('parsley-error')).to.be(false);
+        window.ParsleyUI.addError(parsleyField, 'foo', 'bar');
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
+        expect($('#element').hasClass('parsley-error')).to.be(true);
+        expect($('li.parsley-foo').length).to.be(1);
+        expect($('li.parsley-foo').text()).to.be('bar');
+        window.ParsleyUI.updateError(parsleyField, 'foo', 'baz');
+        expect($('li.parsley-foo').text()).to.be('baz');
+        window.ParsleyUI.removeError(parsleyField, 'foo');
+        expect($('#element').hasClass('parsley-error')).to.be(false);
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

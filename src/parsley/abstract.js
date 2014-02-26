@@ -8,7 +8,7 @@ define('parsley/abstract', function () {
       return this;
     },
 
-    // ParsleyValidator validate proxy function . Could be replaced by third party scripts, like parsley.ajax.js
+    // ParsleyValidator validate proxy function . Could be replaced by third party scripts
     validateThroughValidator: function (value, constraints, priority) {
       return window.ParsleyValidator.validate.apply(window.ParsleyValidator, arguments);
     },

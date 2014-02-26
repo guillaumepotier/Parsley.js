@@ -45,7 +45,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       promises = [];
     this.submitEvent = event;
 
-    this.refreshFields();
+    this._refreshFields();
 
     $.emit('parsley:form:validate', this);
 
@@ -66,7 +66,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
 
   _asyncIsValidForm: function (group) {
     var promises = [];
-    this.refreshFields();
+    this._refreshFields();
 
     for (var i = 0; i < this.fields.length; i++) {
 
@@ -107,7 +107,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       deferred.rejectWith(this);
 
     // If regular constraints are valid, and there is a remote validator registered, run it
-    else if (-1 !== this.indexOfConstraint('remote'))
+    else if (-1 !== this._constraintIndex('remote'))
       this._remote(deferred);
 
     // Otherwise all is good, resolve promise
@@ -165,7 +165,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     // Else, create a proper remote validation Violation to trigger right UI
     this.validationResult = [
       new window.ParsleyValidator.Validator.Violation(
-        this.constraints[this.indexOfConstraint('remote')],
+        this.constraints[this._constraintIndex('remote')],
         this.getValue(),
         null
       )
