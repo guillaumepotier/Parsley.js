@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>validator.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+            
+              
+              <a class="source" href="parsley.html">
+                parsley.js
+              </a>
+            
+              
+              <a class="source" href="parsley.remote.html">
+                parsley.remote.js
+              </a>
+            
+              
+              <a class="source" href="abstract.html">
+                abstract.js
+              </a>
+            
+              
+              <a class="source" href="defaults.html">
+                defaults.js
+              </a>
+            
+              
+              <a class="source" href="field.html">
+                field.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="pubsub.html">
+                pubsub.js
+              </a>
+            
+              
+              <a class="source" href="ui.html">
+                ui.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>validator.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define(<span class="hljs-string">'parsley/validator'</span>, [
+  <span class="hljs-string">'validator'</span>
+], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Validator)</span> {</span>
+  <span class="hljs-keyword">var</span> ParsleyValidator = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(validators, catalog)</span> {</span>
+    <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyValidator'</span>;
+    <span class="hljs-keyword">this</span>.Validator = Validator;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Default Parsley locale is en</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.locale = <span class="hljs-string">'en'</span>;
+
+    <span class="hljs-keyword">this</span>.init(validators || {}, catalog || {});
+  };
+
+  ParsleyValidator.prototype = {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(validators, catalog)</span> {</span>
+      <span class="hljs-keyword">this</span>.catalog = catalog;
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> validators)
+        <span class="hljs-keyword">this</span>.addValidator(name, validators[name].fn, validators[name].priority);
+
+      $.emit(<span class="hljs-string">'parsley:validator:init'</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    setLocale: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(locale)</span> {</span>
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.catalog[locale])
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(locale + <span class="hljs-string">' is not available in the catalog'</span>);
+
+      <span class="hljs-keyword">this</span>.locale = locale;
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Add a new messages catalog for a given locale. Set locale for this catalog if set === <code>true</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    addCatalog: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(locale, messages, set)</span> {</span>
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> === <span class="hljs-keyword">typeof</span> messages)
+        <span class="hljs-keyword">this</span>.catalog[locale] = messages;
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === set)
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setLocale(locale);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Add a specific message for a given constraint in a given locale</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    addMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(locale, name, message)</span> {</span>
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">undefined</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.catalog[locale])
+        <span class="hljs-keyword">this</span>.catalog[locale] = {};
+
+      <span class="hljs-keyword">this</span>.catalog[locale][name] = message;
+    },
+
+    validate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(value, constraints, priority)</span> {</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.Validator.Validator().validate.apply(<span class="hljs-keyword">new</span> Validator.Validator(), <span class="hljs-built_in">arguments</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Add a new validator</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    addValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, fn, priority)</span> {</span>
+      <span class="hljs-keyword">this</span>.validators[name] = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(requirements)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Callback(fn, requirements), { priority: priority });
+      };
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    updateValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, fn, priority)</span> {</span>
+      <span class="hljs-keyword">return</span> addValidator(name, fn, priority);
+    },
+
+    removeValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name)</span> {</span>
+      <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.validators[name];
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    getErrorMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(constraint)</span> {</span>
+      <span class="hljs-keyword">var</span> message;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Type constraints are a bit different, we have to match their requirements too to find right error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'type'</span> === constraint.name)
+        message = window.ParsleyConfig.i18n[<span class="hljs-keyword">this</span>.locale][constraint.name][constraint.requirements];
+      <span class="hljs-keyword">else</span>
+        message = <span class="hljs-keyword">this</span>.formatMesssage(window.ParsleyConfig.i18n[<span class="hljs-keyword">this</span>.locale][constraint.name], constraint.requirements);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-string">''</span> !== message ? message : window.ParsleyConfig.i18n[<span class="hljs-keyword">this</span>.locale].defaultMessage;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Kind of light <code>sprintf()</code> implementation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    formatMesssage: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(string, parameters)</span> {</span>
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> === <span class="hljs-keyword">typeof</span> parameters) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> parameters)
+          string = <span class="hljs-keyword">this</span>.formatMesssage(string, parameters[i]);
+
+        <span class="hljs-keyword">return</span> string;
+      }
+
+      <span class="hljs-keyword">return</span> <span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> string ? string.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'%s'</span>, <span class="hljs-string">'i'</span>), parameters) : <span class="hljs-string">''</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Here is the Parsley default validators list.
+This is basically Validatorjs validators, with different API for some of them
+and a Parsley priority set</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    validators: {
+      notblank: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().NotBlank(), { priority: <span class="hljs-number">2</span> });
+      },
+      required: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Required(), { priority: <span class="hljs-number">512</span> });
+      },
+      type: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(type)</span> {</span>
+        <span class="hljs-keyword">var</span> assert;
+
+        <span class="hljs-keyword">switch</span> (type) {
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'email'</span>:
+            assert = <span class="hljs-keyword">new</span> Validator.Assert().Email();
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'number'</span>:
+            assert = <span class="hljs-keyword">new</span> Validator.Assert().Regexp(<span class="hljs-string">'^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$'</span>);
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'integer'</span>:
+            assert = <span class="hljs-keyword">new</span> Validator.Assert().Regexp(<span class="hljs-string">'^-?\\d+$'</span>);
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'digits'</span>:
+            assert = <span class="hljs-keyword">new</span> Validator.Assert().Regexp(<span class="hljs-string">'^\\d+$'</span>);
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'alphanum'</span>:
+            assert = <span class="hljs-keyword">new</span> Validator.Assert().Regexp(<span class="hljs-string">'^\\w+$'</span>, <span class="hljs-string">'i'</span>);
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'url'</span>:
+            assert = <span class="hljs-keyword">new</span> Validator.Assert().Regexp(<span class="hljs-string">'(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_\\+.~#?&amp;//=]*)'</span>, <span class="hljs-string">'i'</span>);
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">default</span>:
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'validator type `'</span> + type + <span class="hljs-string">'` is not supported'</span>);
+        }
+
+        <span class="hljs-keyword">return</span> $.extend(assert, { priority: <span class="hljs-number">256</span> });
+      },
+      pattern: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(regexp)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Regexp(regexp), { priority: <span class="hljs-number">64</span> });
+      },
+      minlength: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(length)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Length({ min: length }), { priority: <span class="hljs-number">30</span> });
+      },
+      maxlength: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(length)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Length({ max: length }), { priority: <span class="hljs-number">30</span> });
+      },
+      length: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(array)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Length({ min: array[<span class="hljs-number">0</span>], max: array[<span class="hljs-number">1</span>] }), { priority: <span class="hljs-number">32</span> });
+      },
+      mincheck: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(length)</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.minlength(length);
+      },
+      maxcheck: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(length)</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.maxlength(length);
+      },
+      check: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(array)</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.length(array);
+      },
+      min: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(value)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().GreaterThanOrEqual(value), { priority: <span class="hljs-number">30</span> });
+      },
+      max: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(value)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().LessThanOrEqual(value), { priority: <span class="hljs-number">30</span> });
+      },
+      range: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(array)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Range(array[<span class="hljs-number">0</span>], array[<span class="hljs-number">1</span>]), { priority: <span class="hljs-number">32</span> });
+      },
+      equalto: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(identifier)</span> {</span>
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Callback(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(value, identifier)</span> {</span>
+          <span class="hljs-keyword">return</span> value === $(identifier).val();
+        }, identifier), { priority: <span class="hljs-number">256</span> });
+      }
+    }
+  };
+
+  <span class="hljs-keyword">return</span> ParsleyValidator;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+</html>

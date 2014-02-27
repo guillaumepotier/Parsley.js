@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>parsley.remote.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+            
+              
+              <a class="source" href="parsley.html">
+                parsley.js
+              </a>
+            
+              
+              <a class="source" href="parsley.remote.html">
+                parsley.remote.js
+              </a>
+            
+              
+              <a class="source" href="abstract.html">
+                abstract.js
+              </a>
+            
+              
+              <a class="source" href="defaults.html">
+                defaults.js
+              </a>
+            
+              
+              <a class="source" href="field.html">
+                field.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="pubsub.html">
+                pubsub.js
+              </a>
+            
+              
+              <a class="source" href="ui.html">
+                ui.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>parsley.remote.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
+  asyncValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group, event)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === <span class="hljs-keyword">this</span>.__class__)
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncValidateForm(group, event);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncValidateField();
+  },
+
+  asyncIsValid: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === <span class="hljs-keyword">this</span>.__class__)
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncIsValidField();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncIsValidForm(group);
+  },
+
+  onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span>
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+
+    <span class="hljs-keyword">if</span> ( event <span class="hljs-keyword">instanceof</span> $.Event)
+      event.preventDefault();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncValidateForm(<span class="hljs-literal">undefined</span>, event)
+      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        that.$element
+          .off(<span class="hljs-string">'submit.Parsley'</span>)
+          .trigger($.Event(<span class="hljs-string">'submit'</span>));
+      });
+  },
+
+  eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>For keyup, keypress, keydown.. events that could be a little bit obstrusive
+do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
+about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'key'</span>).test(event.type))
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._ui.validationInformationVisible  &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
+        <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">this</span>._ui.validatedOnce = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.asyncValidate();
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Returns Promise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _asyncValidateForm: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group, event)</span> {</span>
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>,
+      promises = [];
+    <span class="hljs-keyword">this</span>.submitEvent = event;
+
+    <span class="hljs-keyword">this</span>._refreshFields();
+
+    $.emit(<span class="hljs-string">'parsley:form:validate'</span>, <span class="hljs-keyword">this</span>);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>do not validate a field if not the same as given validation group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (group &amp;&amp; group !== <span class="hljs-keyword">this</span>.fields[i].options.group)
+        <span class="hljs-keyword">continue</span>;
+
+      promises.push(<span class="hljs-keyword">this</span>.fields[i]._asyncValidateField());
+    }
+
+    <span class="hljs-keyword">return</span> $.when.apply($, promises)
+      .always(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        $.emit(<span class="hljs-string">'parsley:form:validated'</span>, that);
+      });
+  },
+
+  _asyncIsValidForm: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group)</span> {</span>
+    <span class="hljs-keyword">var</span> promises = [];
+    <span class="hljs-keyword">this</span>._refreshFields();
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>do not validate a field if not the same as given validation group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (group &amp;&amp; group !== <span class="hljs-keyword">this</span>.fields[i].options.group)
+        <span class="hljs-keyword">continue</span>;
+
+      promises.push(<span class="hljs-keyword">this</span>.fields[i]._asyncIsValidField());
+    }
+
+    <span class="hljs-keyword">return</span> $.when.apply($, promises);
+  },
+
+  _asyncValidateField: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+
+    $.emit(<span class="hljs-string">'parsley:field:validate'</span>, <span class="hljs-keyword">this</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncIsValidField()
+      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        $.emit(<span class="hljs-string">'parsley:field:success'</span>, that);
+      })
+      .fail(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        $.emit(<span class="hljs-string">'parsley:field:error'</span>, that);
+      })
+      .always(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        $.emit(<span class="hljs-string">'parsley:field:validated'</span>, that);
+      });
+  },
+
+  _asyncIsValidField: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> deferred = $.Deferred(),
+      remoteConstraintIndex;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>If regular isValid (matching regular constraints) retunrs <code>false</code>, no need to go further
+Directly reject promise, do not run remote validator and save server load</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.isValid())
+      deferred.rejectWith(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>If regular constraints are valid, and there is a remote validator registered, run it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (-<span class="hljs-number">1</span> !== <span class="hljs-keyword">this</span>._constraintIndex(<span class="hljs-string">'remote'</span>))
+      <span class="hljs-keyword">this</span>._remote(deferred);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Otherwise all is good, resolve promise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span>
+      deferred.resolveWith(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Return promise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> deferred.promise();
+  },
+
+  _remote: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(deferred)</span> {</span>
+    <span class="hljs-keyword">var</span> promise,
+      data = {},
+      that = <span class="hljs-keyword">this</span>,
+      value = <span class="hljs-keyword">this</span>.getValue(),
+      csr = value + <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'remote-options'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Already validated values are stored to save some calls..</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>._remote &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>._remote[csr])
+      promise = <span class="hljs-keyword">this</span>._remote[csr] ? deferred.resolveWith(that) : deferred.rejectWith(that);
+    <span class="hljs-keyword">else</span> {
+      data[that.$element.attr(<span class="hljs-string">'name'</span>) || that.$element.attr(<span class="hljs-string">'id'</span>)] = value;
+
+      promise = $.ajax($.extend(<span class="hljs-literal">true</span>, {}, {
+        url: that.options.remote,
+        data: data,
+        type: <span class="hljs-string">'GET'</span>
+      }, that.options.remoteOptions || {}));
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Depending on promise result, manage <code>validationResult</code> for UI</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    promise
+      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        that._handleRemoteResult(<span class="hljs-literal">true</span>, deferred, csr);
+      })
+      .fail(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        that._handleRemoteResult(<span class="hljs-literal">false</span>, deferred, csr);
+      });
+  },
+
+  _handleRemoteResult: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(status, deferred, csr)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Store remote call result to avoid next calls</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._remote[csr] = status;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>If reverse option is set, a failing ajax request is considered successful</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.remoteReverse &amp;&amp; <span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.options.remoteReverse)
+      status = !status;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>If true, simply resolve and exit</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (status) {
+      deferred.resolveWith(<span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">return</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Else, create a proper remote validation Violation to trigger right UI</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.validationResult = [
+      <span class="hljs-keyword">new</span> window.ParsleyValidator.Validator.Violation(
+        <span class="hljs-keyword">this</span>.constraints[<span class="hljs-keyword">this</span>._constraintIndex(<span class="hljs-string">'remote'</span>)],
+        <span class="hljs-keyword">this</span>.getValue(),
+        <span class="hljs-literal">null</span>
+      )
+    ];
+
+    deferred.rejectWith(<span class="hljs-keyword">this</span>);
+  }
+});
+
+window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
+  validators: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Remote validator is just an always true sync validator with lowest (-1) priority possible
+It will be overloaded in <code>validateThroughValidator()</code> that will do the heavy async work</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    remote: {
+      fn: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+      },
+      priority: -<span class="hljs-number">1</span>
+    }
+  }
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+</html>

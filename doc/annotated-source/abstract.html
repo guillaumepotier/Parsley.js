@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>abstract.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+            
+              
+              <a class="source" href="parsley.html">
+                parsley.js
+              </a>
+            
+              
+              <a class="source" href="parsley.remote.html">
+                parsley.remote.js
+              </a>
+            
+              
+              <a class="source" href="abstract.html">
+                abstract.js
+              </a>
+            
+              
+              <a class="source" href="defaults.html">
+                defaults.js
+              </a>
+            
+              
+              <a class="source" href="field.html">
+                field.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="pubsub.html">
+                pubsub.js
+              </a>
+            
+              
+              <a class="source" href="ui.html">
+                ui.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>abstract.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define(<span class="hljs-string">'parsley/abstract'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">var</span> ParsleyAbstract = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>};
+
+  ParsleyAbstract.prototype = {
+    actualizeOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>ParsleyValidator validate proxy function . Could be replaced by third party scripts</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    validateThroughValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(value, constraints, priority)</span> {</span>
+      <span class="hljs-keyword">return</span> window.ParsleyValidator.validate.apply(window.ParsleyValidator, <span class="hljs-built_in">arguments</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Subscribe an event and a handler for a specific field or a specific form
+If on a ParsleyForm instance, it will be attached to form instance and also
+To every field instance for this form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    subscribe: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, fn)</span> {</span>
+      $.listenTo(<span class="hljs-keyword">this</span>, name.toLowerCase(), fn);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Same as subscribe above. Unsubscribe an event for field, or form + its fields</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    unsubscribe: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name)</span> {</span>
+      $.unsubscribeTo(<span class="hljs-keyword">this</span>, name.toLowerCase());
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Reset UI</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    reset: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Field case: just emit a reset event for UI</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === <span class="hljs-keyword">this</span>.__class__)
+        <span class="hljs-keyword">return</span> $.emit(<span class="hljs-string">'parsley:field:reset'</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Form case: emit a reset event for each field</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++)
+        $.emit(<span class="hljs-string">'parsley:field:reset'</span>, <span class="hljs-keyword">this</span>.fields[i]);
+
+      $.emit(<span class="hljs-string">'parsley:form:reset'</span>, <span class="hljs-keyword">this</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Destroy Parsley instance (+ UI)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Field case: emit destroy event to clean UI and then destroy stored instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === <span class="hljs-keyword">this</span>.__class__) {
+        $.emit(<span class="hljs-string">'parsley:field:destroy'</span>, <span class="hljs-keyword">this</span>);
+        <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
+
+        <span class="hljs-keyword">return</span>;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Form case: destroy all its fields and then destroy stored instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++)
+        <span class="hljs-keyword">this</span>.fields[i].destroy();
+
+      $.emit(<span class="hljs-string">'parsley:form:destroy'</span>, <span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
+    }
+  };
+
+  <span class="hljs-keyword">return</span> ParsleyAbstract;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+</html>
