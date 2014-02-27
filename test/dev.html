@@ -1,0 +1,55 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Parsleyjs Developpement Tests</title>
+    <link href="../src/parsley.css" rel="stylesheet">
+</head>
+<body>
+    <form id="form" data-parsley-validate>
+        <div class="parent">
+            Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!" />
+
+            Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST", "data": {"foo": "bar"} }' data-parsley-remote-reverse="true" required />
+
+            Radio:
+            <span>
+                <input type="radio" name="radio" id="radio1" value="yes" required />
+                <input type="radio" name="radio" id="radio2" value="no" />
+            </span>
+
+            Checkboxes:
+            <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" data-parsley-errors-container="#checkoxErrors" data-parsley-mincheck="2" required />
+            <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
+            <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" />
+
+            <span id="checkoxErrors"></span>
+
+            FooBar:
+            <input type="text" data-parsley-foobar="baz" required />
+
+            Extra
+            <input type="text" data-parsley-dateiso data-parsley-no-focus required />
+
+            <input type="checkbox" id="cbox" checked>
+            <input type="submit" />
+        </div>
+    </form>
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <!-- <script src="../src/parsley.remote.js"></script> -->
+    <script src="../src/extra/dateiso.js"></script>
+    <script src="../src/i18n/fr.extra.js"></script>
+    <script src="../dist/parsley.js"></script>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
+    <script src="../src/i18n/it.js"></script>
+    <script type="text/javascript">
+        window.ParsleyValidator
+            .addValidator('foobar', function (value, requirement) {
+                return new RegExp('foobar', 'ig').test(value) && new RegExp(requirement, 'ig').test(value);
+            }, 32)
+            .addMessage('fr', 'foobar', 'salut');
+        // $('#form').psly().subscribe('parsley:form:validated', function(formInstance) {
+        //     formInstance.submitEvent.preventDefault();
+        // })
+    </script>
+</html>
