@@ -1,0 +1,33 @@
+{
+  "name": "parsleyjs",
+  "version": "2.0.0-rc1",
+  "license": "MIT",
+  "description": "Validate your forms, frontend, without writing a single line of javascript!",
+  "keywords": [
+    "parsley",
+    "form",
+    "validation"
+  ],
+  "author": {
+    "name": "Guillaume Potier",
+    "email": "guillaume@wisembly.com",
+    "url": "http://guillaumepotier.com/"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "mocha": "1.9.0",
+    "mocha-phantomjs": "*",
+    "expect.js": "*",
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-replace": "~0.5.1",
+    "grunt-bower-cli": "0.0.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-docco": "~0.3.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-concat": "~0.3.0"
+  },
+  "scripts": {
+    "test": "mocha-phantomjs test/index.html"
+  }
+}

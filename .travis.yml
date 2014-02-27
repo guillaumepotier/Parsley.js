@@ -1,9 +1,10 @@
 language: node_js
 
 node_js:
-  - 0.6
+  - 0.10
 
 before_script:
-  - npm install -g mocha-phantomjs@v2.0.3
+  - npm install -g bower
+  - bower install
 
-script: ./bin/test-suite.sh
+script: npm test
