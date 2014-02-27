@@ -1,3 +1,9 @@
+// `window.ParsleyExtend`, like `ParsleyAbstract`, is inherited by `ParsleyField` and `ParsleyForm`
+// That way, we could add new methods or redefine some for these both classes. In particular case
+// We are adding async validation methods that returns promises, bind them properly to triggered
+// Events like onkeyup when field is invalid or on form submit. These validation methods adds an
+// Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
+// Because returns promises instead of booleans.
 window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   asyncValidate: function (group, event) {
     if ('ParsleyForm' === this.__class__)
@@ -131,6 +137,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     else {
       data[that.$element.attr('name') || that.$element.attr('id')] = value;
 
+      // All `$.ajax(options)` could be overriden or extended directly from DOM in `data-parsley-remote-options`
       promise = $.ajax($.extend(true, {}, {
         url: that.options.remote,
         data: data,
@@ -149,7 +156,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   },
 
   _handleRemoteResult: function (status, deferred, csr) {
-    // Store remote call result to avoid next calls
+    // Store remote call result to avoid next calls with exact same parameters
     this._remote[csr] = status;
 
     // If reverse option is set, a failing ajax request is considered successful
@@ -175,10 +182,11 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   }
 });
 
+// Remote validator is just an always true sync validator with lowest (-1) priority possible
+// It will be overloaded in `validateThroughValidator()` that will do the heavy async work
+// This 'hack' is needed not to mess up too much with error messages and stuff in `ParsleyUI`
 window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
   validators: {
-    // Remote validator is just an always true sync validator with lowest (-1) priority possible
-    // It will be overloaded in `validateThroughValidator()` that will do the heavy async work
     remote: {
       fn: function () {
         return true;
@@ -191,7 +199,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc1 - built Thu Feb 27 2014 15:19:20
+* Version 2.0.0-rc1 - built Thu Feb 27 2014 21:29:42
 * MIT Licensed
 *
 */
@@ -1577,6 +1585,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       this.submitEvent = event;
       this.validationResult = true;
       var fieldValidationResult = [];
+      // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
       $.emit('parsley:form:validate', this);
       // loop through fields to validate them one by one
@@ -1610,20 +1619,13 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       var self = this;
       this.fields = [];
       this.$element.find(this.options.inputs).each(function () {
-        self.addField(this);
+        var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
+        // only add valid field children
+        if ('ParsleyField' === fieldInstance.__class__)
+          self.fields.push(fieldInstance);
       });
       return this;
-    },
-    addField: function (field) {
-      var fieldInstance = new window.Parsley(field, {}, this.parsleyInstance);
-      // only add valid field children
-      if ('ParsleyField' === fieldInstance.__class__)
-        this.fields.push(fieldInstance);
-      return this;
-    },
-    removeField: function (field) {},
-    reset: function () {},
-    destroy: function () {}
+    }
   };
 
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
@@ -1701,7 +1703,8 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
       // If a field is empty and not required, leave it alone, it's just fine
-      if ('' === value && !this.isRequired())
+      // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
+      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty)
           return this.validationResult = [];
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)

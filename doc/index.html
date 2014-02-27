@@ -243,7 +243,7 @@
               </tr>
               <tr>
                 <td><code>data-parsley-validate</code> <version>#2.0</version></td>
-                <td><code></code></td>
+                <td></td>
                 <td>Auto bind your form with Parsley validation on document load.</td>
               </tr>
               <tr>
@@ -293,20 +293,21 @@
             <thead>
               <tr>
                 <th class="col-md-3">Property</th>
-                <th class="col-md-1">Default</th>
-                <th class="col-md-4">Description</th>
+                <th class="col-md-5">Description</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><code>data-parsley-group</code> <version>#2.0</version></td>
-                <td><code>null</code></td>
-                <td>Assign a group to a field for specifig group validation</td>
+                <td>Assign a group to a field for specifig group validation. eg: <code>data-parsley-group="signup"</code></td>
               </tr>
               <tr>
                 <td><code>data-parsley-multiple</code> <version>#2.0</version></td>
-                <td><code>null</code></td>
                 <td>You can define a fields' group by giving the same name to radio / checkboxes elements or add a <code>data-parsley-multiple="mymultiplegroup"</code> property to each one of them.</td>
+              </tr>
+              <tr>
+                <td><code>data-parsley-validate-if-empty</code> <version>#2.0</version></td>
+                <td>A field is by default not validated if not required and empty. By adding <code>data-parsley-validate-if-empty</code>, validation will be done even if field is empty. Useful if you need some custom validators that check something particular when field is empty.</td>
               </tr>
             </tbody>
           </table>

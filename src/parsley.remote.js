@@ -1,3 +1,9 @@
+// `window.ParsleyExtend`, like `ParsleyAbstract`, is inherited by `ParsleyField` and `ParsleyForm`
+// That way, we could add new methods or redefine some for these both classes. In particular case
+// We are adding async validation methods that returns promises, bind them properly to triggered
+// Events like onkeyup when field is invalid or on form submit. These validation methods adds an
+// Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
+// Because returns promises instead of booleans.
 window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   asyncValidate: function (group, event) {
     if ('ParsleyForm' === this.__class__)
@@ -131,6 +137,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     else {
       data[that.$element.attr('name') || that.$element.attr('id')] = value;
 
+      // All `$.ajax(options)` could be overriden or extended directly from DOM in `data-parsley-remote-options`
       promise = $.ajax($.extend(true, {}, {
         url: that.options.remote,
         data: data,
@@ -149,7 +156,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   },
 
   _handleRemoteResult: function (status, deferred, csr) {
-    // Store remote call result to avoid next calls
+    // Store remote call result to avoid next calls with exact same parameters
     this._remote[csr] = status;
 
     // If reverse option is set, a failing ajax request is considered successful
@@ -175,10 +182,11 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   }
 });
 
+// Remote validator is just an always true sync validator with lowest (-1) priority possible
+// It will be overloaded in `validateThroughValidator()` that will do the heavy async work
+// This 'hack' is needed not to mess up too much with error messages and stuff in `ParsleyUI`
 window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
   validators: {
-    // Remote validator is just an always true sync validator with lowest (-1) priority possible
-    // It will be overloaded in `validateThroughValidator()` that will do the heavy async work
     remote: {
       fn: function () {
         return true;

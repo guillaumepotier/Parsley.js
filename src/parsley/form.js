@@ -40,6 +40,7 @@ define('parsley/form', [
 
       var fieldValidationResult = [];
 
+      // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
 
       $.emit('parsley:form:validate', this);
@@ -88,25 +89,15 @@ define('parsley/form', [
       this.fields = [];
 
       this.$element.find(this.options.inputs).each(function () {
-        self.addField(this);
+        var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
+
+        // only add valid field children
+        if ('ParsleyField' === fieldInstance.__class__)
+          self.fields.push(fieldInstance);
       });
 
       return this;
-    },
-
-    addField: function (field) {
-      var fieldInstance = new window.Parsley(field, {}, this.parsleyInstance);
-
-      // only add valid field children
-      if ('ParsleyField' === fieldInstance.__class__)
-        this.fields.push(fieldInstance);
-
-      return this;
-    },
-
-    removeField: function (field) {},
-    reset: function () {},
-    destroy: function () {}
+    }
   };
 
   return ParsleyForm;

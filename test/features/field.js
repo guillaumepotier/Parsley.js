@@ -196,6 +196,12 @@ define(function () {
         });
         $('#element').psly().validate();
       });
+      it('should have validateIfEmpty option', function () {
+        $('body').append('<input type="email" data-parsley-rangelength="[5, 10]" id="element" />');
+        expect($('#element').psly().isValid()).to.be.eql([]);
+        $('#element').attr('data-parsley-validate-if-empty', '');
+        expect($('#element').psly().isValid()).to.be.eql(false);
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

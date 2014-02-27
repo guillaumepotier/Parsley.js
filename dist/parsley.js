@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc1 - built Thu Feb 27 2014 15:19:20
+* Version 2.0.0-rc1 - built Thu Feb 27 2014 21:29:42
 * MIT Licensed
 *
 */
@@ -1387,6 +1387,7 @@
       this.submitEvent = event;
       this.validationResult = true;
       var fieldValidationResult = [];
+      // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
       $.emit('parsley:form:validate', this);
       // loop through fields to validate them one by one
@@ -1420,20 +1421,13 @@
       var self = this;
       this.fields = [];
       this.$element.find(this.options.inputs).each(function () {
-        self.addField(this);
+        var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
+        // only add valid field children
+        if ('ParsleyField' === fieldInstance.__class__)
+          self.fields.push(fieldInstance);
       });
       return this;
-    },
-    addField: function (field) {
-      var fieldInstance = new window.Parsley(field, {}, this.parsleyInstance);
-      // only add valid field children
-      if ('ParsleyField' === fieldInstance.__class__)
-        this.fields.push(fieldInstance);
-      return this;
-    },
-    removeField: function (field) {},
-    reset: function () {},
-    destroy: function () {}
+    }
   };
 
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
@@ -1511,7 +1505,8 @@
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
       // If a field is empty and not required, leave it alone, it's just fine
-      if ('' === value && !this.isRequired())
+      // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
+      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty)
           return this.validationResult = [];
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
