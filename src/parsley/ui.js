@@ -131,24 +131,24 @@ define('parsley/ui', [
 
     focus: function (formInstance) {
       if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
-        return;
+        return formInstance._focusedField = null;
 
-      var lastFailingField = null;
+      formInstance._focusedField = null;
 
       for (var i = 0; i < formInstance.fields.length; i++)
         if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0 && 'undefined' === typeof formInstance.fields[i].options.noFocus) {
           if ('first' === formInstance.options.focus) {
-            formInstance.fields[i].$element.focus();
-            return;
+            formInstance._focusedField = formInstance.fields[i].$element;
+            return formInstance._focusedField.focus();
           }
 
-          lastFailingField = formInstance.fields[i];
+          formInstance._focusedField = formInstance.fields[i].$element;
         }
 
-      if (null === lastFailingField)
-        return;
+      if (null === formInstance._focusedField)
+        return null;
 
-      lastFailingField.$element.focus();
+      return formInstance._focusedField.focus();
     },
 
     _getErrorMessage: function (fieldInstance, constraint) {

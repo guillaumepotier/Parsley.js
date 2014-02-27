@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc1 - built Wed Feb 26 2014 21:49:31
+* Version 2.0.0-rc1 - built Thu Feb 27 2014 11:39:23
 * MIT Licensed
 *
 */
@@ -1161,19 +1161,19 @@
     },
     focus: function (formInstance) {
       if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
-        return;
-      var lastFailingField = null;
+        return formInstance._focusedField = null;
+      formInstance._focusedField = null;
       for (var i = 0; i < formInstance.fields.length; i++)
         if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0 && 'undefined' === typeof formInstance.fields[i].options.noFocus) {
           if ('first' === formInstance.options.focus) {
-            formInstance.fields[i].$element.focus();
-            return;
+            formInstance._focusedField = formInstance.fields[i].$element;
+            return formInstance._focusedField.focus();
           }
-          lastFailingField = formInstance.fields[i];
+          formInstance._focusedField = formInstance.fields[i].$element;
         }
-      if (null === lastFailingField)
-        return;
-      lastFailingField.$element.focus();
+      if (null === formInstance._focusedField)
+        return null;
+      return formInstance._focusedField.focus();
     },
     _getErrorMessage: function (fieldInstance, constraint) {
       var customConstraintErrorMessage = constraint.name + 'Message';

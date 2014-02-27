@@ -151,7 +151,27 @@ define(function () {
         parsleyForm = new Parsley($('#element'));
         expect($('#element').attr('novalidate')).not.to.be(undefined);
       });
-      it('should test the no-focus option');
+      it('should test the no-focus option', function () {
+        $('body').append(
+          '<form id="element" data-parsley-focus="first">'                                          +
+            '<input id="field1" type="text" data-parsley-required="true" data-parsley-no-focus />'  +
+            '<input id="field2" data-parsley-required />'                                           +
+          '</form>');
+        $('#element').parsley().validate();
+        expect($('#element').parsley()._focusedField.attr('id')).to.be('field2');
+        $('#field2').val('foo');
+        $('#element').psly().validate();
+        expect($('#element').parsley()._focusedField).to.be(null);
+        $('#field1').removeAttr('data-parsley-no-focus');
+        $('#element').psly().validate();
+        expect($('#element').parsley()._focusedField.attr('id')).to.be('field1');
+        $('#element').attr('data-parsley-focus', 'last');
+        $('#element').psly().validate();
+        expect($('#element').parsley()._focusedField.attr('id')).to.be('field1');
+        $('#field2').val('');
+        $('#element').psly().validate();
+        expect($('#element').parsley()._focusedField.attr('id')).to.be('field2');
+      });
       it('should test the manual add / update / remove error', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = $('#element').parsley();
