@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "2.0.0-rc1",
+  "version": "2.0.0-rc2",
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
   "keywords": [
@@ -25,7 +25,8 @@
     "grunt-contrib-uglify": "~0.2.7",
     "grunt-docco": "~0.3.2",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-concat": "~0.3.0"
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-npm2bower-sync": "~0.3.0"
   },
   "scripts": {
     "test": "mocha-phantomjs test/index.html"

@@ -1,29 +1,35 @@
 {
   "name": "parsleyjs",
-  "version": "2.0.0-rc1",
+  "version": "2.0.0-rc2",
   "ignore": [
     "**/.*",
     "build",
     "test",
+    "doc",
     "*.md",
+    ".json",
+    "*.html",
     "AUTHORS.txt",
     "Gruntfile.js",
     "package.json",
     "bower.json"
   ],
-  "dependencies": {
+  "devDependencies": {
     "jquery": "~1.10.0",
     "validator.js": "~0.5.5",
     "requirejs": "~2.1.0",
-    "bootstrap": "~3.0.3"
-  },
-  "devDependencies": {
+    "bootstrap": "~3.0.3",
     "sinonjs": "~1.7.3"
   },
   "keywords": [
     "parsley",
     "form",
-    "validatation",
-    "library"
-  ]
+    "validation"
+  ],
+  "author": {
+    "name": "Guillaume Potier",
+    "email": "guillaume@wisembly.com",
+    "url": "http://guillaumepotier.com/"
+  },
+  "license": "MIT"
 }

@@ -33,6 +33,25 @@
   - `rangecheck` validator is now renamed as `check`. Same Requirements
   - `notnull`, `type="urlstrict"`, `type="tel"` have disapeared from built-ins
     validators
+  - types `phone`, `urlstrict`, `dateIso` have been removed. They could be
+    crafted and submitted by someone in `extra/`
+
+
+## UI/UX
+
+  - `.parsley-validated` class is not added anymore on binded fields
+  - `novalidate` attr is now automatically added to `<form>`
+  - `.parsley-error-list` is now `.parsley-errors-list`
+  - to customize `type` validator error message, you do not need anymore to add
+    the precise type.
+    eg: `parsley-type-email-message="msg"` becomes
+    `data-parsley-type-message="msg"`
+
+
+## Javascript
+
+  - `.parsley('method')` API is deprecated. Use .parsley().method() now
+    eg: `$('#form').parsley('validate')` is now `$('#form').parsley().validate()`
 
 
 ## Listeners
@@ -41,6 +60,7 @@
     firing it (the way `ParsleyUI` works)
   - could be Field / Form specific by using `.subscribe()` and `.unsuscribe()`
     on a Parsley instance.
+
 
 ## Misc
 

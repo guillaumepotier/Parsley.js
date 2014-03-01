@@ -43,6 +43,9 @@ define([
 
   Parsley.prototype = {
     init: function ($element, options, parsleyInstance) {
+      if (!$element.length)
+        throw new Error('You must bind Parsley on an existing element.');
+
       this.$element = $element;
 
       // If element have already been binded, returns its Parsley instance
@@ -90,12 +93,13 @@ define([
           throw new Error(type + 'is not a supported Parsley type');
       }
 
-      // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
-      this.$element.data('Parsley', parsleyInstance);
+      if ('ParsleyForm' === parsleyInstance.__class__ || 'ParsleyField' === parsleyInstance.__class__) {
+        // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
+        this.$element.data('Parsley', parsleyInstance);
 
-      // Tell the world we got a new ParsleyForm or Field instance!
-      if ('ParsleyForm' === parsleyInstance.__class__ || 'ParsleyField' === parsleyInstance.__class__)
+        // Tell the world we got a new ParsleyForm or ParsleyField instance!
         $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);
+      }
 
       return parsleyInstance;
     }
