@@ -61,7 +61,7 @@
       <div class="jumbotron">
         <h1>Download <em>Parsley</em> <small>v2.0.0-rc1</small></h1>
           <hr></hr>
-          <div class="col-md-12"><a href="https://github.com/guillaumepotier/Parsley.js/releases/tag/2.0.0-rc1" class="download" data-version="zipball" target="_blank">parsley.zip</a> (250ko)</div>
+          <div class="col-md-12"><a href="https://github.com/guillaumepotier/Parsley.js/releases/tag/2.0.0-rc2" class="download" data-version="zipball" target="_blank">parsley.zip</a> (250ko)</div>
 
           <div class="col-md-6"><a href="../dist/parsley.js" class="download" data-version="parsley.js" target="_blank">parsley.js</a> (75ko)</div>
           <div class="col-md-6"><a href="../dist/parsley.min.js" class="download" data-version="parsley.min.js" target="_blank">parsley.min.js</a> (38ko)</div>
@@ -83,7 +83,8 @@
     <script type="text/javascript">
       $(document).ready(function () {
         $('.download').on('click', function (event) {
-          _gaq.push(['_trackEvent','download', 'download', 'download ' + $(this).data('version'), $(this).data('version')]);
+          _gaq.push(['_trackEvent','download', 'download ' + $(this).data('version'), $(this).data('version')]);
+          _gaq.push(['_trackPageview','/download/' + $(this).data('version')]);
         });
       });
     </script>

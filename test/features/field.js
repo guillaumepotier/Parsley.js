@@ -44,6 +44,20 @@ define(function () {
         expect(parsleyField.constraints[0].requirements).to.be(false);
         expect(parsleyField.constraints[0].priority).to.be(64);
       });
+      it('should support select multiple', function () {
+        $('body').append(
+          '<select multiple id="element" >' +
+            '<option value="1">1</option>'  +
+            '<option value="2">2</option>'  +
+            '<option value="3">3</option>'  +
+          '</select>');
+        var parsleyField = new Parsley($('#element'));
+        expect(parsleyField.__class__).to.be('ParsleyField');
+        expect(parsleyField.options.multiple).to.be('element');
+        expect(parsleyField.getValue()).to.be('');
+        $('#element option[value="1"]').attr('selected', 'selected');
+        expect(parsleyField.getValue()).to.be.eql(['1']);
+      });
       it('should have a proper updateConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
@@ -201,6 +215,16 @@ define(function () {
         expect($('#element').psly().isValid()).to.be.eql([]);
         $('#element').attr('data-parsley-validate-if-empty', '');
         expect($('#element').psly().isValid()).to.be.eql(false);
+      });
+      it('should allow `this.value` alteration with parsley:field:validate event', function () {
+        $('body').append('<input type="email" required id="element" />');
+        expect($('#element').parsley().validate()).not.to.be(true);
+
+        $('#element').parsley().subscribe('parsley:field:validate', function (fieldInstance) {
+          fieldInstance.value = 'foo@bar.baz';
+        });
+
+        expect($('#element').parsley().validate()).to.be(true);
       });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };

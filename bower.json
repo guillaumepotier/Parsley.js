@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "2.0.0-rc1",
+  "version": "2.0.0-rc2",
   "ignore": [
     "**/.*",
     "build",
@@ -24,7 +24,12 @@
   "keywords": [
     "parsley",
     "form",
-    "validatation",
-    "library"
-  ]
+    "validation"
+  ],
+  "author": {
+    "name": "Guillaume Potier",
+    "email": "guillaume@wisembly.com",
+    "url": "http://guillaumepotier.com/"
+  },
+  "license": "MIT"
 }

@@ -8,6 +8,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-npm2bower-sync');
 
   grunt.loadNpmTasks('grunt-docco');
 
@@ -17,6 +18,16 @@ module.exports = function (grunt) {
 
     clean: {
       dist: ['./dist']
+    },
+
+    sync: {
+        all: {
+            options: {
+                sync: ['author', 'name', 'version', 'license', 'main', 'keywords'],
+                from: 'package.json',
+                to: 'bower.json'
+            }
+        }
     },
 
     docco: {
@@ -173,7 +184,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['configure', 'requirejs', 'replace:dist', 'uglify:min']);
   grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
   grunt.registerTask('build-annotated-source', ['docco:source', 'replace:annotated']);
-  grunt.registerTask('build-all', ['clean:dist', 'build', 'build-remote', 'build-annotated-source']);
+  grunt.registerTask('build-all', ['clean:dist', 'build', 'build-remote', 'build-annotated-source', 'sync']);
 };
 
 var rdefineEnd = /\}\);[^}\w]*$/;

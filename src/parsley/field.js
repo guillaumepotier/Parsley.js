@@ -21,16 +21,16 @@ define('parsley/field', [
       this.validationResult = [];
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
-      // Select / checkbox multiple inputs hack
-      if (this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) {
-        if ('undefined' === typeof this.$element.attr('name')) {
+      // Select / radio / checkbox multiple inputs hack
+      if ((this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) || (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple'))) {
+        if ('undefined' === typeof this.$element.attr('name') && 'undefined' === typeof this.$element.attr('id')) {
           if (window.console && window.console.warn)
-            window.console.warn('To be binded by Parsley, a radio or checkbox input must have either a name or a multiple option.', this.$element);
+            window.console.warn('To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name, and id or a multiple option.', this.$element);
 
           return this.parsleyInstance;
         }
 
-        this.options.multiple = this.$element.attr('name').replace(/(:|\.|\[|\]|\$)/g, '');
+        this.options.multiple = (this.$element.attr('name') || this.$element.attr('id')).replace(/(:|\.|\[|\]|\$)/g, '');
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
       }
 
@@ -42,8 +42,14 @@ define('parsley/field', [
     //  - `[]` if non required field and empty
     //  - `[Violation, [Violation..]]` if errors
     validate: function () {
+      this.value = this.getValue();
+
+      // Field Validate event. `this.value` could be altered for custom needs
       $.emit('parsley:field:validate', this);
-      $.emit('parsley:field:' + (this.isValid() ? 'success' : 'error'), this);
+
+      $.emit('parsley:field:' + (this.isValid(this.value) ? 'success' : 'error'), this);
+
+      // Field validated event. `this.validationResult` could be altered for custom needs too
       $.emit('parsley:field:validated', this);
 
       return this.validationResult;
@@ -64,18 +70,21 @@ define('parsley/field', [
     },
 
     // Same @return as `validate()`
-    isValid: function () {
+    isValid: function (value) {
       // Sort priorities to validate more important first
-      var priorities = this.getConstraintsSortedPriorities(),
-        value = this.getValue();
+      var priorities = this.getConstraintsSortedPriorities();
+
+      // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
+      value = value || this.getValue();
 
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
 
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty)
-          return this.validationResult = [];
+      // And if multiple field
+      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof this.options.multiple)
+        return this.validationResult = [];
 
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
@@ -101,6 +110,10 @@ define('parsley/field', [
       if ('undefined' !== typeof this.options.value)
         return this.options.value;
 
+      // Regular input, textarea and simple select
+      if ('undefined' === typeof this.options.multiple)
+        return this.$element.val();
+
       // Radio input case
       if (this.$element.is('input[type=radio]'))
         return $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').val() || '';
@@ -116,7 +129,9 @@ define('parsley/field', [
         return values.length ? values : '';
       }
 
-      return this.$element.val();
+      // Select multiple case
+      if (this.$element.is('select'))
+        return null === this.$element.val() ? '' : this.$element.val();
     },
 
     refreshConstraints: function () {

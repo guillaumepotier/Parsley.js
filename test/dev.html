@@ -7,7 +7,7 @@
 <body>
     <form id="form" data-parsley-validate>
         <div class="parent">
-            Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!" />
+<!--             Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!" />
 
             Number: <input id="number" type="text" data-parsley-trigger="keyup" data-parsley-type="number" data-parsley-remote="number" data-parsley-remote-options='{"type": "POST", "data": {"foo": "bar"} }' data-parsley-remote-reverse="true" required />
 
@@ -29,25 +29,31 @@
 
             Extra
             <input type="text" data-parsley-dateiso data-parsley-no-focus required />
+ -->
+            <select id="select" multiple data-parsley-mincheck="1">
+                <option value="0">First</option>
+                <option value="1">Second</option>
+                <option value="2">Third</option>
+            </select>
 
-            <input type="checkbox" id="cbox" checked>
+            <input type="checkbox" id="cbox" checked />
             <input type="submit" />
         </div>
     </form>
 
-    <script src="../bower_components/jquery/jquery.js"></script>
+    <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
     <!-- <script src="../src/parsley.remote.js"></script> -->
-    <script src="../src/extra/dateiso.js"></script>
-    <script src="../src/i18n/fr.extra.js"></script>
-    <script src="../dist/parsley.js"></script>
-    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
-    <script src="../src/i18n/it.js"></script>
+    <!-- <script src="../src/extra/dateiso.js"></script> -->
+    <!-- <script src="../src/i18n/fr.extra.js"></script> -->
+    <!-- <script src="../dist/parsley.js"></script> -->
+    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+    <!-- <script src="../src/i18n/it.js"></script> -->
     <script type="text/javascript">
-        window.ParsleyValidator
-            .addValidator('foobar', function (value, requirement) {
-                return new RegExp('foobar', 'ig').test(value) && new RegExp(requirement, 'ig').test(value);
-            }, 32)
-            .addMessage('fr', 'foobar', 'salut');
+        // window.ParsleyValidator
+        //     .addValidator('foobar', function (value, requirement) {
+        //         return new RegExp('foobar', 'ig').test(value) && new RegExp(requirement, 'ig').test(value);
+        //     }, 32)
+        //     .addMessage('fr', 'foobar', 'salut');
         // $('#form').psly().subscribe('parsley:form:validated', function(formInstance) {
         //     formInstance.submitEvent.preventDefault();
         // })
