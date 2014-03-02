@@ -1,11 +1,11 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc2 - built Sat Mar 01 2014 17:43:45
+* Version 2.0.0-rc2 - built Sun Mar 02 2014 16:29:28
 * MIT Licensed
 *
 */
-(function(window, undefined) {
+!(function($) {
   var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -1836,4 +1836,4 @@ if ('undefined' !== typeof window.ParsleyValidator)
         new Parsley(this);
       });
     });
-})(window);
+})(window.jQuery);
