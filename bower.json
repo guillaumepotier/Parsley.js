@@ -20,7 +20,7 @@
     "requirejs": "~2.1.0",
     "bootstrap": "~3.0.3",
     "sinonjs": "~1.7.3",
-    "uwidget": "*"
+    "uwidget": "~0.0.1"
   },
   "keywords": [
     "parsley",
