@@ -24,7 +24,7 @@ define('parsley/form', [
     },
 
     onSubmitValidate: function (event) {
-      this.validate(undefined, event);
+      this.validate(undefined, undefined, event);
 
       // prevent form submission if validation fails
       if (false === this.validationResult && event instanceof $.Event)
@@ -34,7 +34,7 @@ define('parsley/form', [
     },
 
     // @returns boolean
-    validate: function (group, event) {
+    validate: function (group, force, event) {
       this.submitEvent = event;
       this.validationResult = true;
 
@@ -52,7 +52,7 @@ define('parsley/form', [
         if (group && group !== this.fields[i].options.group)
           continue;
 
-        fieldValidationResult = this.fields[i].validate();
+        fieldValidationResult = this.fields[i].validate(force);
 
         if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
           this.validationResult = false;
@@ -64,7 +64,7 @@ define('parsley/form', [
     },
 
     // Iterate over refreshed fields, and stop on first failure
-    isValid: function (group) {
+    isValid: function (group, force) {
       this._refreshFields();
 
       for (var i = 0; i < this.fields.length; i++) {
@@ -73,7 +73,7 @@ define('parsley/form', [
         if (group && group !== this.fields[i].options.group)
           continue;
 
-        if (false === this.fields[i].isValid())
+        if (false === this.fields[i].isValid(force))
           return false;
       }
 

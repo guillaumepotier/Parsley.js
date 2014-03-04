@@ -75,7 +75,7 @@
           <h1 id="overview" class="page-header">Overview</h1>
           <h3 id="frontend-form-validation">Frontend form validation</h3>
           <p>
-            Parsley is a javascript form validation. It helps you providing your users feedbacks on their form submission before sending it to your server. It saves you bandwith, server load and it saves time for your user.
+            Parsley is a javascript form validation. It helps you providing your users feedbacks on their form submission before sending it to your server. It saves you bandwidth, server load and it saves time for your user.
           </p>
           <p>
             This javascript form validation is not necessary, and if used, this <strong>do not replace a strong backend server validation.</strong>
@@ -87,13 +87,13 @@
           <div class="bs-callout bs-callout-info">
             <h4>Parsley 1.x versions</h4>
             <p>
-              Parsley curent stable and supported versions are 2.x. If you still use a 1.x version, <a href="http://parsleyjs.github.io/Parsley-1.x" target="_blank">here is the related doc</a>. But don't forget to <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/UPGRADE-2.0.md" target="_blank">upgrade</a>!
+              Parsley current stable and supported versions are 2.x. If you still use a 1.x version, <a href="http://parsleyjs.github.io/Parsley-1.x" target="_blank">here is the related doc</a>. But don't forget to <a href="https://github.com/guillaumepotier/Parsley.js/blob/master/UPGRADE-2.0.md" target="_blank">upgrade</a>!
             </p>
           </div>
 
           <h3 id="data-attrs">Data attributes</h3>
           <p>
-            Parsley use a specific DOM API that allow to configure pretty much everything directly from your DOM, without writting a single javascript configuration line ou custom function. Parsley default DOM API is <code>data-parsley-</code>. That means that if in config you see a <code>foo</code> property, it could be setted/modified via DOM with <code>data-parsley-foo="value"</code>.
+            Parsley use a specific DOM API that allow to configure pretty much everything directly from your DOM, without writing a single javascript configuration line ou custom function. Parsley default DOM API is <code>data-parsley-</code>. That means that if in config you see a <code>foo</code> property, it could be set/modified via DOM with <code>data-parsley-foo="value"</code>.
           </p>
 
           <div class="bs-callout bs-callout-warning">
@@ -102,6 +102,7 @@
               <li>For composed property names, Parsley uses camelization, like jQuery <code>$.data()</code> does. That means that <code>data-parsley-composed-property</code> will correspond in code to <code>composedProperty</code>, and reciprocally.</li>
               <li>Every property set in DOM will be stored in <code>this.options</code> for each Parsley instance.</li>
               <li>You can change the DOM API namespace directly in DOM (inception), by doing <code>data-parsley-namespace="data-my-namespace-"</code> and then your Parsley DOM attributes will look like <code>data-my-namespace-property="value"</code>.</li>
+              <li>Special chars: if you are facing referencing names with special chars, like <code>id="this:is:a:special:id"</code>, you'll need in DOM API to use this syntax: <code>data-parsley-errors-container='div[id="this:is:a:special:id"]'</code> otherwise it won't work.</li>
             </ol>
           </div>
 
@@ -157,8 +158,8 @@
           <div class="bs-callout bs-callout-danger">
             <h4>Do not add <code>data-parsley-validate</code> to your forms</h4>
             <p>
-              Please be aware that parsley looks on document load at all <code>data-parsley-validate</code> occurences in DOM and automatically bind them if valid.<br>
-              Once a form or field instance is binded by Parsley, default instanciation options could not be easily updated, only the ones defined in the DOM. That means that if this DOM validation attribute is present, doing <code>$('#form').parsley(options);</code> would just return the automatically already binded instance, and not the one you would expect with the <code>options</code> you wanted to set.
+              Please be aware that parsley looks on document load at all <code>data-parsley-validate</code> occurrences in DOM and automatically bind them if valid.<br>
+              Once a form or field instance is binded by Parsley, default instantiation options could not be easily updated, only the ones defined in the DOM. That means that if this DOM validation attribute is present, doing <code>$('#form').parsley(options);</code> would just return the automatically already binded instance, and not the one you would expect with the <code>options</code> you wanted to set.
             </p>
           </div>
           </p>
@@ -260,22 +261,22 @@
             <thead>
               <tr>
                 <th class="col-md-2">Method</th>
-                <th class="col-md-2">Returns</th>
-                <th class="col-md-4">Description</th>
+                <th class="col-md-1">Returns</th>
+                <th class="col-md-5">Description</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><code>isValid()</code> <version>#2.0</version></td>
+                <td><code>isValid(group, force)</code> <version>#2.0</version></td>
                 <td><code>boolean</code></td>
-                <td>Returns if the Form is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong></td>
+                <td>Returns if the Form is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> given, only validate fields that belongs to this group. If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
-                <td><code>validate(group)</code> <version>#2.0</version></td>
+                <td><code>validate(group, force)</code> <version>#2.0</version></td>
                 <td>
                   <code>boolean</code>
                 </td>
-                <td>Validate form. Prevent submission if not valid. <strong>Fires <a href="#events">events</a> and affect UI.</strong>. You can only validate a certain group of fields by specifing optional <code>group</code> string parameter.</td>
+                <td>Validate form. Prevent submission if not valid. <strong>Fires <a href="#events">events</a> and affect UI.</strong>. You can only validate a certain group of fields by specifying optional <code>group</code> string parameter. If <code>group</code> given, only validate fields that belongs to this group. If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
             </tbody>
           </table>
@@ -335,18 +336,18 @@
             </thead>
             <tbody>
               <tr>
-                <td><code>isValid()</code> <version>#2.0</version></td>
+                <td><code>isValid(force)</code> <version>#2.0</version></td>
                 <td><code>boolean</code></td>
-                <td>Returns if the Field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong></td>
+                <td>Returns if the Field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
-                <td><code>validate()</code> <version>#2.0</version></td>
+                <td><code>validate(force)</code> <version>#2.0</version></td>
                 <td>
                   <code>true</code> if all ok<br/>
                   <code>[]</code> if empty optional field<br/>
                   <code>[Violation [, Violation..]]</code> if fails
                 </td>
-                <td>Validate Field. <strong>Fires <a href="#events">events</a> and affect UI.</strong></td>
+                <td>Validate Field. <strong>Fires <a href="#events">events</a> and affect UI.</strong> If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
             </tbody>
           </table>
@@ -680,7 +681,7 @@ window.ParsleyValidator
           <li><strong>Control focusing on error</strong>: on form submission, the first error field is focused to allow the user to easily start fixing errors.</li>
         </ol>
         </p>
-        <p>Naturaly, all this is absolutely customizable, you'll see below how to configure your desired UX behavior.</p>
+        <p>Naturally, all this is absolutely customizable, you'll see below how to configure your desired UX behavior.</p>
 
         <h3 id="ui-classes">Classes and templates</h3>
         <p>Parsley adds its share of classes and elements. to be continued..</p>
@@ -973,7 +974,7 @@ window.ParsleyValidator
             <div id="mc_embed_signup">
             <form action="http://parsleyjs.us3.list-manage.com/subscribe/post?u=a39bf787b85f4d1b576367606&amp;id=d7374bb2d8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" data-parsley-validate>
               <label for="mce-EMAIL">Subscribe to Parsley mailing list</label>
-              <small>Receive a mail each 2.x new release, and sometimes an email asking for your feeback (twice a year max!)</small>
+              <small>Receive a mail each 2.x new release, and sometimes an email asking for your feedback (twice a year max!)</small>
               <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
                 <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                 <div style="position: absolute; left: -5000px;"><input type="text" name="b_a39bf787b85f4d1b576367606_d7374bb2d8" value=""></div>

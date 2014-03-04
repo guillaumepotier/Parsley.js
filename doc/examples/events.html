@@ -44,6 +44,27 @@
       .row p {
         text-align: justify;
       }
+      .first {
+        padding-left: 15px;
+        border-left: 2px solid #FF851B;
+      }
+      .second {
+        padding-left: 15px;
+        border-left: 2px solid #5bc0de;
+      }
+      .validate {
+        margin-top: 10px;
+      }
+      h4 {
+        margin-bottom: 10px;
+      }
+      .invalid-form-error-message {
+        margin-top: 10px;
+        padding: 5px;
+      }
+      .invalid-form-error-message.filled {
+        border-left: 2px solid red;
+      }
     </style>
   </head>
 
@@ -71,6 +92,7 @@
         <li class="active"><a href="../examples.html">Examples</a></li>
         <li><a href="../index.html">Documentation</a></li>
         <li><a href="../download.html">Download</a></li>
+        <li><a href="help.html">Help</a></li>
         <li><a href="../annotated-source/parsley.html">Annotated&nbsp;source</a></li>
         <li><a href="../tests.html">Tests</a></li>
       </ul>
@@ -83,31 +105,68 @@
           <h2>Parsley Events Demo</h2>
           <hr></hr>
           <div class="form-group">
+            <h4>Correctly fill at least one of these blocks</h4>
             <form id="demo-form" data-parsley-validate>
+              <div class="first">
+                <label for="fullname">Firstname:</label>
+                <input type="text" class="form-control" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
 
-              <div id="emails">
-                <h4>Emails (at least one valid)</h4>
-                <label for="fullname">Email 1:</label>
-                <input type="email" class="form-control" name="email1" />
-
-                <label for="email">Email 2:</label>
-                <input type="email" class="form-control" name="email2" />
-
-                <label for="website">Email 3:</label>
-                <input type="email" class="form-control" name="email3" />
+                <label for="email">Lastname:</label>
+                <input type="text" class="form-control" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+              </div>
+              <hr></hr>
+              <div class="second">
+                <label for="website">Fullname:</label>
+                <input type="text" class="form-control" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
               </div>
 
-              <h4>Message (if you entered exactly 2 emails above)</h4>
-              <label for="message">Message:</label>
-              <textarea id="message" class="form-control" name="message"></textarea>
-
-              <br/>
-              <input type="submit" class="btn btn-default" />
+              <div class="invalid-form-error-message"></div>
+              <input type="submit" class="btn btn-default validate" />
             </form>
           </div>
+        </div>
         <div class="col-md-8">
           <div class="code-block">
-<pre><code>
+<pre><code>&lt;form id="demo-form" data-parsley-validate>
+  &lt;div class="first">
+    &lt;label for="fullname">Firstname:&lt;/label>
+    &lt;input type="text" class="form-control" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+
+    &lt;label for="email">Lastname:&lt;/label>
+    &lt;input type="text" class="form-control" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+  &lt;/div>
+  &lt;hr>&lt;/hr>
+  &lt;div class="second">
+    &lt;label for="website">Fullname:&lt;/label>
+    &lt;input type="text" class="form-control" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
+  &lt;/div>
+
+  &lt;div class="invalid-form-error-message">&lt;/div>
+  &lt;input type="submit" class="btn btn-default validate" />
+&lt;/form>
+
+&lt;script type="text/javascript">
+$(document).ready(function () {
+  $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
+
+    // if one of these blocks is not failing do not prevent submission
+    // we use here group validation with option force (validate even non required fields)
+    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
+      return;
+
+    // else stop form submission
+    formInstance.submitEvent.preventDefault();
+
+    // and display a gentle message
+    $('.invalid-form-error-message')
+      .html("You must correctly fill at least one of these 2 blocks' fields!")
+      .addClass("filled");
+    return;
+
+    $('.invalid-form-error-message').html('');
+  });
+});
+&lt;/script>
 </code></pre>
           </div>
         </div>
@@ -129,19 +188,15 @@
     <script type="text/javascript">
 
       $(document).ready(function () {
-        $('input[name=email1]').parsley().subscribe('parsley:field:validated', function (fieldInstance) {
-          if (
-            !$('input[name=email1]').val().length && !$('input[name=email2]').val().length && !$('input[name=email3]').val().length && $('input[name=email1]').parsley().isValid()) {
-            $('input[name=email1]').attr('data-parsley-error-message', 'You must fill at least one email');
-            $('input[name=email1]')
-              .parsley()
-              .addConstraint('required', undefined, undefined, true)
-              .validate();
-          }
-        });
+        $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
+          if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
+            return;
 
-        $('#demo-form .btn').on('click', function () {
-          $('#demo-form').parsley().validate();
+          formInstance.submitEvent.preventDefault();
+          $('.invalid-form-error-message')
+            .html("You must correctly fill at least one of these 2 blocks' fields!")
+            .addClass("filled");
+          return;
         });
       });
 
