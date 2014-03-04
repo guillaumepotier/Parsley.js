@@ -123,10 +123,16 @@ define(function () {
         expect(parsleyValidator.validate(['foo', 'bar', 'baz', 'qux'], parsleyValidator.validators.maxcheck(3))).not.to.be(true);
       });
       it('should have an equalto validator', function () {
-        $('body').append('<input type="text" id="element" value="foo" />');
-        expect(parsleyValidator.validate('', parsleyValidator.validators.equalto('#element'))).not.to.be(true);
-        expect(parsleyValidator.validate('bar', parsleyValidator.validators.equalto('#element'))).not.to.be(true);
-        expect(parsleyValidator.validate('foo', parsleyValidator.validators.equalto('#element'))).to.be(true);
+        expect(parsleyValidator.validate('', parsleyValidator.validators.equalto('foo'))).not.to.be(true);
+        expect(parsleyValidator.validate('bar', parsleyValidator.validators.equalto('foo'))).not.to.be(true);
+        expect(parsleyValidator.validate('foo', parsleyValidator.validators.equalto('foo'))).to.be(true);
+        $('body').append('<input type="text" id="element" data-parsley-equalto="#equalto" required /><input type="text" id="equalto" value="foo" />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val('fo');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val('foo');
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#equalto').remove();
       });
       it('should handle proper error message for validators', function () {
         expect(parsleyValidator.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('This value length is invalid. It should be between 3 and 6 characters long.');

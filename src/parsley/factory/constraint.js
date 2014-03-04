@@ -19,6 +19,9 @@ define('parsley/factory/constraint', [
 
     priority = priority || getPriority(parsleyField, name);
 
+    if ('function' === typeof window.ParsleyValidator.validators[name](requirements).requirementsTransformer)
+      requirements = window.ParsleyValidator.validators[name](requirements).requirementsTransformer();
+
     return $.extend(window.ParsleyValidator.validators[name](requirements), {
       name: name,
       requirements: requirements,

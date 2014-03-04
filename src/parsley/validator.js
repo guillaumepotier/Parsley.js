@@ -165,10 +165,13 @@ define('parsley/validator', [
       range: function (array) {
         return $.extend(new Validator.Assert().Range(array[0], array[1]), { priority: 32 });
       },
-      equalto: function (identifier) {
-        return $.extend(new Validator.Assert().Callback(function (value, identifier) {
-          return value === $(identifier).val();
-        }, identifier), { priority: 256 });
+      equalto: function (value) {
+        return $.extend(new Validator.Assert().EqualTo(value), {
+          priority: 256,
+          requirementsTransformer: function () {
+            return $(value).length ? $(value).val() : value;
+          }
+        });
       }
     }
   };
