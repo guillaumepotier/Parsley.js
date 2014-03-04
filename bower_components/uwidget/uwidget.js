@@ -125,9 +125,11 @@
     },
 
     getUrl: function () {
-      var url = ('function' === typeof this.options.url ? this.options.url(this.options) : this.options.url) + '?uwidget',
+      var url = ('function' === typeof this.options.url ? this.options.url(this.options) : this.options.url),
         options = ['sort', 'direction', 'filters'],
         value = '';
+
+      url += -1 !== url.indexOf('?') ? '&uwidget' : '?uwidget';
 
       for (var i = 0; i < options.length; i++) {
         value = this.$element.data([options[i]] + '');
