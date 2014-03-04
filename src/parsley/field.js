@@ -41,13 +41,13 @@ define('parsley/field', [
     //  - `true` if all green
     //  - `[]` if non required field and empty
     //  - `[Violation, [Violation..]]` if errors
-    validate: function () {
+    validate: function (force) {
       this.value = this.getValue();
 
       // Field Validate event. `this.value` could be altered for custom needs
       $.emit('parsley:field:validate', this);
 
-      $.emit('parsley:field:' + (this.isValid(this.value) ? 'success' : 'error'), this);
+      $.emit('parsley:field:' + (this.isValid(force, this.value) ? 'success' : 'error'), this);
 
       // Field validated event. `this.validationResult` could be altered for custom needs too
       $.emit('parsley:field:validated', this);
@@ -70,7 +70,7 @@ define('parsley/field', [
     },
 
     // Same @return as `validate()`
-    isValid: function (value) {
+    isValid: function (force, value) {
       // Sort priorities to validate more important first
       var priorities = this.getConstraintsSortedPriorities();
 
@@ -83,7 +83,7 @@ define('parsley/field', [
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
       // And if multiple field
-      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof this.options.multiple)
+      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof this.options.multiple && 'undefined' === typeof force)
         return this.validationResult = [];
 
       // If we want to validate field against all constraints, just call Validator and let it do the job

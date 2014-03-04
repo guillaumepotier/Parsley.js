@@ -226,6 +226,13 @@ define(function () {
 
         expect($('#element').parsley().validate()).to.be(true);
       });
+      it('should have a force option for validate and isValid methods', function () {
+        $('body').append('<input type="email" id="element" />');
+        expect($('#element').parsley().isValid()).to.be.eql([]);
+        expect($('#element').parsley().validate()).to.be.eql([]);
+        expect($('#element').parsley().isValid(true)).to.be(false);
+        expect($('#element').parsley().validate(true).length).to.be(1);
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

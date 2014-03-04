@@ -3,6 +3,9 @@
 **master**
 
   - fixed $ conflict (#525)
+  - added `force` validation for `isValid()` and `validate()`
+  - added doc events example
+  - added doc Help section
 
 **2.0.0-rc2**
 

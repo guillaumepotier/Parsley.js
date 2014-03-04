@@ -244,7 +244,7 @@ define('parsley/ui', [
     },
 
     _insertErrorWrapper: function (fieldInstance) {
-      if ('string' === typeof fieldInstance.options.errorsContainer && $(fieldInstance.options.errorsContainer).length)
+      if ('string' === typeof fieldInstance.options.errorsContainer && $(fieldInstance.options.errorsContainer + '').length)
         return $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
 
       var $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);

@@ -199,7 +199,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc2 - built Sun Mar 02 2014 16:29:28
+* Version 2.0.0-rc2 - built Tue Mar 04 2014 23:07:08
 * MIT Licensed
 *
 */
@@ -1248,10 +1248,13 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       range: function (array) {
         return $.extend(new Validator.Assert().Range(array[0], array[1]), { priority: 32 });
       },
-      equalto: function (identifier) {
-        return $.extend(new Validator.Assert().Callback(function (value, identifier) {
-          return value === $(identifier).val();
-        }, identifier), { priority: 256 });
+      equalto: function (value) {
+        return $.extend(new Validator.Assert().EqualTo(value), {
+          priority: 256,
+          requirementsTransformer: function () {
+            return $(value).length ? $(value).val() : value;
+          }
+        });
       }
     }
   };
@@ -1441,7 +1444,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element : fieldInstance.$element.parent();
     },
     _insertErrorWrapper: function (fieldInstance) {
-      if ('string' === typeof fieldInstance.options.errorsContainer && $(fieldInstance.options.errorsContainer).length)
+      if ('string' === typeof fieldInstance.options.errorsContainer && $(fieldInstance.options.errorsContainer + '').length)
         return $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
       var $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
       if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
@@ -1574,14 +1577,14 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return this._bindFields();
     },
     onSubmitValidate: function (event) {
-      this.validate(undefined, event);
+      this.validate(undefined, undefined, event);
       // prevent form submission if validation fails
       if (false === this.validationResult && event instanceof $.Event)
         event.preventDefault();
       return this;
     },
     // @returns boolean
-    validate: function (group, event) {
+    validate: function (group, force, event) {
       this.submitEvent = event;
       this.validationResult = true;
       var fieldValidationResult = [];
@@ -1593,7 +1596,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
         // do not validate a field if not the same as given validation group
         if (group && group !== this.fields[i].options.group)
           continue;
-        fieldValidationResult = this.fields[i].validate();
+        fieldValidationResult = this.fields[i].validate(force);
         if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
           this.validationResult = false;
       }
@@ -1601,13 +1604,13 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return this.validationResult;
     },
     // Iterate over refreshed fields, and stop on first failure
-    isValid: function (group) {
+    isValid: function (group, force) {
       this._refreshFields();
       for (var i = 0; i < this.fields.length; i++) {
         // do not validate a field if not the same as given validation group
         if (group && group !== this.fields[i].options.group)
           continue;
-        if (false === this.fields[i].isValid())
+        if (false === this.fields[i].isValid(force))
           return false;
       }
       return true;
@@ -1640,6 +1643,8 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority', 2);
     };
     priority = priority || getPriority(parsleyField, name);
+    if ('function' === typeof window.ParsleyValidator.validators[name](requirements).requirementsTransformer)
+      requirements = window.ParsleyValidator.validators[name](requirements).requirementsTransformer();
     return $.extend(window.ParsleyValidator.validators[name](requirements), {
       name: name,
       requirements: requirements,
@@ -1679,11 +1684,11 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
     //  - `true` if all green
     //  - `[]` if non required field and empty
     //  - `[Violation, [Violation..]]` if errors
-    validate: function () {
+    validate: function (force) {
       this.value = this.getValue();
       // Field Validate event. `this.value` could be altered for custom needs
       $.emit('parsley:field:validate', this);
-      $.emit('parsley:field:' + (this.isValid(this.value) ? 'success' : 'error'), this);
+      $.emit('parsley:field:' + (this.isValid(force, this.value) ? 'success' : 'error'), this);
       // Field validated event. `this.validationResult` could be altered for custom needs too
       $.emit('parsley:field:validated', this);
       return this.validationResult;
@@ -1699,7 +1704,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       return priorities;
     },
     // Same @return as `validate()`
-    isValid: function (value) {
+    isValid: function (force, value) {
       // Sort priorities to validate more important first
       var priorities = this.getConstraintsSortedPriorities();
       // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
@@ -1709,7 +1714,7 @@ window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
       // And if multiple field
-      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof this.options.multiple)
+      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof this.options.multiple && 'undefined' === typeof force)
         return this.validationResult = [];
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)

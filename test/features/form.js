@@ -92,6 +92,17 @@ define(function () {
           parsleyForm.onSubmitValidate(event);
           expect(event.preventDefault.called).to.be(false);
       });
+      it('should have a force option for validate and isValid methods', function () {
+        $('body').append(
+          '<form id="element">'                                   +
+            '<input id="field1" type="email" />'                  +
+            '<input id="field3" data-parsley-notblank="true" />'  +
+          '</form>');
+        expect($('#element').parsley().isValid()).to.be(true);
+        expect($('#element').parsley().isValid(undefined, true)).to.be(false);
+        expect($('#element').parsley().validate()).to.be(true);
+        expect($('#element').parsley().validate(undefined, true)).to.be(false);
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();
