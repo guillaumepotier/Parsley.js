@@ -1,0 +1,66 @@
+.uwidget {
+  border: 1px solid #e5e5e5;
+}
+.uwidget .uwidget-actions {
+  display: block;
+  height: 22px;
+  background-color: #f5f5f5;
+}
+.uwidget .uwidget-actions .filters {
+  float: right;
+}
+.uwidget .uwidget-info {
+  display: block;
+  height: 15px;
+  padding: 2px;
+  color: #999999;
+  font-size: 10px;
+  text-align: right;
+  background-color: #f5f5f5;
+}
+.uwidget .uwidget-info a,
+.uwidget .uwidget-info a:hover,
+.uwidget .uwidget-info a:visited {
+  color: #999999;
+  text-decoration: none;
+}
+.uwidget ul.uwidget-container {
+  display: block;
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  text-align: justify;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.uwidget ul.uwidget-container li {
+  position: relative;
+  display: block;
+  margin-bottom: -1px;
+  padding: 8px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.uwidget ul.uwidget-container li:last-child {
+  border: none;
+}
+.uwidget ul.uwidget-container li .gh-issue-title,
+.uwidget ul.uwidget-container li .stack-question-title {
+  margin: 5px;
+  font-size: 15px;
+  line-height: 1.3;
+  margin-bottom: 2px;
+  word-wrap: break-word;
+}
+.uwidget ul.uwidget-container li .gh-issue-title a,
+.uwidget ul.uwidget-container li .stack-question-title a {
+  color: #111111;
+  text-decoration: none;
+}
+.uwidget ul.uwidget-container li .gh-issue-comments,
+.uwidget ul.uwidget-container li .stack-question-answers {
+  width: 80px;
+  float: left;
+  margin-left: 5px;
+  font-size: 13px;
+  color: #999999;
+}

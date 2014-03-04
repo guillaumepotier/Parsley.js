@@ -19,7 +19,8 @@
     "validator.js": "~0.5.5",
     "requirejs": "~2.1.0",
     "bootstrap": "~3.0.3",
-    "sinonjs": "~1.7.3"
+    "sinonjs": "~1.7.3",
+    "uwidget": "*"
   },
   "keywords": [
     "parsley",
