@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc2 - built Tue Mar 04 2014 23:07:08
+* Version 2.0.0-rc3 - built Wed Mar 05 2014 23:09:12
 * MIT Licensed
 *
 */
@@ -1104,6 +1104,8 @@
         this._resetClass(fieldInstance);
     },
     manageErrorsMessages: function (fieldInstance, diff) {
+      if ('undefined' !== typeof fieldInstance.options.errorsMessagesDisabled)
+        return;
       // Case where we have errorMessage option that configure an unique field error message, regardless failing validators
       if ('undefined' !== typeof fieldInstance.options.errorMessage) {
         if ((diff.added.length || diff.kept.length)) {
@@ -1744,7 +1746,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.0.0-rc2
+//     Parsley.js 2.0.0-rc3
 //     http://parsleyjs.org
 //     (c) 20012-2014 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -1752,7 +1754,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.0-rc2';
+    this.__version__ = '2.0.0-rc3';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)

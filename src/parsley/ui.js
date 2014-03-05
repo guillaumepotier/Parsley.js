@@ -59,6 +59,9 @@ define('parsley/ui', [
     },
 
     manageErrorsMessages: function (fieldInstance, diff) {
+      if ('undefined' !== typeof fieldInstance.options.errorsMessagesDisabled)
+        return;
+
       // Case where we have errorMessage option that configure an unique field error message, regardless failing validators
       if ('undefined' !== typeof fieldInstance.options.errorMessage) {
         if ((diff.added.length || diff.kept.length)) {

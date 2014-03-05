@@ -1,11 +1,12 @@
 #Changelog
 
-**master**
+**2.0.0-rc3**
 
   - fixed $ conflict (#525)
   - added `force` validation for `isValid()` and `validate()`
   - added doc events example
   - added doc Help section
+  - added `data-parsley-errors-messages-disabled` option
 
 **2.0.0-rc2**
 

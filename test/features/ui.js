@@ -99,6 +99,13 @@ define(function () {
         $('#element').val('foo@bar.baz').psly().validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
       });
+      it('should display no error message if diabled', function () {
+        $('body').append('<input type="email" id="element" required data-parsley-errors-messages-disabled />');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
+        expect($('#element').hasClass('parsley-error')).to.be(true);
+      });
       it('should handle simple triggers (change, focus..)', function () {
         $('body').append('<input type="email" id="element" required data-parsley-trigger="change" />');
         var parsleyField = $('#element').psly();
