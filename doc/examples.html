@@ -33,7 +33,7 @@
         margin-top: 10px;
       }
       .code-block {
-        margin-top: 40px;
+        margin-top: 20px;
       }
       .hidden {
         display: none;
@@ -111,8 +111,7 @@
         </div>
         <div class="col-md-8">
           <div class="code-block">
-<pre><code>&lt;!-- tell Parsley to validate this form and its fields -->
-&lt;form id="demo-form" data-parsley-validate>
+<pre><code>&lt;form id="demo-form" data-parsley-validate>
 
   &lt;label for="fullname">Full Name * :&lt;/label>
   &lt;!-- this field is just required, it would be validated on form submit -->
@@ -126,20 +125,11 @@
   &lt;label for="website">Website :&lt;/label>
   &lt;!-- this optional field must be an url, and have a custom html error
   message -->
-  &lt;input type="text" name="website"
-  data-parsley-type="url"
-  data-parsley-error-message="A &lt;strong>real&lt;/strong> url pretty please" />
+  &lt;input type="text" name="website" data-parsley-type="url" data-parsley-error-message="A &lt;strong>real&lt;/strong> url pretty please" />
 
   &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
-  &lt;!-- this optional textarea have a length validator that would be checked
-  on keyup after 10 first characters, with a custom message only for minlength
-  validator -->
-  &lt;textarea name="message"
-  data-parsley-trigger="keyup"
-  data-parsley-length="[20, 100]"
-  data-parsley-validation-threshold="10"
-  data-parsley-minlength-message = "Come on! You need to enter at least a 20
-  caracters long comment..">&lt;/textarea>
+  &lt;!-- this optional textarea have a length validator that would be checked on keyup after 10 first characters, with a custom message only for minlength validator -->
+  &lt;textarea name="message" data-parsley-trigger="keyup" data-parsley-length="[20, 100]" data-parsley-validation-threshold="10" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment..">&lt;/textarea>
 
   &lt;input type="submit" />
 &lt;/form>
