@@ -41,17 +41,12 @@
         </div>
     </form> -->
 
-<form id="demo-form" data-parsley-validate>
-<input id="user-add-form:password:input" type="password"
-       data-parsley-required="true"
-       placeholder="password"></input>
-<input id="user-add-form:confirm-password" type="password"
-       data-parsley-equalto='input[id="user-add-form:password:input"]'
-       data-parsley-required="true"
-       placeholder="confirm password"></input>
-<input type="submit"/>
-</form>
+<form action="" data-parsley-validate>
+    <input type="checkbox" name="aaa" value="a" data-parsley-multiple="my_group" data-parsley-mincheck="1" /> A
+    <input type="checkbox" name="bbb" value="b" data-parsley-multpile="my_group" /> B
 
+    <button type="submit">submit</button>
+</form>
     <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
     <!-- <script src="../src/parsley.remote.js"></script> -->
     <!-- <script src="../src/extra/dateiso.js"></script> -->
