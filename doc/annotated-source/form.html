@@ -117,7 +117,7 @@
     },
 
     onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span>
-      <span class="hljs-keyword">this</span>.validate(<span class="hljs-literal">undefined</span>, event);</pre></div></div>
+      <span class="hljs-keyword">this</span>.validate(<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, event);</pre></div></div>
             
         </li>
         
@@ -151,15 +151,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    validate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group, event)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    validate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group, force, event)</span> {</span>
       <span class="hljs-keyword">this</span>.submitEvent = event;
       <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">true</span>;
 
-      <span class="hljs-keyword">var</span> fieldValidationResult = [];
-
-      <span class="hljs-keyword">this</span>._refreshFields();
-
-      $.emit(<span class="hljs-string">'parsley:form:validate'</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
+      <span class="hljs-keyword">var</span> fieldValidationResult = [];</pre></div></div>
             
         </li>
         
@@ -170,11 +166,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>loop through fields to validate them one by one</p>
+              <p>Refresh form DOM options and form’s fields that could have changed</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>._refreshFields();
+
+      $.emit(<span class="hljs-string">'parsley:form:validate'</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -185,6 +183,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
+              <p>loop through fields to validate them one by one</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
               <p>do not validate a field if not the same as given validation group</p>
 
             </div>
@@ -192,7 +205,7 @@
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (group &amp;&amp; group !== <span class="hljs-keyword">this</span>.fields[i].options.group)
           <span class="hljs-keyword">continue</span>;
 
-        fieldValidationResult = <span class="hljs-keyword">this</span>.fields[i].validate();
+        fieldValidationResult = <span class="hljs-keyword">this</span>.fields[i].validate(force);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== fieldValidationResult &amp;&amp; fieldValidationResult.length &gt; <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">this</span>.validationResult)
           <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>;
@@ -206,17 +219,17 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Iterate over refreshed fields, and stop on first failure</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    isValid: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    isValid: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group, force)</span> {</span>
       <span class="hljs-keyword">this</span>._refreshFields();
 
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++) {</pre></div></div>
@@ -224,11 +237,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>do not validate a field if not the same as given validation group</p>
 
@@ -237,7 +250,7 @@
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (group &amp;&amp; group !== <span class="hljs-keyword">this</span>.fields[i].options.group)
           <span class="hljs-keyword">continue</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.fields[i].isValid())
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.fields[i].isValid(force))
           <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
       }
 
@@ -253,37 +266,27 @@
       <span class="hljs-keyword">this</span>.fields = [];
 
       <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-keyword">this</span>.options.inputs).each(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-        self.addField(<span class="hljs-keyword">this</span>);
-      });
-
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    },
-
-    addField: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(field)</span> {</span>
-      <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> window.Parsley(field, {}, <span class="hljs-keyword">this</span>.parsleyInstance);</pre></div></div>
+        <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> window.Parsley(<span class="hljs-keyword">this</span>, {}, self.parsleyInstance);</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>only add valid field children</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__)
-        <span class="hljs-keyword">this</span>.fields.push(fieldInstance);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__)
+          self.fields.push(fieldInstance);
+      });
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    },
-
-    removeField: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(field)</span> {</span>},
-    reset: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>},
-    destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>}
+    }
   };
 
   <span class="hljs-keyword">return</span> ParsleyForm;

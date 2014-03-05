@@ -88,7 +88,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code>Parsley.js 2.0.0-rc1
+              <pre><code>Parsley.js 2.0.0-rc3
 http:<span class="hljs-comment">//parsleyjs.org</span>
 (c) <span class="hljs-number">20012</span>-<span class="hljs-number">2014</span> Guillaume Potier, Wisembly
 Parsley may be freely distributed under the MIT license.
@@ -277,7 +277,7 @@ define([</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> Parsley = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(element, options, parsleyInstance)</span> {</span>
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Parsley'</span>;
-    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'2.0.0-rc1'</span>;
+    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'2.0.0-rc3'</span>;
     <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.hash(<span class="hljs-number">4</span>);</pre></div></div>
             
         </li>
@@ -301,6 +301,9 @@ define([</pre></div></div>
 
   Parsley.prototype = {
     init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">($element, options, parsleyInstance)</span> {</span>
+      <span class="hljs-keyword">if</span> (!$element.length)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'You must bind Parsley on an existing element.'</span>);
+
       <span class="hljs-keyword">this</span>.$element = $element;</pre></div></div>
             
         </li>
@@ -431,7 +434,9 @@ define([</pre></div></div>
           <span class="hljs-keyword">break</span>;
         <span class="hljs-keyword">default</span>:
           <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(type + <span class="hljs-string">'is not a supported Parsley type'</span>);
-      }</pre></div></div>
+      }
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === parsleyInstance.__class__ || <span class="hljs-string">'ParsleyField'</span> === parsleyInstance.__class__) {</pre></div></div>
             
         </li>
         
@@ -446,7 +451,7 @@ define([</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>, parsleyInstance);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>, parsleyInstance);</pre></div></div>
             
         </li>
         
@@ -457,12 +462,12 @@ define([</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Tell the world we got a new ParsleyForm or Field instance!</p>
+              <p>Tell the world we got a new ParsleyForm or ParsleyField instance!</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === parsleyInstance.__class__ || <span class="hljs-string">'ParsleyField'</span> === parsleyInstance.__class__)
-        $.emit(<span class="hljs-string">'parsley:'</span> + (<span class="hljs-string">'parsleyForm'</span> === type ? <span class="hljs-string">'form'</span> : <span class="hljs-string">'field'</span>) + <span class="hljs-string">':init'</span>, parsleyInstance);
+            <div class="content"><div class='highlight'><pre>        $.emit(<span class="hljs-string">'parsley:'</span> + (<span class="hljs-string">'parsleyForm'</span> === type ? <span class="hljs-string">'form'</span> : <span class="hljs-string">'field'</span>) + <span class="hljs-string">':init'</span>, parsleyInstance);
+      }
 
       <span class="hljs-keyword">return</span> parsleyInstance;
     }

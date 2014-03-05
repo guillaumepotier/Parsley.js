@@ -88,7 +88,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p><code>window.ParsleyExtend</code>, like <code>ParsleyAbstract</code>, is inherited by <code>ParsleyField</code> and <code>ParsleyForm</code>
+That way, we could add new methods or redefine some for these both classes. In particular case
+We are adding async validation methods that returns promises, bind them properly to triggered
+Events like onkeyup when field is invalid or on form submit. These validation methods adds an
+Extra <code>remote</code> validator which could not be simply added like other <code>ParsleyExtra</code> validators
+Because returns promises instead of booleans.</p>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
@@ -331,14 +337,7 @@ Directly reject promise, do not run remote validator and save server load</p>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>._remote &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>._remote[csr])
       promise = <span class="hljs-keyword">this</span>._remote[csr] ? deferred.resolveWith(that) : deferred.rejectWith(that);
     <span class="hljs-keyword">else</span> {
-      data[that.$element.attr(<span class="hljs-string">'name'</span>) || that.$element.attr(<span class="hljs-string">'id'</span>)] = value;
-
-      promise = $.ajax($.extend(<span class="hljs-literal">true</span>, {}, {
-        url: that.options.remote,
-        data: data,
-        type: <span class="hljs-string">'GET'</span>
-      }, that.options.remoteOptions || {}));
-    }</pre></div></div>
+      data[that.$element.attr(<span class="hljs-string">'name'</span>) || that.$element.attr(<span class="hljs-string">'id'</span>)] = value;</pre></div></div>
             
         </li>
         
@@ -348,6 +347,26 @@ Directly reject promise, do not run remote validator and save server load</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>All <code>$.ajax(options)</code> could be overriden or extended directly from DOM in <code>data-parsley-remote-options</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      promise = $.ajax($.extend(<span class="hljs-literal">true</span>, {}, {
+        url: that.options.remote,
+        data: data,
+        type: <span class="hljs-string">'GET'</span>
+      }, that.options.remoteOptions || {}));
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Depending on promise result, manage <code>validationResult</code> for UI</p>
 
@@ -367,13 +386,13 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Store remote call result to avoid next calls</p>
+              <p>Store remote call result to avoid next calls with exact same parameters</p>
 
             </div>
             
@@ -382,11 +401,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>If reverse option is set, a failing ajax request is considered successful</p>
 
@@ -398,11 +417,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>If true, simply resolve and exit</p>
 
@@ -416,11 +435,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Else, create a proper remote validation Violation to trigger right UI</p>
 
@@ -436,26 +455,26 @@ Directly reject promise, do not run remote validator and save server load</p>
 
     deferred.rejectWith(<span class="hljs-keyword">this</span>);
   }
-});
-
-window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
-  validators: {</pre></div></div>
+});</pre></div></div>
             
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Remote validator is just an always true sync validator with lowest (-1) priority possible
-It will be overloaded in <code>validateThroughValidator()</code> that will do the heavy async work</p>
+It will be overloaded in <code>validateThroughValidator()</code> that will do the heavy async work
+This ‘hack’ is needed not to mess up too much with error messages and stuff in <code>ParsleyUI</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    remote: {
+            <div class="content"><div class='highlight'><pre>window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
+  validators: {
+    remote: {
       fn: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
         <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
       },

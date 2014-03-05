@@ -248,7 +248,9 @@
         <span class="hljs-keyword">this</span>._resetClass(fieldInstance);
     },
 
-    manageErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fieldInstance, diff)</span> {</span></pre></div></div>
+    manageErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fieldInstance, diff)</span> {</span>
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsMessagesDisabled)
+        <span class="hljs-keyword">return</span>;</pre></div></div>
             
         </li>
         
@@ -604,7 +606,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     },
 
     _insertErrorWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fieldInstance)</span> {</span>
-      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer &amp;&amp; $(fieldInstance.options.errorsContainer).length)
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer &amp;&amp; $(fieldInstance.options.errorsContainer + <span class="hljs-string">''</span>).length)
         <span class="hljs-keyword">return</span> $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
 
       <span class="hljs-keyword">var</span> $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
