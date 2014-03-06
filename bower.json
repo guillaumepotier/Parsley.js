@@ -1,6 +1,9 @@
 {
   "name": "parsleyjs",
   "version": "2.0.0-rc3",
+  "main": [
+    "./dist/parsley.js"
+  ],
   "ignore": [
     "**/.*",
     "build",
