@@ -4,6 +4,7 @@
 
   - fixed js error if wrong data-parsley-errors-container is given
   - fixed js error if `name=""` or `id=""` for parlsey multiple fields (#533)
+  - fixed dynamically added fields form inheritance (#532)
 
 **2.0.0-rc3**
 

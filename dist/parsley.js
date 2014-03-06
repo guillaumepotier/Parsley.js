@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc3 - built Thu Mar 06 2014 22:52:41
+* Version 2.0.0-rc3 - built Thu Mar 06 2014 23:54:07
 * MIT Licensed
 *
 */
@@ -1366,6 +1366,8 @@
     },
     getFieldOptions: function (fieldInstance) {
       this.fieldOptions = ParsleyUtils.attr(fieldInstance.$element, this.staticOptions.namespace);
+      if (null === this.formOptions && 'ParsleyForm' === fieldInstance.parsleyInstance.__proxy__)
+        this.formOptions = getFormOptions(fieldInstance.parsleyInstance);
       // not deep extend, since formOptions and fieldOptions is a 1 level deep object
       return $.extend({}, this.staticOptions, this.formOptions, this.fieldOptions);
     }
@@ -1776,9 +1778,14 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if (!$element.length)
         throw new Error('You must bind Parsley on an existing element.');
       this.$element = $element;
-      // If element have already been binded, returns its Parsley instance
-      if (this.$element.data('Parsley'))
-        return this.$element.data('Parsley');
+      // If element have already been binded, returns its saved Parsley instance
+      if (this.$element.data('Parsley')) {
+        var savedParsleyInstance = this.$element.data('Parsley');
+        // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
+        if ('undefined' !== typeof parsleyInstance && 'ParsleyField' === savedParsleyInstance.parsleyInstance.__proxy__)
+          savedParsleyInstance.parsleyInstance = parsleyInstance;
+        return savedParsleyInstance;
+      }
       // Handle 'static' options
       this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
       options = this.OptionsFactory.get(this);
@@ -1816,6 +1823,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if ('ParsleyForm' === parsleyInstance.__class__ || 'ParsleyField' === parsleyInstance.__class__) {
         // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
         this.$element.data('Parsley', parsleyInstance);
+        this.__proxy__ = parsleyInstance.__class__;
         // Tell the world we got a new ParsleyForm or ParsleyField instance!
         $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);
       }

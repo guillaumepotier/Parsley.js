@@ -3,6 +3,9 @@
   "version": "2.0.0-rc3",
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
+  "main": [
+    "./dist/parsley.js"
+  ],
   "keywords": [
     "parsley",
     "form",

@@ -83,6 +83,27 @@ define(function () {
         $('body').append('<input type="text" id="element" value="" />');
         expect(new Parsley($('#element')).isValid()).to.eql([]);
       });
+      it('should not bind radio or checkboxes withoud a name, an id or a multiple option', function () {
+        $('body').append('<input type="radio" value="foo" />');
+        window.console.warn = sinon.spy();
+        parsleyInstance = $('input[type=radio]').psly();
+        expect(parsleyInstance.__class__).to.be('Parsley');
+        expect(window.console.warn.called).to.be(true);
+        $('input[type=radio]').attr('id', '');
+        parsleyInstance = $('input[type=radio]').psly();
+        expect(parsleyInstance.__class__).to.be('Parsley');
+        expect(window.console.warn.called).to.be(true);
+        $('input[type=radio]').attr('id', 'element');
+        parsleyInstance = $('#element').parsley();
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
+        expect(parsleyInstance.options.multiple).to.be('element');
+        parsleyInstance.destroy();
+        $('input[type=radio]').attr('name', 'element');
+        parsleyInstance = $('input[name=element]').parsley();
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
+        expect(parsleyInstance.options.multiple).to.be('element');
+        $('input[name=element]').remove();
+      });
       it('should properly bind HTML5 supported constraints', function () {
         $('body').append('<input type="email" pattern="\\w+" id="element" required min="5" max="100" />');
         var parsleyField = new Parsley($('#element'));
