@@ -1,5 +1,10 @@
 #Changelog
 
+**master**
+
+  - fixed js error if wrong data-parsley-errors-container is given
+  - fixed js error if `name=""` or `id=""` for parlsey multiple fields (#533)
+
 **2.0.0-rc3**
 
   - fixed $ conflict (#525)

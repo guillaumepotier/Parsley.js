@@ -23,14 +23,19 @@ define('parsley/field', [
 
       // Select / radio / checkbox multiple inputs hack
       if ((this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) || (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple'))) {
-        if ('undefined' === typeof this.$element.attr('name') && 'undefined' === typeof this.$element.attr('id')) {
+        if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
+          this.options.multiple = this.$element.attr('name');
+        else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
+          this.options.multiple = this.$element.attr('id');
+
+        if ('undefined' === typeof this.options.multiple) {
           if (window.console && window.console.warn)
             window.console.warn('To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name, and id or a multiple option.', this.$element);
 
           return this.parsleyInstance;
         }
 
-        this.options.multiple = (this.$element.attr('name') || this.$element.attr('id')).replace(/(:|\.|\[|\]|\$)/g, '');
+        this.options.multiple = this.options.multiple.replace(/(:|\.|\[|\]|\$)/g, '');
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
       }
 

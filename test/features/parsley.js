@@ -86,6 +86,10 @@ define(function () {
         parsleyInstance = $('input[type=radio]').psly();
         expect(parsleyInstance.__class__).to.be('Parsley');
         expect(window.console.warn.called).to.be(true);
+        $('input[type=radio]').attr('id', '');
+        parsleyInstance = $('input[type=radio]').psly();
+        expect(parsleyInstance.__class__).to.be('Parsley');
+        expect(window.console.warn.called).to.be(true);
         $('input[type=radio]').attr('id', 'element');
         parsleyInstance = $('#element').parsley();
         expect(parsleyInstance.__class__).to.be('ParsleyField');
