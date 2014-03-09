@@ -3,6 +3,19 @@
     <meta charset="utf-8">
     <title>Parsleyjs Developpement Tests</title>
     <link href="../src/parsley.css" rel="stylesheet">
+    <style type="text/css">
+        span.parsley-required {
+            padding: 5px;
+            color: white;
+            background-color: darkred;
+        }
+        .parsley-required:after {
+            content:" I want to be a span and get cool styling too!"
+        }
+        span.parsley-required:after {
+            content:" Check out my cool styled span!"
+        }
+    </style>
 </head>
 <body>
 <!--     <form id="form" data-parsley-validate data-parsley-trigger="focusout change">
@@ -41,27 +54,39 @@
         </div>
     </form> -->
 
-<form action="" data-parsley-validate>
-    <input type="checkbox" name="aaa" value="a" data-parsley-multiple="my_group" data-parsley-mincheck="1" /> A
-    <input type="checkbox" name="bbb" value="b" data-parsley-multpile="my_group" /> B
+    <form id="parsleyForm">
+        <input type="text" id="staticTextInput" name="staticTextInput" placeholder="I've always been here.">
+    </form>
 
-    <button type="submit">submit</button>
-</form>
-    <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
+    <script src="../bower_components/jquery/jquery.js"></script>
     <!-- <script src="../src/parsley.remote.js"></script> -->
     <!-- <script src="../src/extra/dateiso.js"></script> -->
     <!-- <script src="../src/i18n/fr.extra.js"></script> -->
-    <!-- <script src="../dist/parsley.js"></script> -->
-    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+    <script src="../dist/parsley.js"></script>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
     <!-- <script src="../src/i18n/it.js"></script> -->
     <script type="text/javascript">
-        // window.ParsleyValidator
-        //     .addValidator('foobar', function (value, requirement) {
-        //         return new RegExp('foobar', 'ig').test(value) && new RegExp(requirement, 'ig').test(value);
-        //     }, 32)
-        //     .addMessage('fr', 'foobar', 'salut');
-        // $('#form').psly().subscribe('parsley:form:validated', function(formInstance) {
-        //     formInstance.submitEvent.preventDefault();
-        // })
+        $(document).ready(function () {
+            // Initialize parsley with an errorTemplate option for fancy styling
+            $('#parsleyForm').parsley({
+                'errorTemplate': '<span></span>'
+            });
+
+            // Add a new text input dynamically, otherwise identical to existing
+            $('#parsleyForm').append('<input type="text" id="dynamicTextInput" name="dynamicTextInput" placeholder="I was added dynamically.">');
+            // In Parsley.js 1.x I used to 'addItem' now, but that is gone in 2.x,
+            // and the ParsleyForm object seems to see new fields automatically
+
+            // $('#parsleyForm').parsley()._bindFields();
+
+            // Add constraints to both of our inputs
+            $('#staticTextInput').parsley().addConstraint("required", "true");
+            $('#dynamicTextInput').parsley().addConstraint("required", "true");
+
+            // Trigger validation
+            $('#parsleyForm').parsley().validate();
+
+            // Note the missing .danger
+        });
     </script>
 </html>

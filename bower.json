@@ -32,5 +32,8 @@
     "email": "guillaume@wisembly.com",
     "url": "http://guillaumepotier.com/"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "main": [
+    "./dist/parsley.js"
+  ]
 }

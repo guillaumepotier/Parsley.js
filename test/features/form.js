@@ -103,6 +103,17 @@ define(function () {
         expect($('#element').parsley().validate()).to.be(true);
         expect($('#element').parsley().validate(undefined, true)).to.be(false);
       });
+      it('should properly bind dynamically added fields', function () {
+        $('body').append('<form id="element" data-parsley-trigger="change"></form>');
+        $('#element').append('<input type="email" id="email" required />');
+        var fieldInstance = $('#email').psly();
+        expect(fieldInstance.__class__).to.be('ParsleyField');
+        expect(fieldInstance.parsleyInstance.__proxy__).to.be('ParsleyField');
+        var formInstance = $('#element').psly();
+        // form corectly have its field, and field have finaly its parent form
+        expect(formInstance.fields[0].$element.attr('id')).to.be('email');
+        expect(fieldInstance.parsleyInstance.__proxy__).to.be('ParsleyForm');
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

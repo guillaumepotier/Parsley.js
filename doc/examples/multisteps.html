@@ -8,7 +8,7 @@
     <meta name="description" content="Parsley, the ultimate frontend javascript form validation library">
     <meta name="author" content="Guillaume Potier">
 
-    <title>Parsley - Exemples | Events</title>
+    <title>Parsley - Exemples | Multi steps form</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
@@ -65,6 +65,9 @@
       .invalid-form-error-message.filled {
         border-left: 2px solid red;
       }
+      .btn-info, .btn-default {
+        margin-top: 10px;
+      }
     </style>
   </head>
 
@@ -102,71 +105,74 @@
       <!-- ###################### BEGIN OF EXAMPLE ######################-->
 
         <div class="col-md-4">
-          <h2>Parsley Events Demo</h2>
+          <h2>Multi steps form demo</h2>
           <small class="pull-left"><a href="../examples.html">&lt;&lt; Back to main example</a></small>
           <span class="clearfix"></span>
 
           <hr></hr>
           <div class="form-group">
-            <h4>Correctly fill at least one of these blocks</h4>
             <form id="demo-form" data-parsley-validate>
-              <div class="first">
-                <label for="firstname">Firstname:</label>
-                <input type="text" class="form-control" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+              <div class="first block1 show">
+                <label for="fullname">Firstname:</label>
+                <input type="text" class="form-control" name="firstname" required data-parsley-group="block1" />
 
                 <label for="lastname">Lastname:</label>
-                <input type="text" class="form-control" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
-              </div>
-              <hr></hr>
-              <div class="second">
-                <label for="fullname">Fullname:</label>
-                <input type="text" class="form-control" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
+                <input type="text" class="form-control" name="lastname" required data-parsley-group="block1" />
+                <span class="next btn btn-info pull-right" data-current-block="1" data-next-block="2">Next ></span>
+                <span class="clearfix"></span>
               </div>
 
-              <div class="invalid-form-error-message"></div>
-              <input type="submit" class="btn btn-default validate" />
+              <div class="second block2 hidden">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" name="email" required data-parsley-group="block2" />
+                <span class="next btn btn-info pull-left" data-current-block="2" data-next-block="1">&lt; Previous</span>
+                <input type="submit" class="btn btn-default pull-right" />
+                <span class="clearfix"></span>
+              </div>
             </form>
           </div>
         </div>
         <div class="col-md-8">
           <div class="code-block">
 <pre><code>&lt;form id="demo-form" data-parsley-validate>
-  &lt;div class="first">
-    &lt;label for="firstname">Firstname:&lt;/label>
-    &lt;input type="text" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+  &lt;div class="first block1 show">
+    &lt;label for="fullname">Firstname:&lt;/label>
+    &lt;input type="text" name="firstname" data-parsley-group="block1" required/>
 
-    &lt;label for="lastname">Lastname:&lt;/label>
-    &lt;input type="text" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
-  &lt;/div>
-  &lt;hr>&lt;/hr>
-  &lt;div class="second">
-    &lt;label for="fullname">Fullname:&lt;/label>
-    &lt;input type="text" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
+    &lt;label for="email">Lastname:&lt;/label>
+    &lt;input type="text" name="lastname" data-parsley-group="block1" required />
+    &lt;span class="next btn btn-info pull-right" data-current-block="1" data-next-block="2">Next >&lt;/span>
   &lt;/div>
 
-  &lt;div class="invalid-form-error-message">&lt;/div>
-  &lt;input type="submit" class="btn btn-default validate" />
+  &lt;div class="second block2 hidden">
+    &lt;label for="website">Email:&lt;/label>
+    &lt;input type="text" name="fullname" required  data-parsley-type="email" data-parsley-group="block2" />
+    &lt;span class="next btn btn-info pull-left" data-current-block="2" data-next-block="1">&lt; Previous&lt;/span>
+    &lt;input type="submit" class="btn btn-default pull-right" />
+  &lt;/div>
 &lt;/form>
 
 &lt;script type="text/javascript">
 $(document).ready(function () {
-  $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
+  $('.next').on('click', function () {
+    var current = $(this).data('currentBlock'),
+      next = $(this).data('nextBlock');
 
-    // if one of these blocks is not failing do not prevent submission
-    // we use here group validation with option force (validate even non required fields)
-    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
-      return;
+    // only validate going forward. If current group is invalid, do not go further
+    // .parsley().validate() returns validation result AND show errors
+    if (next > current)
+      if (false === $('#demo-form').parsley().validate('block' + current))
+        return;
 
-    // else stop form submission
-    formInstance.submitEvent.preventDefault();
+    // validation was ok. We can go on next step.
+    $('.block' + current)
+      .removeClass('show')
+      .addClass('hidden');
 
-    // and display a gentle message
-    $('.invalid-form-error-message')
-      .html("You must correctly fill at least one of these 2 blocks' fields!")
-      .addClass("filled");
-    return;
+    $('.block' + next)
+      .removeClass('hidden')
+      .addClass('show');
 
-    $('.invalid-form-error-message').html('');
   });
 });
 &lt;/script>
@@ -191,15 +197,25 @@ $(document).ready(function () {
     <script type="text/javascript">
 
       $(document).ready(function () {
-        $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
-          if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
-            return;
+        $('.next').on('click', function () {
+          var current = $(this).data('currentBlock'),
+            next = $(this).data('nextBlock');
 
-          formInstance.submitEvent.preventDefault();
-          $('.invalid-form-error-message')
-            .html("You must correctly fill at least one of these 2 blocks' fields!")
-            .addClass("filled");
-          return;
+          // only validate going forward. If current group is invalid, do not go further
+          // .parsley().validate() returns validation result AND show errors
+          if (next > current)
+            if (false === $('#demo-form').parsley().validate('block' + current))
+              return;
+
+          // validation was ok. We can go on next step.
+          $('.block' + current)
+            .removeClass('show')
+            .addClass('hidden');
+
+          $('.block' + next)
+            .removeClass('hidden')
+            .addClass('show');
+
         });
       });
 

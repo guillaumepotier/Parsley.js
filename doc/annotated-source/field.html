@@ -128,14 +128,19 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.multiple) || (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'multiple'</span>))) {
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>).length)
+          <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>).length)
+          <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.multiple) {
           <span class="hljs-keyword">if</span> (window.console &amp;&amp; window.console.warn)
             window.console.warn(<span class="hljs-string">'To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name, and id or a multiple option.'</span>, <span class="hljs-keyword">this</span>.$element);
 
           <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.parsleyInstance;
         }
 
-        <span class="hljs-keyword">this</span>.options.multiple = (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) || <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>)).replace(<span class="hljs-regexp">/(:|\.|\[|\]|\$)/g</span>, <span class="hljs-string">''</span>);
+        <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.options.multiple.replace(<span class="hljs-regexp">/(:|\.|\[|\]|\$)/g</span>, <span class="hljs-string">''</span>);
         ParsleyUtils.setAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
       }
 

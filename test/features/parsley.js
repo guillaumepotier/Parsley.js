@@ -80,23 +80,6 @@ define(function () {
         expect(parsleyInstance.options.namespace).to.be('baz-');
         expect(parsleyInstance.options.foo).to.be('bar');
       });
-      it('should not bind radio or checkboxes withoud a name, an id or a multiple option', function () {
-        $('body').append('<input type="radio" value="foo" />');
-        window.console.warn = sinon.spy();
-        parsleyInstance = $('input[type=radio]').psly();
-        expect(parsleyInstance.__class__).to.be('Parsley');
-        expect(window.console.warn.called).to.be(true);
-        $('input[type=radio]').attr('id', 'element');
-        parsleyInstance = $('#element').parsley();
-        expect(parsleyInstance.__class__).to.be('ParsleyField');
-        expect(parsleyInstance.options.multiple).to.be('element');
-        parsleyInstance.destroy();
-        $('input[type=radio]').attr('name', 'element');
-        parsleyInstance = $('input[name=element]').parsley();
-        expect(parsleyInstance.__class__).to.be('ParsleyField');
-        expect(parsleyInstance.options.multiple).to.be('element');
-        $('input[name=element]').remove();
-      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

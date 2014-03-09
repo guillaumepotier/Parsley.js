@@ -48,13 +48,20 @@ define([
 
       this.$element = $element;
 
-      // If element have already been binded, returns its Parsley instance
-      if (this.$element.data('Parsley'))
-        return this.$element.data('Parsley');
+      // If element have already been binded, returns its saved Parsley instance
+      if (this.$element.data('Parsley')) {
+        var savedParsleyInstance = this.$element.data('Parsley');
+
+        // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
+        if ('undefined' !== typeof parsleyInstance && 'ParsleyField' === savedParsleyInstance.parsleyInstance.__proxy__)
+          savedParsleyInstance.parsleyInstance = parsleyInstance;
+
+        return savedParsleyInstance;
+      }
 
       // Handle 'static' options
       this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
-      options = this.OptionsFactory.staticOptions;
+      options = this.OptionsFactory.get(this);
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs)))
@@ -96,6 +103,7 @@ define([
       if ('ParsleyForm' === parsleyInstance.__class__ || 'ParsleyField' === parsleyInstance.__class__) {
         // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
         this.$element.data('Parsley', parsleyInstance);
+        this.__proxy__ = parsleyInstance.__class__;
 
         // Tell the world we got a new ParsleyForm or ParsleyField instance!
         $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);

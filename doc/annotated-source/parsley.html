@@ -315,12 +315,12 @@ define([</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>If element have already been binded, returns its Parsley instance</p>
+              <p>If element have already been binded, returns its saved Parsley instance</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>))
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>)) {
+        <span class="hljs-keyword">var</span> savedParsleyInstance = <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>);</pre></div></div>
             
         </li>
         
@@ -331,12 +331,15 @@ define([</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Handle ‘static’ options</p>
+              <p>If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.OptionsFactory = <span class="hljs-keyword">new</span> ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, <span class="hljs-string">'ParsleyConfig'</span>, {}), options, <span class="hljs-keyword">this</span>.getNamespace(options));
-      options = <span class="hljs-keyword">this</span>.OptionsFactory.staticOptions;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyInstance &amp;&amp; <span class="hljs-string">'ParsleyField'</span> === savedParsleyInstance.parsleyInstance.__proxy__)
+          savedParsleyInstance.parsleyInstance = parsleyInstance;
+
+        <span class="hljs-keyword">return</span> savedParsleyInstance;
+      }</pre></div></div>
             
         </li>
         
@@ -346,6 +349,22 @@ define([</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Handle ‘static’ options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.OptionsFactory = <span class="hljs-keyword">new</span> ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, <span class="hljs-string">'ParsleyConfig'</span>, {}), options, <span class="hljs-keyword">this</span>.getNamespace(options));
+      options = <span class="hljs-keyword">this</span>.OptionsFactory.get(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>A ParsleyForm instance is obviously a <code>&lt;form&gt;</code> elem but also every node that is not an input and have <code>data-parsley-validate</code> attribute</p>
 
@@ -357,11 +376,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Else every other element that is supported and not excluded is binded as a <code>ParsleyField</code></p>
 
@@ -376,11 +395,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Retrieve namespace used for DOM-API</p>
 
@@ -391,11 +410,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><code>data-parsley-namespace=&lt;namespace&gt;</code></p>
 
@@ -414,11 +433,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Return proper <code>ParsleyForm</code> or <code>ParsleyField</code></p>
 
@@ -441,26 +460,27 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Store for later access the freshly binded instance in DOM element itself using jQuery <code>data()</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>, parsleyInstance);</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Store for later access the freshly binded instance in DOM element itself using jQuery <code>data()</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'Parsley'</span>, parsleyInstance);
+        <span class="hljs-keyword">this</span>.__proxy__ = parsleyInstance.__class__;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Tell the world we got a new ParsleyForm or ParsleyField instance!</p>
 
@@ -476,11 +496,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h3 id="jquery-api">jQuery API</h3>
 <p><code>$(&#39;.elem&#39;).parsley(options)</code> or <code>$(&#39;.elem&#39;).psly(options)</code></p>
@@ -494,11 +514,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h3 id="parsleyui">ParsleyUI</h3>
 <p>UI is a class apart that only listen to some events and them modify DOM accordingly
@@ -512,11 +532,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h3 id="parsleyfield-and-parsleyform-extension">ParsleyField and ParsleyForm extension</h3>
 <p>Ensure that defined if not already the case</p>
@@ -529,11 +549,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h3 id="parsleyconfig">ParsleyConfig</h3>
 <p>Ensure that defined if not already the case</p>
@@ -546,11 +566,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h3 id="globals">Globals</h3>
 
@@ -563,11 +583,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <h3 id="parsley-auto-binding">PARSLEY auto-binding</h3>
 <p>Prevent it by setting <code>ParsleyConfig.autoBind</code> to <code>false</code></p>
@@ -580,11 +600,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Works only on <code>data-parsley-validate</code>. We dunno here user specific namespace</p>
 
