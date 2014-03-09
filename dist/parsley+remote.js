@@ -185,21 +185,19 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
 // Remote validator is just an always true sync validator with lowest (-1) priority possible
 // It will be overloaded in `validateThroughValidator()` that will do the heavy async work
 // This 'hack' is needed not to mess up too much with error messages and stuff in `ParsleyUI`
-window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
-  validators: {
-    remote: {
-      fn: function () {
-        return true;
-      },
-      priority: -1
-    }
-  }
-});
+window.ParsleyConfig = window.ParsleyConfig || {};
+window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
+window.ParsleyConfig.validators.remote = {
+  fn: function () {
+    return true;
+  },
+  priority: -1
+};
 
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc3 - built Thu Mar 06 2014 23:54:07
+* Version 2.0.0-rc3 - built Sun Mar 09 2014 23:47:43
 * MIT Licensed
 *
 */
