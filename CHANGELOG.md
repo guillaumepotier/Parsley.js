@@ -7,6 +7,8 @@
   - fixed dynamically added fields form inheritance (#532)
   - fixed parsley-remote.js remote validator registration that overrided
     other extra validators.
+  - added multiple xhr queries aborting in parsley.remote to avoid unneeded
+    server overload with keyup trigger
 
 **2.0.0-rc3**
 

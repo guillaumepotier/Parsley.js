@@ -53,7 +53,7 @@ define('features/remote', [
       it.skip('should save some calls for querries already done');
       it.skip('should handle remote reverse option');
       it.skip('should handle remote options');
-
+      it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

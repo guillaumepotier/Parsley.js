@@ -22,7 +22,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   onSubmitValidate: function (event) {
     var that = this;
 
-    if ( event instanceof $.Event)
+    if (event instanceof $.Event)
       event.preventDefault();
 
     return this._asyncValidateForm(undefined, event)
@@ -129,7 +129,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       data = {},
       that = this,
       value = this.getValue(),
-      csr = value + this.$element.attr(this.options.namespace + 'remote-options');
+      csr = value + this.$element.attr(this.options.namespace + 'remote-options') || '';
 
     // Already validated values are stored to save some calls..
     if ('undefined' !== typeof this._remote && 'undefined' !== typeof this._remote[csr])
@@ -137,8 +137,12 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     else {
       data[that.$element.attr('name') || that.$element.attr('id')] = value;
 
-      // All `$.ajax(options)` could be overriden or extended directly from DOM in `data-parsley-remote-options`
-      promise = $.ajax($.extend(true, {}, {
+      // Prevent multi burst xhr queries
+      if (this._xhr && 'pending' === this._xhr.state())
+        this._xhr.abort();
+
+      // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
+      this._xhr = $.ajax($.extend(true, {}, {
         url: that.options.remote,
         data: data,
         type: 'GET'
@@ -146,11 +150,15 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     }
 
     // Depending on promise result, manage `validationResult` for UI
-    promise
+    this._xhr
       .done(function () {
         that._handleRemoteResult(true, deferred, csr);
       })
-      .fail(function () {
+      .fail(function (xhr, status, message) {
+        // If we aborted the query, do not handle nothing for this value
+        if ('abort' === status)
+          return;
+
         that._handleRemoteResult(false, deferred, csr);
       });
   },
