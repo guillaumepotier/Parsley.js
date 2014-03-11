@@ -67,8 +67,8 @@ define([
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs)))
         return this.bind('parsleyForm', parsleyInstance);
 
-      // Else every other element that is supported and not excluded is binded as a `ParsleyField`
-      else if (this.$element.is(options.inputs) && !this.$element.is(options.excluded))
+      // Else every other element that is supported is binded as a `ParsleyField`
+      else if (this.$element.is(options.inputs))
         return this.bind('parsleyField', parsleyInstance);
 
       return this;

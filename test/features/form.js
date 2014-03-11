@@ -24,9 +24,10 @@ define(function () {
             '<div id="field2"></div>'           +
             '<textarea id="field2"></textarea>' +
             '<div data-parsley-validate></div>' + // ParsleyForm, not a valid child
+            '<input id="field3" disabled />'    + // Disabled, excluded buy custom options below
             '<input type="submit"/>'            + // Excluded field, not valid
           '</form>');
-        parsleyForm = new Parsley($('#element'));
+        parsleyForm = new Parsley($('#element'), { excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]' });
         expect(parsleyForm.fields.length).to.be(2);
       });
       it('should properly bind options for form and children fields', function () {

@@ -108,7 +108,7 @@
 
           <h3 id="configuration">Configuration</h3>
           <p>
-            You'll see along this documentation and through <a href="examples.html">examples</a> various available configuration options. You can also have a pretty overview <a href="annotated-source/defaults.html" target="_blank">here</a> of Parsley's default configuration options.
+            You'll see along this documentation and through <a href="examples.html">examples</a> various available configuration options. You can also view <a href="annotated-source/defaults.html" target="_blank">here</a> all Parsley's default configuration options.
           </p>
 
 
@@ -252,6 +252,11 @@
                 <td><code>data-parsley-priority-enabled</code> <version>#2.0</version></td>
                 <td><code>true</code></td>
                 <td>Either validate higher priority constraints first and stop on first failure (<code>true</code>), or validate all constraints simultaneously and show all failing ones (<code>false</code>).</td>
+              </tr>
+              <tr>
+                <td><code>data-parsley-excluded</code> <version>#2.0</version></td>
+                <td><pre>input[type=button], input[type=submit], input[type=reset]</pre></td>
+                <td>Form fields that won't be validated by Parsley. If you want for example to add <code>disabled</code> fields to the existing list, use <pre>data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], [disabled]"</pre></td>
               </tr>
             </tbody>
           </table>
@@ -983,7 +988,7 @@ window.ParsleyValidator
             <form action="http://parsleyjs.us3.list-manage.com/subscribe/post?u=a39bf787b85f4d1b576367606&amp;id=d7374bb2d8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" data-parsley-validate>
               <label for="mce-EMAIL">Subscribe to Parsley mailing list</label>
               <small>Receive a mail each 2.x new release, and sometimes an email asking for your feedback (twice a year max!)</small>
-              <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+              <input type="email" data-parsley-error-message="<strong>What did you expect? That on Parsley own documentation, there won't be a validation here? ;)</strong>" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
                 <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                 <div style="position: absolute; left: -5000px;"><input type="text" name="b_a39bf787b85f4d1b576367606_d7374bb2d8" value=""></div>
               <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>

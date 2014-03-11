@@ -205,7 +205,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc3 - built Mon Mar 10 2014 18:09:26
+* Version 2.0.0-rc3 - built Tue Mar 11 2014 12:47:54
 * MIT Licensed
 *
 */
@@ -1639,8 +1639,8 @@ window.ParsleyConfig.validators.remote = {
       this.fields = [];
       this.$element.find(this.options.inputs).each(function () {
         var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
-        // only add valid field children
-        if ('ParsleyField' === fieldInstance.__class__)
+        // Only add valid and not excluded ParsleyField children
+        if ('ParsleyField' === fieldInstance.__class__  && !fieldInstance.$element.is(fieldInstance.options.excluded))
           self.fields.push(fieldInstance);
       });
       return this;
@@ -1996,8 +1996,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs)))
         return this.bind('parsleyForm', parsleyInstance);
-      // Else every other element that is supported and not excluded is binded as a `ParsleyField`
-      else if (this.$element.is(options.inputs) && !this.$element.is(options.excluded))
+      // Else every other element that is supported is binded as a `ParsleyField`
+      else if (this.$element.is(options.inputs))
         return this.bind('parsleyField', parsleyInstance);
       return this;
     },

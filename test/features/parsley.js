@@ -30,11 +30,11 @@ define(function () {
         expect(parsleyInstance).to.be.an('object');
         expect(parsleyInstance.__class__).to.be('Parsley');
       });
-      it('should return Parsley if instantiated on an excluded field type', function () {
+      it('should return ParsleyField even if instantiated on an excluded field type', function () {
         $('body').append('<input type="submit" id="element" />');
         var parsleyInstance = new Parsley($('#element'));
         expect(parsleyInstance).to.be.an('object');
-        expect(parsleyInstance.__class__).to.be('Parsley');
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
       });
       it('should return ParsleyForm if instantiated on an unsupported element with data-parsley-validate attribute', function () {
         $('body').append('<div id="element" data-parsley-validate></div>');
