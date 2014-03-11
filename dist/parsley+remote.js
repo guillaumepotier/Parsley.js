@@ -205,7 +205,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc3 - built Tue Mar 11 2014 12:47:54
+* Version 2.0.0-rc3 - built Tue Mar 11 2014 12:53:23
 * MIT Licensed
 *
 */
@@ -374,7 +374,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.5.5 - built Fri Feb 07 2014 16:52:20
+* Version 0.5.5 - built Tue Mar 11 2014 12:52:08
 * MIT Licensed
 *
 */
@@ -925,7 +925,7 @@ window.ParsleyConfig.validators.remote = {
     },
     Range: function ( min, max ) {
       this.__class__ = 'Range';
-      if ( !min || !max )
+      if ( 'undefined' === typeof min || 'undefined' === typeof max )
         throw new Error( 'Range assert expects min and max values' );
       this.min = min;
       this.max = max;

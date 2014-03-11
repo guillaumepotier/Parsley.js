@@ -10,6 +10,7 @@
   - added multiple xhr queries aborting in parsley.remote to avoid unneeded
     server overload with keyup trigger
   - fixed excluded fields option and added some doc for it (#546)
+  - fixed `range` validator with `0` value (#543)
 
 **2.0.0-rc3**
 
