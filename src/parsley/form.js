@@ -89,7 +89,7 @@ define('parsley/form', [
       this.fields = [];
 
       this.$element.find(this.options.inputs).each(function () {
-        var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
+        var fieldInstance = new window.Parsley(this, self.options, self.parsleyInstance);
 
         // Only add valid and not excluded ParsleyField children
         if ('ParsleyField' === fieldInstance.__class__  && !fieldInstance.$element.is(fieldInstance.options.excluded))
