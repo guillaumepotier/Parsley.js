@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc3 - built Tue Mar 11 2014 12:53:23
+* Version 2.0.0-rc3 - built Tue Mar 11 2014 22:09:35
 * MIT Licensed
 *
 */
@@ -750,7 +750,7 @@
       this.validate = function ( value ) {
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-        if ( !new RegExp( this.regexp ).test( value, this.flag ) )
+        if ( !new RegExp( this.regexp, this.flag ).test( value ) )
           throw new Violation( this, value, { regexp: this.regexp, flag: this.flag } );
         return true;
       };
@@ -1021,7 +1021,9 @@
         return $.extend(assert, { priority: 256 });
       },
       pattern: function (regexp) {
-        return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
+        var flags = regexp.replace(/.*\/([gimy]*)$/, '$1').replace(regexp, '');
+        var pattern = regexp.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
+        return $.extend(new Validator.Assert().Regexp(pattern, flags), { priority: 64 });
       },
       minlength: function (length) {
         return $.extend(new Validator.Assert().Length({ min: length }), { priority: 30 });
