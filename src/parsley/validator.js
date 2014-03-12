@@ -136,9 +136,6 @@ define('parsley/validator', [
         return $.extend(assert, { priority: 256 });
       },
       pattern: function (regexp) {
-        // TODO
-        // check tests
-        // add test for complex regex string
         var flags = regexp.replace(/.*\/([gimy]*)$/, '$1').replace(regexp, '');
         var pattern = regexp.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
         return $.extend(new Validator.Assert().Regexp(pattern, flags), { priority: 64 });
