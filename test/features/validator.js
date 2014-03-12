@@ -95,6 +95,10 @@ define(function () {
       it('should have a pattern validator', function () {
         expect(parsleyValidator.validate('a', parsleyValidator.validators.pattern('[a-z]+'))).to.be(true);
         expect(parsleyValidator.validate('A', parsleyValidator.validators.pattern('[a-z]+'))).not.to.be(true);
+        expect(parsleyValidator.validate('a', parsleyValidator.validators.pattern('/[a-z]+/'))).to.be(true);
+        expect(parsleyValidator.validate('A', parsleyValidator.validators.pattern('/[a-z]+/'))).not.to.be(true);
+        expect(parsleyValidator.validate('a', parsleyValidator.validators.pattern('/[a-z]+/i'))).to.be(true);
+        expect(parsleyValidator.validate('A', parsleyValidator.validators.pattern('/[a-z]+/i'))).to.be(true);
       });
       it('should have a length validator', function () {
         expect(parsleyValidator.validate('foobar', parsleyValidator.validators.length([3, 9]))).to.be(true);
