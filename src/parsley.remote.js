@@ -5,6 +5,8 @@
 // Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
 // Because returns promises instead of booleans.
 window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
+  asyncSupport: true,
+
   asyncValidate: function (group, event) {
     if ('ParsleyForm' === this.__class__)
       return this._asyncValidateForm(group, event);
@@ -22,14 +24,19 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   onSubmitValidate: function (event) {
     var that = this;
 
+    // Clone the event object
+    this.submitEvent = $.extend(true, {}, event);
+
     if (event instanceof $.Event)
       event.preventDefault();
 
     return this._asyncValidateForm(undefined, event)
       .done(function () {
-        that.$element
-          .off('submit.Parsley')
-          .trigger($.Event('submit'));
+        // If used do not have prevented the event, re-submit form
+        if (!that.submitEvent.isDefaultPrevented())
+          that.$element
+            .off('submit.Parsley')
+            .trigger($.Event('submit'));
       });
   },
 
@@ -49,7 +56,6 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   _asyncValidateForm: function (group, event) {
     var that = this,
       promises = [];
-    this.submitEvent = event;
 
     this._refreshFields();
 

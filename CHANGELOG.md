@@ -13,6 +13,8 @@
   - fixed `range` validator with `0` value (#543)
   - added `data-parsley-trim-value` option
   - updated validator.js
+  - added `this.submitEvent.preventDefault()` support for parsley.remote
+    call twice form / field tests with parsley.remote for better support (#552)
 
 **2.0.0-rc3**
 

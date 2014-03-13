@@ -47,9 +47,17 @@ require(['config'], function () {
         });
 
         require([
-          'features/remote'
-        ], function (remote) {
-          remote();
+          'features/remote',
+          'features/abstract',
+          'features/field',
+          'features/form'
+        ], function (remote, abstract, field, form) {
+          describe('Parsley+Remote', function () {
+            remote();
+            abstract(Parsley);
+            field(ParsleyField, Parsley);
+            form(ParsleyForm, Parsley);
+          });
 
           require([
             'features/extra'

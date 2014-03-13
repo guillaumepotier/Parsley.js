@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc3 - built Thu Mar 13 2014 09:17:40
+* Version 2.0.0-rc3 - built Thu Mar 13 2014 11:19:34
 * MIT Licensed
 *
 */
@@ -122,6 +122,7 @@
 
   var ParsleyAbstract = function(options) {};
   ParsleyAbstract.prototype = {
+    asyncSupport: false,
     actualizeOptions: function () {
       this.options = this.parsleyInstance.OptionsFactory.get(this);
       return this;

@@ -81,17 +81,33 @@ define(function () {
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
           parsleyForm = new Parsley($('#element'));
+
+          // parsley.remote hack because if valid, parsley remote re-send form
+          parsleyForm.subscribe('parsley:form:validate', function (formInstance) {
+            if (formInstance.asyncSupport)
+              formInstance.submitEvent._originalPreventDefault();
+          });
+
           var event = $.Event();
+          // parsley.remote hack
+          event._originalPreventDefault = event.preventDefault;
           event.preventDefault = sinon.spy();
           parsleyForm.onSubmitValidate(event);
           expect(event.preventDefault.called).to.be(true);
 
           $('#field1').val('foo');
           $('#field3').val('foo');
+
           event = $.Event();
+          // parsley.remote hack
+          event._originalPreventDefault = event.preventDefault;
           event.preventDefault = sinon.spy();
           parsleyForm.onSubmitValidate(event);
-          expect(event.preventDefault.called).to.be(false);
+
+          if (!parsleyForm.asyncSupport)
+            expect(event.preventDefault.called).to.be(false);
+          else
+            expect(event.preventDefault.called).to.be(true);
       });
       it('should have a force option for validate and isValid methods', function () {
         $('body').append(

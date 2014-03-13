@@ -2,6 +2,8 @@ define('parsley/abstract', function () {
   var ParsleyAbstract = function(options) {};
 
   ParsleyAbstract.prototype = {
+    asyncSupport: false,
+
     actualizeOptions: function () {
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
