@@ -22,6 +22,9 @@ window.ParsleyConfig.i18n.it = $.extend(window.ParsleyConfig.i18n.it || {}, {
   minlength:      "Questo valore è troppo corto. La lunghezza minima è di %s caratteri.",
   maxlength:      "Questo valore è troppo lungo. La lunghezza massima è di %s caratteri.",
   length:         "La lunghezza di questo valore deve essere compresa fra %s e %s caratteri.",
+  mincheck:       "Devi scegliere almeno %s opzioni.",
+  maxcheck:       "Devi scegliere al più %s opzioni.",
+  check:          "Devi scegliere tra %s e %s opzioni.",
   equalto:        "Questo valore deve essere identico."
 });
 
