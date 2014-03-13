@@ -11,6 +11,8 @@
     server overload with keyup trigger
   - fixed excluded fields option and added some doc for it (#546)
   - fixed `range` validator with `0` value (#543)
+  - added `data-parsley-trim-value` option
+  - updated validator.js
 
 **2.0.0-rc3**
 

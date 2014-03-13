@@ -321,6 +321,10 @@
                 <td>A field is by default not validated if not required and empty. By adding <code>data-parsley-validate-if-empty</code>, validation will be done even if field is empty. Useful if you need some custom validators that check something particular when field is empty.</td>
               </tr>
               <tr>
+                <td><code>data-parsley-trim-value</code> <version>#2.0</version></td>
+                <td>Trim field value <strong>only for Parsley validation</strong> (and not inside the input itself, data sent by your form won't be trimmed). Useful if your backend already do so and if trailing spaces could unnecessarily mess with your validation. Use <code>data-parsley-trim-value="true"</code>.</td>
+              </tr>
+              <tr>
                 <td><code>data-parsley-ui-enabled</code> <version>#2.0</version></td>
                 <td>If set to <code>false</code>, Parsley will not affect UI for this field.</td>
               </tr>

@@ -116,8 +116,15 @@ define('parsley/field', [
         return this.options.value;
 
       // Regular input, textarea and simple select
-      if ('undefined' === typeof this.options.multiple)
-        return this.$element.val();
+      if ('undefined' === typeof this.options.multiple) {
+        var value = this.$element.val();
+
+        // Use `data-parsley-trim-value="true"` to auto trim inputs entry
+        if (true === this.options.trimValue)
+          return value.replace(/^\s+|\s+$/g, '');
+
+        return value;
+      }
 
       // Radio input case
       if (this.$element.is('input[type=radio]'))

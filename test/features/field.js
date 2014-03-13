@@ -254,6 +254,12 @@ define(function () {
         expect($('#element').parsley().isValid(true)).to.be(false);
         expect($('#element').parsley().validate(true).length).to.be(1);
       });
+      it('should have a trim-value option', function () {
+        $('body').append('<input type="text" id="element" value=" foo " />');
+        expect($('#element').parsley().getValue()).to.be(' foo ');
+        $('#element').attr('data-parsley-trim-value', true).parsley().actualizeOptions();
+        expect($('#element').parsley().getValue()).to.be('foo');
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc3 - built Tue Mar 11 2014 12:53:23
+* Version 2.0.0-rc3 - built Thu Mar 13 2014 09:17:40
 * MIT Licensed
 *
 */
@@ -170,7 +170,7 @@
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.5.5 - built Tue Mar 11 2014 12:52:08
+* Version 0.5.7 - built Wed Mar 12 2014 19:16:34
 * MIT Licensed
 *
 */
@@ -180,7 +180,7 @@
   */
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '0.5.5';
+    this.__version__ = '0.5.7';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
     return this;
@@ -750,7 +750,7 @@
       this.validate = function ( value ) {
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-        if ( !new RegExp( this.regexp ).test( value, this.flag ) )
+        if ( !new RegExp( this.regexp, this.flag ).test( value ) )
           throw new Violation( this, value, { regexp: this.regexp, flag: this.flag } );
         return true;
       };
@@ -1551,8 +1551,13 @@
       if ('undefined' !== typeof this.options.value)
         return this.options.value;
       // Regular input, textarea and simple select
-      if ('undefined' === typeof this.options.multiple)
-        return this.$element.val();
+      if ('undefined' === typeof this.options.multiple) {
+        var value = this.$element.val();
+        // Use `data-parsley-trim-value="true"` to auto trim inputs entry
+        if (true === this.options.trimValue)
+          return value.replace(/^\s+|\s+$/g, '');
+        return value;
+      }
       // Radio input case
       if (this.$element.is('input[type=radio]'))
         return $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').val() || '';
