@@ -49,6 +49,11 @@
               </a>
             
               
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
               <a class="source" href="pubsub.html">
                 pubsub.js
               </a>
@@ -103,17 +108,18 @@
       <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'You must give a Parsley instance'</span>);
 
     <span class="hljs-keyword">this</span>.parsleyInstance = parsleyInstance;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.init($(element));
+    <span class="hljs-keyword">this</span>.$element = $(element);
   };
 
   ParsleyForm.prototype = {
-    init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">($element)</span> {</span>
-      <span class="hljs-keyword">this</span>.$element = $element;
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
       <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">null</span>;
 
       <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);
 
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._bindFields();
+      <span class="hljs-keyword">this</span>._bindFields();
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     },
 
     onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span>
@@ -277,11 +283,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>only add valid field children</p>
+              <p>Only add valid and not excluded ParsleyField children</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__)
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__  &amp;&amp; !fieldInstance.$element.is(fieldInstance.options.excluded))
           self.fields.push(fieldInstance);
       });
 

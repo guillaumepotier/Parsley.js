@@ -108,7 +108,7 @@
 
           <h3 id="configuration">Configuration</h3>
           <p>
-            You'll see along this documentation and through <a href="examples.html">examples</a> various available configuration options. You can also have a pretty overview <a href="annotated-source/defaults.html" target="_blank">here</a> of Parsley's default configuration options.
+            You'll see along this documentation and through <a href="examples.html">examples</a> various available configuration options. You can also view <a href="annotated-source/defaults.html" target="_blank">here</a> all Parsley's default configuration options.
           </p>
 
 
@@ -210,6 +210,32 @@
           <p>
             Parsley is a decoupled library that uses differents classes to do the heavy work. You'll see here the different protagonists involved and how you can configure them to fit your desired validation.
           </p>
+          <table class="table table-stripped table-bordered">
+            <thead>
+              <tr>
+                <th class="col-md-3">$ API</th>
+                <th class="col-md-1">Return</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>$('#existingForm').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>parsleyFormInstance</code></td>
+              </tr>
+              <tr>
+                <td><code>$('#existingInput').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>parsleyFieldInstance</code></td>
+              </tr>
+              <tr>
+                <td><code>$('#notExistingDOMElement').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>undefined</code></td>
+              </tr>
+              <tr>
+                <td><code>$('.multipleElements').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>Array[Instances]</code></td>
+              </tr>
+            </tbody>
+          </table>
           <div class="bs-callout bs-callout-warning">
             <h4>Look at the source code!</h4>
             <p>
@@ -253,6 +279,11 @@
                 <td><code>true</code></td>
                 <td>Either validate higher priority constraints first and stop on first failure (<code>true</code>), or validate all constraints simultaneously and show all failing ones (<code>false</code>).</td>
               </tr>
+              <tr>
+                <td><code>data-parsley-excluded</code> <version>#2.0</version></td>
+                <td><pre>input[type=button], input[type=submit], input[type=reset]</pre></td>
+                <td>Form fields that won't be validated by Parsley. If you want for example to add <code>disabled</code> fields to the existing list, use <pre>data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], [disabled]"</pre></td>
+              </tr>
             </tbody>
           </table>
 
@@ -277,6 +308,16 @@
                   <code>boolean</code>
                 </td>
                 <td>Validate form. Prevent submission if not valid. <strong>Fires <a href="#events">events</a> and affect UI.</strong>. You can only validate a certain group of fields by specifying optional <code>group</code> string parameter. If <code>group</code> given, only validate fields that belongs to this group. If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
+              </tr>
+              <tr>
+                <td><code>reset()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Reset UI for this form and for its fields.</td>
+              </tr>
+              <tr>
+                <td><code>destroy()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Disable and destroy Parsley for this form and its fields.</td>
               </tr>
             </tbody>
           </table>
@@ -314,6 +355,10 @@
               <tr>
                 <td><code>data-parsley-validate-if-empty</code> <version>#2.0</version></td>
                 <td>A field is by default not validated if not required and empty. By adding <code>data-parsley-validate-if-empty</code>, validation will be done even if field is empty. Useful if you need some custom validators that check something particular when field is empty.</td>
+              </tr>
+              <tr>
+                <td><code>data-parsley-trim-value</code> <version>#2.0</version></td>
+                <td>Trim field value <strong>only for Parsley validation</strong> (and not inside the input itself, data sent by your form won't be trimmed). Useful if your backend already do so and if trailing spaces could unnecessarily mess with your validation. Use <code>data-parsley-trim-value="true"</code>.</td>
               </tr>
               <tr>
                 <td><code>data-parsley-ui-enabled</code> <version>#2.0</version></td>
@@ -356,6 +401,16 @@
                   <code>[Violation [, Violation..]]</code> if fails
                 </td>
                 <td>Validate Field. <strong>Fires <a href="#events">events</a> and affect UI.</strong> If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
+              </tr>
+              <tr>
+                <td><code>reset()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Reset UI for this field.</td>
+              </tr>
+              <tr>
+                <td><code>destroy()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Disable and destroy Parsley for this field.</td>
               </tr>
             </tbody>
           </table>
@@ -621,7 +676,7 @@
                   Check <version>#2.0</version>
                 </td>
                 <td><code>data-parsley-equalto="#anotherfield"</code></td>
-                <td>Validates that value is identical to another field value (useful or password confirmation check).</td>
+                <td>Validates that value is identical to another field value (useful for password confirmation check).</td>
               </tr>
             </tbody>
           </table>
@@ -983,7 +1038,7 @@ window.ParsleyValidator
             <form action="http://parsleyjs.us3.list-manage.com/subscribe/post?u=a39bf787b85f4d1b576367606&amp;id=d7374bb2d8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" data-parsley-validate>
               <label for="mce-EMAIL">Subscribe to Parsley mailing list</label>
               <small>Receive a mail each 2.x new release, and sometimes an email asking for your feedback (twice a year max!)</small>
-              <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+              <input type="email" data-parsley-error-message="<strong>What did you expect? That on Parsley own documentation, there won't be a validation here? ;)</strong>" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
                 <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                 <div style="position: absolute; left: -5000px;"><input type="text" name="b_a39bf787b85f4d1b576367606_d7374bb2d8" value=""></div>
               <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>

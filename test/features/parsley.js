@@ -30,11 +30,11 @@ define(function () {
         expect(parsleyInstance).to.be.an('object');
         expect(parsleyInstance.__class__).to.be('Parsley');
       });
-      it('should return Parsley if instantiated on an excluded field type', function () {
+      it('should return ParsleyField even if instantiated on an excluded field type', function () {
         $('body').append('<input type="submit" id="element" />');
         var parsleyInstance = new Parsley($('#element'));
         expect(parsleyInstance).to.be.an('object');
-        expect(parsleyInstance.__class__).to.be('Parsley');
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
       });
       it('should return ParsleyForm if instantiated on an unsupported element with data-parsley-validate attribute', function () {
         $('body').append('<div id="element" data-parsley-validate></div>');
@@ -79,6 +79,18 @@ define(function () {
         expect(parsleyInstance.__class__).to.be('ParsleyField');
         expect(parsleyInstance.options.namespace).to.be('baz-');
         expect(parsleyInstance.options.foo).to.be('bar');
+      });
+      it('should have a jquery API returning undefined if done on a non existing element', function () {
+        window.console.warn = sinon.spy();
+        expect($('#foo').parsley()).to.be(undefined);
+        expect(window.console.warn.called).to.be(true);
+      });
+      it('should have a jquery API that binds multiple selectors', function () {
+        $('body').append('<div id="element">'+
+          '<input type="text" id="foo" required />' +
+          '<input type="text" id="bar" required />' +
+        '</div>');
+        expect($('input').parsley().length).to.be(2);
       });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };

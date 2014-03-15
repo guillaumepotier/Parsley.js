@@ -49,6 +49,11 @@
               </a>
             
               
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
               <a class="source" href="pubsub.html">
                 pubsub.js
               </a>
@@ -91,10 +96,13 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define(<span class="hljs-string">'parsley/abstract'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-  <span class="hljs-keyword">var</span> ParsleyAbstract = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>};
+            <div class="content"><div class='highlight'><pre>define(<span class="hljs-string">'parsley/abstract'</span>, [
+], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">var</span> ParsleyAbstract = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>};
 
   ParsleyAbstract.prototype = {
+    asyncSupport: <span class="hljs-literal">false</span>,
+
     actualizeOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
       <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);
 
@@ -186,7 +194,7 @@ To every field instance for this form</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === <span class="hljs-keyword">this</span>.__class__)
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> !== <span class="hljs-keyword">this</span>.__class__)
         <span class="hljs-keyword">return</span> $.emit(<span class="hljs-string">'parsley:field:reset'</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
             
         </li>
@@ -236,7 +244,7 @@ To every field instance for this form</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === <span class="hljs-keyword">this</span>.__class__) {
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> !== <span class="hljs-keyword">this</span>.__class__) {
         $.emit(<span class="hljs-string">'parsley:field:destroy'</span>, <span class="hljs-keyword">this</span>);
         <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
 

@@ -49,6 +49,11 @@
               </a>
             
               
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
               <a class="source" href="pubsub.html">
                 pubsub.js
               </a>
@@ -104,15 +109,14 @@
       <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'You must give a Parsley instance'</span>);
 
     <span class="hljs-keyword">this</span>.parsleyInstance = parsleyInstance;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.init($(field), parsleyInstance.options);
+    <span class="hljs-keyword">this</span>.$element = $(field);
+    <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);
   };
 
   ParsleyField.prototype = {
-    init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">($element, options)</span> {</span>
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
       <span class="hljs-keyword">this</span>.constraints = [];
-      <span class="hljs-keyword">this</span>.$element = $element;
-      <span class="hljs-keyword">this</span>.validationResult = [];
-      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);</pre></div></div>
+      <span class="hljs-keyword">this</span>.validationResult = [];</pre></div></div>
             
         </li>
         
@@ -144,7 +148,9 @@
         ParsleyUtils.setAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
       }
 
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bindConstraints();
+      <span class="hljs-keyword">this</span>.bindConstraints();
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     },</pre></div></div>
             
         </li>
@@ -405,8 +411,8 @@ And if multiple field</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.multiple)
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$element.val();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.multiple) {
+        <span class="hljs-keyword">var</span> value = <span class="hljs-keyword">this</span>.$element.val();</pre></div></div>
             
         </li>
         
@@ -416,6 +422,25 @@ And if multiple field</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Use <code>data-parsley-trim-value=&quot;true&quot;</code> to auto trim inputs entry</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.options.trimValue)
+          <span class="hljs-keyword">return</span> value.replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">''</span>);
+
+        <span class="hljs-keyword">return</span> value;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Radio input case</p>
 
@@ -427,11 +452,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>checkbox input case</p>
 
@@ -450,11 +475,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Select multiple case</p>
 
@@ -474,11 +499,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>clean all existing DOM constraints to only keep javascript user constraints</p>
 
@@ -493,11 +518,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>then re-add Parsley DOM-API constraints</p>
 
@@ -509,11 +534,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>finally, bind special HTML5 constraints</p>
 
@@ -527,11 +552,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>html5 required</p>
 
@@ -543,11 +568,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>html5 pattern</p>
 
@@ -559,11 +584,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>range</p>
 
@@ -575,11 +600,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>HTML5 min</p>
 
@@ -591,11 +616,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>HTML5 max</p>
 
@@ -607,11 +632,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>html5 types</p>
 
@@ -625,11 +650,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Small special case here for HTML5 number, that is in fact an integer validator</p>
 
@@ -641,11 +666,11 @@ And if multiple field</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Regular other HTML5 supported types</p>
 
@@ -668,16 +693,16 @@ And if multiple field</p>
       name = name.toLowerCase();
 
       <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> window.ParsleyValidator.validators[name]) {
-        constraint = <span class="hljs-keyword">new</span> ConstraintFactory(<span class="hljs-keyword">this</span>, name, requirements, priority, isDomConstraint);</pre></div></div>
+        <span class="hljs-keyword">var</span> constraint = <span class="hljs-keyword">new</span> ConstraintFactory(<span class="hljs-keyword">this</span>, name, requirements, priority, isDomConstraint);</pre></div></div>
             
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>if constraint already exist, delete it and push new version</p>
 

@@ -1,7 +1,10 @@
-define('parsley/abstract', function () {
-  var ParsleyAbstract = function(options) {};
+define('parsley/abstract', [
+], function () {
+  var ParsleyAbstract = function() {};
 
   ParsleyAbstract.prototype = {
+    asyncSupport: false,
+
     actualizeOptions: function () {
       this.options = this.parsleyInstance.OptionsFactory.get(this);
 
@@ -32,7 +35,7 @@ define('parsley/abstract', function () {
     // Reset UI
     reset: function () {
       // Field case: just emit a reset event for UI
-      if ('ParsleyField' === this.__class__)
+      if ('ParsleyForm' !== this.__class__)
         return $.emit('parsley:field:reset', this);
 
       // Form case: emit a reset event for each field
@@ -45,7 +48,7 @@ define('parsley/abstract', function () {
     // Destroy Parsley instance (+ UI)
     destroy: function () {
       // Field case: emit destroy event to clean UI and then destroy stored instance
-      if ('ParsleyField' === this.__class__) {
+      if ('ParsleyForm' !== this.__class__) {
         $.emit('parsley:field:destroy', this);
         this.$element.removeData('Parsley');
 

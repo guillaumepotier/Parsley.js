@@ -40,20 +40,21 @@ define('features/remote', [
         expect(promise).to.have.key('promise');
       });
       it('should trigger right events on asyncValidate for form and field', function (done) {
-        $.listen('parsley:form:validated', function () { done(); });
         $('body').append(
           '<form id="element" data-parsley-trigger="change">'                 +
             '<input id="field1" type="text" data-parsley-required="true" />'  +
             '<div id="field2"></div>'                                         +
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
-        $('#element').psly().asyncValidate();
+        $('#element').psly()
+          .subscribe('parsley:form:validated', function () { done(); })
+          .asyncValidate();
       });
       it.skip('should handle properly validation with remote validator', function () {});
       it.skip('should save some calls for querries already done');
       it.skip('should handle remote reverse option');
       it.skip('should handle remote options');
-
+      it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

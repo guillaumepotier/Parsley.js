@@ -49,6 +49,11 @@
               </a>
             
               
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
               <a class="source" href="pubsub.html">
                 pubsub.js
               </a>
@@ -98,6 +103,8 @@ Because returns promises instead of booleans.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
+  asyncSupport: <span class="hljs-literal">true</span>,
+
   asyncValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group, event)</span> {</span>
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === <span class="hljs-keyword">this</span>.__class__)
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncValidateForm(group, event);
@@ -113,20 +120,7 @@ Because returns promises instead of booleans.</p>
   },
 
   onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span>
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
-
-    <span class="hljs-keyword">if</span> ( event <span class="hljs-keyword">instanceof</span> $.Event)
-      event.preventDefault();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncValidateForm(<span class="hljs-literal">undefined</span>, event)
-      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-        that.$element
-          .off(<span class="hljs-string">'submit.Parsley'</span>)
-          .trigger($.Event(<span class="hljs-string">'submit'</span>));
-      });
-  },
-
-  eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span></pre></div></div>
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;</pre></div></div>
             
         </li>
         
@@ -136,6 +130,49 @@ Because returns promises instead of booleans.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Clone the event object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.submitEvent = $.extend(<span class="hljs-literal">true</span>, {}, event);
+
+    <span class="hljs-keyword">if</span> (event <span class="hljs-keyword">instanceof</span> $.Event)
+      event.preventDefault();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._asyncValidateForm(<span class="hljs-literal">undefined</span>, event)
+      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>If used do not have prevented the event, re-submit form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!that.submitEvent.isDefaultPrevented())
+          that.$element
+            .off(<span class="hljs-string">'submit.Parsley'</span>)
+            .trigger($.Event(<span class="hljs-string">'submit'</span>));
+      });
+  },
+
+  eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>For keyup, keypress, keydown.. events that could be a little bit obstrusive
 do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
@@ -154,11 +191,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-3">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Returns Promise</p>
 
@@ -167,7 +204,6 @@ about success or failure have been displayed, always validate with this trigger 
             <div class="content"><div class='highlight'><pre>  _asyncValidateForm: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(group, event)</span> {</span>
     <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>,
       promises = [];
-    <span class="hljs-keyword">this</span>.submitEvent = event;
 
     <span class="hljs-keyword">this</span>._refreshFields();
 
@@ -178,11 +214,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>do not validate a field if not the same as given validation group</p>
 
@@ -209,11 +245,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>do not validate a field if not the same as given validation group</p>
 
@@ -252,11 +288,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>If regular isValid (matching regular constraints) retunrs <code>false</code>, no need to go further
 Directly reject promise, do not run remote validator and save server load</p>
@@ -269,11 +305,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>If regular constraints are valid, and there is a remote validator registered, run it</p>
 
@@ -285,11 +321,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Otherwise all is good, resolve promise</p>
 
@@ -301,11 +337,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Return promise</p>
 
@@ -319,16 +355,16 @@ Directly reject promise, do not run remote validator and save server load</p>
       data = {},
       that = <span class="hljs-keyword">this</span>,
       value = <span class="hljs-keyword">this</span>.getValue(),
-      csr = value + <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'remote-options'</span>);</pre></div></div>
+      csr = value + <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'remote-options'</span>) || <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Already validated values are stored to save some calls..</p>
 
@@ -342,17 +378,33 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>All <code>$.ajax(options)</code> could be overriden or extended directly from DOM in <code>data-parsley-remote-options</code></p>
+              <p>Prevent multi burst xhr queries</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      promise = $.ajax($.extend(<span class="hljs-literal">true</span>, {}, {
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._xhr &amp;&amp; <span class="hljs-string">'pending'</span> === <span class="hljs-keyword">this</span>._xhr.state())
+        <span class="hljs-keyword">this</span>._xhr.abort();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>All <code>$.ajax(options)</code> could be overridden or extended directly from DOM in <code>data-parsley-remote-options</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>._xhr = $.ajax($.extend(<span class="hljs-literal">true</span>, {}, {
         url: that.options.remote,
         data: data,
         type: <span class="hljs-string">'GET'</span>
@@ -362,21 +414,38 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Depending on promise result, manage <code>validationResult</code> for UI</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    promise
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._xhr
       .done(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
         that._handleRemoteResult(<span class="hljs-literal">true</span>, deferred, csr);
       })
-      .fail(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      .fail(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(xhr, status, message)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>If we aborted the query, do not handle nothing for this value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">'abort'</span> === status)
+          <span class="hljs-keyword">return</span>;
+
         that._handleRemoteResult(<span class="hljs-literal">false</span>, deferred, csr);
       });
   },
@@ -386,11 +455,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Store remote call result to avoid next calls with exact same parameters</p>
 
@@ -401,11 +470,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>If reverse option is set, a failing ajax request is considered successful</p>
 
@@ -417,11 +486,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>If true, simply resolve and exit</p>
 
@@ -435,11 +504,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Else, create a proper remote validation Violation to trigger right UI</p>
 
@@ -460,11 +529,11 @@ Directly reject promise, do not run remote validator and save server load</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Remote validator is just an always true sync validator with lowest (-1) priority possible
 It will be overloaded in <code>validateThroughValidator()</code> that will do the heavy async work
@@ -472,16 +541,14 @@ This ‘hack’ is needed not to mess up too much with error messages and stuff 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
-  validators: {
-    remote: {
-      fn: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-      },
-      priority: -<span class="hljs-number">1</span>
-    }
-  }
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>window.ParsleyConfig = window.ParsleyConfig || {};
+window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
+window.ParsleyConfig.validators.remote = {
+  fn: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  },
+  priority: -<span class="hljs-number">1</span>
+};</pre></div></div>
             
         </li>
         

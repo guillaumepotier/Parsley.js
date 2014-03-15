@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "2.0.0-rc3",
+  "version": "2.0.0-rc4",
   "ignore": [
     "**/.*",
     "build",
@@ -16,7 +16,7 @@
   ],
   "devDependencies": {
     "jquery": "~1.10.0",
-    "validator.js": "~0.5.5",
+    "validator.js": "~0.5.7",
     "requirejs": "~2.1.0",
     "bootstrap": "~3.0.3",
     "sinonjs": "~1.7.3",

@@ -5,6 +5,8 @@
 // Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
 // Because returns promises instead of booleans.
 window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
+  asyncSupport: true,
+
   asyncValidate: function (group, event) {
     if ('ParsleyForm' === this.__class__)
       return this._asyncValidateForm(group, event);
@@ -22,14 +24,19 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   onSubmitValidate: function (event) {
     var that = this;
 
-    if ( event instanceof $.Event)
+    // Clone the event object
+    this.submitEvent = $.extend(true, {}, event);
+
+    if (event instanceof $.Event)
       event.preventDefault();
 
     return this._asyncValidateForm(undefined, event)
       .done(function () {
-        that.$element
-          .off('submit.Parsley')
-          .trigger($.Event('submit'));
+        // If used do not have prevented the event, re-submit form
+        if (!that.submitEvent.isDefaultPrevented())
+          that.$element
+            .off('submit.Parsley')
+            .trigger($.Event('submit'));
       });
   },
 
@@ -49,7 +56,6 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   _asyncValidateForm: function (group, event) {
     var that = this,
       promises = [];
-    this.submitEvent = event;
 
     this._refreshFields();
 
@@ -129,7 +135,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       data = {},
       that = this,
       value = this.getValue(),
-      csr = value + this.$element.attr(this.options.namespace + 'remote-options');
+      csr = value + this.$element.attr(this.options.namespace + 'remote-options') || '';
 
     // Already validated values are stored to save some calls..
     if ('undefined' !== typeof this._remote && 'undefined' !== typeof this._remote[csr])
@@ -137,8 +143,12 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     else {
       data[that.$element.attr('name') || that.$element.attr('id')] = value;
 
-      // All `$.ajax(options)` could be overriden or extended directly from DOM in `data-parsley-remote-options`
-      promise = $.ajax($.extend(true, {}, {
+      // Prevent multi burst xhr queries
+      if (this._xhr && 'pending' === this._xhr.state())
+        this._xhr.abort();
+
+      // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
+      this._xhr = $.ajax($.extend(true, {}, {
         url: that.options.remote,
         data: data,
         type: 'GET'
@@ -146,11 +156,15 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     }
 
     // Depending on promise result, manage `validationResult` for UI
-    promise
+    this._xhr
       .done(function () {
         that._handleRemoteResult(true, deferred, csr);
       })
-      .fail(function () {
+      .fail(function (xhr, status, message) {
+        // If we aborted the query, do not handle nothing for this value
+        if ('abort' === status)
+          return;
+
         that._handleRemoteResult(false, deferred, csr);
       });
   },
@@ -185,13 +199,11 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
 // Remote validator is just an always true sync validator with lowest (-1) priority possible
 // It will be overloaded in `validateThroughValidator()` that will do the heavy async work
 // This 'hack' is needed not to mess up too much with error messages and stuff in `ParsleyUI`
-window.ParsleyConfig = $.extend(window.ParsleyConfig || {}, {
-  validators: {
-    remote: {
-      fn: function () {
-        return true;
-      },
-      priority: -1
-    }
-  }
-});
+window.ParsleyConfig = window.ParsleyConfig || {};
+window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
+window.ParsleyConfig.validators.remote = {
+  fn: function () {
+    return true;
+  },
+  priority: -1
+};

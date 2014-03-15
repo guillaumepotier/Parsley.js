@@ -44,20 +44,6 @@ define(function () {
         expect(parsleyField.constraints[0].requirements).to.be(false);
         expect(parsleyField.constraints[0].priority).to.be(64);
       });
-      it('should support select multiple', function () {
-        $('body').append(
-          '<select multiple id="element" >' +
-            '<option value="1">1</option>'  +
-            '<option value="2">2</option>'  +
-            '<option value="3">3</option>'  +
-          '</select>');
-        var parsleyField = new Parsley($('#element'));
-        expect(parsleyField.__class__).to.be('ParsleyField');
-        expect(parsleyField.options.multiple).to.be('element');
-        expect(parsleyField.getValue()).to.be('');
-        $('#element option[value="1"]').attr('selected', 'selected');
-        expect(parsleyField.getValue()).to.be.eql(['1']);
-      });
       it('should have a proper updateConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
@@ -82,27 +68,6 @@ define(function () {
       it('should return an empty array for fields withoud constraints', function () {
         $('body').append('<input type="text" id="element" value="" />');
         expect(new Parsley($('#element')).isValid()).to.eql([]);
-      });
-      it('should not bind radio or checkboxes withoud a name, an id or a multiple option', function () {
-        $('body').append('<input type="radio" value="foo" />');
-        window.console.warn = sinon.spy();
-        parsleyInstance = $('input[type=radio]').psly();
-        expect(parsleyInstance.__class__).to.be('Parsley');
-        expect(window.console.warn.called).to.be(true);
-        $('input[type=radio]').attr('id', '');
-        parsleyInstance = $('input[type=radio]').psly();
-        expect(parsleyInstance.__class__).to.be('Parsley');
-        expect(window.console.warn.called).to.be(true);
-        $('input[type=radio]').attr('id', 'element');
-        parsleyInstance = $('#element').parsley();
-        expect(parsleyInstance.__class__).to.be('ParsleyField');
-        expect(parsleyInstance.options.multiple).to.be('element');
-        parsleyInstance.destroy();
-        $('input[type=radio]').attr('name', 'element');
-        parsleyInstance = $('input[name=element]').parsley();
-        expect(parsleyInstance.__class__).to.be('ParsleyField');
-        expect(parsleyInstance.options.multiple).to.be('element');
-        $('input[name=element]').remove();
       });
       it('should properly bind HTML5 supported constraints', function () {
         $('body').append('<input type="email" pattern="\\w+" id="element" required min="5" max="100" />');
@@ -178,7 +143,7 @@ define(function () {
       });
       it('should handle constraints priorities on validation', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        parsleyField = new Parsley($('#element'));
+        var parsleyField = new Parsley($('#element'));
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(1);
         expect(parsleyField.validationResult[0].assert.name).to.be('required');
@@ -193,7 +158,7 @@ define(function () {
       });
       it('should handle all violations if `priorityEnabled` is set to false', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        parsleyField = new Parsley($('#element'), { priorityEnabled: false });
+        var parsleyField = new Parsley($('#element'), { priorityEnabled: false });
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(3);
       });
@@ -253,6 +218,12 @@ define(function () {
         expect($('#element').parsley().validate()).to.be.eql([]);
         expect($('#element').parsley().isValid(true)).to.be(false);
         expect($('#element').parsley().validate(true).length).to.be(1);
+      });
+      it('should have a trim-value option', function () {
+        $('body').append('<input type="text" id="element" value=" foo " />');
+        expect($('#element').parsley().getValue()).to.be(' foo ');
+        $('#element').attr('data-parsley-trim-value', true).parsley().actualizeOptions();
+        expect($('#element').parsley().getValue()).to.be('foo');
       });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };

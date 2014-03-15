@@ -11,15 +11,14 @@ define('parsley/field', [
       throw new Error('You must give a Parsley instance');
 
     this.parsleyInstance = parsleyInstance;
-    return this.init($(field), parsleyInstance.options);
+    this.$element = $(field);
+    this.options = this.parsleyInstance.OptionsFactory.get(this);
   };
 
   ParsleyField.prototype = {
-    init: function ($element, options) {
+    init: function () {
       this.constraints = [];
-      this.$element = $element;
       this.validationResult = [];
-      this.options = this.parsleyInstance.OptionsFactory.get(this);
 
       // Select / radio / checkbox multiple inputs hack
       if ((this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) || (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple'))) {
@@ -39,7 +38,9 @@ define('parsley/field', [
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
       }
 
-      return this.bindConstraints();
+      this.bindConstraints();
+
+      return this;
     },
 
     // Returns validationResult. For field, it could be:
@@ -116,8 +117,15 @@ define('parsley/field', [
         return this.options.value;
 
       // Regular input, textarea and simple select
-      if ('undefined' === typeof this.options.multiple)
-        return this.$element.val();
+      if ('undefined' === typeof this.options.multiple) {
+        var value = this.$element.val();
+
+        // Use `data-parsley-trim-value="true"` to auto trim inputs entry
+        if (true === this.options.trimValue)
+          return value.replace(/^\s+|\s+$/g, '');
+
+        return value;
+      }
 
       // Radio input case
       if (this.$element.is('input[type=radio]'))
@@ -210,7 +218,7 @@ define('parsley/field', [
       name = name.toLowerCase();
 
       if ('function' === typeof window.ParsleyValidator.validators[name]) {
-        constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
+        var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
         if (-1 !== this._constraintIndex(constraint.name))

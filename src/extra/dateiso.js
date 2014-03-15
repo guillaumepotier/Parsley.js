@@ -1,3 +1,4 @@
+// dateiso extra validator
 // Guillaume Potier
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
