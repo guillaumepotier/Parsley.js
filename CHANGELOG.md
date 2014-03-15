@@ -16,6 +16,11 @@
   - added `this.submitEvent.preventDefault()` support for parsley.remote
     call twice form / field tests with parsley.remote for better support (#552)
   - fixed global leaks shown by test suite
+  - new $ Parsley API behavior:
+    - returns `undefined` if called on non existing DOM element
+      + console warn (#548)
+    - returns an array of instances if called on selector with multiple
+      elements (#547)
 
 **2.0.0-rc3**
 

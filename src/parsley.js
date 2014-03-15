@@ -156,6 +156,24 @@ define([
   // ### jQuery API
   // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
   $.fn.parsley = $.fn.psly = function (options) {
+    if (this.length > 1) {
+      var instances = [];
+
+      this.each(function () {
+        instances.push($(this).parsley(options));
+      });
+
+      return instances;
+    }
+
+    // Return undefined if applied to non existing DOM element
+    if (!$(this).length) {
+      if (window.console && window.console.warn)
+        window.console.warn('You must bind Parsley on an existing element.');
+
+      return;
+    }
+
     return new Parsley(this, options);
   };
 
@@ -184,10 +202,8 @@ define([
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
     $(document).ready(function () {
-      // Works only on `data-parsley-validate`. We dunno here user specific namespace
-      $('[data-parsley-validate]').each(function () {
-        new Parsley(this);
-      });
+      // Works only on `data-parsley-validate`.
+      $('[data-parsley-validate]').parsley();
     });
 
   return Parsley;

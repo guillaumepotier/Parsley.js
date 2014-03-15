@@ -210,6 +210,32 @@
           <p>
             Parsley is a decoupled library that uses differents classes to do the heavy work. You'll see here the different protagonists involved and how you can configure them to fit your desired validation.
           </p>
+          <table class="table table-stripped table-bordered">
+            <thead>
+              <tr>
+                <th class="col-md-3">$ API</th>
+                <th class="col-md-1">Return</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>$('#existingForm').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>parsleyFormInstance</code></td>
+              </tr>
+              <tr>
+                <td><code>$('#existingInput').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>parsleyFieldInstance</code></td>
+              </tr>
+              <tr>
+                <td><code>$('#notExistingDOMElement').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>undefined</code></td>
+              </tr>
+              <tr>
+                <td><code>$('.multipleElements').parsley(options)</code> <version>#2.0</version></td>
+                <td><code>Array[Instances]</code></td>
+              </tr>
+            </tbody>
+          </table>
           <div class="bs-callout bs-callout-warning">
             <h4>Look at the source code!</h4>
             <p>
