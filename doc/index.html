@@ -309,6 +309,16 @@
                 </td>
                 <td>Validate form. Prevent submission if not valid. <strong>Fires <a href="#events">events</a> and affect UI.</strong>. You can only validate a certain group of fields by specifying optional <code>group</code> string parameter. If <code>group</code> given, only validate fields that belongs to this group. If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
+              <tr>
+                <td><code>reset()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Reset UI for this form and for its fields.</td>
+              </tr>
+              <tr>
+                <td><code>destroy()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Disable and destroy Parsley for this form and its fields.</td>
+              </tr>
             </tbody>
           </table>
 
@@ -391,6 +401,16 @@
                   <code>[Violation [, Violation..]]</code> if fails
                 </td>
                 <td>Validate Field. <strong>Fires <a href="#events">events</a> and affect UI.</strong> If <code>force</code> given, force validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
+              </tr>
+              <tr>
+                <td><code>reset()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Reset UI for this field.</td>
+              </tr>
+              <tr>
+                <td><code>destroy()</code> <version>#2.0</version></td>
+                <td></td>
+                <td>Disable and destroy Parsley for this field.</td>
               </tr>
             </tbody>
           </table>
