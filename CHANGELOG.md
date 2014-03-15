@@ -15,6 +15,7 @@
   - updated validator.js
   - added `this.submitEvent.preventDefault()` support for parsley.remote
     call twice form / field tests with parsley.remote for better support (#552)
+  - fixed global leaks shown by test suite
 
 **2.0.0-rc3**
 

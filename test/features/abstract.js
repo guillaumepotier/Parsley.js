@@ -43,7 +43,7 @@ define(function () {
             '<div id="field2"></div>'                     +
             '<textarea id="field2"></textarea>'           +
           '</form>');
-        parsleyForm = new Parsley($('#element'));
+        var parsleyForm = new Parsley($('#element'));
         parsleyForm.validate();
         expect($('#parsley-id-' + $('#field1').psly().__id__ + ' li').length).to.be(1);
 
@@ -76,7 +76,7 @@ define(function () {
             '<div id="field2"></div>'           +
             '<textarea id="field2"></textarea>' +
           '</form>');
-        parsleyForm = new Parsley($('#element'));
+        var parsleyForm = new Parsley($('#element'));
 
         // Test that a subscribed field event on parent form would be triggered by fields too
         // Here we only have field1 and field2 as valid parsley fields

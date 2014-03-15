@@ -23,11 +23,13 @@ define([
   'parsley/form',
   // `ParsleyField` Class. Handle field validation
   'parsley/field',
+  // `Multiple` Class. Extend `ParsleyField` to generate `ParsleyFieldMultiple`
+  'parsley/multiple',
   // Tiny Parsley Pub / Sub mechanism, used for `ParsleyUI` and Listeners
   'parsley/pubsub',
   // Default en constraints messages
   'i18n/en'
-], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField) {
+], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField, ParsleyMultiple) {
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
@@ -64,12 +66,32 @@ define([
       options = this.OptionsFactory.get(this);
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
-      if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs)))
+      if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, options.namespace, 'validate') && !this.$element.is(options.inputs))) {
         return this.bind('parsleyForm', parsleyInstance);
 
       // Else every other element that is supported is binded as a `ParsleyField`
-      else if (this.$element.is(options.inputs))
+      } else if (this.$element.is(options.inputs)) {
+
+        if ((this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof options.multiple) || (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple'))) {
+          if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
+            options.multiple = this.$element.attr('name');
+          else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
+            options.multiple = this.$element.attr('id');
+
+          if ('undefined' === typeof options.multiple) {
+            if (window.console && window.console.warn)
+              window.console.warn('To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name, and id or a multiple option.', this.$element);
+
+            return this;
+          }
+
+          options.multiple = options.multiple.replace(/(:|\.|\[|\]|\$)/g, '');
+
+          return this.bind('parsleyFieldMultiple', parsleyInstance, options.multiple);
+        }
+
         return this.bind('parsleyField', parsleyInstance);
+      }
 
       return this;
     },
@@ -87,14 +109,32 @@ define([
       return ParsleyDefaults.namespace;
     },
 
-    // Return proper `ParsleyForm` or `ParsleyField`
-    bind: function (type, parentParsleyInstance) {
+    // Return proper `ParsleyForm`, `ParsleyField` or `ParsleyFieldMultiple`
+    bind: function (type, parentParsleyInstance, multiple) {
+      var parsleyInstance;
+
       switch (type) {
         case 'parsleyForm':
-          parsleyInstance = $.extend(new ParsleyForm(this.$element, parentParsleyInstance || this), new ParsleyAbstract(), window.ParsleyExtend);
+          parsleyInstance = $.extend(
+            new ParsleyForm(this.$element, parentParsleyInstance || this),
+            new ParsleyAbstract(),
+            window.ParsleyExtend
+          ).init();
           break;
         case 'parsleyField':
-          parsleyInstance = $.extend(new ParsleyField(this.$element, parentParsleyInstance || this), new ParsleyAbstract(), window.ParsleyExtend);
+          parsleyInstance = $.extend(
+            new ParsleyField(this.$element, parentParsleyInstance || this),
+            new ParsleyAbstract(),
+            window.ParsleyExtend
+          ).init();
+          break;
+        case 'parsleyFieldMultiple':
+          parsleyInstance = $.extend(
+            new ParsleyField(this.$element, parentParsleyInstance || this),
+            new ParsleyAbstract(),
+            new ParsleyMultiple(),
+            window.ParsleyExtend
+          ).init(multiple);
           break;
         default:
           throw new Error(type + 'is not a supported Parsley type');

@@ -7,6 +7,7 @@ require(['config'], function () {
     'sinon'
   ], function (jquery, expect, mocha, sinon) {
     // setup mocha
+    mocha.checkLeaks();
     mocha.setup('bdd');
     mocha.reporter('html');
 
@@ -29,17 +30,19 @@ require(['config'], function () {
         'features/pubsub',
         'features/abstract',
         'features/field',
+        'features/multiple',
         'features/form',
         'features/validator',
         'features/ui',
         'features/utils'
-      ], function (parsleyBase, options, pubsub, abstract, field, form, validator, ui, utils) {
+      ], function (parsleyBase, options, pubsub, abstract, field, multiple, form, validator, ui, utils) {
         describe('ParsleyStandard', function () {
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
           pubsub();
           abstract(Parsley);
           field(ParsleyField, Parsley);
+          multiple(Parsley);
           form(ParsleyForm, Parsley);
           validator(ParsleyValidator);
           ui(ParsleyUI);

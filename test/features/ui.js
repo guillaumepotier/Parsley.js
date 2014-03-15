@@ -34,7 +34,7 @@ define(function () {
       it('should handle wrong errors-container option', function () {
         $('body').append('<input type="text" id="element" data-parsley-errors-container="#donotexist" />');
         window.console.warn = sinon.spy();
-        parsleyInstance = $('#element').psly();
+        var parsleyInstance = $('#element').psly();
         expect(window.console.warn.called).to.be(true);
       });
       it('should add proper parsley class on success or failure', function () {
@@ -161,7 +161,7 @@ define(function () {
             '<div id="field2"></div>'                                         +
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
-        parsleyForm = new Parsley($('#element'));
+        var parsleyForm = new Parsley($('#element'));
         expect($('#element').attr('novalidate')).not.to.be(undefined);
       });
       it('should test the no-focus option', function () {

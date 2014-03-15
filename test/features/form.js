@@ -14,7 +14,7 @@ define(function () {
             '<div id="field2"></div>'           +
             '<textarea id="field2"></textarea>' +
           '</form>');
-        parsleyForm = new Parsley($('#element'));
+        var parsleyForm = new Parsley($('#element'));
         expect(parsleyForm.fields.length).to.be(2);
       });
       it('should bind parsleyFields children, and not excluded ones', function () {
@@ -27,7 +27,7 @@ define(function () {
             '<input id="field3" disabled />'    + // Disabled, excluded buy custom options below
             '<input type="submit"/>'            + // Excluded field, not valid
           '</form>');
-        parsleyForm = new Parsley($('#element'), { excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]' });
+        var parsleyForm = new Parsley($('#element'), { excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]' });
         expect(parsleyForm.fields.length).to.be(2);
       });
       it('should properly bind options for form and children fields', function () {
@@ -37,7 +37,7 @@ define(function () {
             '<div id="field2"></div>'                                         +
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
-        parsleyForm = new Parsley($('#element'));
+        var parsleyForm = new Parsley($('#element'));
         expect(parsleyForm.fields.length).to.be(2);
         expect(new Parsley('#field1').options.trigger).to.be('change');
         expect(new Parsley('#field1').options).to.have.key('required');
@@ -52,7 +52,7 @@ define(function () {
             '<div id="field2"></div>'                                         +
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
-          parsleyForm = new Parsley($('#element'));
+          var parsleyForm = new Parsley($('#element'));
           parsleyForm.validate();
           expect(parsleyForm.validationResult).to.be(false);
           $('#field1').val('foo');
@@ -66,7 +66,7 @@ define(function () {
             '<div id="field2"></div>'                                                                  +
             '<textarea id="field3" data-parsley-group="bar" data-parsley-required="true"></textarea>'  +
           '</form>');
-          parsleyForm = new Parsley($('#element'));
+          var parsleyForm = new Parsley($('#element'));
           expect(parsleyForm.isValid()).to.be(false);
           $('#field1').val('value');
           expect(parsleyForm.isValid()).to.be(false);
@@ -80,7 +80,7 @@ define(function () {
             '<div id="field2"></div>'                                         +
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
-          parsleyForm = new Parsley($('#element'));
+          var parsleyForm = new Parsley($('#element'));
 
           // parsley.remote hack because if valid, parsley remote re-send form
           parsleyForm.subscribe('parsley:form:validate', function (formInstance) {
