@@ -21,6 +21,7 @@
       + console warn (#548)
     - returns an array of instances if called on selector with multiple
       elements (#547)
+  - fixed `min`, `max`, `range` validators (#556)
 
 **2.0.0-rc3**
 

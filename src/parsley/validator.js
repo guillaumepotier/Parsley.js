@@ -157,13 +157,31 @@ define('parsley/validator', [
         return this.length(array);
       },
       min: function (value) {
-        return $.extend(new Validator.Assert().GreaterThanOrEqual(value), { priority: 30 });
+        return $.extend(new Validator.Assert().GreaterThanOrEqual(value), {
+          priority: 30,
+          requirementsTransformer: function () {
+            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
+          }
+        });
       },
       max: function (value) {
-        return $.extend(new Validator.Assert().LessThanOrEqual(value), { priority: 30 });
+        return $.extend(new Validator.Assert().LessThanOrEqual(value), {
+          priority: 30,
+          requirementsTransformer: function () {
+            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
+          }
+        });
       },
       range: function (array) {
-        return $.extend(new Validator.Assert().Range(array[0], array[1]), { priority: 32 });
+        return $.extend(new Validator.Assert().Range(array[0], array[1]), {
+          priority: 32,
+          requirementsTransformer: function () {
+            for (var i = 0; i < array.length; i++)
+              array[i] = 'string' === typeof array[i] && !isNaN(array[i]) ? parseInt(array[i], 10) : array[i];
+
+            return array;
+          }
+        });
       },
       equalto: function (value) {
         return $.extend(new Validator.Assert().EqualTo(value), {

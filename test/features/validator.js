@@ -42,18 +42,25 @@ define(function () {
         expect(parsleyValidator.validate('1', parsleyValidator.validators.min(6))).not.to.be(true);
         expect(parsleyValidator.validate('6', parsleyValidator.validators.min(6))).to.be(true);
         expect(parsleyValidator.validate('10', parsleyValidator.validators.min(6))).to.be(true);
+        $('body').append('<input type="text" id="element" value="7" min="2" />');
+        expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a max validator', function () {
         expect(parsleyValidator.validate('', parsleyValidator.validators.max(10))).not.to.be(true);
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.max(10))).not.to.be(true);
         expect(parsleyValidator.validate('1', parsleyValidator.validators.max(10))).to.be(true);
+        expect(parsleyValidator.validate('1', parsleyValidator.validators.max("10"))).to.be(true);
         expect(parsleyValidator.validate('10', parsleyValidator.validators.max(10))).to.be(true);
         expect(parsleyValidator.validate('17', parsleyValidator.validators.max(10))).not.to.be(true);
+        $('body').append('<input type="text" id="element" value="7" max="20" />');
+        expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a range validator', function () {
         expect(parsleyValidator.validate('1', parsleyValidator.validators.range([5, 10]))).not.to.be(true);
         expect(parsleyValidator.validate('7', parsleyValidator.validators.range([5, 10]))).to.be(true);
         expect(parsleyValidator.validate('17', parsleyValidator.validators.range([5, 10]))).not.to.be(true);
+        $('body').append('<input type="text" id="element" value="7" max="20" min="2" />');
+        expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a type="number" validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('number'))).not.to.be(true);
@@ -104,10 +111,14 @@ define(function () {
       it('should have a minlength validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.minlength(3))).to.be(true);
         expect(parsleyValidator.validate('fo', parsleyValidator.validators.minlength(3))).not.to.be(true);
+        $('body').append('<input type="text" id="element" value="foo" minlength="2" />');
+        expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a maxlength validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.maxlength(3))).to.be(true);
         expect(parsleyValidator.validate('foobar', parsleyValidator.validators.maxlength(3))).not.to.be(true);
+        $('body').append('<input type="text" id="element" value="foo" maxlength="10" />');
+        expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a check validator', function () {
         expect(parsleyValidator.validate(['foo', 'bar', 'baz'], parsleyValidator.validators.check([3, 5]))).to.be(true);
