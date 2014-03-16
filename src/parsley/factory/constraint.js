@@ -19,6 +19,7 @@ define('parsley/factory/constraint', [
 
     priority = priority || getPriority(parsleyField, name);
 
+    // If validator have a requirementsTransformer, execute it
     if ('function' === typeof window.ParsleyValidator.validators[name](requirements).requirementsTransformer)
       requirements = window.ParsleyValidator.validators[name](requirements).requirementsTransformer();
 

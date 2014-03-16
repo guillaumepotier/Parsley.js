@@ -1,6 +1,14 @@
-#Changelog
+# Parsley 2.x changelog
 
-**master**
+## master
+
+  - totally reworked multiple fields (#542):
+    - created a new Class: `ParsleyFieldMultiple`
+    - multiple fields returns now same `ParsleyFieldMultiple` instance
+    - do not support anymore `id` as a valid multiple value for radio or
+      checkboxe inputs. Must have a `name` or `data-parsley-multiple` attr
+
+## 2.0.0-rc4
 
   - fixed js error if wrong data-parsley-errors-container is given
   - fixed js error if `name=""` or `id=""` for parlsey multiple fields (#533)
@@ -23,7 +31,7 @@
       elements (#547)
   - fixed `min`, `max`, `range` validators (#556)
 
-**2.0.0-rc3**
+## 2.0.0-rc3
 
   - fixed $ conflict (#525)
   - added `force` validation for `isValid()` and `validate()`
@@ -31,9 +39,13 @@
   - added doc Help section
   - added `data-parsley-errors-messages-disabled` option
 
-**2.0.0-rc2**
+## 2.0.0-rc2
 
   - added `data-parsley-validate-if-empty` field option (#489)
   - fixed select multiple bug (#522)
   - allowed checkbox, radio and select multiple inputs to have either a `name`
     or an `id` to be binded (instead of just a name)
+
+## 2.0.0-rc1
+
+  - initial 2.x public release
