@@ -83,7 +83,7 @@ define(function () {
       });
       it('should support select multiple', function () {
         $('body').append(
-          '<select multiple name="foo" id="element" >' +
+          '<select multiple name="foo" id="element" required data-parsley-mincheck="2">' +
             '<option value="1">1</option>'  +
             '<option value="2">2</option>'  +
             '<option value="3">3</option>'  +
@@ -92,8 +92,13 @@ define(function () {
         expect(parsleyField.__class__).to.be('ParsleyFieldMultiple');
         expect(parsleyField.options.multiple).to.be('foo');
         expect(parsleyField.getValue()).to.be.eql([]);
+        expect(parsleyField.isValid()).to.be(false);
         $('#element option[value="1"]').attr('selected', 'selected');
         expect(parsleyField.getValue()).to.be.eql(['1']);
+        expect(parsleyField.isValid()).to.be(false);
+        $('#element option[value="2"]').attr('selected', 'selected');
+        expect(parsleyField.getValue()).to.be.eql(['1', '2']);
+        expect(parsleyField.isValid()).to.be(true);
       });
       it('should not bind radio or checkboxes withoud a name or a multiple option', function () {
         $('body').append('<input type="radio" id="element" value="foo" />');

@@ -24,19 +24,24 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   onSubmitValidate: function (event) {
     var that = this;
 
+    // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
+    if (true === event.parsley)
+      return;
+
     // Clone the event object
     this.submitEvent = $.extend(true, {}, event);
 
-    if (event instanceof $.Event)
+    // Prevent form submit and immediately stop its event propagation
+    if (event instanceof $.Event) {
+      event.stopImmediatePropagation();
       event.preventDefault();
+    }
 
     return this._asyncValidateForm(undefined, event)
       .done(function () {
-        // If used do not have prevented the event, re-submit form
+        // If user do not have prevented the event, re-submit form
         if (!that.submitEvent.isDefaultPrevented())
-          that.$element
-            .off('submit.Parsley')
-            .trigger($.Event('submit'));
+          that.$element.trigger($.extend($.Event('submit'), { parsley: true }));
       });
   },
 
@@ -211,7 +216,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Sun Mar 16 2014 17:30:47
+* Version 2.0.0-rc4 - built Mon Mar 17 2014 12:59:22
 * MIT Licensed
 *
 */
@@ -1588,6 +1593,7 @@ window.ParsleyConfig.validators.remote = {
         case 'ParsleyForm':
           return this.getFormOptions(parsleyInstance);
         case 'ParsleyField':
+        case 'ParsleyFieldMultiple':
           return this.getFieldOptions(parsleyInstance);
         default:
           throw new Error('Instance ' + parsleyInstance.__class__ + ' is not supported');
@@ -1682,8 +1688,8 @@ window.ParsleyConfig.validators.remote = {
   };
 
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
-    if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
-      throw new Error('ParsleyField instance expected');
+    if (!new RegExp('ParsleyField').test(ParsleyUtils.get(parsleyField, '__class__')))
+      throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
     if ('function' !== typeof window.ParsleyValidator.validators[name] &&
       'Assert' !== window.ParsleyValidator.validators[name](requirements).__parentClass__)
       throw new Error('Valid validator expected');
@@ -1882,6 +1888,12 @@ window.ParsleyConfig.validators.remote = {
     },
     refreshConstraints: function () {
       this.constraints = [];
+      // Select multiple special treatment
+      if (this.$element.is('select')) {
+        this.actualizeOptions().bindConstraints();
+        return this;
+      }
+
       for (var i = 0; i < this.$elements.length; i++)
         this.constraints = this.constraints.concat(this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints);
       return this;

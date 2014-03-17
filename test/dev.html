@@ -4,21 +4,11 @@
     <title>Parsleyjs Developpement Tests</title>
     <link href="../src/parsley.css" rel="stylesheet">
     <style type="text/css">
-        span.parsley-required {
-            padding: 5px;
-            color: white;
-            background-color: darkred;
-        }
-        .parsley-required:after {
-            content:" I want to be a span and get cool styling too!"
-        }
-        span.parsley-required:after {
-            content:" Check out my cool styled span!"
-        }
+
     </style>
 </head>
 <body>
-<!--     <form id="form" data-parsley-validate data-parsley-trigger="focusout change">
+    <form id="form" data-parsley-validate data-parsley-trigger="focusout change">
         <div class="parent">
             Email: <input id="email" type="email" data-parsley-no-focus data-parsley-length="[5, 20]" data-parsley-trigger="change" required data-parsley-required-message="Super message!" />
 
@@ -52,22 +42,25 @@
             <input type="checkbox" id="cbox" checked />
             <input type="submit" />
         </div>
-    </form> -->
+    </form>
 
-    <form id="parsleyForm" data-parsley-validate>
-            Checkboxes:
+<!--     <form id="parsleyForm" data-parsley-validate>
+        <div>
             <input type="checkbox" name="ch$ckbox[]" id="checkbox1" value="foo" required />
             <input type="checkbox" name="ch$ckbox[]" id="checkbox2" value="bar" />
             <input type="checkbox" name="ch$ckbox[]" id="checkbox3" value="baz" data-parsley-mincheck="2" />
-        <input type="submit">
-    </form>
+        </div>
 
-    <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
-    <!-- <script src="../src/parsley.remote.js"></script> -->
+         <input type="email" id="email" required />
+        <input type="submit">
+    </form> -->
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../src/parsley.remote.js"></script>
     <!-- <script src="../src/extra/dateiso.js"></script> -->
     <!-- <script src="../src/i18n/fr.extra.js"></script> -->
-    <!-- <script src="../dist/parsley.js"></script> -->
-    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+    <script src="../dist/parsley.js"></script>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
     <!-- <script src="../src/i18n/it.js"></script> -->
     <script type="text/javascript">
         // $(document).ready(function () {

@@ -22,6 +22,7 @@ define('parsley/factory/options', [
         case 'ParsleyForm':
           return this.getFormOptions(parsleyInstance);
         case 'ParsleyField':
+        case 'ParsleyFieldMultiple':
           return this.getFieldOptions(parsleyInstance);
         default:
           throw new Error('Instance ' + parsleyInstance.__class__ + ' is not supported');

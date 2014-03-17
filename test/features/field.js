@@ -121,12 +121,19 @@ define(function () {
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('9');
         expect(parsleyField.isValid()).to.be(true);
+        ParsleyValidator.removeValidator('multiple');
       });
       it('should properly compute constraints on each validation', function () {
         $('body').append('<input type="email" data-parsley-required id="element" />');
         ParsleyValidator.addValidator('foobazer', function (value) {
           return 'foobar' === value;
         }, 2);
+        ParsleyValidator.addValidator('multiple', function (value, multiple) {
+          if (!isNaN(parseFloat(value)) && isFinite(value))
+            return !(Number(value) % multiple);
+
+          return false;
+        }, 512);
 
         var parsleyField = new Parsley($('#element'))
           .addConstraint('multiple', 4)
@@ -140,6 +147,8 @@ define(function () {
           .removeConstraint('multiple')
           .refreshConstraints();
         expect(parsleyField.constraints.length).to.be(2);
+        ParsleyValidator.removeValidator('foobazer');
+        ParsleyValidator.removeValidator('multiple');
       });
       it('should handle constraints priorities on validation', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');

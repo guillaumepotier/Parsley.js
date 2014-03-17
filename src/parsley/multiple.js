@@ -21,6 +21,14 @@ define('parsley/multiple', [
     refreshConstraints: function () {
       this.constraints = [];
 
+      // Select multiple special treatment
+      if (this.$element.is('select')) {
+        this.actualizeOptions().bindConstraints();
+
+        return this;
+      }
+
+
       for (var i = 0; i < this.$elements.length; i++)
         this.constraints = this.constraints.concat(this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints);
 
