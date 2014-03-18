@@ -216,7 +216,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Tue Mar 18 2014 12:05:29
+* Version 2.0.0-rc4 - built Tue Mar 18 2014 23:55:34
 * MIT Licensed
 *
 */
@@ -234,8 +234,8 @@ window.ParsleyConfig.validators.remote = {
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
         if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
-          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr, 'i').test(attribute.name))
-              return true;
+          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr + '$', 'i').test(attribute.name))
+            return true;
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
         }
       }

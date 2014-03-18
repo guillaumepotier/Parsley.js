@@ -13,9 +13,10 @@ define('parsley/utils', function () {
 
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
+
         if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
-          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr, 'i').test(attribute.name))
-              return true;
+          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr + '$', 'i').test(attribute.name))
+            return true;
 
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
         }

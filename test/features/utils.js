@@ -54,6 +54,25 @@ define(function () {
         expect(ParsleyUtils.attr(element, 'data-parsley-', 'FoO')).to.be(true);
         expect(ParsleyUtils.attr(element, 'data-parsley-', 'baz')).to.be(false);
       });
+      it('should have a checkAttr feature for attr() method', function () {
+        var element = [{
+          attributes: [
+            {
+              specified: true,
+              name: "data-parsley-required-message",
+              value: "foo"
+            },
+            {
+              specified: true,
+              name: "data-parsley-validate",
+              value: true
+            }
+          ]
+        }];
+        expect(ParsleyUtils.attr(element, 'data-parsley-', 'required')).to.be(false);
+        expect(ParsleyUtils.attr(element, 'data-parsley-', 'required-message')).to.be(true);
+        expect(ParsleyUtils.attr(element, 'data-parsley-', 'validate')).to.be(true);
+      });
       it('should have a proper get() function', function () {
         var object = {
           foo: {bar: 'baz'},
