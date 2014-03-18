@@ -244,7 +244,8 @@ define([
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
     $(document).ready(function () {
       // Works only on `data-parsley-validate`.
-      $('[data-parsley-validate]').parsley();
+      if ($('[data-parsley-validate]').length)
+        $('[data-parsley-validate]').parsley();
     });
 
   return Parsley;

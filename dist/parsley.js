@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Mon Mar 17 2014 12:59:22
+* Version 2.0.0-rc4 - built Tue Mar 18 2014 12:05:29
 * MIT Licensed
 *
 */
@@ -1024,11 +1024,21 @@
       pattern: function (regexp) {
         return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
       },
-      minlength: function (length) {
-        return $.extend(new Validator.Assert().Length({ min: length }), { priority: 30 });
+      minlength: function (value) {
+        return $.extend(new Validator.Assert().Length({ min: value }), {
+          priority: 30,
+          requirementsTransformer: function () {
+            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
+          }
+        });
       },
-      maxlength: function (length) {
-        return $.extend(new Validator.Assert().Length({ max: length }), { priority: 30 });
+      maxlength: function (value) {
+        return $.extend(new Validator.Assert().Length({ max: value }), {
+        priority: 30,
+        requirementsTransformer: function () {
+            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
+          }
+      });
       },
       length: function (array) {
         return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
@@ -1985,6 +1995,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
     $(document).ready(function () {
       // Works only on `data-parsley-validate`.
-      $('[data-parsley-validate]').parsley();
+      if ($('[data-parsley-validate]').length)
+        $('[data-parsley-validate]').parsley();
     });
 })(window.jQuery);

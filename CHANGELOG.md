@@ -10,6 +10,7 @@
   - `dist/parsley+remote.js` and `dist/parsley+remote.min.js` have been renamed
     to `dist/parsley.remote.js` and `dist/parsley.remote.min.js`
   - changed the way `asyncValidate` handle events
+  - fix warning if parsley called on a page without elements to validate (#562)
 
 ## 2.0.0-rc4
 
