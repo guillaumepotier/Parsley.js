@@ -137,8 +137,8 @@
         sort: {
           enabled: true,
           name: 'sort',
-          values: ['activity', 'votes', 'creation', 'relevance'],
-          labels: ['Activity', 'Votes', 'Creation', 'Relevance']
+          values: ['creation', 'activity', 'votes', 'relevance'],
+          labels: ['Creation', 'Activity', 'Votes', 'Relevance']
         },
         direction: {
           enabled: true,
@@ -162,7 +162,7 @@
   <script type="text/html" id="stack_tmpl">
     <li>
       <span class="stack-question-answers">
-        <%= score %> <%= answer_count > 1 ? "answers" : "answer" %>
+        <%= answer_count %> <%= answer_count > 1 ? "answers" : "answer" %>
       </span>
       <span class="stack-question-title">
         <a href="<%= link %>"><%= title %></a>
