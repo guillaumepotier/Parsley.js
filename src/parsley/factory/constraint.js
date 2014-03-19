@@ -14,7 +14,7 @@ define('parsley/factory/constraint', [
       if ('undefined' !== typeof parsleyField.options[name + 'Priority'])
         return parsleyField.options[name + 'Priority'];
 
-      return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority', 2);
+      return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority') || 2;
     };
 
     priority = priority || getPriority(parsleyField, name);

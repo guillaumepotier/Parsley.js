@@ -81,7 +81,6 @@ define(function () {
         expect(ParsleyUtils.get(object, 'bar')).to.be('qux');
         expect(ParsleyUtils.get(object, 'foo.bar')).to.be('baz');
         expect(ParsleyUtils.get(object, 'foo.baz')).to.be(undefined);
-        expect(ParsleyUtils.get(object, 'foobarbaz', 'foo')).to.be('foo');
       });
     });
   }

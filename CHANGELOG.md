@@ -12,6 +12,8 @@
   - changed the way `asyncValidate` handle events
   - fix warning if parsley called on a page without elements to validate (#562)
   - fixed `ParsleyUtils.attr()` attribute checking (#564)
+  - updated `ParsleyUtils.get()` method. Do not support anymore placeholder
+    feature since `ParsleyUtils.get() || placeholder` writing is more readable
 
 ## 2.0.0-rc4
 
