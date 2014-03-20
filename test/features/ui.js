@@ -37,13 +37,23 @@ define(function () {
         var parsleyInstance = $('#element').psly();
         expect(window.console.warn.called).to.be(true);
       });
-      it('should add proper parsley class on success or failure', function () {
+      it('should add proper parsley class on success or failure (type=text)', function () {
         $('body').append('<input type="text" id="element" required />');
         var parsleyField = $('#element').psly();
         parsleyField.validate();
         expect($('#element').hasClass('parsley-error')).to.be(true);
         expect($('#element').hasClass('parsley-success')).to.be(false);
         $('#element').val('foo').psly().validate();
+        expect($('#element').hasClass('parsley-success')).to.be(true);
+        expect($('#element').hasClass('parsley-error')).to.be(false);
+      });
+      it('should add proper parsley class on success or failure (type=radio)', function () {
+        $('body').append('<input type="radio" id="element" required />');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('#element').hasClass('parsley-error')).to.be(true);
+        expect($('#element').hasClass('parsley-success')).to.be(false);
+        $('#element').attr('checked', 'checked').psly().validate();
         expect($('#element').hasClass('parsley-success')).to.be(true);
         expect($('#element').hasClass('parsley-error')).to.be(false);
       });
