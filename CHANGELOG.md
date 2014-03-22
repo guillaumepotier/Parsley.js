@@ -14,6 +14,7 @@
     feature since `ParsleyUtils.get() || placeholder` writing is more readable
   - select and select multiple elements both handle the `parsley-success` and
     `parsley-error` classes directly and not their parent.
+  - added pattern flags support (#566, #550)
 
 ## 2.0.0-rc4
 
