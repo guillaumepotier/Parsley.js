@@ -136,7 +136,18 @@ define('parsley/validator', [
         return $.extend(assert, { priority: 256 });
       },
       pattern: function (regexp) {
-        return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
+        var flags = null;
+        var hasFlags = regexp.match(/^\/(.*)\/([gimy]+)$/);
+        if (hasFlags) {
+          regexp = hasFlags[1];
+          flags = hasFlags[2];
+        } else {
+          var enclosed = regexp.match(/^\/(.*)\/$/);
+          if (enclosed) {
+            regexp = enclosed[1];
+          }
+        }
+        return $.extend(new Validator.Assert().Regexp(regexp, flags), { priority: 64 });
       },
       minlength: function (value) {
         return $.extend(new Validator.Assert().Length({ min: value }), {
