@@ -418,10 +418,26 @@
           <h4>UI</h4>
           See <a href="#ui-for-field">UI for Field</a> section.
 
+          <h3 id="usage-global-configuration">Global configuration</h3>
+          <p>
+            It is possible to configure Parsley options gobaly and avoid passing them to each form on your site. To do so, you'll need to define a <code>window.ParsleyConfig = {}</code> object <strong>before</strong> calling Parsley file.
+          </p>
+          <p>
+            For example, if you want to customize the field errors and use div and spans instead of ul and lis, use this snippet:
+<pre><code>window.ParsleyConfig = {
+  errorsWrapper: '&lt;div>&lt;/div>',
+  errorTemplate: '&lt;span>&lt;/span>'
+};
+&lt;script src="parsley.js">&lt;/script>
+</code></pre>
+          </p>
+
           <!-- ****************** BUILT-IN VALIDATORS ****************** -->
           <h1 id="validators" class="page-header">Built-in validators</h1>
           <h3 id="validators-overview">Overview</h3>
-          <p>Parsley 2.x is now based on <a href="http://validatorjs.org">validator.js</a> that ships usual validators and ease a lot group and priority validation. That way, Parsley mutualize validators with validators.js and define new ones using the <code>Callback()</code> Assert.</p>
+          <p>
+            Parsley 2.x is now based on <a href="http://validatorjs.org">validator.js</a> that ships usual validators and ease a lot group and priority validation. That way, Parsley mutualize validators with validators.js and define new ones using the <code>Callback()</code> Assert.
+          </p>
 
           <div class="bs-callout bs-callout-info">
             <h4>Use Validator.js in your Parsley projects</h4>
@@ -992,6 +1008,7 @@ window.ParsleyValidator
                   <li><a href="#usage-overview">Overview</a></li>
                   <li><a href="#usage-form">Form</a></li>
                   <li><a href="#usage-field">Field</a></li>
+                  <li><a href="#usage-global-configuration">Global configuration</a></li>
                 </ul>
               </li>
               <li>
