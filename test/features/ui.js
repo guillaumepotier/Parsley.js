@@ -51,9 +51,30 @@ define(function () {
         $('body').append('<input type="radio" id="element" required />');
         var parsleyField = $('#element').psly();
         parsleyField.validate();
+        expect($('#element').parent().hasClass('parsley-error')).to.be(true);
+        expect($('#element').parent().hasClass('parsley-success')).to.be(false);
+        $('#element').attr('checked', 'checked').psly().validate();
+        expect($('#element').parent().hasClass('parsley-success')).to.be(true);
+        expect($('#element').parent().hasClass('parsley-error')).to.be(false);
+      });
+      it('should add proper parsley class on success or failure (input=checkbox)', function () {
+        $('body').append('<input type="checkbox" id="element" required />');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('#element').parent().hasClass('parsley-error')).to.be(true);
+        expect($('#element').parent().hasClass('parsley-success')).to.be(false);
+        $('#element').attr('checked', 'checked').psly().validate();
+        expect($('#element').parent().hasClass('parsley-success')).to.be(true);
+        expect($('#element').parent().hasClass('parsley-error')).to.be(false);
+      });
+      it('should add proper parsley class on success or failure (select multiple)', function () {
+        $('body').append('<select multiple id="element" required><option value="foo">foo</option></select>');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
         expect($('#element').hasClass('parsley-error')).to.be(true);
         expect($('#element').hasClass('parsley-success')).to.be(false);
-        $('#element').attr('checked', 'checked').psly().validate();
+        $('#element option[value="foo"]').attr('selected', 'selected');
+        parsleyField.validate();
         expect($('#element').hasClass('parsley-success')).to.be(true);
         expect($('#element').hasClass('parsley-error')).to.be(false);
       });

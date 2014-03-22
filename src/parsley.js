@@ -92,10 +92,12 @@ define([
         multiple = this.options.multiple;
       else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
         multiple = this.$element.attr('name');
+      else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
+        multiple = this.$element.attr('id');
 
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
-        return this.bind('parsleyFieldMultiple', parsleyInstance, multiple || this.$element.attr('id') || this.__id__);
+        return this.bind('parsleyFieldMultiple', parsleyInstance, multiple || this.__id__);
 
       // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
       } else if ('undefined' === typeof multiple) {

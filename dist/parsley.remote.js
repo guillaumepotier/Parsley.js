@@ -216,7 +216,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Tue Mar 18 2014 23:55:34
+* Version 2.0.0-rc4 - built Sat Mar 22 2014 13:10:17
 * MIT Licensed
 *
 */
@@ -245,15 +245,15 @@ window.ParsleyConfig.validators.remote = {
       $element[0].setAttribute(this.dasherize(namespace + attr), String(value));
     },
     // Recursive object / array getter
-    get: function (obj, path, placeholder) {
+    get: function (obj, path) {
       var i = 0,
       paths = (path || '').split('.');
       while (this.isObject(obj) || this.isArray(obj)) {
         obj = obj[paths[i++]];
         if (i === paths.length)
-          return obj || placeholder;
+          return obj;
       }
-      return placeholder;
+      return undefined;
     },
     hash: function (length) {
       return String(Math.random()).substring(2, length ? length + 2 : 9);
@@ -1482,13 +1482,21 @@ window.ParsleyConfig.validators.remote = {
       // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
     },
+    // Determine which element will have `parsley-error` and `parsley-success` classes
     _manageClassHandler: function (fieldInstance) {
+      // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
       if ('string' === typeof fieldInstance.options.classHandler && $(fieldInstance.options.classHandler).length)
         return $(fieldInstance.options.classHandler);
+      // Class handled could also be determined by function given in Parsley options
       var $handler = fieldInstance.options.classHandler(fieldInstance);
+      // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
-      return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element : fieldInstance.$element.parent();
+      // Otherwise, if simple element (input, texatrea, select..) it will perfectly host the classes
+      if ('undefined' === typeof fieldInstance.options.multiple || fieldInstance.$element.is('select'))
+        return fieldInstance.$element;
+      // But if multiple element (radio, checkbox), that would be their parent
+      return fieldInstance.$element.parent();
     },
     _insertErrorWrapper: function (fieldInstance) {
       var $errorsContainer;
@@ -1706,7 +1714,7 @@ window.ParsleyConfig.validators.remote = {
     var getPriority = function (parsleyField, name) {
       if ('undefined' !== typeof parsleyField.options[name + 'Priority'])
         return parsleyField.options[name + 'Priority'];
-      return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority', 2);
+      return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority') || 2;
     };
     priority = priority || getPriority(parsleyField, name);
     // If validator have a requirementsTransformer, execute it
@@ -2065,7 +2073,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
         return savedParsleyInstance;
       }
       // Handle 'static' options
-      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig', {}), options, this.getNamespace(options));
+      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig') || {}, options, this.getNamespace(options));
       this.options = this.OptionsFactory.get(this);
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
@@ -2088,9 +2096,11 @@ if ('undefined' !== typeof window.ParsleyValidator)
         multiple = this.options.multiple;
       else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
         multiple = this.$element.attr('name');
+      else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
+        multiple = this.$element.attr('id');
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
-        return this.bind('parsleyFieldMultiple', parsleyInstance, multiple || this.$element.attr('id') || this.__id__);
+        return this.bind('parsleyFieldMultiple', parsleyInstance, multiple || this.__id__);
       // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
       } else if ('undefined' === typeof multiple) {
         if (window.console && window.console.warn)
@@ -2191,7 +2201,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### ParsleyUI
   // UI is a class apart that only listen to some events and them modify DOM accordingly
   // Could be overriden by defining a `window.ParsleyConfig.ParsleyUI` appropriate class (with `listen()` method basically)
-  window.ParsleyUI = 'function' === typeof ParsleyUtils.get(window.ParsleyConfig, 'ParsleyUI') ?
+  window.ParsleyUI = 'function' === typeof ParsleyUtils.get(window, 'ParsleyConfig.ParsleyUI') ?
     new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
   // ### ParsleyField and ParsleyForm extension
   // Ensure that defined if not already the case

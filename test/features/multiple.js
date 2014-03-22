@@ -20,13 +20,13 @@ define(function () {
             '<input type="checkbox" name="check" id="check1" value="1" />'  +
             '<input type="checkbox" name="check" id="check2" value="2" />'  +
             '<input type="checkbox" name="check" id="check3" value="3" />'  +
-            '<input type="checkbox" id="check4" value="foo" />' +
+            '<input type="checkbox" value="foo" />' +
           '</form>');
         $('#element').parsley();
         expect($('#check1').attr('data-parsley-multiple')).to.be('check');
         expect($('#check2').attr('data-parsley-multiple')).to.be('check');
         expect($('#check3').attr('data-parsley-multiple')).to.be('check');
-        expect($('#check4').attr('data-parsley-multiple')).to.be(undefined);
+        expect($('#check4').eq(3).attr('data-parsley-multiple')).to.be(undefined);
       });
       it('should have a specific `getValue` method (checkbox)', function () {
         $('body').append(
@@ -100,12 +100,16 @@ define(function () {
         expect(parsleyField.getValue()).to.be.eql(['1', '2']);
         expect(parsleyField.isValid()).to.be(true);
       });
-      it('should not bind radio or checkboxes withoud a name or a multiple option', function () {
-        $('body').append('<input type="radio" id="element" value="foo" />');
+      it('should not bind radio or checkboxes withoud a name or and id or a multiple option', function () {
+        $('body').append('<input type="radio" value="foo" />');
         window.console.warn = sinon.spy();
-        var parsleyInstance = $('#element').psly();
+        var parsleyInstance = $('input[type=radio]').psly();
         expect(parsleyInstance.__class__).to.be('Parsley');
         expect(window.console.warn.called).to.be(true);
+        $('input[type=radio]').attr('id', 'element');
+        parsleyInstance = $('#element').parsley();
+        expect(parsleyInstance.__class__).to.be('ParsleyFieldMultiple');
+        expect(parsleyInstance.options.multiple).to.be('element');
         $('#element').attr('name', 'element');
         parsleyInstance = $('input[name=element]').parsley();
         expect(parsleyInstance.__class__).to.be('ParsleyFieldMultiple');

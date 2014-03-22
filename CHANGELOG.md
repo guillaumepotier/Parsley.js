@@ -5,8 +5,6 @@
   - totally reworked multiple fields (#542):
     - created a new Class: `ParsleyFieldMultiple`
     - multiple fields returns now same `ParsleyFieldMultiple` instance
-    - do not support anymore `id` as a valid multiple value for radio or
-      checkboxe inputs. Must have a `name` or `data-parsley-multiple` attr
   - `dist/parsley+remote.js` and `dist/parsley+remote.min.js` have been renamed
     to `dist/parsley.remote.js` and `dist/parsley.remote.min.js`
   - changed the way `asyncValidate` handle events
@@ -14,6 +12,8 @@
   - fixed `ParsleyUtils.attr()` attribute checking (#564)
   - updated `ParsleyUtils.get()` method. Do not support anymore placeholder
     feature since `ParsleyUtils.get() || placeholder` writing is more readable
+  - select and select multiple elements both handle the `parsley-success` and
+    `parsley-error` classes directly and not their parent.
 
 ## 2.0.0-rc4
 
