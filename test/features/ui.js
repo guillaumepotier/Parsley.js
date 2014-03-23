@@ -150,15 +150,30 @@ define(function () {
         $('#element').trigger($.Event('change'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
       });
-      it('should auto bind error triggers on field error', function () {
-        $('body').append('<input type="email" id="element" required data-parsley-trigger="change" />');
+      it('should auto bind error trigger on selet field error (input=text)', function () {
+        $('body').append('<input type="email" id="element" required />');
         var parsleyField = $('#element').psly();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
-        $('#element').trigger($.Event('change'));
+        parsleyField.validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-required')).to.be(true);
         $('#element').val('foo').trigger($.Event('keyup'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
+      });
+      it('should auto bind error trigger on selet field error (select)', function () {
+        $('body').append('<select id="element" required>'+
+          '<option value="">Choose</option>' +
+          '<option value="foo">foo</option>' +
+          '<option value="bar">bar</option>' +
+        '</select>');
+        var parsleyField = $('#element').psly();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-required')).to.be(true);
+        $('#element [option="foo"]').attr('selected', 'selected');
+        $('#element').trigger($.Event('change'));
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(false);
       });
       it('should handle complex triggers (keyup, keypress..)', function () {
         $('body').append('<input type="email" id="element" required data-parsley-trigger="keyup" />');

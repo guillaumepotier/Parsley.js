@@ -216,7 +216,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Sun Mar 23 2014 13:45:06
+* Version 2.0.0-rc4 - built Sun Mar 23 2014 14:09:58
 * MIT Licensed
 *
 */
@@ -1571,6 +1571,10 @@ window.ParsleyConfig.validators.remote = {
           if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
             return $(this).on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
         });
+      // Select case
+      if (fieldInstance.$element.is('select'))
+        if (!new RegExp('change', 'i').test(fieldInstance.options.trigger || ''))
+          return fieldInstance.$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
       // All other inputs fields
       if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
         return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));

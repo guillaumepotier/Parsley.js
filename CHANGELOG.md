@@ -17,6 +17,7 @@
   - added pattern flags support (#566, #550)
   - fixed ParsleyFieldMultiple optional fields if not explicitely required
   - fixed ParsleyFieldMultiple trigger
+  - fixed select UI auto-bind change on error (#537)
 
 ## 2.0.0-rc4
 

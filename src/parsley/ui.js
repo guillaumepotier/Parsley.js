@@ -333,6 +333,11 @@ define('parsley/ui', [
             return $(this).on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
         });
 
+      // Select case
+      if (fieldInstance.$element.is('select'))
+        if (!new RegExp('change', 'i').test(fieldInstance.options.trigger || ''))
+          return fieldInstance.$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
+
       // All other inputs fields
       if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
         return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
