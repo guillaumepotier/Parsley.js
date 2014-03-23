@@ -140,13 +140,22 @@
 
               <label for="hobbies">Hobbies (2 minimum):</label>
               <p>
-                Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" />
-                Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" />
-                Eating <input type="checkbox" name="hobbies[]" id="hobby3" value="eat" />
-                Spleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" />
-                Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" />
-                Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" />
+                Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" /><br/>
+                Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" /><br/>
+                Eating <input type="checkbox" name="hobbies[]" id="hobby3" value="eat" /><br/>
+                Spleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" /><br/>
+                Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" /><br/>
+                Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" /><br/>
               <p>
+
+              <label for="heard">Heard us by *:</label>
+              <select id="heard" required>
+                <option value="">Choose..</option>
+                <option value="press">Press</option>
+                <option value="net">Internet</option>
+                <option value="mouth">Word of mouth</option>
+                <option value="other">Other..</option>
+              </select>
 
               <label for="message">Message (20 chars min, 100 max) :</label>
               <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10"></textarea>
@@ -162,13 +171,13 @@
           <div class="code-block">
 <pre><code>&lt;form id="demo-form" data-parsley-validate>
 
-  &lt;label for="fullname">Full Name * :&lt;/label>
   &lt;!-- this field is just required, it would be validated on form submit -->
+  &lt;label for="fullname">Full Name * :&lt;/label>
   &lt;input type="text" name="fullname" required />
 
-  &lt;label for="email">Email * :&lt;/label>
   &lt;!-- this required field must be an email, and validation will be run on
   field change -->
+  &lt;label for="email">Email * :&lt;/label>
   &lt;input type="email" name="email" data-parsley-trigger="change" required />
 
   &lt;!-- radio and checkbox inputs by default have to be wrapped in a parent
@@ -191,8 +200,19 @@
     Coding &lt;input type="checkbox" name="hobbies" value="code" />
   &lt;p>
 
-  &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
+
+  &lt;!-- regular select input. Nothing more to add. -->
+  &lt;label for="heard">Heard us by *:&lt;/label>
+  &lt;select id="heard" required>
+    &lt;option value="">Choose..&lt;/option>
+    &lt;option value="press">Press&lt;/option>
+    &lt;option value="net">Internet&lt;/option>
+    &lt;option value="mouth">Word of mouth&lt;/option>
+    &lt;option value="other">Other..&lt;/option>
+  &lt;/select>
+
   &lt;!-- this optional textarea have a length validator that would be checked on keyup after 10 first characters, with a custom message only for minlength validator -->
+  &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
   &lt;textarea name="message" data-parsley-trigger="keyup" data-parsley-length="[20, 100]" data-parsley-validation-threshold="10" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment..">&lt;/textarea>
 
   &lt;input type="submit" />
