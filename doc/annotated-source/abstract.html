@@ -123,7 +123,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    validateThroughValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(value, constraints, priority)</span> {</span>
-      <span class="hljs-keyword">return</span> window.ParsleyValidator.validate.apply(window.ParsleyValidator, <span class="hljs-built_in">arguments</span>);
+      <span class="hljs-keyword">return</span> window.ParsleyValidator.validate.apply(window.ParsleyValidator, [value, constraints, priority]);
     },</pre></div></div>
             
         </li>

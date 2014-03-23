@@ -13,9 +13,10 @@ define('parsley/utils', function () {
 
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
+
         if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
-          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr, 'i').test(attribute.name))
-              return true;
+          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr + '$', 'i').test(attribute.name))
+            return true;
 
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
         }
@@ -29,17 +30,17 @@ define('parsley/utils', function () {
     },
 
     // Recursive object / array getter
-    get: function (obj, path, placeholder) {
+    get: function (obj, path) {
       var i = 0,
       paths = (path || '').split('.');
 
       while (this.isObject(obj) || this.isArray(obj)) {
         obj = obj[paths[i++]];
         if (i === paths.length)
-          return obj || placeholder;
+          return obj;
       }
 
-      return placeholder;
+      return undefined;
     },
 
     hash: function (length) {

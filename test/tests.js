@@ -25,6 +25,7 @@ require(['config'], function () {
 
       // load full parsley.js + UT
       require([
+        'features/utils',
         'features/parsley',
         'features/options',
         'features/pubsub',
@@ -33,10 +34,10 @@ require(['config'], function () {
         'features/multiple',
         'features/form',
         'features/validator',
-        'features/ui',
-        'features/utils'
-      ], function (parsleyBase, options, pubsub, abstract, field, multiple, form, validator, ui, utils) {
+        'features/ui'
+      ], function (utils, parsleyBase, options, pubsub, abstract, field, multiple, form, validator, ui) {
         describe('ParsleyStandard', function () {
+          utils(ParsleyUtils);
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
           pubsub();
@@ -46,7 +47,6 @@ require(['config'], function () {
           form(ParsleyForm, Parsley);
           validator(ParsleyValidator);
           ui(ParsleyUI);
-          utils(ParsleyUtils);
         });
 
         require([

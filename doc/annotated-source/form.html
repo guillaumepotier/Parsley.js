@@ -269,7 +269,9 @@
 
     _bindFields: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
       <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+
       <span class="hljs-keyword">this</span>.fields = [];
+      <span class="hljs-keyword">this</span>.fieldsMappedById = {};
 
       <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-keyword">this</span>.options.inputs).each(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
         <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> window.Parsley(<span class="hljs-keyword">this</span>, {}, self.parsleyInstance);</pre></div></div>
@@ -283,12 +285,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Only add valid and not excluded ParsleyField children</p>
+              <p>Only add valid and not excluded <code>ParsleyField</code> and <code>ParsleyFieldMultiple</code> children</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__  &amp;&amp; !fieldInstance.$element.is(fieldInstance.options.excluded))
-          self.fields.push(fieldInstance);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ((<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__ || <span class="hljs-string">'ParsleyFieldMultiple'</span> === fieldInstance.__class__) &amp;&amp; !fieldInstance.$element.is(fieldInstance.options.excluded))
+          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> self.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__]) {
+            self.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__] = fieldInstance;
+            self.fields.push(fieldInstance);
+          }
       });
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;

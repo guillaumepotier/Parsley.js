@@ -24,19 +24,24 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   onSubmitValidate: function (event) {
     var that = this;
 
+    // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
+    if (true === event.parsley)
+      return;
+
     // Clone the event object
     this.submitEvent = $.extend(true, {}, event);
 
-    if (event instanceof $.Event)
+    // Prevent form submit and immediately stop its event propagation
+    if (event instanceof $.Event) {
+      event.stopImmediatePropagation();
       event.preventDefault();
+    }
 
     return this._asyncValidateForm(undefined, event)
       .done(function () {
-        // If used do not have prevented the event, re-submit form
+        // If user do not have prevented the event, re-submit form
         if (!that.submitEvent.isDefaultPrevented())
-          that.$element
-            .off('submit.Parsley')
-            .trigger($.Event('submit'));
+          that.$element.trigger($.extend($.Event('submit'), { parsley: true }));
       });
   },
 

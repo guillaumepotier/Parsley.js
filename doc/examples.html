@@ -38,11 +38,17 @@
       .hidden {
         display: none;
       }
-      .row h2 {
+      .row a h2 {
         color: #FF851B;
+        height: 66px;
       }
-      .row p {
+      .row a p {
+        color: #111;
         text-align: justify;
+        height: 80px;
+      }
+      .row a .link {
+        color: #428bca;
       }
     </style>
   </head>
@@ -76,72 +82,31 @@
         <li><a href="tests.html">Tests</a></li>
       </ul>
 
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Simple form example *</h2>
-          <small>* Please, note that this demo form is not a perfect example of UX-awareness. The aim here is to show a quick overview of parsley-API and Parsley customizable behavior.</small>
-          <hr></hr>
-          <div class="form-group">
-            <form id="demo-form" data-parsley-validate>
-              <label for="fullname">Full Name * :</label>
-              <input type="text" class="form-control" name="fullname" required />
-
-              <label for="email">Email * :</label>
-              <input type="email" class="form-control" name="email" data-parsley-trigger="change" required />
-
-              <label for="message">Message (20 chars min, 100 max) :</label>
-              <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10"></textarea>
-
-              <br/>
-              <span class="btn btn-default">validate</span>
-            </form>
-          </div>
-          <div class="bs-callout bs-callout-warning hidden">
-            <h4>Oh snap!</h4>
-            <p>This form seems far to be valid :(</p>
-          </div>
-
-          <div class="bs-callout bs-callout-info hidden">
-            <h4>Yay!</h4>
-            <p>Everything seems to be ok :)</p>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div class="code-block">
-<pre><code>&lt;form id="demo-form" data-parsley-validate>
-
-  &lt;label for="fullname">Full Name * :&lt;/label>
-  &lt;!-- this field is just required, it would be validated on form submit -->
-  &lt;input type="text" name="fullname" required />
-
-  &lt;label for="email">Email * :&lt;/label>
-  &lt;!-- this required field must be an email, and validation will be run on
-  field change -->
-  &lt;input type="email" name="email" data-parsley-trigger="change" required />
-
-  &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
-  &lt;!-- this optional textarea have a length validator that would be checked on keyup after 10 first characters, with a custom message only for minlength validator -->
-  &lt;textarea name="message" data-parsley-trigger="keyup" data-parsley-length="[20, 100]" data-parsley-validation-threshold="10" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment..">&lt;/textarea>
-
-  &lt;input type="submit" />
-&lt;/form>
-</code></pre>
-          </div>
-        </div>
-      </div>
-
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-lg-4">
-          <h2>Using Events to make complex validations</h2>
-          <p class="argument">Sometimes, regular validators and regular Parsley validation process <strong>is not enough</strong> for your forms. <strong>See how you could leverage Parsley events</strong> to make incredible validations!</p>
-          <p><a href="examples/events.html">View example &raquo;</a></p>
-        </div>
-        <div class="col-lg-4">
-          <h2>A multi steps form with Parsley validation</h2>
-          <p class="argument">Sometimes, you'll need to split <strong>long and fastidious forms</strong> in multiple parts. See how you could leverage <strong>Parsley groups</strong> to easily validate this multi steps form, step by step.</p>
-          <p><a href="examples/multisteps.html">View example &raquo;</a></p>
-        </div>
+        <a href="examples/simple.html">
+          <div class="col-lg-4">
+            <h2>A simple demo form to showcase various inputs</h2>
+            <p class="argument">A Simple demo form that uses most of supported Parsley elements to show how to <strong>bind, configure and validate them properly.</strong> For more information, please have a look to the documentation.</p>
+            <p class="link">View example &raquo;</p>
+          </div>
+        </a>
+
+        <a href="examples/events.html">
+          <div class="col-lg-4">
+            <h2>Using events to make complex validations</h2>
+            <p class="argument">Sometimes, regular validators and regular Parsley validation process <strong>is not enough</strong> for your forms. <strong>See how you could leverage Parsley events</strong> to make incredible validations!</p>
+            <p class="link">View example &raquo;</p>
+          </div>
+        </a>
+
+        <a href="examples/multisteps.html">
+          <div class="col-lg-4">
+            <h2>A multi steps form with Parsley validation</h2>
+            <p class="argument">Sometimes, you'll need to split <strong>long and fastidious forms</strong> into multiple parts. See how you could leverage <strong>Parsley groups</strong> to easily validate this multi steps form, step by step.</p>
+            <p class="link">View example &raquo;</p>
+          </div>
+        </a>
       </div>
 
       <!-- Site footer -->
@@ -156,30 +121,6 @@
 
     <script type="text/javascript" src="../dist/parsley.js"></script>
     <script type="text/javascript">
-
-      $.listen('parsley:field:validate', function () {
-        validateFront();
-      });
-
-      $('#demo-form .btn').on('click', function () {
-        $('#demo-form').parsley().validate();
-        validateFront();
-      });
-
-      var validateFront = function () {
-        if (true === $('#demo-form').parsley().isValid()) {
-          $('.bs-callout-info').removeClass('hidden');
-          $('.bs-callout-warning').addClass('hidden');
-        } else {
-          $('.bs-callout-info').addClass('hidden');
-          $('.bs-callout-warning').removeClass('hidden');
-        }
-      };
-
-      try {
-        hljs.initHighlightingOnLoad();
-      } catch ( err ) {}
-
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-37229467-1']);
       _gaq.push(['_trackPageview']);

@@ -3,8 +3,8 @@ define('parsley/factory/constraint', [
 ], function (ParsleyUtils) {
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
 
-    if ('ParsleyField' !== ParsleyUtils.get(parsleyField, '__class__'))
-      throw new Error('ParsleyField instance expected');
+    if (!new RegExp('ParsleyField').test(ParsleyUtils.get(parsleyField, '__class__')))
+      throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
 
     if ('function' !== typeof window.ParsleyValidator.validators[name] &&
       'Assert' !== window.ParsleyValidator.validators[name](requirements).__parentClass__)
@@ -14,11 +14,12 @@ define('parsley/factory/constraint', [
       if ('undefined' !== typeof parsleyField.options[name + 'Priority'])
         return parsleyField.options[name + 'Priority'];
 
-      return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority', 2);
+      return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority') || 2;
     };
 
     priority = priority || getPriority(parsleyField, name);
 
+    // If validator have a requirementsTransformer, execute it
     if ('function' === typeof window.ParsleyValidator.validators[name](requirements).requirementsTransformer)
       requirements = window.ParsleyValidator.validators[name](requirements).requirementsTransformer();
 

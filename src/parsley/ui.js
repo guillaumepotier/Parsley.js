@@ -234,16 +234,25 @@ define('parsley/ui', [
       this.actualizeTriggers(fieldInstance);
     },
 
+    // Determine which element will have `parsley-error` and `parsley-success` classes
     _manageClassHandler: function (fieldInstance) {
+      // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
       if ('string' === typeof fieldInstance.options.classHandler && $(fieldInstance.options.classHandler).length)
         return $(fieldInstance.options.classHandler);
 
+      // Class handled could also be determined by function given in Parsley options
       var $handler = fieldInstance.options.classHandler(fieldInstance);
 
+      // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
 
-      return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element : fieldInstance.$element.parent();
+      // Otherwise, if simple element (input, texatrea, select..) it will perfectly host the classes
+      if ('undefined' === typeof fieldInstance.options.multiple || fieldInstance.$element.is('select'))
+        return fieldInstance.$element;
+
+      // But if multiple element (radio, checkbox), that would be their parent
+      return fieldInstance.$element.parent();
     },
 
     _insertErrorWrapper: function (fieldInstance) {
@@ -266,8 +275,15 @@ define('parsley/ui', [
     },
 
     actualizeTriggers: function (fieldInstance) {
+      var that = this;
+
       // Remove Parsley events already binded on this field
-      fieldInstance.$element.off('.Parsley');
+      if (fieldInstance.options.multiple)
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
+          $(this).off('.Parsley');
+        });
+      else
+        fieldInstance.$element.off('.Parsley');
 
       // If no trigger is set, all good
       if (false === fieldInstance.options.trigger)
@@ -279,11 +295,19 @@ define('parsley/ui', [
         return;
 
       // Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise
-      fieldInstance.$element
-        .on(
-          triggers.split(' ').join('.Parsley ') + '.Parsley',
-          false,
-          $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
+      if (fieldInstance.options.multiple)
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
+          $(this).on(
+            triggers.split(' ').join('.Parsley ') + '.Parsley',
+            false,
+            $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : that.eventValidate, fieldInstance));
+        });
+      else
+        fieldInstance.$element
+          .on(
+            triggers.split(' ').join('.Parsley ') + '.Parsley',
+            false,
+            $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
     },
 
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
@@ -302,11 +326,11 @@ define('parsley/ui', [
     manageFailingFieldTrigger: function (fieldInstance) {
       fieldInstance._ui.failedOnce = true;
 
-      // Radio and checkboxes fields
+      // Radio and checkboxes fields must bind every field multiple
       if (fieldInstance.options.multiple)
         $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
           if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
-            return $(this).parsley().$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
+            return $(this).on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
         });
 
       // All other inputs fields

@@ -12,7 +12,7 @@
 ## Options / Configuration
 
 - options is now a flat 1 dim depth object.
-  These options have disapered:
+  These options have disappeared:
     - `listeners`
     - `validators`
     - `useHtml5Constraints`

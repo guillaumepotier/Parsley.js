@@ -158,7 +158,7 @@ module.exports = function (grunt) {
       },
       remote: {
         files: {
-          'dist/parsley+remote.min.js': 'dist/parsley+remote.js'
+          'dist/parsley.remote.min.js': 'dist/parsley.remote.js'
         }
       }
     },
@@ -173,7 +173,7 @@ module.exports = function (grunt) {
     concat: {
       remote: {
         src: ['src/parsley.remote.js', 'dist/parsley.js'],
-        dest: 'dist/parsley+remote.js'
+        dest: 'dist/parsley.remote.js'
       }
     }
   });

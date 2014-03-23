@@ -282,7 +282,7 @@
               <tr>
                 <td><code>data-parsley-excluded</code> <version>#2.0</version></td>
                 <td><pre>input[type=button], input[type=submit], input[type=reset]</pre></td>
-                <td>Form fields that won't be validated by Parsley. If you want for example to add <code>disabled</code> fields to the existing list, use <pre>data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], [disabled]"</pre></td>
+                <td>Form fields that won't be validated by Parsley. If you want for example to add <code>disabled</code> and not visible fields to the existing list, use <pre>data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], [disabled], :hidden"</pre></td>
               </tr>
             </tbody>
           </table>
@@ -418,10 +418,26 @@
           <h4>UI</h4>
           See <a href="#ui-for-field">UI for Field</a> section.
 
+          <h3 id="usage-global-configuration">Global configuration</h3>
+          <p>
+            It is possible to configure Parsley options gobaly and avoid passing them to each form on your site. To do so, you'll need to define a <code>window.ParsleyConfig = {}</code> object <strong>before</strong> calling Parsley file.
+          </p>
+          <p>
+            For example, if you want to customize the field errors and use div and spans instead of ul and lis, use this snippet:
+<pre><code>window.ParsleyConfig = {
+  errorsWrapper: '&lt;div>&lt;/div>',
+  errorTemplate: '&lt;span>&lt;/span>'
+};
+&lt;script src="parsley.js">&lt;/script>
+</code></pre>
+          </p>
+
           <!-- ****************** BUILT-IN VALIDATORS ****************** -->
           <h1 id="validators" class="page-header">Built-in validators</h1>
           <h3 id="validators-overview">Overview</h3>
-          <p>Parsley 2.x is now based on <a href="http://validatorjs.org">validator.js</a> that ships usual validators and ease a lot group and priority validation. That way, Parsley mutualize validators with validators.js and define new ones using the <code>Callback()</code> Assert.</p>
+          <p>
+            Parsley 2.x is now based on <a href="http://validatorjs.org">validator.js</a> that ships usual validators and ease a lot group and priority validation. That way, Parsley mutualize validators with validators.js and define new ones using the <code>Callback()</code> Assert.
+          </p>
 
           <div class="bs-callout bs-callout-info">
             <h4>Use Validator.js in your Parsley projects</h4>
@@ -747,7 +763,12 @@ window.ParsleyValidator
         <p>Naturally, all this is absolutely customizable, you'll see below how to configure your desired UX behavior.</p>
 
         <h3 id="ui-classes">Classes and templates</h3>
-        <p>Parsley adds its share of classes and elements. to be continued..</p>
+        <p>Parsley adds its share of classes and elements, to ease nice UI validation result display. By default, it will add <code>parsley-success</code> and <code>parley-error</code> classes depending on the validation result, <strong>on the input istelf for a simple text, textarea and select input, and on <u>the parent</u> for radio / checkboxes inputs.</strong></p>
+
+        <div class="bs-callout bs-callout-info">
+          <h4>Customize your classes</h4>
+          <p>You could change these classes'names in configuration, and the class holder element too.</p>
+        </div>
 
         <h3 id="ui-for-form">UI for form</h3>
         <table class="table table-stripped table-bordered">
@@ -987,6 +1008,7 @@ window.ParsleyValidator
                   <li><a href="#usage-overview">Overview</a></li>
                   <li><a href="#usage-form">Form</a></li>
                   <li><a href="#usage-field">Field</a></li>
+                  <li><a href="#usage-global-configuration">Global configuration</a></li>
                 </ul>
               </li>
               <li>

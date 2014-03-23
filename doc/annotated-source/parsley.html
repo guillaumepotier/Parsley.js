@@ -374,8 +374,8 @@ define([</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.OptionsFactory = <span class="hljs-keyword">new</span> ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, <span class="hljs-string">'ParsleyConfig'</span>, {}), options, <span class="hljs-keyword">this</span>.getNamespace(options));
-      options = <span class="hljs-keyword">this</span>.OptionsFactory.get(<span class="hljs-keyword">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.OptionsFactory = <span class="hljs-keyword">new</span> ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, <span class="hljs-string">'ParsleyConfig'</span>) || {}, options, <span class="hljs-keyword">this</span>.getNamespace(options));
+      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.OptionsFactory.get(<span class="hljs-keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -390,7 +390,7 @@ define([</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'form'</span>) || (ParsleyUtils.attr(<span class="hljs-keyword">this</span>.$element, options.namespace, <span class="hljs-string">'validate'</span>) &amp;&amp; !<span class="hljs-keyword">this</span>.$element.is(options.inputs))) {
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'form'</span>) || (ParsleyUtils.attr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'validate'</span>) &amp;&amp; !<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-keyword">this</span>.options.inputs)))
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyForm'</span>, parsleyInstance);</pre></div></div>
             
         </li>
@@ -402,34 +402,18 @@ define([</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Else every other element that is supported is binded as a <code>ParsleyField</code></p>
+              <p>Every other supported element and not excluded element is binded as a <code>ParsleyField</code> or <code>ParsleyFieldMultiple</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(options.inputs)) {
-
-        <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> options.multiple) || (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'multiple'</span>))) {
-          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>).length)
-            options.multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>);
-          <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>).length)
-            options.multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>);
-
-          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> options.multiple) {
-            <span class="hljs-keyword">if</span> (window.console &amp;&amp; window.console.warn)
-              window.console.warn(<span class="hljs-string">'To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name, and id or a multiple option.'</span>, <span class="hljs-keyword">this</span>.$element);
-
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-          }
-
-          options.multiple = options.multiple.replace(<span class="hljs-regexp">/(:|\.|\[|\]|\$)/g</span>, <span class="hljs-string">''</span>);
-
-          <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyFieldMultiple'</span>, parsleyInstance, options.multiple);
-        }
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyField'</span>, parsleyInstance);
-      }
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-keyword">this</span>.options.inputs) &amp;&amp; !<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-keyword">this</span>.options.excluded))
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.isMultiple() ? <span class="hljs-keyword">this</span>.handleMultiple(parsleyInstance) : <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyField'</span>, parsleyInstance);
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    isMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.multiple) || (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'multiple'</span>));
     },</pre></div></div>
             
         </li>
@@ -441,11 +425,25 @@ define([</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Retrieve namespace used for DOM-API</p>
+              <p>Multiples fields are a real nightmare :(</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    getNamespace: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(options)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    handleMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(parsleyInstance)</span> {</span>
+      <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>,
+        name,
+        multiple,
+        parsleyMultipleInstance;
+
+      <span class="hljs-keyword">this</span>.options = $.extend(<span class="hljs-keyword">this</span>.options, ParsleyUtils.attr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace));
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple) {
+        multiple = <span class="hljs-keyword">this</span>.options.multiple;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>).length) {
+        multiple = name = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>).length) {
+        multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>);
+      }</pre></div></div>
             
         </li>
         
@@ -455,6 +453,135 @@ define([</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Special select multiple input</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'multiple'</span>)) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyFieldMultiple'</span>, parsleyInstance, multiple || <span class="hljs-keyword">this</span>.__id__);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Else for radio / checkboxes, we need a <code>name</code> or <code>data-parsley-multiple</code> to properly bind it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> multiple) {
+        <span class="hljs-keyword">if</span> (window.console &amp;&amp; window.console.warn)
+          window.console.warn(<span class="hljs-string">'To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.'</span>, <span class="hljs-keyword">this</span>.$element);
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Remove special chars</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      multiple = multiple.replace(<span class="hljs-regexp">/(:|\.|\[|\]|\$)/g</span>, <span class="hljs-string">''</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Add proper <code>data-parsley-multiple</code> to siblings if we had a name</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> name)
+        $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+          $(<span class="hljs-keyword">this</span>).attr(that.options.namespace + <span class="hljs-string">'multiple'</span>, multiple);
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Check here if we don’t already have a related multiple instance saved</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ($(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).length)
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; $(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).length; i++)
+          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $($(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).get(i)).data(<span class="hljs-string">'Parsley'</span>)) {
+            parsleyMultipleInstance = $($(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).get(i)).data(<span class="hljs-string">'Parsley'</span>);
+
+            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'ParsleyFieldMultiple'</span>)) {
+              parsleyMultipleInstance.addElement(<span class="hljs-keyword">this</span>.$element);
+              <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'id'</span>, parsleyMultipleInstance.__id__);
+            }
+
+            <span class="hljs-keyword">break</span>;
+          }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Create a secret ParsleyField instance for every multiple field. It would be stored in <code>data(&#39;ParsleyFieldMultiple&#39;)</code>
+And would be useful later to access classic <code>ParsleyField</code> stuff while being in a <code>ParsleyFieldMultiple</code> instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyField'</span>, parsleyInstance, multiple, <span class="hljs-literal">true</span>);
+
+      <span class="hljs-keyword">return</span> parsleyMultipleInstance || <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyFieldMultiple'</span>, parsleyInstance, multiple);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Retrieve namespace used for DOM-API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getNamespace: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(options)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><code>data-parsley-namespace=&lt;namespace&gt;</code></p>
 
@@ -473,17 +600,17 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Return proper <code>ParsleyForm</code>, <code>ParsleyField</code> or <code>ParsleyFieldMultiple</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    bind: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(type, parentParsleyInstance, multiple)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    bind: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(type, parentParsleyInstance, multiple, doNotStore)</span> {</span>
       <span class="hljs-keyword">var</span> parsleyInstance;
 
       <span class="hljs-keyword">switch</span> (type) {
@@ -503,7 +630,7 @@ define([</pre></div></div>
           <span class="hljs-keyword">break</span>;
         <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyFieldMultiple'</span>:
           parsleyInstance = $.extend(
-            <span class="hljs-keyword">new</span> ParsleyField(<span class="hljs-keyword">this</span>.$element, parentParsleyInstance || <span class="hljs-keyword">this</span>),
+            <span class="hljs-keyword">new</span> ParsleyField(<span class="hljs-keyword">this</span>.$element, parentParsleyInstance || <span class="hljs-keyword">this</span>).init(),
             <span class="hljs-keyword">new</span> ParsleyAbstract(),
             <span class="hljs-keyword">new</span> ParsleyMultiple(),
             window.ParsleyExtend
@@ -513,16 +640,38 @@ define([</pre></div></div>
           <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(type + <span class="hljs-string">'is not a supported Parsley type'</span>);
       }
 
-      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === parsleyInstance.__class__ || <span class="hljs-string">'ParsleyField'</span> === parsleyInstance.__class__) {</pre></div></div>
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> multiple)
+        ParsleyUtils.setAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'multiple'</span>, multiple);
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> doNotStore) {
+        <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'ParsleyFieldMultiple'</span>, parsleyInstance);
+
+        <span class="hljs-keyword">return</span> parsleyInstance;
+      }</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Store instance if <code>ParsleyForm</code>, <code>ParsleyField</code> or <code>ParsleyFieldMultiple</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'ParsleyF'</span>, <span class="hljs-string">'i'</span>).test(parsleyInstance.__class__)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Store for later access the freshly binded instance in DOM element itself using jQuery <code>data()</code></p>
 
@@ -534,11 +683,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Tell the world we got a new ParsleyForm or ParsleyField instance!</p>
 
@@ -554,11 +703,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h3 id="jquery-api">jQuery API</h3>
 <p><code>$(&#39;.elem&#39;).parsley(options)</code> or <code>$(&#39;.elem&#39;).psly(options)</code></p>
@@ -579,11 +728,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Return undefined if applied to non existing DOM element</p>
 
@@ -602,11 +751,11 @@ define([</pre></div></div>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <h3 id="parsleyui">ParsleyUI</h3>
 <p>UI is a class apart that only listen to some events and them modify DOM accordingly
@@ -614,17 +763,17 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  window.ParsleyUI = <span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> ParsleyUtils.get(window.ParsleyConfig, <span class="hljs-string">'ParsleyUI'</span>) ?
+            <div class="content"><div class='highlight'><pre>  window.ParsleyUI = <span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> ParsleyUtils.get(window, <span class="hljs-string">'ParsleyConfig.ParsleyUI'</span>) ?
     <span class="hljs-keyword">new</span> window.ParsleyConfig.ParsleyUI().listen() : <span class="hljs-keyword">new</span> ParsleyUI().listen();</pre></div></div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h3 id="parsleyfield-and-parsleyform-extension">ParsleyField and ParsleyForm extension</h3>
 <p>Ensure that defined if not already the case</p>
@@ -637,11 +786,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-30">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h3 id="parsleyconfig">ParsleyConfig</h3>
 <p>Ensure that defined if not already the case</p>
@@ -654,11 +803,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-31">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h3 id="globals">Globals</h3>
 
@@ -671,11 +820,11 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-32">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h3 id="parsley-auto-binding">PARSLEY auto-binding</h3>
 <p>Prevent it by setting <code>ParsleyConfig.autoBind</code> to <code>false</code></p>
@@ -688,17 +837,18 @@ Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> app
         </li>
         
         
-        <li id="section-33">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Works only on <code>data-parsley-validate</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      $(<span class="hljs-string">'[data-parsley-validate]'</span>).parsley();
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ($(<span class="hljs-string">'[data-parsley-validate]'</span>).length)
+        $(<span class="hljs-string">'[data-parsley-validate]'</span>).parsley();
     });
 
   <span class="hljs-keyword">return</span> Parsley;

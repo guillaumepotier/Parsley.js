@@ -87,14 +87,19 @@ define('parsley/form', [
 
     _bindFields: function () {
       var self = this;
+
       this.fields = [];
+      this.fieldsMappedById = {};
 
       this.$element.find(this.options.inputs).each(function () {
         var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
 
-        // Only add valid and not excluded ParsleyField children
-        if ('ParsleyField' === fieldInstance.__class__  && !fieldInstance.$element.is(fieldInstance.options.excluded))
-          self.fields.push(fieldInstance);
+        // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
+        if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))
+          if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
+            self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
+            self.fields.push(fieldInstance);
+          }
       });
 
       return this;
