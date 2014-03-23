@@ -50,6 +50,22 @@ define('features/remote', [
           .subscribe('parsley:form:validated', function () { done(); })
           .asyncValidate();
       });
+      it('should have a force option for asyncValidate and asyncIsValid methods', function (done) {
+        $('body').append('<input type="email" id="element" />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.asyncIsValid()
+          .done(function () {
+            parsleyInstance.asyncValidate()
+              .done(function () {
+                parsleyInstance.asyncIsValid(true)
+                  .fail(function () {
+                    done();
+                  });
+              });
+          });
+        // expect($('#element').parsley().asyncIsValid(true)).to.be(false);
+        // expect($('#element').parsley().asyncValidate(true).length).to.be(1);
+      });
       it.skip('should handle properly validation with remote validator', function () {});
       it.skip('should save some calls for querries already done');
       it.skip('should handle remote reverse option');
