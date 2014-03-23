@@ -74,6 +74,13 @@ define(function () {
             '<input type="checkbox" name="check[]" id="check3" value="3" />'  +
             '<input type="checkbox" name="check[]" id="check4" value="4" />'  +
           '</form>');
+
+        // if not required, field is optional and do not fail
+        expect($('#check1').parsley().isValid()).to.be.eql([]);
+        expect($('#element').parsley().isValid()).to.be(true);
+
+        // once required, it fails if not rightly checked
+        $('#check1').attr('required', 'true');
         expect($('#element').parsley().isValid()).to.be(false);
         $('#check2').attr('checked', 'checked');
         expect($('#element').parsley().isValid()).to.be(true);

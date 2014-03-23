@@ -15,6 +15,7 @@
   - select and select multiple elements both handle the `parsley-success` and
     `parsley-error` classes directly and not their parent.
   - added pattern flags support (#566, #550)
+  - fixed ParsleyFieldMultiple optional fields if not explicitely required
 
 ## 2.0.0-rc4
 
