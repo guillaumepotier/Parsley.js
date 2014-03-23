@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Parsley, the ultimate frontend javascript form validation library">
+    <meta name="author" content="Guillaume Potier">
+
+    <title>Parsley - Exemples | Simple form demo</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../assets/docs.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="http://yandex.st/highlightjs/7.3/styles/github.min.css" rel="stylesheet">
+
+    <link href="../../src/parsley.css" rel="stylesheet">
+    <style>
+      body {
+        color: #111111;
+      }
+      .row {
+        margin-top: 10px;
+      }
+      .code-block {
+        margin-top: 20px;
+      }
+      .hidden {
+        display: none;
+      }
+      .row h2 {
+        color: #FF851B;
+      }
+      .row p {
+        text-align: justify;
+      }
+      .first {
+        padding-left: 15px;
+        border-left: 2px solid #FF851B;
+      }
+      .second {
+        padding-left: 15px;
+        border-left: 2px solid #5bc0de;
+      }
+      .validate {
+        margin-top: 10px;
+      }
+      h4 {
+        margin-bottom: 10px;
+      }
+      .invalid-form-error-message {
+        margin-top: 10px;
+        padding: 5px;
+      }
+      .invalid-form-error-message.filled {
+        border-left: 2px solid red;
+      }
+      p.parsley-success {
+        color: #468847;
+        background-color: #DFF0D8;
+        border: 1px solid #D6E9C6;
+      }
+      p.parsley-error {
+        color: #B94A48;
+        background-color: #F2DEDE;
+        border: 1px solid #EED3D7;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <div class="header">
+          <h3 class="text-muted"><a href="../../index.html">Parsley</a></h3>
+
+          <span class="social-buttons inline-block">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://parsleyjs.org" data-text="Parsley, the ultimate javascript form validation library. #parsleyjs" data-via="guillaumepotier" data-related="guillaumepotier" data-hashtags="parsleyjs">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+            <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=Parsley.js&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+
+            <iframe src="http://ghbtns.com/github-btn.html?user=guillaumepotier&repo=Parsley.js&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+          </span>
+        </div>
+      </div>
+
+      <ul class="nav nav-justified">
+        <li><a href="../../">Home</a></li>
+        <li class="active"><a href="../examples.html">Examples</a></li>
+        <li><a href="../index.html">Documentation</a></li>
+        <li><a href="../download.html">Download</a></li>
+        <li><a href="../help.html">Help</a></li>
+        <li><a href="../annotated-source/parsley.html">Annotated&nbsp;source</a></li>
+        <li><a href="../tests.html">Tests</a></li>
+      </ul>
+
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Simple form example *</h2>
+          <p><small class="pull-left"><a href="../examples.html">&lt;&lt; Back to main example</a></small></p>
+          <span class="clearfix"></span>
+          <hr></hr>
+
+          <div class="bs-callout bs-callout-warning hidden">
+            <h4>Oh snap!</h4>
+            <p>This form seems far to be valid :(</p>
+          </div>
+
+          <div class="bs-callout bs-callout-info hidden">
+            <h4>Yay!</h4>
+            <p>Everything seems to be ok :)</p>
+          </div>
+
+          <div class="form-group">
+            <form id="demo-form" data-parsley-validate>
+              <label for="fullname">Full Name * :</label>
+              <input type="text" class="form-control" name="fullname" required />
+
+              <label for="email">Email * :</label>
+              <input type="email" class="form-control" name="email" data-parsley-trigger="change" required />
+
+              <label for="gender">Gender *:</label>
+              <p>
+                M: <input type="radio" name="gender" id="genderM" value="M" required />
+                F: <input type="radio" name="gender" id="genderF" value="F" />
+              </p>
+
+              <label for="hobbies">Hobbies (2 minimum):</label>
+              <p>
+                Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" />
+                Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" />
+                Eating <input type="checkbox" name="hobbies[]" id="hobby3" value="eat" />
+                Spleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" />
+                Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" />
+                Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" />
+              <p>
+
+              <label for="message">Message (20 chars min, 100 max) :</label>
+              <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10"></textarea>
+
+              <br/>
+              <span class="btn btn-default">validate</span>
+
+              <p><small>* Please, note that this demo form is not a perfect example of UX-awareness. The aim here is to show a quick overview of parsley-API and Parsley customizable behavior.</small></p>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="code-block">
+<pre><code>&lt;form id="demo-form" data-parsley-validate>
+
+  &lt;label for="fullname">Full Name * :&lt;/label>
+  &lt;!-- this field is just required, it would be validated on form submit -->
+  &lt;input type="text" name="fullname" required />
+
+  &lt;label for="email">Email * :&lt;/label>
+  &lt;!-- this required field must be an email, and validation will be run on
+  field change -->
+  &lt;input type="email" name="email" data-parsley-trigger="change" required />
+
+  &lt;!-- radio and checkbox inputs by default have to be wrapped in a parent
+  elemnt (here &lt;p>) that will have success and error classes -->
+  &lt;label for="gender">Gender *:&lt;/label>
+  &lt;p>
+    M: &lt;input type="radio" name="gender" id="genderM" value="M" required />
+    F: &lt;input type="radio" name="gender" id="genderF" value="F" />
+  &lt;/p>
+
+  &lt;!-- here, field is not required, it won't throw any error if no checkbox
+  is checked. But if checked, two at least must be checked -->
+  &lt;label for="hobbies">Hobbies (2 minimum):&lt;/label>
+  &lt;p>
+    Skiing &lt;input type="checkbox" name="hobbies" value="ski" data-parsley-mincheck="2" />
+    Running &lt;input type="checkbox" name="hobbies" value="run" />
+    Eating &lt;input type="checkbox" name="hobbies" value="eat" />
+    Spleeping &lt;input type="checkbox" name="hobbies" value="sleep" />
+    Reading &lt;input type="checkbox" name="hobbies" value="read" />
+    Coding &lt;input type="checkbox" name="hobbies" value="code" />
+  &lt;p>
+
+  &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
+  &lt;!-- this optional textarea have a length validator that would be checked on keyup after 10 first characters, with a custom message only for minlength validator -->
+  &lt;textarea name="message" data-parsley-trigger="keyup" data-parsley-length="[20, 100]" data-parsley-validation-threshold="10" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment..">&lt;/textarea>
+
+  &lt;input type="submit" />
+&lt;/form>
+</code></pre>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ###################### END OF EXAMPLE ######################-->
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p>&copy; <a href="https://twitter.com/guillaumepotier" title="Guillaume Potier on Twitter">Guillaume Potier</a> 2014 - <a href="http://wisembly.com">@Wisembly</a></p>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="../../bower_components/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../../bower_components/bootstrap/js/affix.js"></script>
+    <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+    <script type="text/javascript" src="../../dist/parsley.js"></script>
+    <script type="text/javascript">
+
+      $(document).ready(function () {
+        $.listen('parsley:field:validate', function () {
+          validateFront();
+        });
+
+        $('#demo-form .btn').on('click', function () {
+          $('#demo-form').parsley().validate();
+          validateFront();
+        });
+
+        var validateFront = function () {
+          if (true === $('#demo-form').parsley().isValid()) {
+            $('.bs-callout-info').removeClass('hidden');
+            $('.bs-callout-warning').addClass('hidden');
+          } else {
+            $('.bs-callout-info').addClass('hidden');
+            $('.bs-callout-warning').removeClass('hidden');
+          }
+        };
+      });
+
+      try {
+        hljs.initHighlightingOnLoad();
+      } catch ( err ) {}
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-37229467-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>

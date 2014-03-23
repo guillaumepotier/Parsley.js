@@ -55,11 +55,14 @@
         <input type="submit">
     </form> -->
 
-    <div id="parsleyContainer" data-parsley-validate>
-        <input type="text" id="dynValidate" data-parsley-required-message='Must enter a value' />
-        <a href="#" id='testAdd'>Add</a>
-        <a href="#" id='testValidate'>Validate</a>
-    </div>
+    <form id="parsley" data-parsley-validate>
+        <select data-parsley-trigger="change" required>
+            <option value="">Choose</option>
+            <option value="foo">foo</option>
+            <option value="bar">bar</option>
+        </select>
+        <input type="submit" />
+    </form>
 
     <script src="../bower_components/jquery/jquery.js"></script>
     <!-- <script src="../src/parsley.remote.js"></script> -->
@@ -71,17 +74,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(function () {
-                $("#testAdd")
-                .on("click", function () {
-                    $("#dynValidate").parsley().addConstraint("required", true);
-                });
-
-                $("#testValidate")
-                .on("click", function () {
-                    $("#parsleyContainer").parsley().validate();
-                });
-            });
         });
     </script>
 </html>

@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Sat Mar 22 2014 13:10:17
+* Version 2.0.0-rc4 - built Sun Mar 23 2014 13:43:50
 * MIT Licensed
 *
 */
@@ -1022,7 +1022,17 @@
         return $.extend(assert, { priority: 256 });
       },
       pattern: function (regexp) {
-        return $.extend(new Validator.Assert().Regexp(regexp), { priority: 64 });
+        var flags = '';
+        // Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern
+        if (!!(/^\/.*\/(?:[gimy]*)$/.test(regexp))) {
+          // Replace the regexp literal string with the first match group: ([gimy]*)
+          // If no flag is present, this will be a blank string
+          flags = regexp.replace(/.*\/([gimy]*)$/, '$1');
+          // Again, replace the regexp literal string with the first match group:
+          // everything excluding the opening and closing slashes and the flags
+          regexp = regexp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+        }
+        return $.extend(new Validator.Assert().Regexp(regexp, flags), { priority: 64 });
       },
       minlength: function (value) {
         return $.extend(new Validator.Assert().Length({ min: value }), {
@@ -1298,8 +1308,14 @@
       return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element.after(fieldInstance._ui.$errorsWrapper) : fieldInstance.$element.parent().after(fieldInstance._ui.$errorsWrapper);
     },
     actualizeTriggers: function (fieldInstance) {
+      var that = this;
       // Remove Parsley events already binded on this field
-      fieldInstance.$element.off('.Parsley');
+      if (fieldInstance.options.multiple)
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
+          $(this).off('.Parsley');
+        });
+      else
+        fieldInstance.$element.off('.Parsley');
       // If no trigger is set, all good
       if (false === fieldInstance.options.trigger)
         return;
@@ -1307,11 +1323,19 @@
       if ('' === triggers)
         return;
       // Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise
-      fieldInstance.$element
-        .on(
-          triggers.split(' ').join('.Parsley ') + '.Parsley',
-          false,
-          $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
+      if (fieldInstance.options.multiple)
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
+          $(this).on(
+            triggers.split(' ').join('.Parsley ') + '.Parsley',
+            false,
+            $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : that.eventValidate, fieldInstance));
+        });
+      else
+        fieldInstance.$element
+          .on(
+            triggers.split(' ').join('.Parsley ') + '.Parsley',
+            false,
+            $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
     },
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
     eventValidate: function(event) {
@@ -1326,11 +1350,11 @@
     },
     manageFailingFieldTrigger: function (fieldInstance) {
       fieldInstance._ui.failedOnce = true;
-      // Radio and checkboxes fields
+      // Radio and checkboxes fields must bind every field multiple
       if (fieldInstance.options.multiple)
         $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
           if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
-            return $(this).parsley().$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
+            return $(this).on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
         });
       // All other inputs fields
       if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
@@ -1563,8 +1587,7 @@
       value = value || this.getValue();
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-      // And if multiple field
-      if ('' === value && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof this.options.multiple && 'undefined' === typeof force)
+      if (0 === value.length && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof force)
         return this.validationResult = [];
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
@@ -1874,15 +1897,17 @@ if ('undefined' !== typeof window.ParsleyValidator)
     // Multiples fields are a real nightmare :(
     handleMultiple: function (parsleyInstance) {
       var that = this,
+        name,
         multiple,
         parsleyMultipleInstance;
       this.options = $.extend(this.options, ParsleyUtils.attr(this.$element, this.options.namespace));
-      if (this.options.multiple)
+      if (this.options.multiple) {
         multiple = this.options.multiple;
-      else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
-        multiple = this.$element.attr('name');
-      else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
+      } else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length) {
+        multiple = name = this.$element.attr('name');
+      } else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length) {
         multiple = this.$element.attr('id');
+      }
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
         return this.bind('parsleyFieldMultiple', parsleyInstance, multiple || this.__id__);
@@ -1894,13 +1919,20 @@ if ('undefined' !== typeof window.ParsleyValidator)
       }
       // Remove special chars
       multiple = multiple.replace(/(:|\.|\[|\]|\$)/g, '');
+      // Add proper `data-parsley-multiple` to siblings if we had a name
+      if ('undefined' !== typeof name)
+        $('input[name="' + name + '"]').each(function () {
+          $(this).attr(that.options.namespace + 'multiple', multiple);
+        });
       // Check here if we don't already have a related multiple instance saved
-      if ($('[data-parsley-multiple=' + multiple +']').length)
-        for (var i = 0; i < $('[data-parsley-multiple=' + multiple +']').length; i++)
-          if ('undefined' !== typeof $($('[data-parsley-multiple=' + multiple +']').get(i)).data('Parsley')) {
-            parsleyMultipleInstance = $($('[data-parsley-multiple=' + multiple +']').get(i)).data('Parsley');
-            if (!this.$element.data('ParsleyFieldMultiple'))
+      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length)
+        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++)
+          if ('undefined' !== typeof $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley')) {
+            parsleyMultipleInstance = $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley');
+            if (!this.$element.data('ParsleyFieldMultiple')) {
               parsleyMultipleInstance.addElement(this.$element);
+              this.$element.attr(this.options.namespace + 'id', parsleyMultipleInstance.__id__);
+            }
             break;
           }
       // Create a secret ParsleyField instance for every multiple field. It would be stored in `data('ParsleyFieldMultiple')`

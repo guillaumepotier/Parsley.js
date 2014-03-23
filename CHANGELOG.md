@@ -16,6 +16,7 @@
     `parsley-error` classes directly and not their parent.
   - added pattern flags support (#566, #550)
   - fixed ParsleyFieldMultiple optional fields if not explicitely required
+  - fixed ParsleyFieldMultiple trigger
 
 ## 2.0.0-rc4
 

@@ -83,17 +83,19 @@ define([
     // Multiples fields are a real nightmare :(
     handleMultiple: function (parsleyInstance) {
       var that = this,
+        name,
         multiple,
         parsleyMultipleInstance;
 
       this.options = $.extend(this.options, ParsleyUtils.attr(this.$element, this.options.namespace));
 
-      if (this.options.multiple)
+      if (this.options.multiple) {
         multiple = this.options.multiple;
-      else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
-        multiple = this.$element.attr('name');
-      else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
+      } else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length) {
+        multiple = name = this.$element.attr('name');
+      } else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length) {
         multiple = this.$element.attr('id');
+      }
 
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
@@ -110,14 +112,22 @@ define([
       // Remove special chars
       multiple = multiple.replace(/(:|\.|\[|\]|\$)/g, '');
 
-      // Check here if we don't already have a related multiple instance saved
-      if ($('[data-parsley-multiple=' + multiple +']').length)
-        for (var i = 0; i < $('[data-parsley-multiple=' + multiple +']').length; i++)
-          if ('undefined' !== typeof $($('[data-parsley-multiple=' + multiple +']').get(i)).data('Parsley')) {
-            parsleyMultipleInstance = $($('[data-parsley-multiple=' + multiple +']').get(i)).data('Parsley');
+      // Add proper `data-parsley-multiple` to siblings if we had a name
+      if ('undefined' !== typeof name)
+        $('input[name="' + name + '"]').each(function () {
+          $(this).attr(that.options.namespace + 'multiple', multiple);
+        });
 
-            if (!this.$element.data('ParsleyFieldMultiple'))
+      // Check here if we don't already have a related multiple instance saved
+      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length)
+        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++)
+          if ('undefined' !== typeof $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley')) {
+            parsleyMultipleInstance = $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley');
+
+            if (!this.$element.data('ParsleyFieldMultiple')) {
               parsleyMultipleInstance.addElement(this.$element);
+              this.$element.attr(this.options.namespace + 'id', parsleyMultipleInstance.__id__);
+            }
 
             break;
           }
