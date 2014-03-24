@@ -106,8 +106,20 @@ define('features/remote', [
               });
           });
       });
+      it('should handle remote options', function (done) {
+        $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" data-parsley-remote-options=\'{ "type": "POST", "data": {"foo": "bar"} }\' required name="element" value="baz" />');
+        var parsleyInstance = $('#element').parsley();
+
+        sinon.stub($, 'ajax').returns($.Deferred().resolve());
+        parsleyInstance.asyncIsValid()
+          .done(function () {
+            expect($.ajax.calledWithMatch({ type: "POST" })).to.be(true);
+            expect($.ajax.calledWithMatch({ url: "http://foo.bar" })).to.be(true);
+            expect($.ajax.calledWithMatch({ data: {"foo": "bar", "element": "baz"} })).to.be(true);
+            done();
+          });
+      });
       it.skip('should save some calls for querries already done');
-      it.skip('should handle remote options');
       it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         if ($('#element').length)
