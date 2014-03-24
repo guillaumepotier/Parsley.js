@@ -37,6 +37,9 @@ require(['config'], function () {
         'features/ui'
       ], function (utils, parsleyBase, options, pubsub, abstract, field, multiple, form, validator, ui) {
         describe('ParsleyStandard', function () {
+          // beforeEach(function () {
+          //   window.ParsleyConfig = $.extend(true, {}, window.ParsleyConfig, { excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[disabled]' });
+          // });
           utils(ParsleyUtils);
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
@@ -56,6 +59,9 @@ require(['config'], function () {
           'features/form'
         ], function (remote, abstract, field, form) {
           describe('Parsley+Remote', function () {
+            // beforeEach(function () {
+            //   window.ParsleyConfig = $.extend(true, {}, window.ParsleyConfig, { excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[disabled]' });
+            // });
             remote();
             abstract(Parsley);
             field(ParsleyField, Parsley);
