@@ -961,21 +961,62 @@ window.ParsleyValidator
         <!-- ****************** Remote ****************** -->
         <h1 id="remote" class="page-header">Parsley Remote</h1>
         <p>
-          <a href="annotated-source/parsley.remote.html" target="_blank">Parsley remote</a> is a handy plugin that adds an unique ajax asynchronous validator: <code>data-parsley-remote="http://url.ext"</code>. It adds these asynchronous methods to Parsley: <code>.asyncIsValid()</code> and <code>.asyncValidate()</code>.
-        </p>
-        <p>
-          By default, it will make a <code>GET</code> request to the url given in the DOM, and send as parameter the field's value within its name or id. Standard jQuery <code>$.ajax</code> options could be passed with <code>data-parsley-remote-options</code>.
-        </p>
-        <p>
-<pre><code>&lt;input name="q" type="text" data-parsley-remote-reverse="true" data-parsley-remote="http://myapi.com" data-parsley-remote-options='{ method: "POST", dataType: "jsonp", "data": { "anothervar": "value" } }' value="foo" /></code>
-</code></pre>
-          The above code will make a <code>POST</code> querry to <code>http://myapi.com</code> sending <code>q='foo'</code> and <code>anothervar=value</code>. By default, a non 2xx ajax response is considered as a failure, but sometimes (when a call is needed to see if an email, a pseudo is available) a 404 API answer could be the right answer, that's why the <code>reverse</code> option is here, to throw an error if the request is a success.
+          <a href="annotated-source/parsley.remote.html" target="_blank">Parsley remote</a> is a handy plugin that adds an <strong>unique ajax asynchronous validator</strong>.
         </p>
         <p>
           To use this plugin, either load <code>parsley.remote.js</code> <strong>before</strong> loading <code>parsley.js</code>, either directly load <code>parsley+remote.js</code>.
         </p>
 
-        <!-- ****************** Remote ****************** -->
+        <h3>Options</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-3">Name</th>
+              <th class="col-md-1">API</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Remote validator</td>
+              <td><code>data-parsley-remote</code> <version>#2.0</version></td>
+              <td>Define the url that would be called to validate the entered content. eg: <code>data-parsley-remote="http://url.ext"</code></td>
+            </tr>
+            <tr>
+              <td>Reverse</td>
+              <td><code>data-parsley-remote-reverse</code> <version>#2.0</version></td>
+              <td>By default, all 2xx ajax returs are considered valid, all others failure. Sometimes (when a call is needed to see if an email, a pseudo is available for example) a 404 API answer could be the right answer. Using <code>data-parsley-remote-reverse="true"</code> will consider 200 response is an error, and 404 one is correct.</td>
+            </tr>
+            <tr>
+              <td>Options</td>
+              <td><code>data-parsley-remote-options</code> <version>#2.0</version></td>
+              <td>You could pass a json object to the <code>$.ajax()</code> method used by remote validator. eg: <pre>data-parsley-remote-options='{ "type": "POST", "dataType": "jsonp", "data": { "token": "value" } }'</pre>
+              <span class="label label-warning">Warning:</span> you must format your JSON string wrapping all the keys/values with <code>"</code> like above otherwise it won't be correctly parsed by <code>$.parseJSON()</code> used behind the scene by remote validator (<a href="https://api.jquery.com/jQuery.parseJSON/" target="_blank">See jQuery doc</a>)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Methods</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-1">Method</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>asyncIsValid()</code> <version>#2.0</version></td>
+              <td>Asynchronously get if field or form is valid or not. Returns a jQyery promise.</td>
+            </tr>
+            <tr>
+              <td><code>asyncValidate()</code> <version>#2.0</version></td>
+              <td>Asynchronously validate a field or a form and display UI errors. Returns a jQyery promise.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ****************** Extra ****************** -->
         <h1 id="extras" class="page-header">Parsley Extras</h1>
         <p>
           You'll find in the <code>src/extra/</code> directory in Parsley .zip or Github projects many more or less useful validators crafted by the community. A doc here is coming.
