@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.0.0-rc5
+
   - totally reworked multiple fields (#542):
     - created a new Class: `ParsleyFieldMultiple`
     - multiple fields returns now same `ParsleyFieldMultiple` instance
@@ -18,6 +20,7 @@
   - fixed ParsleyFieldMultiple optional fields if not explicitely required
   - fixed ParsleyFieldMultiple trigger
   - fixed select UI auto-bind change on error (#537)
+  - fixed `asyncIsValid()` and `asyncValidate()` API to support `force` option
 
 ## 2.0.0-rc4
 

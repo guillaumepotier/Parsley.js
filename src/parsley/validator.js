@@ -48,6 +48,8 @@ define('parsley/validator', [
         this.catalog[locale] = {};
 
       this.catalog[locale][name] = message;
+
+      return this;
     },
 
     validate: function (value, constraints, priority) {

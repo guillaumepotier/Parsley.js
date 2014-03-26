@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Sun Mar 23 2014 14:09:58
+* Version 2.0.0-rc5 - built Wed Mar 26 2014 09:14:00
 * MIT Licensed
 *
 */
@@ -949,6 +949,7 @@
       if (undefined === typeof this.catalog[locale])
         this.catalog[locale] = {};
       this.catalog[locale][name] = message;
+      return this;
     },
     validate: function (value, constraints, priority) {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
@@ -1591,7 +1592,7 @@
       value = value || this.getValue();
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-      if (0 === value.length && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof force)
+      if (0 === value.length && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && true !== force)
         return this.validationResult = [];
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
@@ -1856,7 +1857,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.0.0-rc4
+//     Parsley.js 2.0.0-rc5
 //     http://parsleyjs.org
 //     (c) 20012-2014 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -1864,7 +1865,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.0-rc4';
+    this.__version__ = '2.0.0-rc5';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)

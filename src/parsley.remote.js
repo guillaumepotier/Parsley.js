@@ -7,18 +7,18 @@
 window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   asyncSupport: true,
 
-  asyncValidate: function (group, event) {
+  asyncValidate: function () {
     if ('ParsleyForm' === this.__class__)
-      return this._asyncValidateForm(group, event);
+      return this._asyncValidateForm.apply(this, arguments);
 
-    return this._asyncValidateField();
+    return this._asyncValidateField.apply(this, arguments);
   },
 
-  asyncIsValid: function (group) {
+  asyncIsValid: function () {
     if ('ParsleyField' === this.__class__)
-      return this._asyncIsValidField();
+      return this._asyncIsValidField.apply(this, arguments);
 
-    return this._asyncIsValidForm(group);
+    return this._asyncIsValidForm.apply(this, arguments);
   },
 
   onSubmitValidate: function (event) {
@@ -81,7 +81,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       });
   },
 
-  _asyncIsValidForm: function (group) {
+  _asyncIsValidForm: function (group, force) {
     var promises = [];
     this._refreshFields();
 
@@ -91,18 +91,18 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       if (group && group !== this.fields[i].options.group)
         continue;
 
-      promises.push(this.fields[i]._asyncIsValidField());
+      promises.push(this.fields[i]._asyncIsValidField(force));
     }
 
     return $.when.apply($, promises);
   },
 
-  _asyncValidateField: function () {
+  _asyncValidateField: function (force) {
     var that = this;
 
     $.emit('parsley:field:validate', this);
 
-    return this._asyncIsValidField()
+    return this._asyncIsValidField(force)
       .done(function () {
         $.emit('parsley:field:success', that);
       })
@@ -114,13 +114,13 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       });
   },
 
-  _asyncIsValidField: function () {
+  _asyncIsValidField: function (force, value) {
     var deferred = $.Deferred(),
       remoteConstraintIndex;
 
     // If regular isValid (matching regular constraints) retunrs `false`, no need to go further
     // Directly reject promise, do not run remote validator and save server load
-    if (false === this.isValid())
+    if (false === this.isValid(force, value))
       deferred.rejectWith(this);
 
     // If regular constraints are valid, and there is a remote validator registered, run it
