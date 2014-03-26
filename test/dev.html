@@ -56,16 +56,17 @@
     </form> -->
 
     <form id="parsley" data-parsley-validate>
-        <input type="text" value="disabled!" disabled="disabled" />
+        <input type="text" required />
+        <input type="text" data-parsley-trigger="keyup" data-parsley-remote="http://app.wisembly.dev:8888/api/4/event/lps" />
         <input type="submit" />
     </form>
 
-    <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
-    <!-- <script src="../src/parsley.remote.js"></script> -->
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../src/parsley.remote.js"></script>
     <!-- <script src="../src/extra/dateiso.js"></script> -->
     <!-- <script src="../src/i18n/fr.extra.js"></script> -->
-    <!-- <script src="../dist/parsley.js"></script> -->
-    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+    <script src="../dist/parsley.js"></script>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
     <!-- <script src="../src/i18n/it.js"></script> -->
 
     <script type="text/javascript">

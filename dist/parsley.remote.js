@@ -140,12 +140,18 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       data = {},
       that = this,
       value = this.getValue(),
-      csr = value + this.$element.attr(this.options.namespace + 'remote-options') || '';
+      csr = value + (this.$element.attr(this.options.namespace + 'remote-options') || '');
+
+    // Initialise querry cache
+    if ('undefined' === typeof this._remoteCache)
+      this._remoteCache = {};
 
     // Already validated values are stored to save some calls..
-    if ('undefined' !== typeof this._remote && 'undefined' !== typeof this._remote[csr])
-      promise = this._remote[csr] ? deferred.resolveWith(that) : deferred.rejectWith(that);
-    else {
+    if ('undefined' !== typeof this._remoteCache[csr]) {
+      this._remoteCache[csr] ? deferred.resolveWith(that) : deferred.rejectWith(that);
+      return;
+
+    } else {
       data[that.$element.attr('name') || that.$element.attr('id')] = value;
 
       // Prevent multi burst xhr queries
@@ -176,7 +182,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
 
   _handleRemoteResult: function (status, deferred, csr) {
     // Store remote call result to avoid next calls with exact same parameters
-    this._remote[csr] = status;
+    this._remoteCache[csr] = status;
 
     // If reverse option is set, a failing ajax request is considered successful
     if ('undefined' !== typeof this.options.remoteReverse && true === this.options.remoteReverse)
@@ -216,7 +222,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Wed Mar 26 2014 09:14:00
+* Version 2.0.0-rc5 - built Wed Mar 26 2014 16:25:10
 * MIT Licensed
 *
 */

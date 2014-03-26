@@ -115,11 +115,42 @@ define('features/remote', [
           .done(function () {
             expect($.ajax.calledWithMatch({ type: "POST" })).to.be(true);
             expect($.ajax.calledWithMatch({ url: "http://foo.bar" })).to.be(true);
-            expect($.ajax.calledWithMatch({ data: {"foo": "bar", "element": "baz"} })).to.be(true);
+            expect($.ajax.calledWithMatch({ data: { "foo": "bar", "element": "baz" } })).to.be(true);
+            $.ajax.restore();
             done();
           });
       });
-      it.skip('should save some calls for querries already done');
+      it('should save some calls for querries already done', function (done) {
+        $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" required name="element" value="foo" />');
+        var parsleyInstance = $('#element').parsley();
+
+        sinon.stub($, 'ajax').returns($.Deferred().resolve());
+        parsleyInstance.asyncIsValid()
+          .done(function () {
+            expect($.ajax.calledOnce).to.be(true);
+            expect($.ajax.calledWithMatch({ data: { "element": "foo" } })).to.be(true);
+            $.ajax.restore();
+            sinon.stub($, 'ajax').returns($.Deferred().reject());
+
+            $('#element').val('bar');
+            parsleyInstance.asyncIsValid()
+              .fail(function () {
+                expect($.ajax.calledOnce).to.be(true);
+                expect($.ajax.calledWithMatch({ data: { "element": "bar" } })).to.be(true);
+
+                $.ajax.restore();
+                sinon.stub($, 'ajax').returns($.Deferred().resolve());
+                $('#element').val('foo');
+
+                parsleyInstance.asyncIsValid()
+                  .done(function () {
+                    expect($.ajax.callCount).to.be(0);
+                    expect($.ajax.calledOnce).to.be(false);
+                    done();
+                  });
+              });
+          });
+      });
       it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         if ($('#element').length)

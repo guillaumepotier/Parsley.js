@@ -2,6 +2,8 @@
 
 ## master
 
+  - fixed remote re-entering already validated value (#576)
+
 ## 2.0.0-rc5
 
   - totally reworked multiple fields (#542):
