@@ -7,18 +7,18 @@
 window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
   asyncSupport: true,
 
-  asyncValidate: function (group, event) {
+  asyncValidate: function () {
     if ('ParsleyForm' === this.__class__)
-      return this._asyncValidateForm(group, event);
+      return this._asyncValidateForm.apply(this, arguments);
 
-    return this._asyncValidateField();
+    return this._asyncValidateField.apply(this, arguments);
   },
 
-  asyncIsValid: function (group) {
+  asyncIsValid: function () {
     if ('ParsleyField' === this.__class__)
-      return this._asyncIsValidField();
+      return this._asyncIsValidField.apply(this, arguments);
 
-    return this._asyncIsValidForm(group);
+    return this._asyncIsValidForm.apply(this, arguments);
   },
 
   onSubmitValidate: function (event) {
@@ -81,7 +81,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       });
   },
 
-  _asyncIsValidForm: function (group) {
+  _asyncIsValidForm: function (group, force) {
     var promises = [];
     this._refreshFields();
 
@@ -91,18 +91,18 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       if (group && group !== this.fields[i].options.group)
         continue;
 
-      promises.push(this.fields[i]._asyncIsValidField());
+      promises.push(this.fields[i]._asyncIsValidField(force));
     }
 
     return $.when.apply($, promises);
   },
 
-  _asyncValidateField: function () {
+  _asyncValidateField: function (force) {
     var that = this;
 
     $.emit('parsley:field:validate', this);
 
-    return this._asyncIsValidField()
+    return this._asyncIsValidField(force)
       .done(function () {
         $.emit('parsley:field:success', that);
       })
@@ -114,13 +114,13 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       });
   },
 
-  _asyncIsValidField: function () {
+  _asyncIsValidField: function (force, value) {
     var deferred = $.Deferred(),
       remoteConstraintIndex;
 
     // If regular isValid (matching regular constraints) retunrs `false`, no need to go further
     // Directly reject promise, do not run remote validator and save server load
-    if (false === this.isValid())
+    if (false === this.isValid(force, value))
       deferred.rejectWith(this);
 
     // If regular constraints are valid, and there is a remote validator registered, run it
@@ -216,7 +216,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc4 - built Sun Mar 23 2014 14:09:58
+* Version 2.0.0-rc5 - built Wed Mar 26 2014 09:14:00
 * MIT Licensed
 *
 */
@@ -1164,6 +1164,7 @@ window.ParsleyConfig.validators.remote = {
       if (undefined === typeof this.catalog[locale])
         this.catalog[locale] = {};
       this.catalog[locale][name] = message;
+      return this;
     },
     validate: function (value, constraints, priority) {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
@@ -1806,7 +1807,7 @@ window.ParsleyConfig.validators.remote = {
       value = value || this.getValue();
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-      if (0 === value.length && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && 'undefined' === typeof force)
+      if (0 === value.length && !this.isRequired() && 'undefined' === typeof this.options.validateIfEmpty && true !== force)
         return this.validationResult = [];
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
@@ -2071,7 +2072,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.0.0-rc4
+//     Parsley.js 2.0.0-rc5
 //     http://parsleyjs.org
 //     (c) 20012-2014 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2079,7 +2080,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### Parsley factory
   var Parsley = function (element, options, parsleyInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.0-rc4';
+    this.__version__ = '2.0.0-rc5';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
