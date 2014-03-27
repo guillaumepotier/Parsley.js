@@ -3,6 +3,8 @@
 ## master
 
   - fixed remote re-entering already validated value (#576)
+  - added `stopImmediatePropagation()` un `onSubmit()` method to avoid conflicts
+    with other libraries (#561)
 
 ## 2.0.0-rc5
 

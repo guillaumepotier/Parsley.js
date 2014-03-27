@@ -28,8 +28,10 @@ define('parsley/form', [
       this.validate(undefined, undefined, event);
 
       // prevent form submission if validation fails
-      if (false === this.validationResult && event instanceof $.Event)
+      if (false === this.validationResult && event instanceof $.Event) {
+        event.stopImmediatePropagation();
         event.preventDefault();
+      }
 
       return this;
     },

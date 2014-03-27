@@ -131,6 +131,21 @@ define(function () {
         expect(formInstance.fields[0].$element.attr('id')).to.be('email');
         expect(fieldInstance.parsleyInstance.__proxy__).to.be('ParsleyForm');
       });
+      it('should stop event propagation on form submit', function (done) {
+        $('body').append('<form id="element"><input type="text" required/></form>');
+        var parsleyInstance = $('#element').parsley();
+
+        $('#element').on('submit', function () {
+          // It sould never pass here!
+          expect(true).to.be(false);
+        });
+
+        parsleyInstance.subscribe('parsley:form:validated', function () {
+          done();
+        });
+
+        $('#element').submit();
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();
