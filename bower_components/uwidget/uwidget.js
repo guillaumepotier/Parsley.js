@@ -73,14 +73,14 @@
 
         for (i = 0; i < this.options.filters.values.length; i++) {
           checked = this.$element.data('filters') && new RegExp(this.options.filters.labels[i], 'i').test(this.$element.data('filters'));
-          this.$filters.append(this.options.filters.labels[i] + ' <input type="checkbox" name="filters[]" value="' + this.options.filters.values[i] + '" ' + (checked ? 'checked' : '') + '/> ');
+          this.$filters.append(this.options.filters.labels[i] + ' <input type="checkbox" name="filters[]" value="' + this.options.filters.values[i] + '" ' + (checked ? 'checked' : '') + '/>');
         }
 
         this.$actions.append(this.$filters);
       }
 
       this.$container = $('<ul class="uwidget-container"></ul>');
-      this.$info = $('<span class="uwidget-info"><a href="https://github.com/guillaumepotier/uwidget" target="_blank">UWidget</a></span>');
+      this.$info = $('<span class="uwidget-info"><a href="#" target="_blank">UWidget</a></span>');
 
       this.$element
         .append(this.$actions)

@@ -1,7 +1,7 @@
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.5.5 - built Fri Feb 07 2014 16:52:20
+* Version 0.5.8 - built Sun Mar 16 2014 17:18:21
 * MIT Licensed
 *
 */
@@ -14,7 +14,7 @@
 
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '0.5.5';
+    this.__version__ = '0.5.8';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
 
@@ -180,7 +180,8 @@
     },
 
     has: function ( node, nodes ) {
-      var nodes = 'undefined' !== typeof nodes ? nodes : this.nodes;
+      nodes = 'undefined' !== typeof nodes ? nodes : this.nodes;
+
       return 'undefined' !== typeof nodes[ node ];
     },
 
@@ -278,9 +279,9 @@
 
     __toString: function () {
       if ( 'undefined' !== typeof this.violation )
-        var violation = '", ' + this.getViolation().constraint + ' expected was ' + this.getViolation().expected;
+        this.violation = '", ' + this.getViolation().constraint + ' expected was ' + this.getViolation().expected;
 
-      return this.assert.__class__ + ' assert failed for "' + this.value + violation || '';
+      return this.assert.__class__ + ' assert failed for "' + this.value + this.violation || '';
     },
 
     getViolation: function () {
@@ -421,7 +422,7 @@
       this.arguments = Array.prototype.slice.call( arguments );
 
       if ( 1 === this.arguments.length )
-        this.arguments = []
+        this.arguments = [];
       else
         this.arguments.splice( 0, 1 );
 
@@ -431,8 +432,7 @@
       this.fn = fn;
 
       this.validate = function ( value ) {
-        var arguments = [ value ].concat( this.arguments) ;
-        var result = this.fn.apply( this, arguments );
+        var result = this.fn.apply( this, [ value ].concat( this.arguments ) );
 
         if ( true !== result )
           throw new Violation( this, value, { result: result } );
@@ -782,7 +782,7 @@
     Range: function ( min, max ) {
       this.__class__ = 'Range';
 
-      if ( !min || !max )
+      if ( 'undefined' === typeof min || 'undefined' === typeof max )
         throw new Error( 'Range assert expects min and max values' );
 
       this.min = min;
@@ -822,7 +822,7 @@
         if ( 'string' !== typeof value )
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
 
-        if ( !new RegExp( this.regexp ).test( value, this.flag ) )
+        if ( !new RegExp( this.regexp, this.flag ).test( value ) )
           throw new Violation( this, value, { regexp: this.regexp, flag: this.flag } );
 
         return true;
@@ -838,12 +838,14 @@
         if ( 'undefined' === typeof value )
           throw new Violation( this, value );
 
-        if ( 'string' === typeof value )
-          try {
+        try {
+          if ( 'string' === typeof value )
             new Assert().NotNull().validate( value ) && new Assert().NotBlank().validate( value );
-          } catch ( violation ) {
-            throw new Violation( this, value );
-          }
+          else if ( true === _isArray( value ) )
+            new Assert().Length( { min: 1 } ).validate( value );
+        } catch ( violation ) {
+          throw new Violation( this, value );
+        }
 
         return true;
       };
@@ -898,7 +900,7 @@
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
         "use strict";
-        if (this == null) {
+        if (this === null) {
             throw new TypeError();
         }
         var t = Object(this);
@@ -911,7 +913,7 @@
             n = Number(arguments[1]);
             if (n != n) { // shortcut for verifying if it's NaN
                 n = 0;
-            } else if (n != 0 && n != Infinity && n != -Infinity) {
+            } else if (n !== 0 && n != Infinity && n != -Infinity) {
                 n = (n > 0 || -1) * Math.floor(Math.abs(n));
             }
         }
@@ -937,15 +939,14 @@
 
   var _isArray = function ( obj ) {
     return Object.prototype.toString.call( obj ) === '[object Array]';
-  }
+  };
 
   // https://github.com/LearnBoost/expect.js/blob/master/expect.js
   var expect = {
     eql: function ( actual, expected ) {
       if ( actual === expected ) {
         return true;
-      } else if ( 'undefined' !== typeof Buffer
-          && Buffer.isBuffer( actual ) && Buffer.isBuffer( expected ) ) {
+      } else if ( 'undefined' !== typeof Buffer && Buffer.isBuffer( actual ) && Buffer.isBuffer( expected ) ) {
         if ( actual.length !== expected.length ) return false;
 
         for ( var i = 0; i < actual.length; i++ )
@@ -994,27 +995,27 @@
 
       try {
         var ka = this.keys( a ), kb = this.keys( b ), key, i;
+
+        if ( ka.length !== kb.length )
+          return false;
+
+        ka.sort();
+        kb.sort();
+
+        for ( i = ka.length - 1; i >= 0; i-- )
+          if ( ka[ i ] != kb[ i ] )
+            return false;
+
+        for ( i = ka.length - 1; i >= 0; i-- ) {
+          key = ka[i];
+          if ( !this.eql( a[ key ], b[ key ] ) )
+             return false;
+        }
+
+        return true;
       } catch ( e ) {
         return false;
       }
-
-      if ( ka.length !== kb.length )
-        return false;
-
-      ka.sort();
-      kb.sort();
-
-      for ( i = ka.length - 1; i >= 0; i-- )
-        if ( ka[ i ] != kb[ i ] )
-          return false;
-
-      for ( i = ka.length - 1; i >= 0; i-- ) {
-        key = ka[i];
-        if ( !this.eql( a[ key ], b[ key ] ) )
-           return false;
-      }
-
-      return true;
     }
   };
 
