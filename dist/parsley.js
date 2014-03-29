@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Sat Mar 29 2014 17:01:05
+* Version 2.0.0-rc5 - built Sat Mar 29 2014 18:13:25
 * MIT Licensed
 *
 */
@@ -11,7 +11,8 @@
     // returns object from dom attributes and values
     // if attr is given, returns bool if attr present in DOM or not
     attr: function ($element, namespace, checkAttr) {
-      var attribute,
+      var
+        attribute,
         obj = {},
         regex = new RegExp('^' + namespace, 'i');
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
@@ -31,8 +32,9 @@
     },
     // Recursive object / array getter
     get: function (obj, path) {
-      var i = 0,
-      paths = (path || '').split('.');
+      var
+        i = 0,
+        paths = (path || '').split('.');
       while (this.isObject(obj) || this.isArray(obj)) {
         obj = obj[paths[i++]];
         if (i === paths.length)
@@ -1226,7 +1228,8 @@
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
     _diff: function (newResult, oldResult, deep) {
-      var added = [],
+      var
+        added = [],
         kept = [];
       for (var i = 0; i < newResult.length; i++) {
         var found = false;
@@ -1753,7 +1756,9 @@
     }
   };
 
-  var o = $({}), subscribed = {};
+  var
+    o = $({}),
+    subscribed = {};
   // $.listen(name, callback);
   // $.listen(name, context, callback);
   $.listen = function (name) {
@@ -1904,7 +1909,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
     },
     // Multiples fields are a real nightmare :(
     handleMultiple: function (parsleyInstance) {
-      var that = this,
+      var
+        that = this,
         name,
         multiple,
         parsleyMultipleInstance;

@@ -4,7 +4,8 @@ define('parsley/utils', function () {
     // returns object from dom attributes and values
     // if attr is given, returns bool if attr present in DOM or not
     attr: function ($element, namespace, checkAttr) {
-      var attribute,
+      var
+        attribute,
         obj = {},
         regex = new RegExp('^' + namespace, 'i');
 
@@ -31,8 +32,9 @@ define('parsley/utils', function () {
 
     // Recursive object / array getter
     get: function (obj, path) {
-      var i = 0,
-      paths = (path || '').split('.');
+      var
+        i = 0,
+        paths = (path || '').split('.');
 
       while (this.isObject(obj) || this.isArray(obj)) {
         obj = obj[paths[i++]];

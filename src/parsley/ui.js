@@ -164,7 +164,8 @@ define('parsley/ui', [
     },
 
     _diff: function (newResult, oldResult, deep) {
-      var added = [],
+      var
+        added = [],
         kept = [];
 
       for (var i = 0; i < newResult.length; i++) {

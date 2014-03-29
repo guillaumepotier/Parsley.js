@@ -82,7 +82,8 @@ define([
 
     // Multiples fields are a real nightmare :(
     handleMultiple: function (parsleyInstance) {
-      var that = this,
+      var
+        that = this,
         name,
         multiple,
         parsleyMultipleInstance;

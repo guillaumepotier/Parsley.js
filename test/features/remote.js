@@ -120,7 +120,6 @@ define('features/remote', [
             done();
           });
       });
-
       it('should save some calls for querries already done', function (done) {
         $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" required name="element" value="foo" />');
         var parsleyInstance = $('#element').parsley();
@@ -153,14 +152,10 @@ define('features/remote', [
               });
           });
       });
-
+      // custom validator needed for this test is registered in `tests.js` before running this suite
       it('should handle remote validator option', function (done) {
-        $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" data-parsley-remote-validator="remote-custom" required name="element" value="foobar" />');
+        $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" data-parsley-remote-validator="cUSTom" required name="element" value="foobar" />');
         var parsleyInstance = $('#element').parsley();
-
-        window.ParsleyExtend.addAsyncValidator('remote-custom', function (xhr) {
-          return xhr.status === 404;
-        });
 
         sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
         parsleyInstance.asyncIsValid()
@@ -177,9 +172,27 @@ define('features/remote', [
                 $('#element').val('fooquux');
                 parsleyInstance.asyncIsValid()
                   .done(function () {
+                    $.ajax.restore();
                     done();
                   });
               });
+          });
+      });
+
+      it('should handle remote validator option with custom url', function (done) {
+        $('body').append('<input type="text" data-parsley-remote id="element" data-parsley-remote-validator="mycustom" required name="element" value="foobar" />');
+        var parsleyInstance = $('#element').parsley();
+
+        parsleyInstance.addAsyncValidator('mycustom', function (xhr) {
+          return xhr.status === 404;
+        }, 'http://foobar.baz');
+
+        sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
+        parsleyInstance.asyncIsValid()
+          .fail(function () {
+            expect($.ajax.calledWithMatch({ url: "http://foobar.baz" })).to.be(true);
+            $.ajax.restore();
+            done();
           });
       });
 

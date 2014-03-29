@@ -4,24 +4,33 @@
 // Events like onkeyup when field is invalid or on form submit. These validation methods adds an
 // Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
 // Because returns promises instead of booleans.
-
 window.ParsleyExtend = window.ParsleyExtend || {};
 window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   asyncSupport: true,
 
   asyncValidators: $.extend({
-    'remote-default': function (xhr) {
-      return xhr.state() === 'resolved';
+    default: {
+      fn: function (xhr) {
+        return 'resolved' === xhr.state();
+      },
+      url: false
     },
-    'remote-reverse': function (xhr) {
-      // If reverse option is set, a failing ajax request is considered successful
-      return xhr.state() === 'rejected';
+    reverse: {
+      fn: function (xhr) {
+        // If reverse option is set, a failing ajax request is considered successful
+        return 'rejected' === xhr.state();
+      },
+      url: false
     }
   }, window.ParsleyExtend.asyncValidators),
 
-  addAsyncValidator: function (name, fn) {
-      this.asyncValidators[name] = fn;
-      return this;
+  addAsyncValidator: function (name, fn, url) {
+    this.asyncValidators[name.toLowerCase()] = {
+      fn: fn,
+      url: url || false
+    };
+
+    return this;
   },
 
   asyncValidate: function () {
@@ -76,8 +85,9 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
   // Returns Promise
   _asyncValidateForm: function (group, event) {
-    var that = this,
-        promises = [];
+    var
+      that = this,
+      promises = [];
 
     this._refreshFields();
 
@@ -132,7 +142,8 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   },
 
   _asyncIsValidField: function (force, value) {
-    var deferred = $.Deferred(),
+    var
+      deferred = $.Deferred(),
       remoteConstraintIndex;
 
     // If regular isValid (matching regular constraints) returns `false`, no need to go further
@@ -153,35 +164,42 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   },
 
   _remote: function (deferred) {
-    var that = this,
-        data = {},
-        ajaxOptions,
-        csr;
+    var
+      that = this,
+      data = {},
+      ajaxOptions,
+      csr,
+      validator = this.options.remoteValidator || (true === this.options.remoteReverse ? 'reverse' : 'default');
 
-    // fill data with current value
+    validator = validator.toLowerCase();
+
+    if ('undefined' === typeof this.asyncValidators[validator])
+      throw new Error('Calling an undefined async validator: `' + validator + '`');
+
+    // Fill data with current value
     data[this.$element.attr('name') || this.$element.attr('id')] = this.getValue();
 
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
-      url: this.options.remote,
+      url: this.asyncValidators[validator].url || this.options.remote,
       data: data,
       type: 'GET'
     }, this.options.remoteOptions || {});
 
-    // generate store key based on ajax options
+    // Generate store key based on ajax options
     csr = $.param(ajaxOptions);
 
     // Initialise querry cache
     if ('undefined' === typeof this._remoteCache)
       this._remoteCache = {};
 
-    // try to retrieve stored xhr
+    // Try to retrieve stored xhr
     if (!this._remoteCache[csr]) {
       // Prevent multi burst xhr queries
       if (this._xhr && 'pending' === this._xhr.state())
         this._xhr.abort();
 
-      // make ajax call
+      // Make ajax call
       this._xhr =  $.ajax(ajaxOptions)
 
       // Store remote call result to avoid next calls with exact same parameters
@@ -189,24 +207,23 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     }
 
     this._remoteCache[csr]
-        .done(function (data, textStatus, xhr) {
-          that._handleRemoteResult(xhr, deferred);
-        })
-        .fail(function (xhr, status, message) {
-          // If we aborted the query, do not handle nothing for this value
-          if ('abort' === status)
-            return;
+      .done(function (data, textStatus, xhr) {
+        that._handleRemoteResult(validator, xhr, deferred);
+      })
+      .fail(function (xhr, status, message) {
+        // If we aborted the query, do not handle nothing for this value
+        if ('abort' === status)
+          return;
 
-          that._handleRemoteResult(xhr, deferred);
-        });
+        that._handleRemoteResult(validator, xhr, deferred);
+      });
   },
 
-  _handleRemoteResult: function (xhr, deferred) {
-    var validator = this.options.remoteValidator || (this.options.remoteReverse === true ? 'remote-reverse' : 'remote-default');
-
-    if ('function' === typeof this.asyncValidators[validator] && this.asyncValidators[validator](xhr)) {
-      // If true, simply resolve and exit
+  _handleRemoteResult: function (validator, xhr, deferred) {
+    // If true, simply resolve and exit
+    if ('function' === typeof this.asyncValidators[validator].fn && this.asyncValidators[validator].fn(xhr)) {
       deferred.resolveWith(this);
+
       return;
     }
 
@@ -238,7 +255,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Sat Mar 29 2014 17:01:05
+* Version 2.0.0-rc5 - built Sat Mar 29 2014 18:13:25
 * MIT Licensed
 *
 */
@@ -248,7 +265,8 @@ window.ParsleyConfig.validators.remote = {
     // returns object from dom attributes and values
     // if attr is given, returns bool if attr present in DOM or not
     attr: function ($element, namespace, checkAttr) {
-      var attribute,
+      var
+        attribute,
         obj = {},
         regex = new RegExp('^' + namespace, 'i');
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
@@ -268,8 +286,9 @@ window.ParsleyConfig.validators.remote = {
     },
     // Recursive object / array getter
     get: function (obj, path) {
-      var i = 0,
-      paths = (path || '').split('.');
+      var
+        i = 0,
+        paths = (path || '').split('.');
       while (this.isObject(obj) || this.isArray(obj)) {
         obj = obj[paths[i++]];
         if (i === paths.length)
@@ -1463,7 +1482,8 @@ window.ParsleyConfig.validators.remote = {
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
     _diff: function (newResult, oldResult, deep) {
-      var added = [],
+      var
+        added = [],
         kept = [];
       for (var i = 0; i < newResult.length; i++) {
         var found = false;
@@ -1990,7 +2010,9 @@ window.ParsleyConfig.validators.remote = {
     }
   };
 
-  var o = $({}), subscribed = {};
+  var
+    o = $({}),
+    subscribed = {};
   // $.listen(name, callback);
   // $.listen(name, context, callback);
   $.listen = function (name) {
@@ -2141,7 +2163,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
     },
     // Multiples fields are a real nightmare :(
     handleMultiple: function (parsleyInstance) {
-      var that = this,
+      var
+        that = this,
         name,
         multiple,
         parsleyMultipleInstance;

@@ -9,6 +9,7 @@
     fields as a multiple field (#589)
   - `input[type=hidden]` are now excluded by default (#589)
   - fixed constraints unicity on fields belonging to same multiple group
+  - added `data-parsley-remote-validator` feature (#587)
 
 ## 2.0.0-rc5
 
