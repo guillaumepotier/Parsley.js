@@ -281,8 +281,12 @@
               </tr>
               <tr>
                 <td><code>data-parsley-excluded</code> <version>#2.0</version></td>
-                <td><pre>input[type=button], input[type=submit], input[type=reset]</pre></td>
-                <td>Form fields that won't be validated by Parsley. If you want for example to add <code>disabled</code> and not visible fields to the existing list, use <pre>data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], [disabled], :hidden"</pre></td>
+                <td>
+                  <code>input[type=button],</code><br/>
+                  <code>input[type=submit],</code><br/>
+                  <code>input[type=reset],</code><br/>
+                  <code>input[type=hidden]</code></td>
+                <td>Form fields that won't be validated by Parsley. If you want for example to add <code>disabled</code> and not visible fields to the existing list, use <pre>data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], input[type=hidden], [disabled], :hidden"</pre></td>
               </tr>
             </tbody>
           </table>

@@ -148,8 +148,27 @@ define(function () {
         $('#check2').trigger($.Event('change'));
         expect(parsleyInstance.validationResult).to.be.eql(true);
       });
-      it.skip('should add errors on change if trigger enabled, whatever field is changed', function () {
-
+      it('should add errors on change if trigger enabled, whatever field is changed', function () {
+        $('body').append(
+          '<form id="element" >' +
+            '<input type="checkbox" name="check[]" id="check1" value="1" required data-parsley-mincheck="2" data-parsley-trigger="change" />'  +
+            '<input type="checkbox" name="check[]" id="check2" value="2" />'  +
+            '<input type="checkbox" name="check[]" id="check3" value="3" />'  +
+            '<input type="checkbox" name="check[]" id="check4" value="4" />'  +
+          '</form>');
+        var parsleyInstance = $('#check1').parsley();
+        expect(parsleyInstance.validationResult.length).to.be(0);
+        $('#check3').trigger($.Event('change'));
+        expect(parsleyInstance.validationResult.length).to.be(1);
+      });
+      it('should bind only valid multiple siblings sharing the same name', function () {
+        $('body').append(
+          '<form id="element">' +
+            '<input name="foo" type="hidden" value="0"/>' +
+            '<input name="foo" id="check" type="checkbox" value="1"/>' +
+          '</form>');
+        $('#element').parsley();
+        expect($('#check').parsley().$elements.length).to.be(1);
       });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };

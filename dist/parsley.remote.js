@@ -222,7 +222,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Wed Mar 26 2014 16:25:10
+* Version 2.0.0-rc5 - built Sat Mar 29 2014 11:22:25
 * MIT Licensed
 *
 */
@@ -313,7 +313,7 @@ window.ParsleyConfig.validators.remote = {
     // Supported inputs by default
     inputs: 'input, textarea, select',
     // Excluded inputs by default
-    excluded: 'input[type=button], input[type=submit], input[type=reset]',
+    excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
     // Stop validating field on highest priority failing constraint
     priorityEnabled: true,
     // ### UI
@@ -1684,8 +1684,10 @@ window.ParsleyConfig.validators.remote = {
     onSubmitValidate: function (event) {
       this.validate(undefined, undefined, event);
       // prevent form submission if validation fails
-      if (false === this.validationResult && event instanceof $.Event)
+      if (false === this.validationResult && event instanceof $.Event) {
+        event.stopImmediatePropagation();
         event.preventDefault();
+      }
       return this;
     },
     // @returns boolean
@@ -2148,7 +2150,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
       // Add proper `data-parsley-multiple` to siblings if we had a name
       if ('undefined' !== typeof name)
         $('input[name="' + name + '"]').each(function () {
-          $(this).attr(that.options.namespace + 'multiple', multiple);
+          if ($(this).is('input[type=radio], input[type=checkbox]'))
+            $(this).attr(that.options.namespace + 'multiple', multiple);
         });
       // Check here if we don't already have a related multiple instance saved
       if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length)
