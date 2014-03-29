@@ -14,7 +14,7 @@ define('parsley/defaults', function () {
     inputs: 'input, textarea, select',
 
     // Excluded inputs by default
-    excluded: 'input[type=button], input[type=submit], input[type=reset]',
+    excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
 
     // Stop validating field on highest priority failing constraint
     priorityEnabled: true,

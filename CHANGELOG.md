@@ -3,6 +3,12 @@
 ## master
 
   - fixed remote re-entering already validated value (#576)
+  - added `stopImmediatePropagation()` un `onSubmit()` method to avoid conflicts
+    with other libraries (#561)
+  - fixed parsleyFieldMultiple behavior that tried to bind non radio or checkbox
+    fields as a multiple field (#589)
+  - `input[type=hidden]` are now excluded by default (#589)
+  - fixed constraints unicity on fields belonging to same multiple group
 
 ## 2.0.0-rc5
 

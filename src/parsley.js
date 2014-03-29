@@ -115,7 +115,8 @@ define([
       // Add proper `data-parsley-multiple` to siblings if we had a name
       if ('undefined' !== typeof name)
         $('input[name="' + name + '"]').each(function () {
-          $(this).attr(that.options.namespace + 'multiple', multiple);
+          if ($(this).is('input[type=radio], input[type=checkbox]'))
+            $(this).attr(that.options.namespace + 'multiple', multiple);
         });
 
       // Check here if we don't already have a related multiple instance saved

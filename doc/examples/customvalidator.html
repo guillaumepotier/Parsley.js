@@ -8,7 +8,7 @@
     <meta name="description" content="Parsley, the ultimate frontend javascript form validation library">
     <meta name="author" content="Guillaume Potier">
 
-    <title>Parsley - Exemples | Events</title>
+    <title>Parsley - Exemples | Custom validator</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
@@ -65,6 +65,9 @@
       .invalid-form-error-message.filled {
         border-left: 2px solid red;
       }
+      .btn-info, .btn-default {
+        margin-top: 10px;
+      }
     </style>
   </head>
 
@@ -102,74 +105,76 @@
       <!-- ###################### BEGIN OF EXAMPLE ######################-->
 
         <div class="col-md-4">
-          <h2>Parsley Events Demo</h2>
+          <h2>Craft your own validators demo</h2>
           <small class="pull-left"><a href="../examples.html">&lt;&lt; Back to examples</a></small>
           <span class="clearfix"></span>
 
           <hr></hr>
           <div class="form-group">
-            <h4>Correctly fill at least one of these blocks</h4>
             <form id="demo-form" data-parsley-validate>
-              <div class="first">
-                <label for="firstname">Firstname:</label>
-                <input type="text" class="form-control" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+              <label for="question">Do you code? *</label>
+              <p>
+                <input type="radio" name="question1" value="yes" required /> Yes
+                <input type="radio" name="question1" value="no" /> No
+              </p>
 
-                <label for="lastname">Lastname:</label>
-                <input type="text" class="form-control" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
-              </div>
-              <hr></hr>
-              <div class="second">
-                <label for="fullname">Fullname:</label>
-                <input type="text" class="form-control" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
-              </div>
+              <label for="languages">If yes, in which language(s)?</label>
+              <input type="text" class="form-control" name="languages" data-parsley-conditionalrequired='["[name=\"question1\"]:checked", "yes"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you are a programmer!" />
 
-              <div class="invalid-form-error-message"></div>
-              <input type="submit" class="btn btn-default validate" />
+              <label for="question">Do you eat dog food? *</label>
+              <p>
+                <input type="radio" name="question2" value="yes" required /> Yes
+                <input type="radio" name="question2" value="no" /> No
+              </p>
+
+              <label for="why">If no, why?</label>
+              <input type="text" class="form-control" name="why" data-parsley-conditionalrequired='["[name=\"question2\"]:checked", "no"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you do not eat dog food!" />
+
+              <input type="submit" class="btn btn-default pull-right" />
             </form>
           </div>
         </div>
         <div class="col-md-8">
           <div class="code-block">
 <pre><code>&lt;form id="demo-form" data-parsley-validate>
-  &lt;div class="first">
-    &lt;label for="firstname">Firstname:&lt;/label>
-    &lt;input type="text" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+  &lt;label for="question">Do you code? *&lt;/label>
+  &lt;p>
+    &lt;input type="radio" name="question" value="true" required /> Yes
+    &lt;input type="radio" name="question" value="false" /> No
+  &lt;/p>
 
-    &lt;label for="lastname">Lastname:&lt;/label>
-    &lt;input type="text" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
-  &lt;/div>
-  &lt;hr>&lt;/hr>
-  &lt;div class="second">
-    &lt;label for="fullname">Fullname:&lt;/label>
-    &lt;input type="text" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
-  &lt;/div>
+  &lt;label for="languages">If yes, in which language(s)?&lt;/label>
+  &lt;input type="text" class="form-control" name="languages" data-parsley-conditionalrequired='["[name=\"question1\"]:checked", "yes"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you are a programmer!" />
 
-  &lt;div class="invalid-form-error-message">&lt;/div>
-  &lt;input type="submit" class="btn btn-default validate" />
+  &lt;label for="question">Do you eat dog food? *&lt;/label>
+  &lt;p>
+    &lt;input type="radio" name="question2" value="yes" required /> Yes
+    &lt;input type="radio" name="question2" value="no" /> No
+  &lt;/p>
+
+  &lt;label for="why">If no, why?&lt;/label>
+  &lt;input type="text" class="form-control" name="why" data-parsley-conditionalrequired='["[name=\"question2\"]:checked", "no"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you do not eat dog food!" />
+
+  &lt;input type="submit" class="btn btn-default pull-right" />
 &lt;/form>
 
 &lt;script type="text/javascript">
-$(document).ready(function () {
-  $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
+  window.ParsleyConfig = {
+    validators: {
+      conditionalrequired: {
+        fn: function (value, requirements) {
+          // if requirements[0] value does not meet requirements[1] expectation, field is required
+          if (requirements[1] == $(requirements[0]).val() && '' == value)
+          return false;
 
-    // if one of these blocks is not failing do not prevent submission
-    // we use here group validation with option force (validate even non required fields)
-    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
-      return;
-
-    // else stop form submission
-    formInstance.submitEvent.preventDefault();
-
-    // and display a gentle message
-    $('.invalid-form-error-message')
-      .html("You must correctly fill at least one of these 2 blocks' fields!")
-      .addClass("filled");
-    return;
-
-    $('.invalid-form-error-message').html('');
-  });
-});
+          return true;
+        },
+        priority: 32
+      }
+    }
+  };
 &lt;/script>
+&lt;script type="text/javascript" src="../../dist/parsley.js">&lt;/script>
 </code></pre>
           </div>
         </div>
@@ -187,22 +192,26 @@ $(document).ready(function () {
     <script type="text/javascript" src="../../bower_components/bootstrap/js/affix.js"></script>
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
 
-    <script type="text/javascript" src="../../dist/parsley.js"></script>
     <script type="text/javascript">
+      window.ParsleyConfig = {
+        validators: {
+          conditionalrequired: {
+            fn: function (value, requirements) {
+              // if requirements[0] value does not meet requirements[1] expectation, field is required
+              if (requirements[1] == $(requirements[0]).val() && '' == value)
+                return false;
 
-      $(document).ready(function () {
-        $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
-          if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
-            return;
+              return true;
+            },
+            priority: 32
+          }
+        }
+      };
+    </script>
 
-          formInstance.submitEvent.preventDefault();
-          $('.invalid-form-error-message')
-            .html("You must correctly fill at least one of these 2 blocks' fields!")
-            .addClass("filled");
-          return;
-        });
-      });
+    <script type="text/javascript" src="../../dist/parsley.js"></script>
 
+    <script type="text/javascript">
       try {
         hljs.initHighlightingOnLoad();
       } catch ( err ) {}

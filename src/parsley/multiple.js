@@ -19,6 +19,8 @@ define('parsley/multiple', [
     },
 
     refreshConstraints: function () {
+      var fieldConstraints;
+
       this.constraints = [];
 
       // Select multiple special treatment
@@ -28,9 +30,13 @@ define('parsley/multiple', [
         return this;
       }
 
+      // Gather all constraints for each input in the multiple group
+      for (var i = 0; i < this.$elements.length; i++) {
+        fieldConstraints = this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints;
 
-      for (var i = 0; i < this.$elements.length; i++)
-        this.constraints = this.constraints.concat(this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints);
+        for (var j = 0; j < fieldConstraints.length; j++)
+          this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
+      }
 
       return this;
     },

@@ -18,6 +18,7 @@ define('parsley/field', [
   ParsleyField.prototype = {
     init: function () {
       this.constraints = [];
+      this.constraintsByName = {};
       this.validationResult = [];
       this.bindConstraints();
 
@@ -86,9 +87,10 @@ define('parsley/field', [
 
     // Field is required if have required constraint without `false` value
     isRequired: function () {
-      var constraintIndex = this._constraintIndex('required');
+      if ('undefined' === typeof this.constraintsByName.required)
+        return false;
 
-      return !(-1 === constraintIndex || (-1 !== constraintIndex && false === this.constraints[constraintIndex].requirements));
+      return false !== this.constraintsByName.required.requirements;
     },
 
     getValue: function () {
@@ -183,10 +185,11 @@ define('parsley/field', [
         var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
-        if (-1 !== this._constraintIndex(constraint.name))
+        if ('undefined' !== this.constraintsByName[constraint.name])
           this.removeConstraint(constraint.name);
 
         this.constraints.push(constraint);
+        this.constraintsByName[constraint.name] = constraint;
       }
 
       return this;
@@ -205,14 +208,6 @@ define('parsley/field', [
     updateConstraint: function (name, parameters, priority) {
       return this.removeConstraint(name)
         .addConstraint(name, parameters, priority);
-    },
-
-    _constraintIndex: function (name) {
-      for (var i = 0; i < this.constraints.length; i++)
-        if (name === this.constraints[i].name)
-          return i;
-
-      return -1;
     }
   };
 

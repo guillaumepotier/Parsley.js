@@ -124,7 +124,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       deferred.rejectWith(this);
 
     // If regular constraints are valid, and there is a remote validator registered, run it
-    else if (-1 !== this._constraintIndex('remote'))
+    else if ('undefined' !== typeof this.constraintsByName.remote)
       this._remote(deferred);
 
     // Otherwise all is good, resolve promise
@@ -197,7 +197,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     // Else, create a proper remote validation Violation to trigger right UI
     this.validationResult = [
       new window.ParsleyValidator.Validator.Violation(
-        this.constraints[this._constraintIndex('remote')],
+        this.constraintsByName.remote,
         this.getValue(),
         null
       )
@@ -222,7 +222,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Wed Mar 26 2014 16:25:10
+* Version 2.0.0-rc5 - built Sat Mar 29 2014 12:48:27
 * MIT Licensed
 *
 */
@@ -313,7 +313,7 @@ window.ParsleyConfig.validators.remote = {
     // Supported inputs by default
     inputs: 'input, textarea, select',
     // Excluded inputs by default
-    excluded: 'input[type=button], input[type=submit], input[type=reset]',
+    excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
     // Stop validating field on highest priority failing constraint
     priorityEnabled: true,
     // ### UI
@@ -1169,7 +1169,7 @@ window.ParsleyConfig.validators.remote = {
     addMessage: function (locale, name, message) {
       if (undefined === typeof this.catalog[locale])
         this.catalog[locale] = {};
-      this.catalog[locale][name] = message;
+      this.catalog[locale][name.toLowerCase()] = message;
       return this;
     },
     validate: function (value, constraints, priority) {
@@ -1177,7 +1177,7 @@ window.ParsleyConfig.validators.remote = {
     },
     // Add a new validator
     addValidator: function (name, fn, priority) {
-      this.validators[name] = function (requirements) {
+      this.validators[name.toLowerCase()] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
       };
       return this;
@@ -1193,10 +1193,10 @@ window.ParsleyConfig.validators.remote = {
       var message;
       // Type constraints are a bit different, we have to match their requirements too to find right error message
       if ('type' === constraint.name)
-        message = window.ParsleyConfig.i18n[this.locale][constraint.name][constraint.requirements];
+        message = this.catalog[this.locale][constraint.name][constraint.requirements];
       else
-        message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale][constraint.name], constraint.requirements);
-      return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].defaultMessage;
+        message = this.formatMesssage(this.catalog[this.locale][constraint.name], constraint.requirements);
+      return '' !== message ? message : this.catalog[this.locale].defaultMessage;
     },
     // Kind of light `sprintf()` implementation
     formatMesssage: function (string, parameters) {
@@ -1684,8 +1684,10 @@ window.ParsleyConfig.validators.remote = {
     onSubmitValidate: function (event) {
       this.validate(undefined, undefined, event);
       // prevent form submission if validation fails
-      if (false === this.validationResult && event instanceof $.Event)
+      if (false === this.validationResult && event instanceof $.Event) {
+        event.stopImmediatePropagation();
         event.preventDefault();
+      }
       return this;
     },
     // @returns boolean
@@ -1776,6 +1778,7 @@ window.ParsleyConfig.validators.remote = {
   ParsleyField.prototype = {
     init: function () {
       this.constraints = [];
+      this.constraintsByName = {};
       this.validationResult = [];
       this.bindConstraints();
       return this;
@@ -1826,8 +1829,9 @@ window.ParsleyConfig.validators.remote = {
     },
     // Field is required if have required constraint without `false` value
     isRequired: function () {
-      var constraintIndex = this._constraintIndex('required');
-      return !(-1 === constraintIndex || (-1 !== constraintIndex && false === this.constraints[constraintIndex].requirements));
+      if ('undefined' === typeof this.constraintsByName.required)
+        return false;
+      return false !== this.constraintsByName.required.requirements;
     },
     getValue: function () {
       var value;
@@ -1899,9 +1903,10 @@ window.ParsleyConfig.validators.remote = {
       if ('function' === typeof window.ParsleyValidator.validators[name]) {
         var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
         // if constraint already exist, delete it and push new version
-        if (-1 !== this._constraintIndex(constraint.name))
+        if ('undefined' !== this.constraintsByName[constraint.name])
           this.removeConstraint(constraint.name);
         this.constraints.push(constraint);
+        this.constraintsByName[constraint.name] = constraint;
       }
       return this;
     },
@@ -1916,12 +1921,6 @@ window.ParsleyConfig.validators.remote = {
     updateConstraint: function (name, parameters, priority) {
       return this.removeConstraint(name)
         .addConstraint(name, parameters, priority);
-    },
-    _constraintIndex: function (name) {
-      for (var i = 0; i < this.constraints.length; i++)
-        if (name === this.constraints[i].name)
-          return i;
-      return -1;
     }
   };
 
@@ -1939,15 +1938,19 @@ window.ParsleyConfig.validators.remote = {
       return this;
     },
     refreshConstraints: function () {
+      var fieldConstraints;
       this.constraints = [];
       // Select multiple special treatment
       if (this.$element.is('select')) {
         this.actualizeOptions().bindConstraints();
         return this;
       }
-
-      for (var i = 0; i < this.$elements.length; i++)
-        this.constraints = this.constraints.concat(this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints);
+      // Gather all constraints for each input in the multiple group
+      for (var i = 0; i < this.$elements.length; i++) {
+        fieldConstraints = this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints;
+        for (var j = 0; j < fieldConstraints.length; j++)
+          this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
+      }
       return this;
     },
     getValue: function () {
@@ -2148,7 +2151,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
       // Add proper `data-parsley-multiple` to siblings if we had a name
       if ('undefined' !== typeof name)
         $('input[name="' + name + '"]').each(function () {
-          $(this).attr(that.options.namespace + 'multiple', multiple);
+          if ($(this).is('input[type=radio], input[type=checkbox]'))
+            $(this).attr(that.options.namespace + 'multiple', multiple);
         });
       // Check here if we don't already have a related multiple instance saved
       if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length)

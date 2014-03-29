@@ -47,7 +47,7 @@ define('parsley/validator', [
       if (undefined === typeof this.catalog[locale])
         this.catalog[locale] = {};
 
-      this.catalog[locale][name] = message;
+      this.catalog[locale][name.toLowerCase()] = message;
 
       return this;
     },
@@ -58,7 +58,7 @@ define('parsley/validator', [
 
     // Add a new validator
     addValidator: function (name, fn, priority) {
-      this.validators[name] = function (requirements) {
+      this.validators[name.toLowerCase()] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
       };
 
@@ -80,11 +80,11 @@ define('parsley/validator', [
 
       // Type constraints are a bit different, we have to match their requirements too to find right error message
       if ('type' === constraint.name)
-        message = window.ParsleyConfig.i18n[this.locale][constraint.name][constraint.requirements];
+        message = this.catalog[this.locale][constraint.name][constraint.requirements];
       else
-        message = this.formatMesssage(window.ParsleyConfig.i18n[this.locale][constraint.name], constraint.requirements);
+        message = this.formatMesssage(this.catalog[this.locale][constraint.name], constraint.requirements);
 
-      return '' !== message ? message : window.ParsleyConfig.i18n[this.locale].defaultMessage;
+      return '' !== message ? message : this.catalog[this.locale].defaultMessage;
     },
 
     // Kind of light `sprintf()` implementation

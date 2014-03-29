@@ -37,6 +37,17 @@ define(function () {
         expect(parsleyInstance.__class__).to.be('Parsley');
         expect($('#parsley-id-' + parsleyInstance.__id__).length).to.be(0);
       });
+      it('should have excluded fields by default', function () {
+        $('body').append(
+          '<form id="element" >'        +
+            '<input type="submit" />'   +
+            '<input type="reset" />'    +
+            '<input type="hidden" />'   +
+            '<input type="button" />'   +
+          '</form>');
+        var parsleyInstance = $('#element').parsley();
+        expect(parsleyInstance.fields.length).to.be(0);
+      });
       it('should return ParsleyForm if instantiated on an unsupported element with data-parsley-validate attribute', function () {
         $('body').append('<div id="element" data-parsley-validate></div>');
         var parsleyInstance = new Parsley($('#element'));
