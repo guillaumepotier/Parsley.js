@@ -255,7 +255,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Sat Mar 29 2014 18:13:25
+* Version 2.0.0-rc5 - built Sat Mar 29 2014 20:19:11
 * MIT Licensed
 *
 */

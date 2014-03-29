@@ -1,5 +1,5 @@
 define('features/remote', [
-  'src/parsley.remote',
+  'extra/plugin/remote',
 ], function (ParsleyExtend) {
 
   // Preseve ParsleyExtend in order to load it only when needed by this suite and do not alter other tests runned before
