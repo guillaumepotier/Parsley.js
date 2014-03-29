@@ -124,7 +124,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
       deferred.rejectWith(this);
 
     // If regular constraints are valid, and there is a remote validator registered, run it
-    else if (-1 !== this._constraintIndex('remote'))
+    else if ('undefined' !== typeof this.constraintsByName.remote)
       this._remote(deferred);
 
     // Otherwise all is good, resolve promise
@@ -197,7 +197,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend || {}, {
     // Else, create a proper remote validation Violation to trigger right UI
     this.validationResult = [
       new window.ParsleyValidator.Validator.Violation(
-        this.constraints[this._constraintIndex('remote')],
+        this.constraintsByName.remote,
         this.getValue(),
         null
       )
