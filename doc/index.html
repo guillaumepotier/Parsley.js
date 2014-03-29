@@ -967,6 +967,38 @@ window.ParsleyValidator
         <p>
           <a href="annotated-source/parsley.remote.html" target="_blank">Parsley remote</a> is a handy plugin that adds an <strong>unique ajax asynchronous validator</strong>.
         </p>
+
+
+        <p>Configuring your custom remote validators comes with two solutions:
+        <ul>
+          <li>By registering them in some globals <strong>before</strong> calling <code>parsley.remote.js</code>:
+<pre><code>&lt;input name="q" type="text" data-parsley-remote="http://myapi.com" data-parsley-remote-validator='remote-custom' value="foo" />
+[...]
+&lt;script type="text/javascript">
+window.ParsleyExtend = {
+  asyncValidators: {
+    'remote-custom': function (xhr) {
+        return xhr.status === 404;
+    }
+  }
+};
+&lt;/script>
+</code></pre>
+            </li>
+            <li>By registering them in <code>ParsleyExtend</code> <strong>after</strong> that <code>parsley.remote.js</code> is loaded:
+
+<pre><code>&lt;input name="q" type="text" data-parsley-remote="http://myapi.com" data-parsley-remote-validator='remote-custom' value="foo" />
+[...]
+&lt;script type="text/javascript">
+window.ParsleyExtend
+  .addAsyncValidator('remote-custom', function (xhr) {
+    return xhr.status === 404;
+  });
+&lt;/script>
+</code></pre></li>
+        </ul>
+        </p>
+      </div>
         <p>
           To use this plugin, either load <code>parsley.remote.js</code> <strong>before</strong> loading <code>parsley.js</code>, either directly load <code>parsley+remote.js</code>.
         </p>

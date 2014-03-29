@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Sat Mar 29 2014 12:48:27
+* Version 2.0.0-rc5 - built Sat Mar 29 2014 17:01:05
 * MIT Licensed
 *
 */
