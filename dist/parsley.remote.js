@@ -255,7 +255,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Sat Mar 29 2014 20:19:11
+* Version 2.0.0-rc5 - built Tue Apr 08 2014 23:39:01
 * MIT Licensed
 *
 */
@@ -1230,14 +1230,14 @@ window.ParsleyConfig.validators.remote = {
       if ('type' === constraint.name)
         message = this.catalog[this.locale][constraint.name][constraint.requirements];
       else
-        message = this.formatMesssage(this.catalog[this.locale][constraint.name], constraint.requirements);
+        message = this.formatMessage(this.catalog[this.locale][constraint.name], constraint.requirements);
       return '' !== message ? message : this.catalog[this.locale].defaultMessage;
     },
     // Kind of light `sprintf()` implementation
-    formatMesssage: function (string, parameters) {
+    formatMessage: function (string, parameters) {
       if ('object' === typeof parameters) {
         for (var i in parameters)
-          string = this.formatMesssage(string, parameters[i]);
+          string = this.formatMessage(string, parameters[i]);
         return string;
       }
       return 'string' === typeof string ? string.replace(new RegExp('%s', 'i'), parameters) : '';
@@ -1408,17 +1408,15 @@ window.ParsleyConfig.validators.remote = {
             fieldInstance._ui.$errorsWrapper
               .append($(fieldInstance.options.errorTemplate)
               .addClass('parsley-custom-error-message'));
-          fieldInstance._ui.$errorsWrapper
+          return fieldInstance._ui.$errorsWrapper
             .addClass('filled')
             .find('.parsley-custom-error-message')
             .html(fieldInstance.options.errorMessage);
-        } else {
-          fieldInstance._ui.$errorsWrapper
-            .removeClass('filled')
-            .find('.parsley-custom-error-message')
-            .remove();
         }
-        return;
+        return fieldInstance._ui.$errorsWrapper
+          .removeClass('filled')
+          .find('.parsley-custom-error-message')
+          .remove();
       }
       // Show, hide, update failing constraints messages
       for (var i = 0; i < diff.removed.length; i++)
@@ -1478,7 +1476,7 @@ window.ParsleyConfig.validators.remote = {
     _getErrorMessage: function (fieldInstance, constraint) {
       var customConstraintErrorMessage = constraint.name + 'Message';
       if ('undefined' !== typeof fieldInstance.options[customConstraintErrorMessage])
-        return fieldInstance.options[customConstraintErrorMessage];
+        return window.ParsleyValidator.formatMessage(fieldInstance.options[customConstraintErrorMessage], constraint.requirements);
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
     _diff: function (newResult, oldResult, deep) {

@@ -126,6 +126,12 @@ define(function () {
         $('#element').val('foo').psly().validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('bar');
       });
+      it('should show custom error message with variabilized parameters', function () {
+        $('body').append('<input type="text" id="element" value="bar" data-parsley-minlength="7" data-parsley-minlength-message="foo %s bar"/>');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('foo 7 bar');
+      });
       it('should show custom error message for whole field', function () {
         $('body').append('<input type="email" id="element" required data-parsley-error-message="baz"/>');
         var parsleyField = $('#element').psly();
