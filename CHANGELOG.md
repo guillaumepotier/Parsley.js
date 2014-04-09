@@ -11,6 +11,8 @@
   - fixed constraints unicity on fields belonging to same multiple group
   - added `data-parsley-remote-validator` feature (#587)
   - now support custom messages placeholders (#602)
+  - fix exception when ParsleyField or ParsleyFieldMultiple value is null or
+    undefined (#598)
 
 ## 2.0.0-rc5
 

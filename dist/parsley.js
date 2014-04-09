@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Tue Apr 08 2014 23:39:01
+* Version 2.0.0-rc5 - built Wed Apr 09 2014 09:38:07
 * MIT Licensed
 *
 */
@@ -1620,6 +1620,9 @@
         value = this.options.value;
       else
         value = this.$element.val();
+      // Handle wrong DOM or configurations
+      if ('undefined' === typeof value || null === value)
+        return '';
       // Use `data-parsley-trim-value="true"` to auto trim inputs entry
       if (true === this.options.trimValue)
         return value.replace(/^\s+|\s+$/g, '');
@@ -1749,8 +1752,10 @@
         return values.length ? values : [];
       }
       // Select multiple case
-      if (this.$element.is('select'))
-        return null === this.$element.val() ? [] : this.$element.val();
+      if (this.$element.is('select') && null === this.$element.val())
+        return [];
+      // Default case that should never happen
+      return this.$element.val();
     }
   };
 

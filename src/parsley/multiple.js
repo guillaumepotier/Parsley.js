@@ -62,8 +62,11 @@ define('parsley/multiple', [
       }
 
       // Select multiple case
-      if (this.$element.is('select'))
-        return null === this.$element.val() ? [] : this.$element.val();
+      if (this.$element.is('select') && null === this.$element.val())
+        return [];
+
+      // Default case that should never happen
+      return this.$element.val();
     }
   };
 

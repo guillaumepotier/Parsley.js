@@ -102,6 +102,10 @@ define('parsley/field', [
       else
         value = this.$element.val();
 
+      // Handle wrong DOM or configurations
+      if ('undefined' === typeof value || null === value)
+        return '';
+
       // Use `data-parsley-trim-value="true"` to auto trim inputs entry
       if (true === this.options.trimValue)
         return value.replace(/^\s+|\s+$/g, '');

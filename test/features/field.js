@@ -234,6 +234,10 @@ define(function () {
         $('#element').attr('data-parsley-trim-value', true).parsley().actualizeOptions();
         expect($('#element').parsley().getValue()).to.be('foo');
       });
+      it('should properly handle null or undefined values', function () {
+        $('body').append('<input type="text" id="element" required value/>');
+        expect($('#element').parsley().isValid()).to.be(false);
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

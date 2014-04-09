@@ -107,6 +107,14 @@ define(function () {
         expect(parsleyField.getValue()).to.be.eql(['1', '2']);
         expect(parsleyField.isValid()).to.be(true);
       });
+      it('should support select with default without a value', function () {
+        $('body').append(
+          '<select id="element" required>'    +
+            '<option selected="selected" value>default</option>'  +
+            '<option value="2">2</option>'    +
+          '</select>');
+        expect($('#element').parsley().isValid()).to.be(false);
+      });
       it('should not bind radio or checkboxes withoud a name or and id or a multiple option', function () {
         $('body').append('<input type="radio" value="foo" />');
         window.console.warn = sinon.spy();
