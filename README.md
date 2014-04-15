@@ -20,6 +20,15 @@ jQuery >= 1.6
 
 See `CONTRIBUTING.md` file
 
+##Integrations
+
+Create integration with other framework as a separate Github repo and send a pull request for including here.
+Some integrations are
+
+* [CakePHP](https://github.com/Codaxis/parsley-helper)
+* [Django](https://github.com/agiliq/django-parsley)
+* [Rails](https://github.com/mekishizufu/parsley-rails)
+
 ## Install dev environment
 
 ```
