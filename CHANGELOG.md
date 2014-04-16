@@ -14,6 +14,8 @@
   - fix exception when ParsleyField or ParsleyFieldMultiple value is null or
     undefined (#598)
   - fixed `destroy()` method + added test (#555)
+  - added requirejs AMD support for `dist/parsley.js` and `dist/parsley.min.js`
+    versions (#606)
 
 ## 2.0.0-rc5
 

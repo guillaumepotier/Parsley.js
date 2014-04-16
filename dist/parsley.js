@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Wed Apr 16 2014 22:32:46
+* Version 2.0.0-rc5 - built Wed Apr 16 2014 22:50:43
 * MIT Licensed
 *
 */
@@ -2056,4 +2056,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();
     });
+
+// AMD Compliance
+if ('function' === typeof define && define.amd)
+  define('parsley', function() { return window.Parsley; } );
 })(window.jQuery);
