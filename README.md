@@ -28,6 +28,7 @@ Some integrations are
 * [CakePHP](https://github.com/Codaxis/parsley-helper)
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
+* [OSSCDN by MaxCDN](http://osscdn.com/#/parsleyjs)
 
 ## Install dev environment
 
