@@ -13,6 +13,7 @@
   - now support custom messages placeholders (#602)
   - fix exception when ParsleyField or ParsleyFieldMultiple value is null or
     undefined (#598)
+  - fixed `destroy()` method + added test (#555)
 
 ## 2.0.0-rc5
 

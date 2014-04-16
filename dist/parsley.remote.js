@@ -255,7 +255,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Wed Apr 09 2014 09:38:07
+* Version 2.0.0-rc5 - built Wed Apr 16 2014 22:32:46
 * MIT Licensed
 *
 */
@@ -413,15 +413,16 @@ window.ParsleyConfig.validators.remote = {
     destroy: function () {
       // Field case: emit destroy event to clean UI and then destroy stored instance
       if ('ParsleyForm' !== this.__class__) {
-        $.emit('parsley:field:destroy', this);
         this.$element.removeData('Parsley');
+        this.$element.removeData('ParsleyFieldMultiple');
+        $.emit('parsley:field:destroy', this);
         return;
       }
       // Form case: destroy all its fields and then destroy stored instance
       for (var i = 0; i < this.fields.length; i++)
         this.fields[i].destroy();
-      $.emit('parsley:form:destroy', this);
       this.$element.removeData('Parsley');
+      $.emit('parsley:form:destroy', this);
     }
   };
 /*!
@@ -1621,12 +1622,12 @@ window.ParsleyConfig.validators.remote = {
         return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
     },
     reset: function (parsleyInstance) {
-      // Nothing to do if UI never initialized for this field
-      if ('undefined' === typeof parsleyInstance._ui)
-        return;
       // Reset all event listeners
       parsleyInstance.$element.off('.Parsley');
       parsleyInstance.$element.off('.ParsleyFailedOnce');
+      // Nothing to do if UI never initialized for this field
+      if ('undefined' === typeof parsleyInstance._ui)
+        return;
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
       // Reset all errors' li
@@ -1641,9 +1642,6 @@ window.ParsleyConfig.validators.remote = {
       parsleyInstance._ui.validationInformationVisible = false;
     },
     destroy: function (parsleyInstance) {
-      // Nothing to do if UI never initialized for this field
-      if ('undefined' === typeof parsleyInstance._ui)
-        return;
       this.reset(parsleyInstance);
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;

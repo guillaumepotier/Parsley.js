@@ -343,13 +343,13 @@ define('parsley/ui', [
     },
 
     reset: function (parsleyInstance) {
-      // Nothing to do if UI never initialized for this field
-      if ('undefined' === typeof parsleyInstance._ui)
-        return;
-
       // Reset all event listeners
       parsleyInstance.$element.off('.Parsley');
       parsleyInstance.$element.off('.ParsleyFailedOnce');
+
+      // Nothing to do if UI never initialized for this field
+      if ('undefined' === typeof parsleyInstance._ui)
+        return;
 
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
@@ -369,10 +369,6 @@ define('parsley/ui', [
     },
 
     destroy: function (parsleyInstance) {
-      // Nothing to do if UI never initialized for this field
-      if ('undefined' === typeof parsleyInstance._ui)
-        return;
-
       this.reset(parsleyInstance);
 
       if ('ParsleyForm' === parsleyInstance.__class__)

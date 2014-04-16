@@ -49,8 +49,9 @@ define('parsley/abstract', [
     destroy: function () {
       // Field case: emit destroy event to clean UI and then destroy stored instance
       if ('ParsleyForm' !== this.__class__) {
-        $.emit('parsley:field:destroy', this);
         this.$element.removeData('Parsley');
+        this.$element.removeData('ParsleyFieldMultiple');
+        $.emit('parsley:field:destroy', this);
 
         return;
       }
@@ -59,8 +60,8 @@ define('parsley/abstract', [
       for (var i = 0; i < this.fields.length; i++)
         this.fields[i].destroy();
 
-      $.emit('parsley:form:destroy', this);
       this.$element.removeData('Parsley');
+      $.emit('parsley:form:destroy', this);
     }
   };
 
