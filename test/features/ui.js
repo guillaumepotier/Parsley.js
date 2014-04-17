@@ -254,6 +254,18 @@ define(function () {
         expect($('#element').hasClass('parsley-error')).to.be(false);
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
       });
+      it('should have a getErrorsMessage() method', function () {
+        $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.validate();
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance).length).to.be(1);
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value should be a valid email.');
+
+        $('#element').attr('data-parsley-priority-enabled', false);
+        parsleyInstance.validate();
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance).length).to.be(2);
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value is too short. It should have 5 characters or more.');
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();

@@ -49,6 +49,20 @@ define('parsley/ui', [
         this.manageFailingFieldTrigger(fieldInstance);
     },
 
+    // Returns an array of field's error message(s)
+    getErrorsMessages: function (fieldInstance) {
+      // No error message, field is valid
+      if (true === fieldInstance.validationResult)
+        return [];
+
+      var messages = [];
+
+      for (var i = 0; i < fieldInstance.validationResult.length; i++)
+        messages.push(this._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
+
+      return messages;
+    },
+
     manageStatusClass: function (fieldInstance) {
       if (true === fieldInstance.validationResult)
         this._successClass(fieldInstance);

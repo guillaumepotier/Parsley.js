@@ -17,6 +17,7 @@
   - added requirejs AMD support for `dist/parsley.js` and `dist/parsley.min.js`
     versions (#606)
   - fixed custom namespace -multiple that didn't re-evaluated correctly (#595)
+  - added `ParsleyUI.getErrorsMessages()` (Closes #607)
 
 ## 2.0.0-rc5
 

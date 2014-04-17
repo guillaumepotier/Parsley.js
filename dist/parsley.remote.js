@@ -255,7 +255,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Thu Apr 17 2014 18:53:10
+* Version 2.0.0-rc5 - built Thu Apr 17 2014 19:33:56
 * MIT Licensed
 *
 */
@@ -1390,6 +1390,16 @@ window.ParsleyConfig.validators.remote = {
       // If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user
       if ((diff.kept.length || diff.added.length) && 'undefined' === typeof fieldInstance._ui.failedOnce)
         this.manageFailingFieldTrigger(fieldInstance);
+    },
+    // Returns an array of field's error message(s)
+    getErrorsMessages: function (fieldInstance) {
+      // No error message, field is valid
+      if (true === fieldInstance.validationResult)
+        return [];
+      var messages = [];
+      for (var i = 0; i < fieldInstance.validationResult.length; i++)
+        messages.push(this._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
+      return messages;
     },
     manageStatusClass: function (fieldInstance) {
       if (true === fieldInstance.validationResult)
