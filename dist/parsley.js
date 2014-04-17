@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0-rc5 - built Wed Apr 16 2014 22:50:43
+* Version 2.0.0-rc5 - built Thu Apr 17 2014 18:53:10
 * MIT Licensed
 *
 */
@@ -126,7 +126,7 @@
   ParsleyAbstract.prototype = {
     asyncSupport: false,
     actualizeOptions: function () {
-      this.options = this.parsleyInstance.OptionsFactory.get(this);
+      this.options = this.OptionsFactory.get(this);
       return this;
     },
     // ParsleyValidator validate proxy function . Could be replaced by third party scripts
@@ -1437,25 +1437,25 @@
     },
     getFieldOptions: function (fieldInstance) {
       this.fieldOptions = ParsleyUtils.attr(fieldInstance.$element, this.staticOptions.namespace);
-      if (null === this.formOptions && 'ParsleyForm' === fieldInstance.parsleyInstance.__proxy__)
-        this.formOptions = getFormOptions(fieldInstance.parsleyInstance);
+      if (null === this.formOptions && 'undefined' !== typeof fieldInstance.parent)
+        this.formOptions = getFormOptions(fieldInstance.parent);
       // not deep extend, since formOptions and fieldOptions is a 1 level deep object
       return $.extend({}, this.staticOptions, this.formOptions, this.fieldOptions);
     }
   };
 
-  var ParsleyForm = function(element, parsleyInstance) {
+  var ParsleyForm = function(element, OptionsFactory) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
-    if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
-      throw new Error('You must give a Parsley instance');
-    this.parsleyInstance = parsleyInstance;
+    if ('OptionsFactory' !== ParsleyUtils.get(OptionsFactory, '__class__'))
+      throw new Error('You must give an OptionsFactory instance');
+    this.OptionsFactory = OptionsFactory;
     this.$element = $(element);
   };
   ParsleyForm.prototype = {
     init: function () {
       this.validationResult = null;
-      this.options = this.parsleyInstance.OptionsFactory.get(this);
+      this.options = this.OptionsFactory.get(this);
       this._bindFields();
       return this;
     },
@@ -1508,7 +1508,7 @@
       this.fields = [];
       this.fieldsMappedById = {};
       this.$element.find(this.options.inputs).each(function () {
-        var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
+        var fieldInstance = new window.Parsley(this, {}, self);
         // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
         if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))
           if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
@@ -1544,14 +1544,19 @@
     });
   };
 
-  var ParsleyField = function(field, parsleyInstance) {
+  var ParsleyField = function(field, OptionsFactory, parsleyFormInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.hash(4);
-    if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
-      throw new Error('You must give a Parsley instance');
-    this.parsleyInstance = parsleyInstance;
     this.$element = $(field);
-    this.options = this.parsleyInstance.OptionsFactory.get(this);
+    // If we have
+    if ('undefined' !== typeof parsleyFormInstance) {
+      this.parent = parsleyFormInstance;
+      this.OptionsFactory = this.parent.OptionsFactory;
+      this.options = this.OptionsFactory.get(this);
+      return;
+    }
+    this.OptionsFactory = OptionsFactory;
+    this.options = this.OptionsFactory.get(this);
   };
   ParsleyField.prototype = {
     init: function () {
@@ -1872,50 +1877,55 @@ if ('undefined' !== typeof window.ParsleyValidator)
 //     Parsley may be freely distributed under the MIT license.
 
   // ### Parsley factory
-  var Parsley = function (element, options, parsleyInstance) {
+  var Parsley = function (element, options, parsleyFormInstance) {
     this.__class__ = 'Parsley';
     this.__version__ = '2.0.0-rc5';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
       throw new Error('You must give an element');
-    return this.init($(element), options, parsleyInstance);
+    if ('undefined' !== typeof parsleyFormInstance && 'ParsleyForm' !== parsleyFormInstance.__class__)
+      throw new Error('Parent instance must be a ParsleyForm instance');
+    return this.init($(element), options, parsleyFormInstance);
   };
   Parsley.prototype = {
-    init: function ($element, options, parsleyInstance) {
+    init: function ($element, options, parsleyFormInstance) {
       if (!$element.length)
         throw new Error('You must bind Parsley on an existing element.');
       this.$element = $element;
       // If element have already been binded, returns its saved Parsley instance
       if (this.$element.data('Parsley')) {
-        var savedParsleyInstance = this.$element.data('Parsley');
+        var savedparsleyFormInstance = this.$element.data('Parsley');
         // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
-        if ('undefined' !== typeof parsleyInstance && 'ParsleyField' === savedParsleyInstance.parsleyInstance.__proxy__)
-          savedParsleyInstance.parsleyInstance = parsleyInstance;
-        return savedParsleyInstance;
+        if ('undefined' !== typeof parsleyFormInstance)
+          savedparsleyFormInstance.parent = parsleyFormInstance;
+        return savedparsleyFormInstance;
       }
       // Handle 'static' options
       this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, ParsleyUtils.get(window, 'ParsleyConfig') || {}, options, this.getNamespace(options));
       this.options = this.OptionsFactory.get(this);
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
-        return this.bind('parsleyForm', parsleyInstance);
+        return this.bind('parsleyForm');
       // Every other supported element and not excluded element is binded as a `ParsleyField` or `ParsleyFieldMultiple`
       else if (this.$element.is(this.options.inputs) && !this.$element.is(this.options.excluded))
-        return this.isMultiple() ? this.handleMultiple(parsleyInstance) : this.bind('parsleyField', parsleyInstance);
+        return this.isMultiple() ? this.handleMultiple(parsleyFormInstance) : this.bind('parsleyField', parsleyFormInstance);
       return this;
     },
     isMultiple: function () {
       return (this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) || (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple'));
     },
     // Multiples fields are a real nightmare :(
-    handleMultiple: function (parsleyInstance) {
+    // Maybe some refacto would be appreciated here..
+    handleMultiple: function (parsleyFormInstance) {
       var
         that = this,
         name,
         multiple,
         parsleyMultipleInstance;
-      this.options = $.extend(this.options, ParsleyUtils.attr(this.$element, this.options.namespace));
+      // Get parsleyFormInstance options if exist, mixed with element attributes
+      this.options = $.extend(this.options, parsleyFormInstance ? parsleyFormInstance.OptionsFactory.get(parsleyFormInstance) : {}, ParsleyUtils.attr(this.$element, this.options.namespace));
+      // Handle multiple name
       if (this.options.multiple) {
         multiple = this.options.multiple;
       } else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length) {
@@ -1925,7 +1935,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       }
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
-        return this.bind('parsleyFieldMultiple', parsleyInstance, multiple || this.__id__);
+        return this.bind('parsleyFieldMultiple', parsleyFormInstance, multiple || this.__id__);
       // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
       } else if ('undefined' === typeof multiple) {
         if (window.console && window.console.warn)
@@ -1953,8 +1963,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
           }
       // Create a secret ParsleyField instance for every multiple field. It would be stored in `data('ParsleyFieldMultiple')`
       // And would be useful later to access classic `ParsleyField` stuff while being in a `ParsleyFieldMultiple` instance
-      this.bind('parsleyField', parsleyInstance, multiple, true);
-      return parsleyMultipleInstance || this.bind('parsleyFieldMultiple', parsleyInstance, multiple);
+      this.bind('parsleyField', parsleyFormInstance, multiple, true);
+      return parsleyMultipleInstance || this.bind('parsleyFieldMultiple', parsleyFormInstance, multiple);
     },
     // Retrieve namespace used for DOM-API
     getNamespace: function (options) {
@@ -1968,26 +1978,26 @@ if ('undefined' !== typeof window.ParsleyValidator)
       return ParsleyDefaults.namespace;
     },
     // Return proper `ParsleyForm`, `ParsleyField` or `ParsleyFieldMultiple`
-    bind: function (type, parentParsleyInstance, multiple, doNotStore) {
+    bind: function (type, parentParsleyFormInstance, multiple, doNotStore) {
       var parsleyInstance;
       switch (type) {
         case 'parsleyForm':
           parsleyInstance = $.extend(
-            new ParsleyForm(this.$element, parentParsleyInstance || this),
+            new ParsleyForm(this.$element, this.OptionsFactory),
             new ParsleyAbstract(),
             window.ParsleyExtend
           ).init();
           break;
         case 'parsleyField':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, parentParsleyInstance || this),
+            new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance),
             new ParsleyAbstract(),
             window.ParsleyExtend
           ).init();
           break;
         case 'parsleyFieldMultiple':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, parentParsleyInstance || this).init(),
+            new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance).init(),
             new ParsleyAbstract(),
             new ParsleyMultiple(),
             window.ParsleyExtend
@@ -2006,7 +2016,6 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if (new RegExp('ParsleyF', 'i').test(parsleyInstance.__class__)) {
         // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
         this.$element.data('Parsley', parsleyInstance);
-        this.__proxy__ = parsleyInstance.__class__;
         // Tell the world we got a new ParsleyForm or ParsleyField instance!
         $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);
       }

@@ -178,6 +178,19 @@ define(function () {
         $('#element').parsley();
         expect($('#check').parsley().$elements.length).to.be(1);
       });
+      it('should handle form namespace configuration inheritance and click events while multiple binding through ParsleyForm', function () {
+        $('body').append(
+          '<form id="element" >' +
+            '<input type="radio" name="radio" id="radio1" value="3" foo-bar-required />'  +
+            '<input type="radio" name="radio" id="radio2" value="4" />'  +
+          '</form>');
+        // set specific namespace here for form
+        var parsleyInstance = $('#element').parsley({ namespace: 'foo-bar-' });
+        parsleyInstance.validate();
+        expect($('ul.parsley-errors-list li').length).to.be(1);
+        $('#radio2').trigger('click');
+        expect($('ul.parsley-errors-list li').length).to.be(0);
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

@@ -6,7 +6,7 @@ define('parsley/abstract', [
     asyncSupport: false,
 
     actualizeOptions: function () {
-      this.options = this.parsleyInstance.OptionsFactory.get(this);
+      this.options = this.OptionsFactory.get(this);
 
       return this;
     },

@@ -3,16 +3,23 @@ define('parsley/field', [
     'parsley/ui',
     'parsley/utils'
 ], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
-  var ParsleyField = function(field, parsleyInstance) {
+  var ParsleyField = function(field, OptionsFactory, parsleyFormInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.hash(4);
 
-    if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
-      throw new Error('You must give a Parsley instance');
-
-    this.parsleyInstance = parsleyInstance;
     this.$element = $(field);
-    this.options = this.parsleyInstance.OptionsFactory.get(this);
+
+    // If we have
+    if ('undefined' !== typeof parsleyFormInstance) {
+      this.parent = parsleyFormInstance;
+      this.OptionsFactory = this.parent.OptionsFactory;
+      this.options = this.OptionsFactory.get(this);
+
+      return;
+    }
+
+    this.OptionsFactory = OptionsFactory;
+    this.options = this.OptionsFactory.get(this);
   };
 
   ParsleyField.prototype = {
