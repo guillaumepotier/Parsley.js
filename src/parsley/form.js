@@ -2,7 +2,7 @@ define('parsley/form', [
   'parsley/abstract',
   'parsley/utils'
 ], function (ParsleyAbstract, ParsleyUtils) {
-  var ParsleyForm = function(element, OptionsFactory) {
+  var ParsleyForm = function (element, OptionsFactory) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
 
@@ -11,19 +11,12 @@ define('parsley/form', [
 
     this.OptionsFactory = OptionsFactory;
     this.$element = $(element);
+
+    this.validationResult = null;
+    this.options = this.OptionsFactory.get(this);
   };
 
   ParsleyForm.prototype = {
-    init: function () {
-      this.validationResult = null;
-
-      this.options = this.OptionsFactory.get(this);
-
-      this._bindFields();
-
-      return this;
-    },
-
     onSubmitValidate: function (event) {
       this.validate(undefined, undefined, event);
 

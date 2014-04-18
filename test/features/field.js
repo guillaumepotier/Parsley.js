@@ -138,7 +138,7 @@ define(function () {
         var parsleyField = new Parsley($('#element'))
           .addConstraint('multiple', 4)
           .addConstraint('foobazer', true);
-        parsleyField.bindConstraints();
+        parsleyField.refreshConstraints();
         expect(parsleyField.constraints.length).to.be(4);
         $('#element').removeAttr('data-parsley-required');
         parsleyField.refreshConstraints();

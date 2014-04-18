@@ -40,7 +40,7 @@ define('parsley/factory/options', [
       this.fieldOptions = ParsleyUtils.attr(fieldInstance.$element, this.staticOptions.namespace);
 
       if (null === this.formOptions && 'undefined' !== typeof fieldInstance.parent)
-        this.formOptions = getFormOptions(fieldInstance.parent);
+        this.formOptions = this.getFormOptions(fieldInstance.parent);
 
       // not deep extend, since formOptions and fieldOptions is a 1 level deep object
       return $.extend({}, this.staticOptions, this.formOptions, this.fieldOptions);

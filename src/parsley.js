@@ -170,22 +170,22 @@ define([
             new ParsleyForm(this.$element, this.OptionsFactory),
             new ParsleyAbstract(),
             window.ParsleyExtend
-          ).init();
+          )._bindFields();
           break;
         case 'parsleyField':
           parsleyInstance = $.extend(
             new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance),
             new ParsleyAbstract(),
             window.ParsleyExtend
-          ).init();
+          );
           break;
         case 'parsleyFieldMultiple':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance).init(),
+            new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance),
             new ParsleyAbstract(),
             new ParsleyMultiple(),
             window.ParsleyExtend
-          ).init(multiple);
+          )._init(multiple);
           break;
         default:
           throw new Error(type + 'is not a supported Parsley type');

@@ -3,6 +3,7 @@
 // You have this way a total javascript control over your form validation, and nothing needed in DOM
 window.ParsleyConfig = $.extend(true, window.ParsleyConfig, { autoBind: false });
 window.ParsleyExtend = window.ParsleyExtend || {};
+
 window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   // { '#selector' : { constraintName1: value, constraintName2: value2 }, #selector2: { constraintName: value } }
   // { '#selector' : { constraintName1: { requirements: value, priority: value }, constraintName2: value2 } }
@@ -36,7 +37,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   },
 
   // Do nothing
-  bindConstraints: function () {
+  _bindConstraints: function () {
     return this;
   }
 });

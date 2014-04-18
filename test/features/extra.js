@@ -14,7 +14,7 @@ define('features/extra', [
         expect(parsleyValidator.validate('1986-12-45', parsleyValidator.validators.dateiso())).not.to.be(true);
         expect(parsleyValidator.validate('1986-12-01', parsleyValidator.validators.dateiso())).to.be(true);
       });
-      it('should have a bind.js plugin adding a `register` method', function (done) {
+      it('should have a bind.js plugin allowing to give pure json validation config to parsley constructor', function (done) {
         require(['extra/plugin/bind'], function () {
           $('body').append(
           '<form id="element" >' +
