@@ -19,13 +19,13 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="parsley.html">
-                parsley.js
+              <a class="source" href="remote.html">
+                remote.js
               </a>
             
               
-              <a class="source" href="parsley.remote.html">
-                parsley.remote.js
+              <a class="source" href="parsley.html">
+                parsley.js
               </a>
             
               
@@ -115,7 +115,8 @@ if attr is given, returns bool if attr present in DOM or not</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    attr: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">($element, namespace, checkAttr)</span> {</span>
-      <span class="hljs-keyword">var</span> attribute,
+      <span class="hljs-keyword">var</span>
+        attribute,
         obj = {},
         regex = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'^'</span> + namespace, <span class="hljs-string">'i'</span>);
 
@@ -154,8 +155,9 @@ if attr is given, returns bool if attr present in DOM or not</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    get: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(obj, path)</span> {</span>
-      <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>,
-      paths = (path || <span class="hljs-string">''</span>).split(<span class="hljs-string">'.'</span>);
+      <span class="hljs-keyword">var</span>
+        i = <span class="hljs-number">0</span>,
+        paths = (path || <span class="hljs-string">''</span>).split(<span class="hljs-string">'.'</span>);
 
       <span class="hljs-keyword">while</span> (<span class="hljs-keyword">this</span>.isObject(obj) || <span class="hljs-keyword">this</span>.isArray(obj)) {
         obj = obj[paths[i++]];

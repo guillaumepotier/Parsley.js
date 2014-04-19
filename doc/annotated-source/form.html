@@ -19,13 +19,13 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="parsley.html">
-                parsley.js
+              <a class="source" href="remote.html">
+                remote.js
               </a>
             
               
-              <a class="source" href="parsley.remote.html">
-                parsley.remote.js
+              <a class="source" href="parsley.html">
+                parsley.js
               </a>
             
               
@@ -100,28 +100,21 @@
   <span class="hljs-string">'parsley/abstract'</span>,
   <span class="hljs-string">'parsley/utils'</span>
 ], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(ParsleyAbstract, ParsleyUtils)</span> {</span>
-  <span class="hljs-keyword">var</span> ParsleyForm = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(element, parsleyInstance)</span> {</span>
+  <span class="hljs-keyword">var</span> ParsleyForm = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(element, OptionsFactory)</span> {</span>
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyForm'</span>;
     <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.hash(<span class="hljs-number">4</span>);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">'Parsley'</span> !== ParsleyUtils.get(parsleyInstance, <span class="hljs-string">'__class__'</span>))
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'You must give a Parsley instance'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'OptionsFactory'</span> !== ParsleyUtils.get(OptionsFactory, <span class="hljs-string">'__class__'</span>))
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'You must give an OptionsFactory instance'</span>);
 
-    <span class="hljs-keyword">this</span>.parsleyInstance = parsleyInstance;
+    <span class="hljs-keyword">this</span>.OptionsFactory = OptionsFactory;
     <span class="hljs-keyword">this</span>.$element = $(element);
+
+    <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.OptionsFactory.get(<span class="hljs-keyword">this</span>);
   };
 
   ParsleyForm.prototype = {
-    init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">null</span>;
-
-      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);
-
-      <span class="hljs-keyword">this</span>._bindFields();
-
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    },
-
     onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event)</span> {</span>
       <span class="hljs-keyword">this</span>.validate(<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, event);</pre></div></div>
             
@@ -138,8 +131,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.validationResult &amp;&amp; event <span class="hljs-keyword">instanceof</span> $.Event)
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.validationResult &amp;&amp; event <span class="hljs-keyword">instanceof</span> $.Event) {
+        event.stopImmediatePropagation();
         event.preventDefault();
+      }
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     },</pre></div></div>
@@ -274,7 +269,7 @@
       <span class="hljs-keyword">this</span>.fieldsMappedById = {};
 
       <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-keyword">this</span>.options.inputs).each(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-        <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> window.Parsley(<span class="hljs-keyword">this</span>, {}, self.parsleyInstance);</pre></div></div>
+        <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> window.Parsley(<span class="hljs-keyword">this</span>, {}, self);</pre></div></div>
             
         </li>
         

@@ -19,13 +19,13 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="parsley.html">
-                parsley.js
+              <a class="source" href="remote.html">
+                remote.js
               </a>
             
               
-              <a class="source" href="parsley.remote.html">
-                parsley.remote.js
+              <a class="source" href="parsley.html">
+                parsley.js
               </a>
             
               
@@ -101,26 +101,11 @@
     <span class="hljs-string">'parsley/ui'</span>,
     <span class="hljs-string">'parsley/utils'</span>
 ], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(ConstraintFactory, ParsleyUI, ParsleyUtils)</span> {</span>
-  <span class="hljs-keyword">var</span> ParsleyField = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(field, parsleyInstance)</span> {</span>
+  <span class="hljs-keyword">var</span> ParsleyField = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(field, OptionsFactory, parsleyFormInstance)</span> {</span>
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyField'</span>;
     <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.hash(<span class="hljs-number">4</span>);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">'Parsley'</span> !== ParsleyUtils.get(parsleyInstance, <span class="hljs-string">'__class__'</span>))
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'You must give a Parsley instance'</span>);
-
-    <span class="hljs-keyword">this</span>.parsleyInstance = parsleyInstance;
-    <span class="hljs-keyword">this</span>.$element = $(field);
-    <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);
-  };
-
-  ParsleyField.prototype = {
-    init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">this</span>.constraints = [];
-      <span class="hljs-keyword">this</span>.validationResult = [];
-      <span class="hljs-keyword">this</span>.bindConstraints();
-
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    },</pre></div></div>
+    <span class="hljs-keyword">this</span>.$element = $(field);</pre></div></div>
             
         </li>
         
@@ -131,11 +116,84 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Returns validationResult. For field, it could be:</p>
+              <p>If we have a parent <code>ParsleyForm</code> instance given, use its <code>OptionsFactory</code>, and save parent</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyFormInstance) {
+      <span class="hljs-keyword">this</span>.parent = parsleyFormInstance;
+      <span class="hljs-keyword">this</span>.OptionsFactory = <span class="hljs-keyword">this</span>.parent.OptionsFactory;
+      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.OptionsFactory.get(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Else, take the <code>Parsley</code> one</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">this</span>.OptionsFactory = OptionsFactory;
+      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.OptionsFactory.get(<span class="hljs-keyword">this</span>);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Initialize some properties</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.constraints = [];
+    <span class="hljs-keyword">this</span>.constraintsByName = {};
+    <span class="hljs-keyword">this</span>.validationResult = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Bind constraints</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._bindConstraints();
+  };
+
+  ParsleyField.prototype = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h1 id="public-api">Public API</h1>
+<p>Validate field and $.emit some events for mainly <code>ParsleyUI</code>
+@returns validationResult:</p>
 <ul>
-<li><code>true</code> if all green</li>
-<li><code>[]</code> if non required field and empty</li>
-<li><code>[Violation, [Violation..]]</code> if errors</li>
+<li><code>true</code> if all constraint passes</li>
+<li><code>[]</code> if not required field and empty (not validated)</li>
+<li><code>[Violation, [Violation..]]</code> if there were validation errors</li>
 </ul>
 
             </div>
@@ -146,11 +204,11 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Field Validate event. <code>this.value</code> could be altered for custom needs</p>
 
@@ -163,11 +221,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Field validated event. <code>this.validationResult</code> could be altered for custom needs too</p>
 
@@ -176,75 +234,7 @@
             <div class="content"><div class='highlight'><pre>      $.emit(<span class="hljs-string">'parsley:field:validated'</span>, <span class="hljs-keyword">this</span>);
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validationResult;
-    },
-
-    getConstraintsSortedPriorities: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">var</span> priorities = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Create array unique of priorities</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.constraints.length; i++)
-        <span class="hljs-keyword">if</span> (-<span class="hljs-number">1</span> === priorities.indexOf(<span class="hljs-keyword">this</span>.constraints[i].priority))
-          priorities.push(<span class="hljs-keyword">this</span>.constraints[i].priority);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Sort them by priority DESC</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      priorities.sort(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(a, b)</span> {</span> <span class="hljs-keyword">return</span> b - a; });
-
-      <span class="hljs-keyword">return</span> priorities;
     },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Same @return as <code>validate()</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    isValid: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(force, value)</span> {</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Recompute options and rebind constraints to have latest changes</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.refreshConstraints();</pre></div></div>
             
         </li>
         
@@ -255,11 +245,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Sort priorities to validate more important first</p>
+              <p>Just validate field. Do not trigger any event
+Same @return as <code>validate()</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> priorities = <span class="hljs-keyword">this</span>.getConstraintsSortedPriorities();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    isValid: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(force, value)</span> {</span></pre></div></div>
             
         </li>
         
@@ -270,11 +261,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Value could be passed as argument, needed to add more power to ‘parsley:field:validate’</p>
+              <p>Recompute options and rebind constraints to have latest changes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      value = value || <span class="hljs-keyword">this</span>.getValue();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.refreshConstraints();</pre></div></div>
             
         </li>
         
@@ -285,13 +276,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>If a field is empty and not required, leave it alone, it’s just fine
-Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful for some custom validators</p>
+              <p>Sort priorities to validate more important first</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> === value.length &amp;&amp; !<span class="hljs-keyword">this</span>.isRequired() &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.validateIfEmpty &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> force)
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validationResult = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> priorities = <span class="hljs-keyword">this</span>._getConstraintsSortedPriorities();</pre></div></div>
             
         </li>
         
@@ -301,6 +290,38 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Value could be passed as argument, needed to add more power to ‘parsley:field:validate’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      value = value || <span class="hljs-keyword">this</span>.getValue();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>If a field is empty and not required, leave it alone, it’s just fine
+Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful for some custom validators</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> === value.length &amp;&amp; !<span class="hljs-keyword">this</span>._isRequired() &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.validateIfEmpty &amp;&amp; <span class="hljs-literal">true</span> !== force)
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validationResult = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>If we want to validate field against all constraints, just call Validator and let it do the job</p>
 
@@ -312,11 +333,11 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Else, iterate over priorities one by one, and validate related asserts one by one</p>
 
@@ -332,33 +353,27 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Field is required if have required constraint without <code>false</code> value</p>
+              <p>@returns Parsley field computed value that could be overrided or configured in DOM</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    isRequired: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">var</span> constraintIndex = <span class="hljs-keyword">this</span>._constraintIndex(<span class="hljs-string">'required'</span>);
-
-      <span class="hljs-keyword">return</span> !(-<span class="hljs-number">1</span> === constraintIndex || (-<span class="hljs-number">1</span> !== constraintIndex &amp;&amp; <span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.constraints[constraintIndex].requirements));
-    },
-
-    getValue: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+            <div class="content"><div class='highlight'><pre>    getValue: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
       <span class="hljs-keyword">var</span> value;</pre></div></div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Value could be overriden in DOM</p>
 
@@ -372,65 +387,18 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
         </li>
         
         
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Use <code>data-parsley-trim-value=&quot;true&quot;</code> to auto trim inputs entry</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.options.trimValue)
-        <span class="hljs-keyword">return</span> value.replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">''</span>);
-
-      <span class="hljs-keyword">return</span> value;
-    },
-
-    refreshConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">this</span>.actualizeOptions().bindConstraints();
-
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    },
-
-    bindConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">var</span> constraints = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>clean all existing DOM constraints to only keep javascript user constraints</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.constraints.length; i++)
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.constraints[i].isDomConstraint)
-          constraints.push(<span class="hljs-keyword">this</span>.constraints[i]);
-
-      <span class="hljs-keyword">this</span>.constraints = constraints;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>then re-add Parsley DOM-API constraints</p>
+              <p>Handle wrong DOM or configurations</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.options)
-        <span class="hljs-keyword">this</span>.addConstraint(name, <span class="hljs-keyword">this</span>.options[name]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> value || <span class="hljs-literal">null</span> === value)
+        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -441,14 +409,15 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>finally, bind special HTML5 constraints</p>
+              <p>Use <code>data-parsley-trim-value=&quot;true&quot;</code> to auto trim inputs entry</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bindHtml5Constraints();
-    },
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.options.trimValue)
+        <span class="hljs-keyword">return</span> value.replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">''</span>);
 
-    bindHtml5Constraints: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+      <span class="hljs-keyword">return</span> value;
+    },</pre></div></div>
             
         </li>
         
@@ -459,126 +428,13 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>html5 required</p>
+              <p>Actualize options that could have change since previous validation
+Re-bind accordingly constraints (could be some new, removed or updated)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.hasClass(<span class="hljs-string">'required'</span>) || <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'required'</span>))
-        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'required'</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>html5 pattern</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'pattern'</span>))
-        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'pattern'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'pattern'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>range</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
-        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'range'</span>, [<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>)], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>HTML5 min</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>))
-        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'min'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>HTML5 max</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
-        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'max'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>html5 types</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> type = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>);
-
-      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> type)
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>Small special case here for HTML5 number, that is in fact an integer validator</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'number'</span> === type)
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, <span class="hljs-string">'integer'</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Regular other HTML5 supported types</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(type, <span class="hljs-string">'i'</span>).test(<span class="hljs-string">'email url range'</span>))
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, type, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>    refreshConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.actualizeOptions()._bindConstraints();
     },
 
     <span class="hljs-comment">/**
@@ -599,26 +455,40 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
         </li>
         
         
-        <li id="section-28">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>if constraint already exist, delete it and push new version</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (-<span class="hljs-number">1</span> !== <span class="hljs-keyword">this</span>._constraintIndex(constraint.name))
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">this</span>.constraintsByName[constraint.name])
           <span class="hljs-keyword">this</span>.removeConstraint(constraint.name);
 
         <span class="hljs-keyword">this</span>.constraints.push(constraint);
+        <span class="hljs-keyword">this</span>.constraintsByName[constraint.name] = constraint;
       }
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Remove a constraint</p>
 
-    removeConstraint: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name)</span> {</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    removeConstraint: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name)</span> {</span>
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.constraints.length; i++)
         <span class="hljs-keyword">if</span> (name === <span class="hljs-keyword">this</span>.constraints[i].name) {
           <span class="hljs-keyword">this</span>.constraints.splice(i, <span class="hljs-number">1</span>);
@@ -626,19 +496,327 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
         }
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Update a constraint (Remove + re-add)</p>
 
-    updateConstraint: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, parameters, priority)</span> {</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    updateConstraint: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, parameters, priority)</span> {</span>
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.removeConstraint(name)
         .addConstraint(name, parameters, priority);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h1 id="internals">Internals</h1>
 
-    _constraintIndex: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name)</span> {</span>
-      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.constraints.length; i++)
-        <span class="hljs-keyword">if</span> (name === <span class="hljs-keyword">this</span>.constraints[i].name)
-          <span class="hljs-keyword">return</span> i;
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Internal only.
+Bind constraints from config + options + DOM</p>
 
-      <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _bindConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">var</span> constraints = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>clean all existing DOM constraints to only keep javascript user constraints</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.constraints.length; i++)
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.constraints[i].isDomConstraint)
+          constraints.push(<span class="hljs-keyword">this</span>.constraints[i]);
+
+      <span class="hljs-keyword">this</span>.constraints = constraints;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>then re-add Parsley DOM-API constraints</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.options)
+        <span class="hljs-keyword">this</span>.addConstraint(name, <span class="hljs-keyword">this</span>.options[name]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>finally, bind special HTML5 constraints</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._bindHtml5Constraints();
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Internal only.
+Bind specific HTML5 constraints to be HTML5 compliant</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _bindHtml5Constraints: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>html5 required</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.hasClass(<span class="hljs-string">'required'</span>) || <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'required'</span>))
+        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'required'</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>html5 pattern</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'pattern'</span>))
+        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'pattern'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'pattern'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>range</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
+        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'range'</span>, [<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>)], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>HTML5 min</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>))
+        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'min'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>HTML5 max</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
+        <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'max'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>html5 types</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> type = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>);
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> type)
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Small special case here for HTML5 number, that is in fact an integer validator</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'number'</span> === type)
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, <span class="hljs-string">'integer'</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Regular other HTML5 supported types</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(type, <span class="hljs-string">'i'</span>).test(<span class="hljs-string">'email url range'</span>))
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, type, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Internal only.
+Field is required if have required constraint without <code>false</code> value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _isRequired: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.constraintsByName.required)
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> !== <span class="hljs-keyword">this</span>.constraintsByName.required.requirements;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Internal only.
+Sort constraints by priority DESC</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _getConstraintsSortedPriorities: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">var</span> priorities = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Create array unique of priorities</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.constraints.length; i++)
+        <span class="hljs-keyword">if</span> (-<span class="hljs-number">1</span> === priorities.indexOf(<span class="hljs-keyword">this</span>.constraints[i].priority))
+          priorities.push(<span class="hljs-keyword">this</span>.constraints[i].priority);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Sort them by priority DESC</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      priorities.sort(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(a, b)</span> {</span> <span class="hljs-keyword">return</span> b - a; });
+
+      <span class="hljs-keyword">return</span> priorities;
     }
   };
 

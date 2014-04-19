@@ -19,13 +19,13 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="parsley.html">
-                parsley.js
+              <a class="source" href="remote.html">
+                remote.js
               </a>
             
               
-              <a class="source" href="parsley.remote.html">
-                parsley.remote.js
+              <a class="source" href="parsley.html">
+                parsley.js
               </a>
             
               
@@ -104,7 +104,7 @@
     asyncSupport: <span class="hljs-literal">false</span>,
 
     actualizeOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.parsleyInstance.OptionsFactory.get(<span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">this</span>.options = <span class="hljs-keyword">this</span>.OptionsFactory.get(<span class="hljs-keyword">this</span>);
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     },</pre></div></div>
@@ -245,8 +245,9 @@ To every field instance for this form</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> !== <span class="hljs-keyword">this</span>.__class__) {
-        $.emit(<span class="hljs-string">'parsley:field:destroy'</span>, <span class="hljs-keyword">this</span>);
         <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
+        <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'ParsleyFieldMultiple'</span>);
+        $.emit(<span class="hljs-string">'parsley:field:destroy'</span>, <span class="hljs-keyword">this</span>);
 
         <span class="hljs-keyword">return</span>;
       }</pre></div></div>
@@ -267,8 +268,8 @@ To every field instance for this form</p>
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++)
         <span class="hljs-keyword">this</span>.fields[i].destroy();
 
-      $.emit(<span class="hljs-string">'parsley:form:destroy'</span>, <span class="hljs-keyword">this</span>);
       <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
+      $.emit(<span class="hljs-string">'parsley:form:destroy'</span>, <span class="hljs-keyword">this</span>);
     }
   };
 
