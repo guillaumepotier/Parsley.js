@@ -1,6 +1,6 @@
 # Parsley 2.x changelog
 
-## master
+## 2.0.0
 
   - fixed remote re-entering already validated value (#576)
   - added `stopImmediatePropagation()` un `onSubmit()` method to avoid conflicts
