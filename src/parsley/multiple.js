@@ -1,23 +1,18 @@
 define('parsley/multiple', [
 ], function () {
-  var ParsleyMultiple = function() {
+  var ParsleyMultiple = function () {
     this.__class__ = 'ParsleyFieldMultiple';
   };
 
   ParsleyMultiple.prototype = {
-    init: function (multiple) {
-      this.$elements = [this.$element];
-      this.options.multiple = multiple;
-
-      return this;
-    },
-
+    // Add new `$element` sibling for multiple field
     addElement: function ($element) {
       this.$elements.push($element);
 
       return this;
     },
 
+    // See `ParsleyField.refreshConstraints()`
     refreshConstraints: function () {
       var fieldConstraints;
 
@@ -25,7 +20,7 @@ define('parsley/multiple', [
 
       // Select multiple special treatment
       if (this.$element.is('select')) {
-        this.actualizeOptions().bindConstraints();
+        this.actualizeOptions()._bindConstraints();
 
         return this;
       }
@@ -41,6 +36,7 @@ define('parsley/multiple', [
       return this;
     },
 
+    // See `ParsleyField.getValue()`
     getValue: function () {
       // Value could be overriden in DOM
       if ('undefined' !== typeof this.options.value)
@@ -62,8 +58,18 @@ define('parsley/multiple', [
       }
 
       // Select multiple case
-      if (this.$element.is('select'))
-        return null === this.$element.val() ? [] : this.$element.val();
+      if (this.$element.is('select') && null === this.$element.val())
+        return [];
+
+      // Default case that should never happen
+      return this.$element.val();
+    },
+
+    _init: function (multiple) {
+      this.$elements = [this.$element];
+      this.options.multiple = multiple;
+
+      return this;
     }
   };
 

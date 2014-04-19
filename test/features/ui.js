@@ -126,6 +126,12 @@ define(function () {
         $('#element').val('foo').psly().validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('bar');
       });
+      it('should show custom error message with variabilized parameters', function () {
+        $('body').append('<input type="text" id="element" value="bar" data-parsley-minlength="7" data-parsley-minlength-message="foo %s bar"/>');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('foo 7 bar');
+      });
       it('should show custom error message for whole field', function () {
         $('body').append('<input type="email" id="element" required data-parsley-error-message="baz"/>');
         var parsleyField = $('#element').psly();
@@ -247,6 +253,18 @@ define(function () {
         window.ParsleyUI.removeError(parsleyField, 'foo');
         expect($('#element').hasClass('parsley-error')).to.be(false);
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
+      });
+      it('should have a getErrorsMessage() method', function () {
+        $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.validate();
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance).length).to.be(1);
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value should be a valid email.');
+
+        $('#element').attr('data-parsley-priority-enabled', false);
+        parsleyInstance.validate();
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance).length).to.be(2);
+        expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value is too short. It should have 5 characters or more.');
       });
       afterEach(function () {
         if ($('#element').length)

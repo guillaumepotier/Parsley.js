@@ -6,7 +6,7 @@ Javascript form validation, without actually writing a single line of javascript
 
 ## Version
 
-2.0.0-rc5
+2.0.0
 
 ## Doc
 
@@ -19,6 +19,16 @@ jQuery >= 1.6
 ## Contributing
 
 See `CONTRIBUTING.md` file
+
+##Integrations
+
+Create integration with other framework as a separate Github repo and send a pull request for including here.
+Some integrations are
+
+* [CakePHP](https://github.com/Codaxis/parsley-helper)
+* [Django](https://github.com/agiliq/django-parsley)
+* [Rails](https://github.com/mekishizufu/parsley-rails)
+* [OSSCDN by MaxCDN](http://osscdn.com/#/parsleyjs)
 
 ## Install dev environment
 

@@ -56,21 +56,43 @@
     </form> -->
 
     <form id="parsley" data-parsley-validate>
-        <input type="text" required />
-        <input type="text" data-parsley-trigger="keyup" data-parsley-remote="http://app.wisembly.dev:8888/api/4/event/lps" />
+        <select name="plan" id="plan" class="form-control first" required="">
+            <option selected="selected" value="">Please select</option>
+            <option value="1200">1200 Calories</option>
+            <option value="1500">1500 Calories</option>
+            <option value="1800">1800 Calories</option>
+        </select>
         <input type="submit" />
+        <input type="reset" onclick="javascript:$('#parsley').parsley().destroy();" />
     </form>
 
-    <script src="../bower_components/jquery/jquery.js"></script>
-    <script src="../src/parsley.remote.js"></script>
+<!--     <form id="doesntwork">
+        <h2>doesnt work</h2>
+        <div>
+            <label>
+                <input type="radio" class=" " name="options[186][]" value="yes" required />No</label>
+            <label>
+                <input type="radio" class=" " name="options[186][]" value="no" required />Yes</label>
+        </div>
+        <div>
+            <button type="submit">go</button>
+        </div>
+    </form> -->
+
+    <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
+    <!-- <script src="../src/parsley.remote.js"></script> -->
     <!-- <script src="../src/extra/dateiso.js"></script> -->
     <!-- <script src="../src/i18n/fr.extra.js"></script> -->
-    <script src="../dist/parsley.js"></script>
-    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
+    <!-- <script src="../src/i18n/fr.js"></script> -->
+    <!-- <script src="../dist/parsley.js"></script> -->
+    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
     <!-- <script src="../src/i18n/it.js"></script> -->
 
     <script type="text/javascript">
         // $(document).ready(function () {
+        //     $('#doesntwork').parsley({
+        //         namespace: 'data-validate-'
+        //     });
         // });
     </script>
 </html>

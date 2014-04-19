@@ -2,7 +2,9 @@ define('parsley/pubsub', [
   'parsley/field',
   'parsley/form'
 ], function (ParsleyField, ParsleyForm) {
-  var o = $({}), subscribed = {};
+  var
+    o = $({}),
+    subscribed = {};
 
   // $.listen(name, callback);
   // $.listen(name, context, callback);

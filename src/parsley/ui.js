@@ -49,6 +49,20 @@ define('parsley/ui', [
         this.manageFailingFieldTrigger(fieldInstance);
     },
 
+    // Returns an array of field's error message(s)
+    getErrorsMessages: function (fieldInstance) {
+      // No error message, field is valid
+      if (true === fieldInstance.validationResult)
+        return [];
+
+      var messages = [];
+
+      for (var i = 0; i < fieldInstance.validationResult.length; i++)
+        messages.push(this._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
+
+      return messages;
+    },
+
     manageStatusClass: function (fieldInstance) {
       if (true === fieldInstance.validationResult)
         this._successClass(fieldInstance);
@@ -70,18 +84,16 @@ define('parsley/ui', [
               .append($(fieldInstance.options.errorTemplate)
               .addClass('parsley-custom-error-message'));
 
-          fieldInstance._ui.$errorsWrapper
+          return fieldInstance._ui.$errorsWrapper
             .addClass('filled')
             .find('.parsley-custom-error-message')
             .html(fieldInstance.options.errorMessage);
-        } else {
-          fieldInstance._ui.$errorsWrapper
-            .removeClass('filled')
-            .find('.parsley-custom-error-message')
-            .remove();
         }
 
-        return;
+        return fieldInstance._ui.$errorsWrapper
+          .removeClass('filled')
+          .find('.parsley-custom-error-message')
+          .remove();
       }
 
       // Show, hide, update failing constraints messages
@@ -158,13 +170,14 @@ define('parsley/ui', [
       var customConstraintErrorMessage = constraint.name + 'Message';
 
       if ('undefined' !== typeof fieldInstance.options[customConstraintErrorMessage])
-        return fieldInstance.options[customConstraintErrorMessage];
+        return window.ParsleyValidator.formatMessage(fieldInstance.options[customConstraintErrorMessage], constraint.requirements);
 
       return window.ParsleyValidator.getErrorMessage(constraint);
     },
 
     _diff: function (newResult, oldResult, deep) {
-      var added = [],
+      var
+        added = [],
         kept = [];
 
       for (var i = 0; i < newResult.length; i++) {
@@ -344,13 +357,13 @@ define('parsley/ui', [
     },
 
     reset: function (parsleyInstance) {
-      // Nothing to do if UI never initialized for this field
-      if ('undefined' === typeof parsleyInstance._ui)
-        return;
-
       // Reset all event listeners
       parsleyInstance.$element.off('.Parsley');
       parsleyInstance.$element.off('.ParsleyFailedOnce');
+
+      // Nothing to do if UI never initialized for this field
+      if ('undefined' === typeof parsleyInstance._ui)
+        return;
 
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
@@ -370,10 +383,6 @@ define('parsley/ui', [
     },
 
     destroy: function (parsleyInstance) {
-      // Nothing to do if UI never initialized for this field
-      if ('undefined' === typeof parsleyInstance._ui)
-        return;
-
       this.reset(parsleyInstance);
 
       if ('ParsleyForm' === parsleyInstance.__class__)

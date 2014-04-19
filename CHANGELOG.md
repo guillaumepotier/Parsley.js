@@ -1,6 +1,6 @@
 # Parsley 2.x changelog
 
-## master
+## 2.0.0
 
   - fixed remote re-entering already validated value (#576)
   - added `stopImmediatePropagation()` un `onSubmit()` method to avoid conflicts
@@ -9,6 +9,15 @@
     fields as a multiple field (#589)
   - `input[type=hidden]` are now excluded by default (#589)
   - fixed constraints unicity on fields belonging to same multiple group
+  - added `data-parsley-remote-validator` feature (#587)
+  - now support custom messages placeholders (#602)
+  - fix exception when ParsleyField or ParsleyFieldMultiple value is null or
+    undefined (#598)
+  - fixed `destroy()` method + added test (#555)
+  - added requirejs AMD support for `dist/parsley.js` and `dist/parsley.min.js`
+    versions (#606)
+  - fixed custom namespace -multiple that didn't re-evaluated correctly (#595)
+  - added `ParsleyUI.getErrorsMessages()` (Closes #607)
 
 ## 2.0.0-rc5
 

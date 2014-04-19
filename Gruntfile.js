@@ -32,7 +32,7 @@ module.exports = function (grunt) {
 
     docco: {
       source: {
-        src: ['src/parsley.js', 'src/parsley/*.js', 'src/parsley.remote.js'],
+        src: ['src/parsley.js', 'src/parsley/*.js', 'src/extra/plugin/remote.js'],
         options: {
           output: 'doc/annotated-source/',
           layout: 'parallel'
@@ -172,7 +172,7 @@ module.exports = function (grunt) {
 
     concat: {
       remote: {
-        src: ['src/parsley.remote.js', 'dist/parsley.js'],
+        src: ['src/extra/plugin/remote.js', 'dist/parsley.js'],
         dest: 'dist/parsley.remote.js'
       }
     }

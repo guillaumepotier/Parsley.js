@@ -82,16 +82,16 @@ define('parsley/validator', [
       if ('type' === constraint.name)
         message = this.catalog[this.locale][constraint.name][constraint.requirements];
       else
-        message = this.formatMesssage(this.catalog[this.locale][constraint.name], constraint.requirements);
+        message = this.formatMessage(this.catalog[this.locale][constraint.name], constraint.requirements);
 
       return '' !== message ? message : this.catalog[this.locale].defaultMessage;
     },
 
     // Kind of light `sprintf()` implementation
-    formatMesssage: function (string, parameters) {
+    formatMessage: function (string, parameters) {
       if ('object' === typeof parameters) {
         for (var i in parameters)
-          string = this.formatMesssage(string, parameters[i]);
+          string = this.formatMessage(string, parameters[i]);
 
         return string;
       }

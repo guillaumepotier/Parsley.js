@@ -107,6 +107,14 @@ define(function () {
         expect(parsleyField.getValue()).to.be.eql(['1', '2']);
         expect(parsleyField.isValid()).to.be(true);
       });
+      it('should support select with default without a value', function () {
+        $('body').append(
+          '<select id="element" required>'    +
+            '<option selected="selected" value>default</option>'  +
+            '<option value="2">2</option>'    +
+          '</select>');
+        expect($('#element').parsley().isValid()).to.be(false);
+      });
       it('should not bind radio or checkboxes withoud a name or and id or a multiple option', function () {
         $('body').append('<input type="radio" value="foo" />');
         window.console.warn = sinon.spy();
@@ -169,6 +177,19 @@ define(function () {
           '</form>');
         $('#element').parsley();
         expect($('#check').parsley().$elements.length).to.be(1);
+      });
+      it('should handle form namespace configuration inheritance and click events while multiple binding through ParsleyForm', function () {
+        $('body').append(
+          '<form id="element" >' +
+            '<input type="radio" name="radio" id="radio1" value="3" foo-bar-required />'  +
+            '<input type="radio" name="radio" id="radio2" value="4" />'  +
+          '</form>');
+        // set specific namespace here for form
+        var parsleyInstance = $('#element').parsley({ namespace: 'foo-bar-' });
+        parsleyInstance.validate();
+        expect($('ul.parsley-errors-list li').length).to.be(1);
+        $('#radio2').trigger('click');
+        expect($('ul.parsley-errors-list li').length).to.be(0);
       });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };

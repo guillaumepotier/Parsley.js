@@ -138,7 +138,7 @@ define(function () {
         var parsleyField = new Parsley($('#element'))
           .addConstraint('multiple', 4)
           .addConstraint('foobazer', true);
-        parsleyField.bindConstraints();
+        parsleyField.refreshConstraints();
         expect(parsleyField.constraints.length).to.be(4);
         $('#element').removeAttr('data-parsley-required');
         parsleyField.refreshConstraints();
@@ -233,6 +233,10 @@ define(function () {
         expect($('#element').parsley().getValue()).to.be(' foo ');
         $('#element').attr('data-parsley-trim-value', true).parsley().actualizeOptions();
         expect($('#element').parsley().getValue()).to.be('foo');
+      });
+      it('should properly handle null or undefined values', function () {
+        $('body').append('<input type="text" id="element" required value/>');
+        expect($('#element').parsley().isValid()).to.be(false);
       });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };

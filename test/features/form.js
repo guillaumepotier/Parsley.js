@@ -125,11 +125,10 @@ define(function () {
         $('#element').append('<input type="email" id="email" required />');
         var fieldInstance = $('#email').psly();
         expect(fieldInstance.__class__).to.be('ParsleyField');
-        expect(fieldInstance.parsleyInstance.__proxy__).to.be('ParsleyField');
         var formInstance = $('#element').psly();
         // form corectly have its field, and field have finaly its parent form
         expect(formInstance.fields[0].$element.attr('id')).to.be('email');
-        expect(fieldInstance.parsleyInstance.__proxy__).to.be('ParsleyForm');
+        expect(fieldInstance.parent.__class__).to.be('ParsleyForm');
       });
       it('should stop event propagation on form submit', function (done) {
         $('body').append('<form id="element"><input type="text" required/></form>');

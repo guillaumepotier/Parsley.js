@@ -2,28 +2,21 @@ define('parsley/form', [
   'parsley/abstract',
   'parsley/utils'
 ], function (ParsleyAbstract, ParsleyUtils) {
-  var ParsleyForm = function(element, parsleyInstance) {
+  var ParsleyForm = function (element, OptionsFactory) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
 
-    if ('Parsley' !== ParsleyUtils.get(parsleyInstance, '__class__'))
-      throw new Error('You must give a Parsley instance');
+    if ('OptionsFactory' !== ParsleyUtils.get(OptionsFactory, '__class__'))
+      throw new Error('You must give an OptionsFactory instance');
 
-    this.parsleyInstance = parsleyInstance;
+    this.OptionsFactory = OptionsFactory;
     this.$element = $(element);
+
+    this.validationResult = null;
+    this.options = this.OptionsFactory.get(this);
   };
 
   ParsleyForm.prototype = {
-    init: function () {
-      this.validationResult = null;
-
-      this.options = this.parsleyInstance.OptionsFactory.get(this);
-
-      this._bindFields();
-
-      return this;
-    },
-
     onSubmitValidate: function (event) {
       this.validate(undefined, undefined, event);
 
@@ -94,7 +87,7 @@ define('parsley/form', [
       this.fieldsMappedById = {};
 
       this.$element.find(this.options.inputs).each(function () {
-        var fieldInstance = new window.Parsley(this, {}, self.parsleyInstance);
+        var fieldInstance = new window.Parsley(this, {}, self);
 
         // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
         if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))
