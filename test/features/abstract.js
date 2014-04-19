@@ -26,7 +26,14 @@ define(function () {
         $.emit('parsley:field:foo', 'bar');
         $.emit('parsley:field:foo', parsleyField, 'baz');
       });
-      it.skip('should use unsubscribe()');
+      it('should use unsubscribe()', function () {
+        $('body').append('<input type="email" id="element" />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.subscribe('foo', function () { return 'bar'; });
+        expect($.subscribed().foo.length).to.be(1);
+        parsleyInstance.unsubscribe('foo');
+        expect($.subscribed().foo.length).to.be(0);
+      });
       it('should use reset() on field', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
         var parsleyField = new Parsley('#element');
