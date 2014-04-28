@@ -15,7 +15,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	color: #3C43A6;
+	color: #476E4D;
 	text-align: center;
 }
 
@@ -33,7 +33,7 @@ h3 {
 
 .container header {
 	padding: 2em 0;
-	border-bottom: 1px solid #333;
+	border-bottom: 1px solid #6C3F77;
 	background: url(img/backhead.jpg) top right no-repeat;
 	-webkit-background-size: cover;
 	background-size: cover;
@@ -68,13 +68,29 @@ h3 {
 }
 
 .btn {
-	background: #3C43A6;
+	background: #476E4D;
 	padding: 1em 2em;
 	margin: 1em 1em 0;
 	display: inline-block;
 	border-radius: 4px;
 	color: white;
 	text-decoration: none;
+}
+
+.btn:visited {
+	color: white;
+}
+
+.btn:hover {
+	background: #6C3F77;
+}
+
+a {
+	color: #6C3F77;
+}
+
+a:visited {
+	color: inherit;
 }
 
 .col-lg-4 {
