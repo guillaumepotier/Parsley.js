@@ -1,0 +1,100 @@
+* {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+body {
+	font-family: 'Crimson';
+	text-align: center;
+}
+
+.container {
+	position: relative;
+	max-width: 1080px;
+	margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #3C43A6;
+	text-align: center;
+}
+
+h1 {
+	font-size: 64px;
+	margin-bottom: 0;
+}
+
+h2 {
+	font-size: 36px;
+	margin-top: 0;
+}
+
+.main-nav {
+	position: absolute;
+	top: -30px;
+	width: 100%;
+	text-align: center;
+}
+
+.main-nav ul {
+	text-align: center;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.main-nav li {
+	display: inline-block;
+	padding: 0 1em;
+}
+
+.main--top {
+	margin-top: 3em;
+}
+
+.btn {
+	background: #3C43A6;
+	padding: 1em 2em;
+	margin: 1em;
+	display: inline-block;
+	border-radius: 4px;
+	color: white;
+	text-decoration: none;
+}
+
+.col-lg-4 {
+	width: 33%;
+	min-height: 300px;
+	float: left;
+}
+
+@media (max-width: 600px) {
+	.col-lg-4 {
+		width: 100%;
+	}
+}
+
+.visually-hidden {
+	position: absolute !important;
+	clip: rect(1px 1px 1px 1px);
+	clip: rect(1px, 1px, 1px, 1px);
+	padding:0 !important;
+	border:0 !important;
+	height: 1px !important;
+	width: 1px !important;
+	overflow: hidden;
+} 
+
+
+@font-face {
+	font-family: 'Crimson';
+	src: url('fonts/CrimsonText-Roman.woff') format('woff'),
+		 url('fonts/CrimsonText-Roman.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Crimson';
+	src: url('fonts/CrimsonText-Bold.woff') format('woff'),
+		 url('fonts/CrimsonText-Bold.ttf') format('truetype');
+	font-weight: bold;
+}
