@@ -8,7 +8,7 @@ body {
 	text-align: center;
 }
 
-.container {
+.container > * {
 	position: relative;
 	max-width: 1080px;
 	margin: 0 auto;
@@ -21,17 +21,32 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
 	font-size: 64px;
-	margin-bottom: 0;
 }
 
 h2 {
 	font-size: 36px;
-	margin-top: 0;
+}
+
+h3 {
+	font-size: 26px;
+}
+
+.container header {
+	padding: 2em 0;
+	border-bottom: 1px solid #333;
+	background: url(img/backhead.jpg) top right no-repeat;
+	-webkit-background-size: cover;
+	background-size: cover;
+	max-width: none;
+}
+
+.head--h1 {
+	margin-bottom: -60px;
 }
 
 .main-nav {
 	position: absolute;
-	top: -30px;
+	top: 0px;
 	width: 100%;
 	text-align: center;
 }
@@ -55,7 +70,7 @@ h2 {
 .btn {
 	background: #3C43A6;
 	padding: 1em 2em;
-	margin: 1em;
+	margin: 1em 1em 0;
 	display: inline-block;
 	border-radius: 4px;
 	color: white;
