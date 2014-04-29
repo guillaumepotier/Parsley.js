@@ -6,6 +6,9 @@
 body {
 	font-family: 'Crimson';
 	text-align: center;
+	background: #F7F7E4;
+	padding: 0;
+	margin: 0;
 }
 
 .container > * {
@@ -44,9 +47,13 @@ h3 {
 	margin-bottom: -60px;
 }
 
+.head--h2 {
+	margin-bottom: 10px;
+}
+
 .main-nav {
 	position: absolute;
-	top: 0px;
+	top: 10px;
 	width: 100%;
 	text-align: center;
 }
@@ -77,6 +84,10 @@ h3 {
 	text-decoration: none;
 }
 
+.btn--head {
+	margin: 0 0 2em;
+}
+
 .btn:visited {
 	color: white;
 }
@@ -95,8 +106,27 @@ a:visited {
 
 .col-lg-4 {
 	width: 33%;
-	min-height: 300px;
+	min-height: 360px;
+	padding: 1em;
 	float: left;
+	text-align: left;
+}
+
+.col-lg-4 h3 {
+	text-align: left;
+}
+
+p {
+	line-height: 1.9;
+}
+
+strong {
+	line-height: 1;
+}
+
+footer {
+	float: none;
+	clear: both;
 }
 
 @media (max-width: 600px) {
