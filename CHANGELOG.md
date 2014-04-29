@@ -1,5 +1,10 @@
 # Parsley 2.x changelog
 
+## master
+
+  - fixed "attr.specified is deprecated." console warning (#608)
+  - fixed package.json config with main dep (#617)
+
 ## 2.0.0
 
   - fixed remote re-entering already validated value (#576)
