@@ -2136,7 +2136,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
   required:       "This value is required.",
   pattern:        "This value seems to be invalid.",
   min:            "This value should be greater than or equal to %s.",
-  max:            "This value should be lower than or equal to %s.",
+  max:            "This value should be less than or equal to %s.",
   range:          "This value should be between %s and %s.",
   minlength:      "This value is too short. It should have %s characters or more.",
   maxlength:      "This value is too long. It should have %s characters or less.",
