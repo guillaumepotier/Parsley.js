@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
+window.ParsleyConfig.i18n.ar = $.extend(window.ParsleyConfig.i18n.ar || {}, {
   defaultMessage: "تأكد من صحة القيمة المدخل",
   type: {
     email:        "تأكد من إدخال بريد الكتروني صحيح",
@@ -30,4 +30,4 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
+  window.ParsleyValidator.addCatalog('ar', window.ParsleyConfig.i18n.ar, true);
