@@ -154,9 +154,10 @@ $(document).ready(function () {
 
     // if one of these blocks is not failing do not prevent submission
     // we use here group validation with option force (validate even non required fields)
-    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
+    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true)) {
+      $('.invalid-form-error-message').html('');
       return;
-
+    }
     // else stop form submission
     formInstance.submitEvent.preventDefault();
 
@@ -165,8 +166,6 @@ $(document).ready(function () {
       .html("You must correctly fill the fields of at least one of these two blocks!")
       .addClass("filled");
     return;
-
-    $('.invalid-form-error-message').html('');
   });
 });
 &lt;/script>
@@ -192,8 +191,10 @@ $(document).ready(function () {
 
       $(document).ready(function () {
         $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
-          if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true))
+          if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true)) {
+            $('.invalid-form-error-message').html('');
             return;
+          }
 
           formInstance.submitEvent.preventDefault();
           $('.invalid-form-error-message')
