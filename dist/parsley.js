@@ -1,11 +1,19 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0 - built Sat Apr 19 2014 17:29:18
+* Version 2.0.0 - built Wed May 14 2014 09:53:53
 * MIT Licensed
 *
 */
-!(function($) {
+!(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module depending on jQuery.
+    define(['jquery'], factory);
+  } else {
+    // No AMD. Register plugin with global jQuery object.
+    factory(jQuery);
+  }
+}(function ($) {
   var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -14,12 +22,13 @@
       var
         attribute,
         obj = {},
+        msie = this.msieversion(),
         regex = new RegExp('^' + namespace, 'i');
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
         return {};
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
-        if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
+        if ('undefined' !== typeof attribute && null !== attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
           if ('undefined' !== typeof checkAttr && new RegExp(checkAttr + '$', 'i').test(attribute.name))
             return true;
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
@@ -81,7 +90,17 @@
         .replace(/([a-z\d])([A-Z])/g, '$1_$2')
         .replace(/_/g, '-')
         .toLowerCase();
-    }
+    },
+    // http://support.microsoft.com/kb/167820
+    // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
+    msieversion: function  () {
+      var
+        ua = window.navigator.userAgent,
+        msie = ua.indexOf('MSIE ');
+      if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
+        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+      return 0;
+   }
   };
 // All these options could be overriden and specified directly in DOM using
 // `data-parsley-` default DOM-API
@@ -2090,8 +2109,4 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();
     });
-
-// AMD Compliance
-if ('function' === typeof define && define.amd)
-  define('parsley', function() { return window.Parsley; } );
-})(window.jQuery);
+}));
