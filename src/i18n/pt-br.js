@@ -4,7 +4,7 @@ window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
 window.ParsleyConfig.i18n['pt-br'] = $.extend(window.ParsleyConfig.i18n['pt-br'] || {}, {
-  defaultMessage: "This value seems to be invalid.",
+  defaultMessage: "Este valor parece ser inválido.",
   type: {
     email:        "Esse campo deve ser um email válido.",
     url:          "Esse campo deve ser uma url válida.",
