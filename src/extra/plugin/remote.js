@@ -24,10 +24,11 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     }
   }, window.ParsleyExtend.asyncValidators),
 
-  addAsyncValidator: function (name, fn, url) {
+  addAsyncValidator: function (name, fn, url, options) {
     this.asyncValidators[name.toLowerCase()] = {
       fn: fn,
-      url: url || false
+      url: url || false,
+      options: options || {}
     };
 
     return this;
@@ -178,6 +179,9 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
     // Fill data with current value
     data[this.$element.attr('name') || this.$element.attr('id')] = this.getValue();
+
+    // Merge options passed in from the function with the ones in the attribute
+    this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {} , this.asyncValidators[validator].options);
 
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
