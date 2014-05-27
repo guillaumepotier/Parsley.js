@@ -388,7 +388,9 @@ define('parsley/ui', [
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
 
-      parsleyInstance._ui.$errorsWrapper.remove();
+      if ('undefined' !== typeof parsleyInstance._ui)
+        parsleyInstance._ui.$errorsWrapper.remove();
+
       delete parsleyInstance._ui;
     },
 
