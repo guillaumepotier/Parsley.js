@@ -95,7 +95,7 @@ define('parsley/utils', function () {
 
     // http://support.microsoft.com/kb/167820
     // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
-    msieversion: function  () {
+    msieversion: function () {
       var
         ua = window.navigator.userAgent,
         msie = ua.indexOf('MSIE ');
