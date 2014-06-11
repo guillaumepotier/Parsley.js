@@ -11,6 +11,7 @@ window.ParsleyConfig.i18n.nl = $.extend(window.ParsleyConfig.i18n.nl || {}, {
         , url:        "Dit lijkt geen geldige URL te zijn."
         , urlstrict:  "Dit is geen geldige URL."
         , number:     "Deze waarde moet een nummer zijn."
+        , integer:    "Deze waarde moet een nummer zijn."
         , digits:     "Deze waarde moet numeriek zijn."
         , dateIso:    "Deze waarde moet een datum in het volgende formaat zijn: (YYYY-MM-DD)."
         , alphanum:   "Deze waarde moet alfanumeriek zijn."
