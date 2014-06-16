@@ -16,7 +16,7 @@ define('parsley/validator', [
       this.catalog = catalog;
 
       for (var name in validators)
-        this.addValidator(name, validators[name].fn, validators[name].priority);
+        this.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
 
       $.emit('parsley:validator:init');
     },
@@ -57,16 +57,19 @@ define('parsley/validator', [
     },
 
     // Add a new validator
-    addValidator: function (name, fn, priority) {
+    addValidator: function (name, fn, priority, requirementsTransformer) {
       this.validators[name.toLowerCase()] = function (requirements) {
-        return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
+        return $.extend(new Validator.Assert().Callback(fn, requirements), {
+          priority: priority,
+          requirementsTransformer: requirementsTransformer
+        });
       };
 
       return this;
     },
 
-    updateValidator: function (name, fn, priority) {
-      return addValidator(name, fn, priority);
+    updateValidator: function (name, fn, priority, requirementsTransformer) {
+      return this.addValidator(name, fn, priority, requirementsTransformer);
     },
 
     removeValidator: function (name) {

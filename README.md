@@ -14,7 +14,7 @@ See `index.html` and `doc/`
 
 ## Requirements
 
-jQuery >= 1.6
+jQuery >= 1.8
 
 ## Contributing
 

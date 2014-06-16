@@ -56,12 +56,7 @@
     </form> -->
 
     <form id="parsley" data-parsley-validate>
-        <select name="plan" id="plan" class="form-control first" required="">
-            <option selected="selected" value="">Please select</option>
-            <option value="1200">1200 Calories</option>
-            <option value="1500">1500 Calories</option>
-            <option value="1800">1800 Calories</option>
-        </select>
+        <input type="text" name="date" id="date" required data-parsley-beforedate="Mon Jun 16 2014 12:21:58 GMT+0200 (CEST)">
         <input type="submit" />
         <input type="reset" onclick="javascript:$('#parsley').parsley().destroy();" />
     </form>
@@ -79,13 +74,32 @@
         </div>
     </form> -->
 
-    <!-- <script src="../bower_components/jquery/jquery.js"></script> -->
+    <script src="../bower_components/jquery/jquery.js"></script>
     <!-- <script src="../src/parsley.remote.js"></script> -->
     <!-- <script src="../src/extra/dateiso.js"></script> -->
     <!-- <script src="../src/i18n/fr.extra.js"></script> -->
     <!-- <script src="../src/i18n/fr.js"></script> -->
-    <!-- <script src="../dist/parsley.js"></script> -->
-    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+
+    <script type="text/javascript">
+        window.ParsleyConfig = {
+            validators: {
+                beforedate: {
+                    fn: function (value, date) {
+                        console.log(date);
+                        return new Date(value) <= date;
+                    },
+                    priority: 32,
+                    requirementsTransformer: function (requirement) {
+                        console.log('here');
+                        return new Date(requirement);
+                    }
+                }
+            }
+        };
+    </script>
+
+    <script src="../dist/parsley.js"></script>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="./dev"></script></body> -->
     <!-- <script src="../src/i18n/it.js"></script> -->
 
     <script type="text/javascript">

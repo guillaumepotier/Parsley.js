@@ -160,6 +160,20 @@ define(function () {
         expect(parsleyValidator.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('Cette valeur doit contenir entre 3 et 6 caractères.');
         expect(parsleyValidator.getErrorMessage({ name: 'notexisting' })).to.be('Cette valeur semble non valide.');
       });
+      it('should handle parametersTransformer for custom validators', function () {
+        parsleyValidator.addValidator('foo', function (requirements) {
+          return requirements;
+        }, 32, function (requirements) {
+          return { req: requirements };
+        });
+        expect(parsleyValidator.validators.foo().requirementsTransformer).to.be.a('function');
+        parsleyValidator.updateValidator('foo', function (requirements) {
+          return requirements;
+        }, 32);
+        expect(parsleyValidator.validators.foo().requirementsTransformer).to.be(undefined);
+        parsleyValidator.removeValidator('foo');
+        expect(parsleyValidator.validators.foo).to.be(undefined);
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

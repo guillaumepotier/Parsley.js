@@ -4,6 +4,9 @@
 
   - fixed "attr.specified is deprecated." console warning (#608)
   - fixed package.json config with main dep (#617)
+  - fixed `addValidator()` method
+  - added support for `requirementsTransformer` for custom validators
+  - updated jQuery needed version from README and doc
 
 ## 2.0.0
 

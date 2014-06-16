@@ -24,10 +24,11 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     }
   }, window.ParsleyExtend.asyncValidators),
 
-  addAsyncValidator: function (name, fn, url) {
+  addAsyncValidator: function (name, fn, url, options) {
     this.asyncValidators[name.toLowerCase()] = {
       fn: fn,
-      url: url || false
+      url: url || false,
+      options: options || {}
     };
 
     return this;
@@ -179,6 +180,9 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     // Fill data with current value
     data[this.$element.attr('name') || this.$element.attr('id')] = this.getValue();
 
+    // Merge options passed in from the function with the ones in the attribute
+    this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {} , this.asyncValidators[validator].options);
+
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
       url: this.asyncValidators[validator].url || this.options.remote,
@@ -255,7 +259,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0 - built Wed May 14 2014 09:53:53
+* Version 2.0.0 - built Mon Jun 16 2014 13:09:29
 * MIT Licensed
 *
 */
@@ -267,7 +271,7 @@ window.ParsleyConfig.validators.remote = {
     // No AMD. Register plugin with global jQuery object.
     factory(jQuery);
   }
-}(function ($) {
+}(function () {
   var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -347,7 +351,7 @@ window.ParsleyConfig.validators.remote = {
     },
     // http://support.microsoft.com/kb/167820
     // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
-    msieversion: function  () {
+    msieversion: function () {
       var
         ua = window.navigator.userAgent,
         msie = ua.indexOf('MSIE ');
@@ -1202,7 +1206,7 @@ window.ParsleyConfig.validators.remote = {
     init: function (validators, catalog) {
       this.catalog = catalog;
       for (var name in validators)
-        this.addValidator(name, validators[name].fn, validators[name].priority);
+        this.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
       $.emit('parsley:validator:init');
     },
     // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
@@ -1231,14 +1235,17 @@ window.ParsleyConfig.validators.remote = {
       return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
     },
     // Add a new validator
-    addValidator: function (name, fn, priority) {
+    addValidator: function (name, fn, priority, requirementsTransformer) {
       this.validators[name.toLowerCase()] = function (requirements) {
-        return $.extend(new Validator.Assert().Callback(fn, requirements), { priority: priority });
+        return $.extend(new Validator.Assert().Callback(fn, requirements), {
+          priority: priority,
+          requirementsTransformer: requirementsTransformer
+        });
       };
       return this;
     },
-    updateValidator: function (name, fn, priority) {
-      return addValidator(name, fn, priority);
+    updateValidator: function (name, fn, priority, requirementsTransformer) {
+      return this.addValidator(name, fn, priority, requirementsTransformer);
     },
     removeValidator: function (name) {
       delete this.validators[name];

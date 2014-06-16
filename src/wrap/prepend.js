@@ -14,4 +14,4 @@
     // No AMD. Register plugin with global jQuery object.
     factory(jQuery);
   }
-}(function ($) {
+}(function () {
