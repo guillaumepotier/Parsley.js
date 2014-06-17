@@ -1,5 +1,9 @@
 # Parsley 2.x changelog
 
+## 2.0.2
+
+  - proper version number in `dist/` files
+
 ## 2.0.1
 
   - fixed "attr.specified is deprecated." console warning (#608)

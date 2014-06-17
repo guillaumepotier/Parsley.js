@@ -6,7 +6,7 @@ Javascript form validation, without actually writing a single line of javascript
 
 ## Version
 
-2.0.1
+2.0.2
 
 ## Doc
 
