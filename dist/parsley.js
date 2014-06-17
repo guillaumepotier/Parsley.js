@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0 - built Tue Jun 17 2014 12:23:13
+* Version 2.0.2 - built Tue Jun 17 2014 15:25:35
 * MIT Licensed
 *
 */
@@ -1027,6 +1027,8 @@
           case 'email':
             assert = new Validator.Assert().Email();
             break;
+          // range type just ensure we have a number here
+          case 'range':
           case 'number':
             assert = new Validator.Assert().Regexp('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
             break;
@@ -1330,13 +1332,13 @@
     },
     _insertErrorWrapper: function (fieldInstance) {
       var $errorsContainer;
-      if ('string' === typeof fieldInstance.options.errorsContainer )
-        if ($(fieldInstance.options.errorsContainer + '').length)
+      if ('string' === typeof fieldInstance.options.errorsContainer) {
+        if ($(fieldInstance.options.errorsContainer).length)
           return $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
         else if (window.console && window.console.warn)
           window.console.warn('The errors container `' + fieldInstance.options.errorsContainer + '` does not exist in DOM');
-
-      if ('function' === typeof fieldInstance.options.errorsContainer)
+      }
+      else if ('function' === typeof fieldInstance.options.errorsContainer)
         $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
       if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
         return $errorsContainer.append(fieldInstance._ui.$errorsWrapper);
@@ -1423,7 +1425,8 @@
       this.reset(parsleyInstance);
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
-      parsleyInstance._ui.$errorsWrapper.remove();
+      if ('undefined' !== typeof parsleyInstance._ui)
+        parsleyInstance._ui.$errorsWrapper.remove();
       delete parsleyInstance._ui;
     },
     _successClass: function (fieldInstance) {
@@ -1923,7 +1926,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.0.0
+//     Parsley.js 2.0.2
 //     http://parsleyjs.org
 //     (c) 20012-2014 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -1931,7 +1934,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### Parsley factory
   var Parsley = function (element, options, parsleyFormInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.0';
+    this.__version__ = '2.0.2';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
