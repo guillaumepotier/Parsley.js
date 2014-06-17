@@ -271,14 +271,13 @@ define('parsley/ui', [
     _insertErrorWrapper: function (fieldInstance) {
       var $errorsContainer;
 
-      if ('string' === typeof fieldInstance.options.errorsContainer )
-        if ($(fieldInstance.options.errorsContainer + '').length)
+      if ('string' === typeof fieldInstance.options.errorsContainer) {
+        if ($(fieldInstance.options.errorsContainer).length)
           return $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
         else if (window.console && window.console.warn)
           window.console.warn('The errors container `' + fieldInstance.options.errorsContainer + '` does not exist in DOM');
-
-
-      if ('function' === typeof fieldInstance.options.errorsContainer)
+      }
+      else if ('function' === typeof fieldInstance.options.errorsContainer)
         $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
 
       if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
@@ -388,7 +387,9 @@ define('parsley/ui', [
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
 
-      parsleyInstance._ui.$errorsWrapper.remove();
+      if ('undefined' !== typeof parsleyInstance._ui)
+        parsleyInstance._ui.$errorsWrapper.remove();
+
       delete parsleyInstance._ui;
     },
 

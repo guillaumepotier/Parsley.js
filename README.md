@@ -1,12 +1,12 @@
 # Parsley
 
-[![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
+[![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.svg?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
 
 Javascript form validation, without actually writing a single line of javascript!
 
 ## Version
 
-2.0.0
+2.0.1
 
 ## Doc
 
@@ -14,7 +14,7 @@ See `index.html` and `doc/`
 
 ## Requirements
 
-jQuery >= 1.6
+jQuery >= 1.8
 
 ## Contributing
 
@@ -35,6 +35,7 @@ Some integrations are
 ```
 npm install
 npm install -g grunt-cli
+npm install -g bower
 grunt configure
 ```
 
@@ -49,8 +50,7 @@ grunt build-all
 
 First time:
 ```
-sudo npm install -g docco
-
+npm install -g docco
 ```
 
 then
@@ -63,7 +63,6 @@ grunt build-annotated-source
 In the browser: open `test/index.html`
 
 In the terminal: `npm test`
-
 
 ## License
 

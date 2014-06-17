@@ -191,6 +191,23 @@ define(function () {
         $('#radio2').trigger('click');
         expect($('ul.parsley-errors-list li').length).to.be(0);
       });
+      it('should handle dynamic multiple items removal', function () {
+        $('body').append(
+          '<form id="element" >' +
+            '<input type="checkbox" name="check[]" id="check1" value="1" data-parsley-check="[1, 2]" />'  +
+            '<input type="checkbox" name="check[]" id="check2" value="2" />'  +
+            '<input type="checkbox" name="check[]" id="check3" value="3" />'  +
+            '<input type="checkbox" name="check[]" id="check4" value="4" />'  +
+          '</form>');
+        // bind all multiple checkbox inputs. TODO refacto multiple binding
+        $('#element').parsley();
+        var parsleyInstance = $('[type=checkbox]:first').parsley();
+        expect(parsleyInstance.$elements.length).to.be(4);
+        $('[type=checkbox]:last').remove();
+        // validate form to go through all multiple inputs. TODO refacto multiple binding
+        $('#element').parsley().validate();
+        expect(parsleyInstance.$elements.length).to.be(3);
+      });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 

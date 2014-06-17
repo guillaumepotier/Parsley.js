@@ -27,6 +27,13 @@ define('parsley/multiple', [
 
       // Gather all constraints for each input in the multiple group
       for (var i = 0; i < this.$elements.length; i++) {
+
+        // Check if element have not been dynamically removed since last binding
+        if (!$('html').has(this.$elements[i]).length) {
+          this.$elements.splice(i, 1);
+          continue;
+        }
+
         fieldConstraints = this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints;
 
         for (var j = 0; j < fieldConstraints.length; j++)

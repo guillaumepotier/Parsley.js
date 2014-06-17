@@ -7,6 +7,7 @@ define('parsley/utils', function () {
       var
         attribute,
         obj = {},
+        msie = this.msieversion(),
         regex = new RegExp('^' + namespace, 'i');
 
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
@@ -15,7 +16,7 @@ define('parsley/utils', function () {
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
 
-        if ('undefined' !== typeof attribute && null !== attribute && attribute.specified && regex.test(attribute.name)) {
+        if ('undefined' !== typeof attribute && null !== attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
           if ('undefined' !== typeof checkAttr && new RegExp(checkAttr + '$', 'i').test(attribute.name))
             return true;
 
@@ -90,6 +91,19 @@ define('parsley/utils', function () {
         .replace(/([a-z\d])([A-Z])/g, '$1_$2')
         .replace(/_/g, '-')
         .toLowerCase();
-    }
+    },
+
+    // http://support.microsoft.com/kb/167820
+    // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
+    msieversion: function () {
+      var
+        ua = window.navigator.userAgent,
+        msie = ua.indexOf('MSIE ');
+
+      if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
+        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+
+      return 0;
+   }
   };
 });

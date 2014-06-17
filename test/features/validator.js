@@ -61,6 +61,10 @@ define(function () {
         expect(parsleyValidator.validate('17', parsleyValidator.validators.range([5, 10]))).not.to.be(true);
         $('body').append('<input type="text" id="element" value="7" max="20" min="2" />');
         expect($('#element').parsley().isValid()).to.be(true);
+
+        $('#element').remove();
+        $('body').append('<input type="range" id="element" value="7" max="20" min="2" />');
+        expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a type="number" validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('number'))).not.to.be(true);
@@ -159,6 +163,20 @@ define(function () {
         parsleyValidator.setLocale('fr');
         expect(parsleyValidator.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('Cette valeur doit contenir entre 3 et 6 caractères.');
         expect(parsleyValidator.getErrorMessage({ name: 'notexisting' })).to.be('Cette valeur semble non valide.');
+      });
+      it('should handle parametersTransformer for custom validators', function () {
+        parsleyValidator.addValidator('foo', function (requirements) {
+          return requirements;
+        }, 32, function (requirements) {
+          return { req: requirements };
+        });
+        expect(parsleyValidator.validators.foo().requirementsTransformer).to.be.a('function');
+        parsleyValidator.updateValidator('foo', function (requirements) {
+          return requirements;
+        }, 32);
+        expect(parsleyValidator.validators.foo().requirementsTransformer).to.be(undefined);
+        parsleyValidator.removeValidator('foo');
+        expect(parsleyValidator.validators.foo).to.be(undefined);
       });
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
