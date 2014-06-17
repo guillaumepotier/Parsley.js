@@ -96,13 +96,12 @@ define([
       this.options = $.extend(this.options, parsleyFormInstance ? parsleyFormInstance.OptionsFactory.get(parsleyFormInstance) : {}, ParsleyUtils.attr(this.$element, this.options.namespace));
 
       // Handle multiple name
-      if (this.options.multiple) {
+      if (this.options.multiple)
         multiple = this.options.multiple;
-      } else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length) {
+      else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
         multiple = name = this.$element.attr('name');
-      } else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length) {
+      else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
         multiple = this.$element.attr('id');
-      }
 
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
@@ -119,16 +118,17 @@ define([
       // Remove special chars
       multiple = multiple.replace(/(:|\.|\[|\]|\$)/g, '');
 
-      // Add proper `data-parsley-multiple` to siblings if we had a name
-      if ('undefined' !== typeof name)
+      // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
+      if ('undefined' !== typeof name) {
         $('input[name="' + name + '"]').each(function () {
           if ($(this).is('input[type=radio], input[type=checkbox]'))
             $(this).attr(that.options.namespace + 'multiple', multiple);
         });
+      }
 
       // Check here if we don't already have a related multiple instance saved
-      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length)
-        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++)
+      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length) {
+        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++) {
           if ('undefined' !== typeof $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley')) {
             parsleyMultipleInstance = $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley');
 
@@ -139,6 +139,8 @@ define([
 
             break;
           }
+        }
+      }
 
       // Create a secret ParsleyField instance for every multiple field. It would be stored in `data('ParsleyFieldMultiple')`
       // And would be useful later to access classic `ParsleyField` stuff while being in a `ParsleyFieldMultiple` instance

@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.0 - built Mon Jun 16 2014 13:09:29
+* Version 2.0.0 - built Tue Jun 17 2014 12:23:13
 * MIT Licensed
 *
 */
@@ -1774,6 +1774,11 @@
       }
       // Gather all constraints for each input in the multiple group
       for (var i = 0; i < this.$elements.length; i++) {
+        // Check if element have not been dynamically removed since last binding
+        if (!$('html').has(this.$elements[i]).length) {
+          this.$elements.splice(i, 1);
+          continue;
+        }
         fieldConstraints = this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints;
         for (var j = 0; j < fieldConstraints.length; j++)
           this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
@@ -1973,13 +1978,12 @@ if ('undefined' !== typeof window.ParsleyValidator)
       // Get parsleyFormInstance options if exist, mixed with element attributes
       this.options = $.extend(this.options, parsleyFormInstance ? parsleyFormInstance.OptionsFactory.get(parsleyFormInstance) : {}, ParsleyUtils.attr(this.$element, this.options.namespace));
       // Handle multiple name
-      if (this.options.multiple) {
+      if (this.options.multiple)
         multiple = this.options.multiple;
-      } else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length) {
+      else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
         multiple = name = this.$element.attr('name');
-      } else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length) {
+      else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
         multiple = this.$element.attr('id');
-      }
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
         return this.bind('parsleyFieldMultiple', parsleyFormInstance, multiple || this.__id__);
@@ -1991,15 +1995,16 @@ if ('undefined' !== typeof window.ParsleyValidator)
       }
       // Remove special chars
       multiple = multiple.replace(/(:|\.|\[|\]|\$)/g, '');
-      // Add proper `data-parsley-multiple` to siblings if we had a name
-      if ('undefined' !== typeof name)
+      // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
+      if ('undefined' !== typeof name) {
         $('input[name="' + name + '"]').each(function () {
           if ($(this).is('input[type=radio], input[type=checkbox]'))
             $(this).attr(that.options.namespace + 'multiple', multiple);
         });
+      }
       // Check here if we don't already have a related multiple instance saved
-      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length)
-        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++)
+      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length) {
+        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++) {
           if ('undefined' !== typeof $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley')) {
             parsleyMultipleInstance = $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley');
             if (!this.$element.data('ParsleyFieldMultiple')) {
@@ -2008,6 +2013,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
             }
             break;
           }
+        }
+      }
       // Create a secret ParsleyField instance for every multiple field. It would be stored in `data('ParsleyFieldMultiple')`
       // And would be useful later to access classic `ParsleyField` stuff while being in a `ParsleyFieldMultiple` instance
       this.bind('parsleyField', parsleyFormInstance, multiple, true);

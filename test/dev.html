@@ -56,7 +56,15 @@
     </form> -->
 
     <form id="parsley" data-parsley-validate>
-        <input type="text" name="date" id="date" required data-parsley-beforedate="Mon Jun 16 2014 12:21:58 GMT+0200 (CEST)">
+        <input type="checkbox" name="check[]" required data-parsley-check="[3, 5]" value="0">
+        <input type="checkbox" name="check[]" value="1">
+
+        <br/>
+
+        <div id="add">Add</div>
+        <div id="remove">Remove</div>
+
+        <br/>
         <input type="submit" />
         <input type="reset" onclick="javascript:$('#parsley').parsley().destroy();" />
     </form>
@@ -81,32 +89,40 @@
     <!-- <script src="../src/i18n/fr.js"></script> -->
 
     <script type="text/javascript">
-        window.ParsleyConfig = {
-            validators: {
-                beforedate: {
-                    fn: function (value, date) {
-                        console.log(date);
-                        return new Date(value) <= date;
-                    },
-                    priority: 32,
-                    requirementsTransformer: function (requirement) {
-                        console.log('here');
-                        return new Date(requirement);
-                    }
-                }
-            }
-        };
+        // window.ParsleyConfig = {
+        //     validators: {
+        //         beforedate: {
+        //             fn: function (value, date) {
+        //                 console.log(date);
+        //                 return new Date(value) <= date;
+        //             },
+        //             priority: 32,
+        //             requirementsTransformer: function (requirement) {
+        //                 console.log('here');
+        //                 return new Date(requirement);
+        //             }
+        //         }
+        //     }
+        // };
     </script>
 
-    <script src="../dist/parsley.js"></script>
+    <!-- <script src="../dist/parsley.js"></script> -->
     <!-- <script src="../bower_components/requirejs/require.js" data-main="./dev"></script></body> -->
+    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
     <!-- <script src="../src/i18n/it.js"></script> -->
 
     <script type="text/javascript">
-        // $(document).ready(function () {
-        //     $('#doesntwork').parsley({
-        //         namespace: 'data-validate-'
-        //     });
-        // });
+        $(document).ready(function () {
+            $('#add').on('click', function () {
+                $('[type=checkbox]:last').after('<input type="checkbox" name="check[]" value="' + (parseInt($('[type=checkbox]:last').val(), 10) + 1) + '">');
+            });
+
+            $('#remove').on('click', function () {
+                if ($('[type=checkbox]').length === 1)
+                    return;
+
+                $('[type=checkbox]:last').remove();
+            });
+        });
     </script>
 </html>
