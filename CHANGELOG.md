@@ -1,6 +1,6 @@
 # Parsley 2.x changelog
 
-## master
+## 2.0.1
 
   - fixed "attr.specified is deprecated." console warning (#608)
   - fixed package.json config with main dep (#617)
