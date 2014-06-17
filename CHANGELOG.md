@@ -8,6 +8,7 @@
   - added support for `requirementsTransformer` for custom validators
   - updated jQuery needed version from README and doc
   - fixed case when a multiple item were dynamically removed from DOM (#634)
+  - added proper `type="range"` support (#668)
 
 ## 2.0.0
 

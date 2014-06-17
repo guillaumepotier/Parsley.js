@@ -61,6 +61,10 @@ define(function () {
         expect(parsleyValidator.validate('17', parsleyValidator.validators.range([5, 10]))).not.to.be(true);
         $('body').append('<input type="text" id="element" value="7" max="20" min="2" />');
         expect($('#element').parsley().isValid()).to.be(true);
+
+        $('#element').remove();
+        $('body').append('<input type="range" id="element" value="7" max="20" min="2" />');
+        expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a type="number" validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('number'))).not.to.be(true);

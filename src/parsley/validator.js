@@ -119,6 +119,8 @@ define('parsley/validator', [
           case 'email':
             assert = new Validator.Assert().Email();
             break;
+          // range type just ensure we have a number here
+          case 'range':
           case 'number':
             assert = new Validator.Assert().Regexp('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
             break;
