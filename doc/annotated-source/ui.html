@@ -733,14 +733,13 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     _insertErrorWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fieldInstance)</span> {</span>
       <span class="hljs-keyword">var</span> $errorsContainer;
 
-      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer )
-        <span class="hljs-keyword">if</span> ($(fieldInstance.options.errorsContainer + <span class="hljs-string">''</span>).length)
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer) {
+        <span class="hljs-keyword">if</span> ($(fieldInstance.options.errorsContainer).length)
           <span class="hljs-keyword">return</span> $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (window.console &amp;&amp; window.console.warn)
           window.console.warn(<span class="hljs-string">'The errors container `'</span> + fieldInstance.options.errorsContainer + <span class="hljs-string">'` does not exist in DOM'</span>);
-
-
-      <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer)
+      }
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer)
         $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
 
       <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $errorsContainer &amp;&amp; $errorsContainer.length)
@@ -1008,7 +1007,9 @@ about success or failure have been displayed, always validate with this trigger 
       <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === parsleyInstance.__class__)
         <span class="hljs-keyword">return</span>;
 
-      parsleyInstance._ui.$errorsWrapper.remove();
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyInstance._ui)
+        parsleyInstance._ui.$errorsWrapper.remove();
+
       <span class="hljs-keyword">delete</span> parsleyInstance._ui;
     },
 

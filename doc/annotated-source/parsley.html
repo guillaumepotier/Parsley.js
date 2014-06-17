@@ -93,7 +93,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code>Parsley.js 2.0.0
+              <pre><code>Parsley.js 2.0.2
 http:<span class="hljs-comment">//parsleyjs.org</span>
 (c) <span class="hljs-number">20012</span>-<span class="hljs-number">2014</span> Guillaume Potier, Wisembly
 Parsley may be freely distributed under the MIT license.
@@ -297,7 +297,7 @@ define([</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> Parsley = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(element, options, parsleyFormInstance)</span> {</span>
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Parsley'</span>;
-    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'2.0.0'</span>;
+    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'2.0.2'</span>;
     <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.hash(<span class="hljs-number">4</span>);</pre></div></div>
             
         </li>
@@ -468,13 +468,12 @@ Maybe some refacto would be appreciated here..</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple) {
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple)
         multiple = <span class="hljs-keyword">this</span>.options.multiple;
-      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>).length) {
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>).length)
         multiple = name = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>);
-      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>).length) {
-        multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>);
-      }</pre></div></div>
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>).length)
+        multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>);</pre></div></div>
             
         </li>
         
@@ -536,15 +535,16 @@ Maybe some refacto would be appreciated here..</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Add proper <code>data-parsley-multiple</code> to siblings if we had a name</p>
+              <p>Add proper <code>data-parsley-multiple</code> to siblings if we have a valid multiple name</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> name)
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> name) {
         $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
           <span class="hljs-keyword">if</span> ($(<span class="hljs-keyword">this</span>).is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>))
             $(<span class="hljs-keyword">this</span>).attr(that.options.namespace + <span class="hljs-string">'multiple'</span>, multiple);
-        });</pre></div></div>
+        });
+      }</pre></div></div>
             
         </li>
         
@@ -559,8 +559,8 @@ Maybe some refacto would be appreciated here..</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ($(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).length)
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; $(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).length; i++)
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ($(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).length) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; $(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).length; i++) {
           <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $($(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).get(i)).data(<span class="hljs-string">'Parsley'</span>)) {
             parsleyMultipleInstance = $($(<span class="hljs-string">'['</span> + <span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple='</span> + multiple +<span class="hljs-string">']'</span>).get(i)).data(<span class="hljs-string">'Parsley'</span>);
 
@@ -570,7 +570,9 @@ Maybe some refacto would be appreciated here..</p>
             }
 
             <span class="hljs-keyword">break</span>;
-          }</pre></div></div>
+          }
+        }
+      }</pre></div></div>
             
         </li>
         

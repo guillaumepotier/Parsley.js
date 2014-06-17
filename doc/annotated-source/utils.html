@@ -118,6 +118,7 @@ if attr is given, returns bool if attr present in DOM or not</p>
       <span class="hljs-keyword">var</span>
         attribute,
         obj = {},
+        msie = <span class="hljs-keyword">this</span>.msieversion(),
         regex = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'^'</span> + namespace, <span class="hljs-string">'i'</span>);
 
       <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> $element || <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> $element[<span class="hljs-number">0</span>])
@@ -126,7 +127,7 @@ if attr is given, returns bool if attr present in DOM or not</p>
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> $element[<span class="hljs-number">0</span>].attributes) {
         attribute = $element[<span class="hljs-number">0</span>].attributes[i];
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> attribute &amp;&amp; <span class="hljs-literal">null</span> !== attribute &amp;&amp; attribute.specified &amp;&amp; regex.test(attribute.name)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> attribute &amp;&amp; <span class="hljs-literal">null</span> !== attribute &amp;&amp; (!msie || msie &gt;= <span class="hljs-number">8</span> || attribute.specified) &amp;&amp; regex.test(attribute.name)) {
           <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> checkAttr &amp;&amp; <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(checkAttr + <span class="hljs-string">'$'</span>, <span class="hljs-string">'i'</span>).test(attribute.name))
             <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 
@@ -274,7 +275,32 @@ if attr is given, returns bool if attr present in DOM or not</p>
         .replace(<span class="hljs-regexp">/([a-z\d])([A-Z])/g</span>, <span class="hljs-string">'$1_$2'</span>)
         .replace(<span class="hljs-regexp">/_/g</span>, <span class="hljs-string">'-'</span>)
         .toLowerCase();
-    }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p><a href="http://support.microsoft.com/kb/167820">http://support.microsoft.com/kb/167820</a>
+<a href="http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie">http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    msieversion: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">var</span>
+        ua = window.navigator.userAgent,
+        msie = ua.indexOf(<span class="hljs-string">'MSIE '</span>);
+
+      <span class="hljs-keyword">if</span> (msie &gt; <span class="hljs-number">0</span> || !!navigator.userAgent.match(<span class="hljs-regexp">/Trident.*rv\:11\./</span>))
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(ua.substring(msie + <span class="hljs-number">5</span>, ua.indexOf(<span class="hljs-string">'.'</span>, msie)), <span class="hljs-number">10</span>);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+   }
   };
 });</pre></div></div>
             

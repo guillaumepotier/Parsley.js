@@ -126,7 +126,7 @@
       <span class="hljs-keyword">this</span>.catalog = catalog;
 
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> validators)
-        <span class="hljs-keyword">this</span>.addValidator(name, validators[name].fn, validators[name].priority);
+        <span class="hljs-keyword">this</span>.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
 
       $.emit(<span class="hljs-string">'parsley:validator:init'</span>);
     },</pre></div></div>
@@ -215,16 +215,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    addValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, fn, priority)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    addValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, fn, priority, requirementsTransformer)</span> {</span>
       <span class="hljs-keyword">this</span>.validators[name.toLowerCase()] = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(requirements)</span> {</span>
-        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Callback(fn, requirements), { priority: priority });
+        <span class="hljs-keyword">return</span> $.extend(<span class="hljs-keyword">new</span> Validator.Assert().Callback(fn, requirements), {
+          priority: priority,
+          requirementsTransformer: requirementsTransformer
+        });
       };
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     },
 
-    updateValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, fn, priority)</span> {</span>
-      <span class="hljs-keyword">return</span> addValidator(name, fn, priority);
+    updateValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name, fn, priority, requirementsTransformer)</span> {</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addValidator(name, fn, priority, requirementsTransformer);
     },
 
     removeValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name)</span> {</span>
@@ -309,7 +312,22 @@ and a Parsley priority set</p>
         <span class="hljs-keyword">switch</span> (type) {
           <span class="hljs-keyword">case</span> <span class="hljs-string">'email'</span>:
             assert = <span class="hljs-keyword">new</span> Validator.Assert().Email();
-            <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>range type just ensure we have a number here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">case</span> <span class="hljs-string">'range'</span>:
           <span class="hljs-keyword">case</span> <span class="hljs-string">'number'</span>:
             assert = <span class="hljs-keyword">new</span> Validator.Assert().Regexp(<span class="hljs-string">'^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$'</span>);
             <span class="hljs-keyword">break</span>;
@@ -337,11 +355,11 @@ and a Parsley priority set</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern</p>
 
@@ -352,11 +370,11 @@ and a Parsley priority set</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Replace the regexp literal string with the first match group: ([gimy]*)
 If no flag is present, this will be a blank string</p>
@@ -368,11 +386,11 @@ If no flag is present, this will be a blank string</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Again, replace the regexp literal string with the first match group:
 everything excluding the opening and closing slashes and the flags</p>
