@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
   "main": "./dist/parsley.js",
-  "repository" : {
+  "repository": {
     "type": "git",
     "url": "https://github.com/guillaumepotier/Parsley.js.git"
   },
