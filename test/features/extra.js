@@ -1,4 +1,5 @@
 define('features/extra', [
+  'extra/validator/comparison',
   'extra/validator/dateiso'
 ], function () {
 
@@ -13,6 +14,62 @@ define('features/extra', [
         expect(parsleyValidator.validate('1986-30-01', parsleyValidator.validators.dateiso())).not.to.be(true);
         expect(parsleyValidator.validate('1986-12-45', parsleyValidator.validators.dateiso())).not.to.be(true);
         expect(parsleyValidator.validate('1986-12-01', parsleyValidator.validators.dateiso())).to.be(true);
+      });
+      it('should have gt validator', function () {
+        expect(window.ParsleyValidator.validators).to.have.key('gt');
+        var number = 5;
+
+        $('body').append('<input type="text" id="element" data-parsley-gt="#gt" required /><input type="text" id="gt" value="' + number + '" />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number + 1);
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#element').val(number);
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number - 1);
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#gt').remove();
+      });
+      it('should have gte validator', function () {
+        expect(window.ParsleyValidator.validators).to.have.key('gte');
+        var number = 5;
+
+        $('body').append('<input type="text" id="element" data-parsley-gte="#gte" required /><input type="text" id="gte" value="' + number + '" />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number + 1);
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#element').val(number);
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#element').val(number - 1);
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#gte').remove();
+      });
+      it('should have lt validator', function () {
+        expect(window.ParsleyValidator.validators).to.have.key('lt');
+        var number = 5;
+
+        $('body').append('<input type="text" id="element" data-parsley-lt="#lt" required /><input type="text" id="lt" value="' + number + '" />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number + 1);
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number);
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number - 1);
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#lt').remove();
+      });
+      it('should have lte validator', function () {
+        expect(window.ParsleyValidator.validators).to.have.key('lte');
+        var number = 5;
+
+        $('body').append('<input type="text" id="element" data-parsley-lte="#lte" required /><input type="text" id="lte" value="' + number + '" />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number + 1);
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val(number);
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#element').val(number - 1);
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#lte').remove();
       });
       it('should have a bind.js plugin allowing to give pure json validation config to parsley constructor', function (done) {
         require(['extra/plugin/bind'], function () {
