@@ -21,7 +21,7 @@ define('parsley/factory/constraint', [
 
     // If validator have a requirementsTransformer, execute it
     if ('function' === typeof window.ParsleyValidator.validators[name](requirements).requirementsTransformer)
-      requirements = window.ParsleyValidator.validators[name](requirements).requirementsTransformer();
+      requirements = window.ParsleyValidator.validators[name](requirements).requirementsTransformer(requirements);
 
     return $.extend(window.ParsleyValidator.validators[name](requirements), {
       name: name,
