@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.2 - built Tue Jun 17 2014 15:25:35
+* Version 2.0.2 - built Mon Jul 21 2014 11:15:25
 * MIT Licensed
 *
 */
@@ -13,7 +13,10 @@
     // No AMD. Register plugin with global jQuery object.
     factory(jQuery);
   }
-}(function () {
+}(function ($) {
+  // small hack for requirejs if jquery loaded through map and not path
+  if ('undefined' === typeof $ && 'undefined' !== typeof window.jQuery)
+    $ = window.jQuery;
   var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -1915,10 +1918,10 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
   max:            "This value should be lower than or equal to %s.",
   range:          "This value should be between %s and %s.",
   minlength:      "This value is too short. It should have %s characters or more.",
-  maxlength:      "This value is too long. It should have %s characters or less.",
+  maxlength:      "This value is too long. It should have %s characters or fewer.",
   length:         "This value length is invalid. It should be between %s and %s characters long.",
   mincheck:       "You must select at least %s choices.",
-  maxcheck:       "You must select %s choices or less.",
+  maxcheck:       "You must select %s choices or fewer.",
   check:          "You must select between %s and %s choices.",
   equalto:        "This value should be the same."
 });

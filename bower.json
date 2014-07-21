@@ -25,7 +25,9 @@
   "keywords": [
     "parsley",
     "form",
-    "validation"
+    "validation",
+    "html5",
+    "polyfill"
   ],
   "author": {
     "name": "Guillaume Potier",

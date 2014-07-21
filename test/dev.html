@@ -106,23 +106,23 @@
         // };
     </script>
 
-    <!-- <script src="../dist/parsley.js"></script> -->
+    <script src="../dist/parsley.js"></script>
     <!-- <script src="../bower_components/requirejs/require.js" data-main="./dev"></script></body> -->
-    <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body>
+    <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
     <!-- <script src="../src/i18n/it.js"></script> -->
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#add').on('click', function () {
-                $('[type=checkbox]:last').after('<input type="checkbox" name="check[]" value="' + (parseInt($('[type=checkbox]:last').val(), 10) + 1) + '">');
-            });
+        // $(document).ready(function () {
+        //     $('#add').on('click', function () {
+        //         $('[type=checkbox]:last').after('<input type="checkbox" name="check[]" value="' + (parseInt($('[type=checkbox]:last').val(), 10) + 1) + '">');
+        //     });
 
-            $('#remove').on('click', function () {
-                if ($('[type=checkbox]').length === 1)
-                    return;
+        //     $('#remove').on('click', function () {
+        //         if ($('[type=checkbox]').length === 1)
+        //             return;
 
-                $('[type=checkbox]:last').remove();
-            });
-        });
+        //         $('[type=checkbox]:last').remove();
+        //     });
+        // });
     </script>
 </html>

@@ -11,8 +11,8 @@ requirejs.config({
 
     map: {
       '*': {
-        'jquery': 'vendors/jquery/jquery',
-        'validator': 'vendors/validator.js/dist/validator'
+        jquery: 'vendors/jquery/jquery',
+        validator: 'vendors/validator.js/dist/validator'
       }
     },
 
