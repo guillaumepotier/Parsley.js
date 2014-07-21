@@ -44,7 +44,7 @@ define('parsley/validator', [
 
     // Add a specific message for a given constraint in a given locale
     addMessage: function (locale, name, message) {
-      if (undefined === typeof this.catalog[locale])
+      if ('undefined' === typeof this.catalog[locale])
         this.catalog[locale] = {};
 
       this.catalog[locale][name.toLowerCase()] = message;
