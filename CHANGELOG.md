@@ -1,9 +1,12 @@
 # Parsley 2.x changelog
 
+## 2.0.3
+
+  - fix not AMD loading for Wordpress case (#685)
+
 ## 2.0.2
 
   - proper version number in `dist/` files
-  - fix not AMD loading for Wordpress case (#685)
 
 ## 2.0.1
 

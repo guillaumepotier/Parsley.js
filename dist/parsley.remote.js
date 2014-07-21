@@ -259,7 +259,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.2 - built Mon Jul 21 2014 09:49:29
+* Version 2.0.3 - built Mon Jul 21 2014 11:56:56
 * MIT Licensed
 *
 */
@@ -272,6 +272,10 @@ window.ParsleyConfig.validators.remote = {
     factory(jQuery);
   }
 }(function ($) {
+  // small hack for requirejs if jquery is loaded through map and not path
+  // see http://requirejs.org/docs/jquery.html
+  if ('undefined' === typeof $ && 'undefined' !== typeof window.jQuery)
+    $ = window.jQuery;
   var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -1226,7 +1230,7 @@ window.ParsleyConfig.validators.remote = {
     },
     // Add a specific message for a given constraint in a given locale
     addMessage: function (locale, name, message) {
-      if (undefined === typeof this.catalog[locale])
+      if ('undefined' === typeof this.catalog[locale])
         this.catalog[locale] = {};
       this.catalog[locale][name.toLowerCase()] = message;
       return this;
@@ -2184,7 +2188,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.0.2
+//     Parsley.js 2.0.3
 //     http://parsleyjs.org
 //     (c) 20012-2014 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2192,7 +2196,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### Parsley factory
   var Parsley = function (element, options, parsleyFormInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.2';
+    this.__version__ = '2.0.3';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
