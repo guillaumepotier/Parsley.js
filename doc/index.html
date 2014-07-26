@@ -393,7 +393,11 @@
             <tbody>
               <tr>
                 <td><code>isValid(force)</code> <version>#2.0</version></td>
-                <td><code>boolean</code></td>
+                <td>
+                  <code>true</code> if all ok<br/>
+                  <code>[]</code> if empty optional field<br/>
+                  <code>[Violation [, Violation..]]</code> if fails
+                </td>
                 <td>Returns if the Field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>force</code> is given, it forces validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
