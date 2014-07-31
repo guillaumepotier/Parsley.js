@@ -225,7 +225,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
   _handleRemoteResult: function (validator, xhr, deferred) {
     // If true, simply resolve and exit
-    if ('function' === typeof this.asyncValidators[validator].fn && this.asyncValidators[validator].fn(xhr)) {
+    if ('function' === typeof this.asyncValidators[validator].fn && this.asyncValidators[validator].fn.call(this, xhr)) {
       deferred.resolveWith(this);
 
       return;
