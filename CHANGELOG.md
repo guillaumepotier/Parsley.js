@@ -1,5 +1,8 @@
 # Parsley 2.x changelog
 
+
+  - added ParsleyField context to asyncValidator callback functions (#702)
+
 ## 2.0.3
 
   - fix not AMD loading for Wordpress case (#685)
