@@ -73,7 +73,7 @@ require(['config'], function () {
             // beforeEach(function () {
             //   window.ParsleyConfig = $.extend(true, {}, window.ParsleyConfig, { excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[disabled]' });
             // });
-            remote();
+            remote(ParsleyExtend);
             abstract(Parsley);
             field(ParsleyField, Parsley);
             form(ParsleyForm, Parsley);
