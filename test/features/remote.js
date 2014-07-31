@@ -2,7 +2,7 @@ define('features/remote', [
   'extra/plugin/remote',
 ], function (ParsleyExtend) {
 
-  // Preseve ParsleyExtend in order to load it only when needed by this suite and do not alter other tests runned before
+  // Preserve ParsleyExtend in order to load it only when needed by this suite and do not alter other tests run before
   window._remoteParsleyExtend = window.ParsleyExtend;
   window._remoteParsleyConfig = window.ParsleyConfig;
   window.ParsleyExtend = window.ParsleyExtend || {};
@@ -120,7 +120,7 @@ define('features/remote', [
             done();
           });
       });
-      it('should save some calls for querries already done', function (done) {
+      it('should save some calls for queries already done', function (done) {
         $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" required name="element" value="foo" />');
         var parsleyInstance = $('#element').parsley();
 
@@ -178,7 +178,6 @@ define('features/remote', [
               });
           });
       });
-
       it('should handle remote validator option with custom url', function (done) {
         $('body').append('<input type="text" data-parsley-remote id="element" data-parsley-remote-validator="mycustom" required name="element" value="foobar" />');
         var parsleyInstance = $('#element').parsley();
@@ -195,7 +194,22 @@ define('features/remote', [
             done();
           });
       });
+      it('should have PluginField as the `this` context of the AJAX callback', function(done) {
+        $('body').append('<input type="text" data-parsley-remote id="element" data-parsley-remote-validator="mycustom" required name="element" value="foobar" />');
+        var parsleyInstance = $('#element').parsley();
 
+        parsleyInstance.addAsyncValidator('mycustom', function (xhr) {
+          expect(this.__class__).to.be('ParsleyField');
+        }, 'http://foobar.baz');
+
+        sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
+        parsleyInstance.asyncIsValid()
+          .fail(function () {
+            expect($.ajax.calledWithMatch({ url: "http://foobar.baz" })).to.be(true);
+            $.ajax.restore();
+            done();
+          });
+      });
       it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         if ($('#element').length)
