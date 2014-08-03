@@ -1,6 +1,7 @@
 define('features/extra', [
   'extra/validator/comparison',
-  'extra/validator/dateiso'
+  'extra/validator/dateiso',
+  'extra/validator/words',
 ], function () {
 
   return function (ParsleyValidator) {
@@ -70,6 +71,35 @@ define('features/extra', [
         $('#element').val(number - 1);
         expect($('#element').psly().isValid()).to.be(true);
         $('#lte').remove();
+      });
+      it('should have a minwords validator', function () {
+        expect(window.ParsleyValidator.validators).to.have.key('minwords');
+        $('body').append('<input type="text" id="element" data-parsley-minwords="2" required />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val('foo');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val('foo bar');
+        expect($('#element').psly().isValid()).to.be(true);
+      });
+      it('should have a maxwords validator', function () {
+        expect(window.ParsleyValidator.validators).to.have.key('maxwords');
+        $('body').append('<input type="text" id="element" data-parsley-maxwords="2" required />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val('foo bar');
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#element').val('foo bar baz');
+        expect($('#element').psly().isValid()).to.be(false);
+      });
+      it('should have a words validator', function () {
+        expect(window.ParsleyValidator.validators).to.have.key('words');
+        $('body').append('<input type="text" id="element" data-parsley-words="[2, 4]" required />');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val('foo');
+        expect($('#element').psly().isValid()).to.be(false);
+        $('#element').val('foo bar baz');
+        expect($('#element').psly().isValid()).to.be(true);
+        $('#element').val('foo bar baz qux bux');
+        expect($('#element').psly().isValid()).to.be(false);
       });
       it('should have a bind.js plugin allowing to give pure json validation config to parsley constructor', function (done) {
         require(['extra/plugin/bind'], function () {
