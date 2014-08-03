@@ -73,6 +73,21 @@ define(function () {
           expect(parsleyForm.isValid('foo')).to.be(true);
           expect(parsleyForm.isValid('bar')).to.be(false);
       });
+      it('should handle group validation with controls with multiple group names', function () {
+        $('body').append(
+          '<form id="element">'                                                                        +
+            '<input id="field1" type="text" data-parsley-group=\'["foo", "baz"]\' data-parsley-required="true" />'  +
+            '<div id="field2"></div>'                                                                  +
+            '<textarea id="field3" data-parsley-group="bar" data-parsley-required="true"></textarea>'  +
+          '</form>');
+          var parsleyForm = new Parsley($('#element'));
+          expect(parsleyForm.isValid()).to.be(false);
+          $('#field1').val('value');
+          expect(parsleyForm.isValid()).to.be(false);
+          expect(parsleyForm.isValid('foo')).to.be(true);
+          expect(parsleyForm.isValid('baz')).to.be(true);
+          expect(parsleyForm.isValid('bar')).to.be(false);
+      });
       it('should handle `onFormSubmit` validation', function () {
         $('body').append(
           '<form id="element" data-parsley-trigger="change">'                 +
