@@ -1,7 +1,9 @@
 # Parsley 2.x changelog
 
+## next stable release
 
   - added ParsleyField context to asyncValidator callback functions (#702)
+  - fixed AMD loading of Validator.js (#691, #693)
 
 ## 2.0.3
 

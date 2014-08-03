@@ -16,7 +16,7 @@
   ],
   "devDependencies": {
     "jquery": "~1.10.0",
-    "validator.js": "~0.5.8",
+    "validator.js": "~1.0.0",
     "requirejs": "~2.1.0",
     "bootstrap": "~3.0.3",
     "sinonjs": "~1.7.3",

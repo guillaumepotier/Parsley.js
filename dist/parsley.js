@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.3 - built Mon Jul 21 2014 11:56:56
+* Version 2.0.3 - built Sun Aug 03 2014 18:29:10
 * MIT Licensed
 *
 */
@@ -197,20 +197,20 @@
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 0.5.8 - built Sun Mar 16 2014 17:18:21
+* Version 1.0.0 - built Sun Aug 03 2014 17:42:31
 * MIT Licensed
 *
 */
-( function ( exports ) {
+( function ( ) {
+  var exports = {};
   /**
   * Validator
   */
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '0.5.8';
+    this.__version__ = '1.0.0';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
-    return this;
   };
   Validator.prototype = {
     constructor: Validator,
@@ -293,27 +293,37 @@
         throw new Error( 'Should give a valid mapping object to Constraint', err, data );
       }
     }
-    return this;
   };
   Constraint.prototype = {
     constructor: Constraint,
     check: function ( object, group ) {
       var result, failures = {};
-      // check all constraint nodes if strict validation enabled. Else, only object nodes that have a constraint
-      for ( var property in this.options.strict ? this.nodes : object ) {
-        if ( this.options.strict ? this.has( property, object ) : this.has( property ) ) {
-          result = this._check( property, object[ property ], group );
-          // check returned an array of Violations or an object mapping Violations
-          if ( ( _isArray( result ) && result.length > 0 ) || ( !_isArray( result ) && !_isEmptyObject( result ) ) )
-            failures[ property ] = result;
-        // in strict mode, get a violation for each constraint node not in object
-        } else if ( this.options.strict ) {
-          try {
+      // check all constraint nodes.
+      for ( var property in this.nodes ) {
+        var isRequired = false;
+        var constraint = this.get(property);
+        var constraints = _isArray( constraint ) ? constraint : [constraint];
+        for (var i = constraints.length - 1; i >= 0; i--) {
+          if ( 'Required' === constraints[i].__class__ ) {
+            isRequired = constraints[i].requiresValidation( group );
+            continue;
+          }
+        }
+        if ( ! this.has( property, object ) && ! this.options.strict && ! isRequired ) {
+          continue;
+        }
+        try {
+          if (! this.has( property, this.options.strict || isRequired ? object : undefined ) ) {
             // we trigger here a HaveProperty Assert violation to have uniform Violation object in the end
             new Assert().HaveProperty( property ).validate( object );
-          } catch ( violation ) {
-            failures[ property ] = violation;
           }
+          result = this._check( property, object[ property ], group );
+          // check returned an array of Violations or an object mapping Violations
+          if ( ( _isArray( result ) && result.length > 0 ) || ( !_isArray( result ) && !_isEmptyObject( result ) ) ) {
+            failures[ property ] = result;
+          }
+        } catch ( violation ) {
+          failures[ property ] = violation;
         }
       }
       return _isEmptyObject(failures) ? true : failures;
@@ -422,14 +432,18 @@
     this.groups = [];
     if ( 'undefined' !== typeof group )
       this.addGroup( group );
-    return this;
   };
   Assert.prototype = {
     construct: Assert,
-    check: function ( value, group ) {
+    requiresValidation: function ( group ) {
       if ( group && !this.hasGroup( group ) )
-        return;
+        return false;
       if ( !group && this.hasGroups() )
+        return false;
+      return true;
+    },
+    check: function ( value, group ) {
+      if ( !this.requiresValidation( group ) )
         return;
       try {
         return this.validate( value, group );
@@ -533,9 +547,9 @@
       };
       return this;
     },
-    Collection: function ( constraint ) {
+    Collection: function ( assertOrConstraint ) {
       this.__class__ = 'Collection';
-      this.constraint = 'undefined' !== typeof constraint ? new Constraint( constraint ) : false;
+      this.constraint = 'undefined' !== typeof assertOrConstraint ? (assertOrConstraint instanceof Assert ? assertOrConstraint : new Constraint( assertOrConstraint )) : false;
       this.validate = function ( collection, group ) {
         var result, validator = new Validator(), count = 0, failures = {}, groups = this.groups.length ? this.groups : group;
         if ( !_isArray( collection ) )
@@ -575,19 +589,6 @@
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
         if ( !regExp.test( value ) )
           throw new Violation( this, value );
-        return true;
-      };
-      return this;
-    },
-    Eql: function ( eql ) {
-      this.__class__ = 'Eql';
-      if ( 'undefined' === typeof eql )
-        throw new Error( 'Equal must be instanciated with an Array or an Object' );
-      this.eql = eql;
-      this.validate = function ( value ) {
-        var eql = 'function' === typeof this.eql ? this.eql( value ) : this.eql;
-        if ( !expect.eql( eql, value ) )
-          throw new Violation( this, value, { eql: eql } );
         return true;
       };
       return this;
@@ -645,18 +646,6 @@
       };
       return this;
     },
-    IPv4: function () {
-      this.__class__ = 'IPv4';
-      this.validate = function ( value ) {
-        var regExp = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-        if ( 'string' !== typeof value )
-          throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-        if ( !regExp.test( value ) )
-          throw new Violation( this, value );
-        return true;
-      };
-      return this;
-    },
     Length: function ( boundaries ) {
       this.__class__ = 'Length';
       if ( !boundaries.min && !boundaries.max )
@@ -700,18 +689,6 @@
           throw new Violation( this, value, { value: Validator.errorCode.must_be_a_number } );
         if ( this.threshold < value )
           throw new Violation( this, value, { threshold: this.threshold } );
-        return true;
-      };
-      return this;
-    },
-    Mac: function () {
-      this.__class__ = 'Mac';
-      this.validate = function ( value ) {
-        var regExp = /^(?:[0-9A-F]{2}:){5}[0-9A-F]{2}$/i;
-        if ( 'string' !== typeof value )
-          throw new Violation( this, value, { value: Validator.errorCode.must_be_a_string } );
-        if ( !regExp.test( value ) )
-          throw new Violation( this, value );
         return true;
       };
       return this;
@@ -871,76 +848,22 @@
   var _isArray = function ( obj ) {
     return Object.prototype.toString.call( obj ) === '[object Array]';
   };
-  // https://github.com/LearnBoost/expect.js/blob/master/expect.js
-  var expect = {
-    eql: function ( actual, expected ) {
-      if ( actual === expected ) {
-        return true;
-      } else if ( 'undefined' !== typeof Buffer && Buffer.isBuffer( actual ) && Buffer.isBuffer( expected ) ) {
-        if ( actual.length !== expected.length ) return false;
-        for ( var i = 0; i < actual.length; i++ )
-          if ( actual[i] !== expected[i] ) return false;
-        return true;
-      } else if ( actual instanceof Date && expected instanceof Date ) {
-        return actual.getTime() === expected.getTime();
-      } else if ( typeof actual !== 'object' && typeof expected !== 'object' ) {
-        // loosy ==
-        return actual == expected;
-      } else {
-        return this.objEquiv(actual, expected);
-      }
-    },
-    isUndefinedOrNull: function ( value ) {
-      return value === null || typeof value === 'undefined';
-    },
-    isArguments: function ( object ) {
-      return Object.prototype.toString.call(object) == '[object Arguments]';
-    },
-    keys: function ( obj ) {
-      if ( Object.keys )
-        return Object.keys( obj );
-      var keys = [];
-      for ( var i in obj )
-        if ( Object.prototype.hasOwnProperty.call( obj, i ) )
-          keys.push(i);
-      return keys;
-    },
-    objEquiv: function ( a, b ) {
-      if ( this.isUndefinedOrNull( a ) || this.isUndefinedOrNull( b ) )
-        return false;
-      if ( a.prototype !== b.prototype ) return false;
-      if ( this.isArguments( a ) ) {
-        if ( !this.isArguments( b ) )
-          return false;
-        return eql( pSlice.call( a ) , pSlice.call( b ) );
-      }
-      try {
-        var ka = this.keys( a ), kb = this.keys( b ), key, i;
-        if ( ka.length !== kb.length )
-          return false;
-        ka.sort();
-        kb.sort();
-        for ( i = ka.length - 1; i >= 0; i-- )
-          if ( ka[ i ] != kb[ i ] )
-            return false;
-        for ( i = ka.length - 1; i >= 0; i-- ) {
-          key = ka[i];
-          if ( !this.eql( a[ key ], b[ key ] ) )
-             return false;
-        }
-        return true;
-      } catch ( e ) {
-        return false;
-      }
-    }
-  };
-  // AMD Compliance
-  if ( "function" === typeof define && define.amd ) {
-    define( 'validator', [],function() { return exports; } );
+  // AMD export
+  if ( typeof define === 'function' && define.amd ) {
+    define( 'vendors/validator.js/dist/validator',[],function() {
+      return exports;
+    } );
+  // commonjs export
+  } else if ( typeof module !== 'undefined' && module.exports ) {
+    module.exports = exports;
+  // browser
+  } else {
+    window[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = exports;
   }
-} )( 'undefined' === typeof exports ? this[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = {} : exports );
+} )( );
 
-
+  // This is needed for Browserify usage that requires Validator.js through module.exports
+  Validator = 'undefined' !== typeof Validator ? Validator : module.exports;
   var ParsleyValidator = function (validators, catalog) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
