@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.3 - built Sun Aug 03 2014 18:29:10
+* Version 2.0.3 - built Mon Aug 04 2014 09:17:18
 * MIT Licensed
 *
 */
@@ -1437,7 +1437,7 @@
       // loop through fields to validate them one by one
       for (var i = 0; i < this.fields.length; i++) {
         // do not validate a field if not the same as given validation group
-        if (group && group !== this.fields[i].options.group)
+        if (group && !this._isFieldInGroup(this.fields[i], group))
           continue;
         fieldValidationResult = this.fields[i].validate(force);
         if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
@@ -1451,12 +1451,17 @@
       this._refreshFields();
       for (var i = 0; i < this.fields.length; i++) {
         // do not validate a field if not the same as given validation group
-        if (group && group !== this.fields[i].options.group)
+        if (group && !this._isFieldInGroup(this.fields[i], group))
           continue;
         if (false === this.fields[i].isValid(force))
           return false;
       }
       return true;
+    },
+    _isFieldInGroup: function (field, group) {
+      if(ParsleyUtils.isArray(field.options.group))
+        return -1 !== $.inArray(field.options.group, group);
+      return field.options.group === group;
     },
     _refreshFields: function () {
       return this.actualizeOptions()._bindFields();

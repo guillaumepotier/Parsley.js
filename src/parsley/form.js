@@ -77,9 +77,8 @@ define('parsley/form', [
     },
 
     _isFieldInGroup: function (field, group) {
-      if(ParsleyUtils.isArray(field.options.group)){
-        return $.inArray(field.options.group, group) > -1;
-      }
+      if(ParsleyUtils.isArray(field.options.group))
+        return -1 !== $.inArray(field.options.group, group);
       return field.options.group === group;
     },
 
