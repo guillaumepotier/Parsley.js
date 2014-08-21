@@ -2,6 +2,8 @@
 
 ## next stable release
 
+## 2.0.4
+
   - added ParsleyField context to asyncValidator callback functions (#702)
   - fixed AMD loading of Validator.js (#691, #693)
   - added extra/words.js validators (#700)
