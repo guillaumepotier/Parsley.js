@@ -3,7 +3,7 @@ define('parsley/validator', [
 ], function (Validator) {
 
   // This is needed for Browserify usage that requires Validator.js through module.exports
-  Validator = 'undefined' !== typeof Validator ? Validator : module.exports;
+  var Validator = 'undefined' !== typeof Validator ? Validator : module.exports;
 
   var ParsleyValidator = function (validators, catalog) {
     this.__class__ = 'ParsleyValidator';
