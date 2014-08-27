@@ -240,8 +240,11 @@ define('parsley/ui', [
       // Store it in fieldInstance for later
       fieldInstance._ui = _ui;
 
-      /** Mess with DOM now **/
-      this._insertErrorWrapper(fieldInstance);
+      // Stops excluded inputs from getting errorContainer added
+      if( !fieldInstance.$element.is(fieldInstance.options.excluded) ) {
+        /** Mess with DOM now **/
+        this._insertErrorWrapper(fieldInstance);
+      }
 
       // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
