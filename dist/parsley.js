@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.4 - built Wed Aug 27 2014 14:36:06
+* Version 2.0.4 - built Wed Aug 27 2014 20:08:31
 * MIT Licensed
 *
 */
@@ -909,13 +909,7 @@ var Validator = ( function ( ) {
   } else {
     window[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = exports;
   }
-
-
-  return {
-    Validator: Validator
-    ,Assert: Assert
-  }
-} )( );
+return {Assert:Assert,Validator:Validator} } )( );
 
 
   // This is needed for Browserify usage that requires Validator.js through module.exports
@@ -1366,10 +1360,9 @@ var Validator = ( function ( ) {
       // Give field its Parsley id in DOM
       fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
 
-
-        /** Generate important UI elements and store them in fieldInstance **/
-        // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes
-        _ui.$errorClassHandler = this._manageClassHandler(fieldInstance);
+      /** Generate important UI elements and store them in fieldInstance **/
+      // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes
+      _ui.$errorClassHandler = this._manageClassHandler(fieldInstance);
 
       // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
       _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
@@ -1395,7 +1388,6 @@ var Validator = ( function ( ) {
 
     // Determine which element will have `parsley-error` and `parsley-success` classes
     _manageClassHandler: function (fieldInstance) {
-
       // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
       if ('string' === typeof fieldInstance.options.classHandler && $(fieldInstance.options.classHandler).length)
         return $(fieldInstance.options.classHandler);

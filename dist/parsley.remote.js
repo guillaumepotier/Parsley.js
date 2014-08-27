@@ -259,7 +259,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.4 - built Wed Aug 27 2014 14:36:06
+* Version 2.0.4 - built Wed Aug 27 2014 20:06:30
 * MIT Licensed
 *
 */
@@ -508,7 +508,7 @@ window.ParsleyConfig.validators.remote = {
 * MIT Licensed
 *
 */
-( function ( ) {
+var Validator = ( function ( ) {
   var exports = {};
   /**
   * Validator
@@ -1167,7 +1167,7 @@ window.ParsleyConfig.validators.remote = {
   } else {
     window[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = exports;
   }
-} )( );
+return {Assert:Assert,Validator:Validator} } )( );
 
 
   // This is needed for Browserify usage that requires Validator.js through module.exports
@@ -1634,8 +1634,11 @@ window.ParsleyConfig.validators.remote = {
       // Store it in fieldInstance for later
       fieldInstance._ui = _ui;
 
-      /** Mess with DOM now **/
-      this._insertErrorWrapper(fieldInstance);
+      // Stops excluded inputs from getting errorContainer added
+      if( !fieldInstance.$element.is(fieldInstance.options.excluded) ) {
+        /** Mess with DOM now **/
+        this._insertErrorWrapper(fieldInstance);
+      }
 
       // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
