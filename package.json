@@ -37,6 +37,7 @@
     "grunt-npm2bower-sync": "~0.3.0"
   },
   "scripts": {
-    "test": "mocha-phantomjs test/index.html"
+    "test": "mocha-phantomjs test/index.html",
+    "test-all": "mocha-phantomjs test/index.html && mocha-phantomjs test/env/amd.html && mocha-phantomjs test/env/browserify.html"
   }
 }

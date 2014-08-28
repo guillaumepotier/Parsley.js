@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.4 - built Thu Aug 21 2014 18:04:53
+* Version 2.0.4 - built Wed Aug 27 2014 18:12:08
 * MIT Licensed
 *
 */
@@ -201,7 +201,7 @@
 * MIT Licensed
 *
 */
-( function ( ) {
+var Validator = ( function ( ) {
   var exports = {};
   /**
   * Validator
@@ -860,10 +860,12 @@
   } else {
     window[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = exports;
   }
+
+  return exports; 
 } )( );
 
   // This is needed for Browserify usage that requires Validator.js through module.exports
-  Validator = 'undefined' !== typeof Validator ? Validator : module.exports;
+  Validator = 'undefined' !== typeof Validator ? Validator : ('undefined' !== typeof module ? module.exports : null);
   var ParsleyValidator = function (validators, catalog) {
     this.__class__ = 'ParsleyValidator';
     this.Validator = Validator;
@@ -1236,8 +1238,11 @@
       _ui.validationInformationVisible = false;
       // Store it in fieldInstance for later
       fieldInstance._ui = _ui;
-      /** Mess with DOM now **/
-      this._insertErrorWrapper(fieldInstance);
+      // Stops excluded inputs from getting errorContainer added
+      if( !fieldInstance.$element.is(fieldInstance.options.excluded) ) {
+        /** Mess with DOM now **/
+        this._insertErrorWrapper(fieldInstance);
+      }
       // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
     },

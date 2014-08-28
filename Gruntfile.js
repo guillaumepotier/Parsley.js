@@ -181,10 +181,10 @@ module.exports = function (grunt) {
   /** Tasks here **/
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['bower:install']);
-  grunt.registerTask('build', ['configure', 'requirejs', 'replace:dist', 'uglify:min']);
+  grunt.registerTask('build', ['requirejs', 'replace:dist', 'uglify:min']);
   grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
   grunt.registerTask('build-annotated-source', ['docco:source', 'replace:annotated']);
-  grunt.registerTask('build-all', ['clean:dist', 'build', 'build-remote', 'build-annotated-source', 'sync']);
+  grunt.registerTask('build-all', ['configure', 'clean:dist', 'build', 'build-remote', 'build-annotated-source', 'sync']);
 };
 
 var rdefineEnd = /\}\);[^}\w]*$/;
@@ -199,9 +199,20 @@ function convert(name, path, contents) {
       .replace(rdefineEnd, "");
   }
 
-  // Leave original validatorjs untouched
-  if (/(dist\/validator.js)/.test(path))
+  // Update original validatorjs for non-AMD implementation
+  if (/(dist\/validator.js)/.test(path)) {
+
+    // Makes sure the self-executing wrapper function stores a variable
+    contents = contents.replace("(","var Validator = (");
+
+    // Makes sure the self-executing wrapper function returns an object
+    var lastClosingBraceIndex = contents.lastIndexOf("}");
+    contents = contents.substring(0, lastClosingBraceIndex)
+      + "\n\n  return exports; \n}"
+      + contents.substring(lastClosingBraceIndex + 1);
+
     return contents;
+  }
 
   // Ignore returns
   contents = contents
