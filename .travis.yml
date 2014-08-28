@@ -5,6 +5,8 @@ node_js:
 
 before_script:
   - npm install -g bower
+  - npm install -g browserify
   - bower install
+  - browserify test/env/browserify.js > test/env/browserify_bundle.js
 
-script: npm test
+script: npm run-script test-all

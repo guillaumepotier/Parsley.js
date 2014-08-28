@@ -204,13 +204,13 @@ function convert(name, path, contents) {
 
     // Makes sure the self-executing wrapper function stores a variable
     contents = contents.replace("(","var Validator = (");
-    
+
     // Makes sure the self-executing wrapper function returns an object
     var lastClosingBraceIndex = contents.lastIndexOf("}");
-    contents = contents.substring( 0, lastClosingBraceIndex ) 
-                  + "return {Assert:Assert,Validator:Validator} }" 
-                  + contents.substring( lastClosingBraceIndex + 1 );
-    
+    contents = contents.substring(0, lastClosingBraceIndex)
+      + "\n\n  return exports; \n}"
+      + contents.substring(lastClosingBraceIndex + 1);
+
     return contents;
   }
 
