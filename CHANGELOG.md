@@ -2,6 +2,10 @@
 
 ## next stable release
 
+## 2.0.5
+
+  - fixed AMD
+
 ## 2.0.4
 
   - added ParsleyField context to asyncValidator callback functions (#702)
