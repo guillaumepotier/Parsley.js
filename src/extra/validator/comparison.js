@@ -1,27 +1,35 @@
+// gt, gte, lt, lte extra validators
+window.ParsleyConfig = window.ParsleyConfig || {};
+window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
+
 // Greater than validator
-window.ParsleyValidator.addValidator('gt', 
-    function (value, requirement) {
-        return parseFloat(value) > parseFloat($(requirement).val());
-    }, 32)
-    .addMessage('en', 'gt', 'This value should be greater');
+window.ParsleyConfig.validators.gt = {
+  fn: function (value, requirement) {
+    return parseFloat(value) > parseFloat($(requirement).val());
+  },
+  priority: 32
+};
 
 // Greater than or equal to validator
-window.ParsleyValidator.addValidator('gte', 
-    function (value, requirement) {
-        return parseFloat(value) >= parseFloat($(requirement).val());
-    }, 32)
-    .addMessage('en', 'gte', 'This value should be greater or equal');
+window.ParsleyConfig.validators.gte = {
+  fn: function (value, requirement) {
+    return parseFloat(value) >= parseFloat($(requirement).val());
+  },
+  priority: 32
+};
 
 // Less than validator
-window.ParsleyValidator.addValidator('lt', 
-    function (value, requirement) {
-        return parseFloat(value) < parseFloat($(requirement).val());
-    }, 32)
-    .addMessage('en', 'lt', 'This value should be less');
+window.ParsleyConfig.validators.lt = {
+  fn: function (value, requirement) {
+    return parseFloat(value) < parseFloat($(requirement).val());
+  },
+  priority: 32
+};
 
 // Less than or equal to validator
-window.ParsleyValidator.addValidator('lte', 
-    function (value, requirement) {
-        return parseFloat(value) <= parseFloat($(requirement).val());
-    }, 32)
-    .addMessage('en', 'lte', 'This value should be less or equal');
+window.ParsleyConfig.validators.lte = {
+  fn: function (value, requirement) {
+    return parseFloat(value) <= parseFloat($(requirement).val());
+  },
+  priority: 32
+};

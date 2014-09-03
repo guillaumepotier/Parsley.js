@@ -431,11 +431,13 @@
           </p>
           <p>
             For example, if you want to customize the field errors and use div and spans instead of ul and lis, use this snippet:
-<pre><code>window.ParsleyConfig = {
+<pre><code>&lt;script&gt;
+window.ParsleyConfig = {
   errorsWrapper: '&lt;div>&lt;/div>',
   errorTemplate: '&lt;span>&lt;/span>'
 };
-&lt;script src="parsley.js">&lt;/script>
+&lt;/script&gt;
+&lt;script src="parsley.js"&gt;&lt;/script&gt;
 </code></pre>
           </p>
 
@@ -1175,7 +1177,7 @@ $('[name="q"]').parsley()
            <tr>
              <td>
                <a name="psly-validator-maxwords"></a>
-               Minwords <version>#2.0</version>
+               Maxwords <version>#2.0</version>
              </td>
              <td>
                <table class="table-stripped hundred">
@@ -1190,7 +1192,7 @@ $('[name="q"]').parsley()
            <tr>
              <td>
                <a name="psly-validator-words"></a>
-               Minwords <version>#2.0</version>
+               Words <version>#2.0</version>
              </td>
              <td>
                <table class="table-stripped hundred">
