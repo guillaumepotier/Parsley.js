@@ -23,7 +23,7 @@ window.ParsleyConfig.i18n.es = $.extend(window.ParsleyConfig.i18n.es || {}, {
   length:         "La longitud de este valor debe estar entre %s y %s caracteres.",
   mincheck:       "Debe seleccionar al menos %s opciones.",
   maxcheck:       "Debe seleccionar %s opciones o menos.",
-  rangecheck:     "Debe seleccionar entre %s y %s opciones.",
+  check:          "Debe seleccionar entre %s y %s opciones.",
   equalto:        "Este valor debe ser idéntico."
 });
 
