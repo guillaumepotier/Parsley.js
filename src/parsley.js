@@ -263,7 +263,7 @@ define([
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
-    $(document).ready(function () {
+    $(function () {
       // Works only on `data-parsley-validate`.
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();

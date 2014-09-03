@@ -171,11 +171,11 @@ define('parsley/validator', [
       },
       maxlength: function (value) {
         return $.extend(new Validator.Assert().Length({ max: value }), {
-        priority: 30,
-        requirementsTransformer: function () {
+          priority: 30,
+          requirementsTransformer: function () {
             return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
           }
-      });
+        });
       },
       length: function (array) {
         return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
