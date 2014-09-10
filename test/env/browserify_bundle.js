@@ -10315,7 +10315,7 @@ var Validator = ( function ( ) {
       else
         this.arguments.splice( 0, 1 );
       if ( 'function' !== typeof fn )
-        throw new Error( 'Callback must be instanciated with a function' );
+        throw new Error( 'Callback must be instantiated with a function' );
       this.fn = fn;
       this.validate = function ( value ) {
         var result = this.fn.apply( this, [ value ].concat( this.arguments ) );
@@ -10328,7 +10328,7 @@ var Validator = ( function ( ) {
     Choice: function ( list ) {
       this.__class__ = 'Choice';
       if ( !_isArray( list ) && 'function' !== typeof list )
-        throw new Error( 'Choice must be instanciated with an array or a function' );
+        throw new Error( 'Choice must be instantiated with an array or a function' );
       this.list = list;
       this.validate = function ( value ) {
         var list = 'function' === typeof this.list ? this.list() : this.list;
@@ -10388,7 +10388,7 @@ var Validator = ( function ( ) {
     EqualTo: function ( reference ) {
       this.__class__ = 'EqualTo';
       if ( 'undefined' === typeof reference )
-        throw new Error( 'EqualTo must be instanciated with a value or a function' );
+        throw new Error( 'EqualTo must be instantiated with a value or a function' );
       this.reference = reference;
       this.validate = function ( value ) {
         var reference = 'function' === typeof this.reference ? this.reference( value ) : this.reference;
@@ -10429,7 +10429,7 @@ var Validator = ( function ( ) {
     InstanceOf: function ( classRef ) {
       this.__class__ = 'InstanceOf';
       if ( 'undefined' === typeof classRef )
-        throw new Error( 'InstanceOf must be instanciated with a value' );
+        throw new Error( 'InstanceOf must be instantiated with a value' );
       this.classRef = classRef;
       this.validate = function ( value ) {
         if ( true !== (value instanceof this.classRef) )
@@ -10441,7 +10441,7 @@ var Validator = ( function ( ) {
     Length: function ( boundaries ) {
       this.__class__ = 'Length';
       if ( !boundaries.min && !boundaries.max )
-        throw new Error( 'Lenth assert must be instanciated with a { min: x, max: y } object' );
+        throw new Error( 'Lenth assert must be instantiated with a { min: x, max: y } object' );
       this.min = boundaries.min;
       this.max = boundaries.max;
       this.validate = function ( value ) {
@@ -11665,7 +11665,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
     this.__class__ = 'Parsley';
     this.__version__ = '2.0.4';
     this.__id__ = ParsleyUtils.hash(4);
-    // Parsley must be instanciated with a DOM element or jQuery $element
+    // Parsley must be instantiated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
       throw new Error('You must give an element');
     if ('undefined' !== typeof parsleyFormInstance && 'ParsleyForm' !== parsleyFormInstance.__class__)
