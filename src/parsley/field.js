@@ -203,7 +203,7 @@ define('parsley/field', [
 
       // Small special case here for HTML5 number, that is in fact an integer validator
       if ('number' === type)
-        return this.addConstraint('type', 'integer', undefined, true);
+        return this.addConstraint('type', this.$element.data().parsleyType || 'integer', undefined, true);
 
       // Regular other HTML5 supported types
       else if (new RegExp(type, 'i').test('email url range'))
