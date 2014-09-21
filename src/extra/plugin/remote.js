@@ -25,6 +25,10 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   }, window.ParsleyExtend.asyncValidators),
 
   addAsyncValidator: function (name, fn, url, options) {
+    if (typeof options == 'function') {
+      options = options(this);
+    }
+    
     this.asyncValidators[name.toLowerCase()] = {
       fn: fn,
       url: url || false,
