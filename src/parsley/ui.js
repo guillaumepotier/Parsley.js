@@ -374,6 +374,7 @@ define('parsley/ui', [
       parsleyInstance._ui.$errorsWrapper.children().each(function () {
         $(this).remove();
       });
+      parsleyInstance._ui.$errorsWrapper.removeClass('filled');
 
       // Reset validation class
       this._resetClass(parsleyInstance);

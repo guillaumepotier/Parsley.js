@@ -271,6 +271,13 @@ define(function () {
         var parsleyInstance = $('#element').parsley();
         expect($('body ul').length).to.be(0);
       });
+      it('should remove filled class from errors container when reseting', function () {
+        $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.validate();
+        parsleyInstance.reset();
+        expect($('ul#parsley-id-' + parsleyInstance.__id__).hasClass('filled')).to.be(false);
+      });
       afterEach(function () {
         if ($('#element').length)
           $('#element').remove();
