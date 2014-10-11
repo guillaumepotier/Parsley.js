@@ -116,15 +116,12 @@ body {
   margin-top: 40px;
 
   .nav {
-
-    &>li {
-      &>a {
-        display: block;
-        font-size: 13px;
-        font-weight: 500;
-        color: #111111;
-        padding: 4px 20px;
-      }
+    &>li>a {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #111111;
+      padding: 4px 20px;
     }
 
     &>.active, &>.active:hover, &>.active:focus {
@@ -145,21 +142,17 @@ body {
       display: none;
       padding-bottom: 10px;
 
-      &>li {
-        &>a {
-          padding-top: 2px;
-          padding-bottom: 2px;
-          padding-left: 30px;
-          font-size: 12px;
-          font-weight: 400;
-        }
+      &>li>a {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 30px;
+        font-size: 12px;
+        font-weight: 400;
       }
 
-      &>.active {
-        &>a {
-          font-weight: 500;
-          padding-left: 28px;
-        }
+      &>.active>a {
+        font-weight: 500;
+        padding-left: 28px;
       }
     }
   }

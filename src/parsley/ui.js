@@ -371,10 +371,10 @@ define('parsley/ui', [
         return;
 
       // Reset all errors' li
-      parsleyInstance._ui.$errorsWrapper.children().each(function () {
-        $(this).remove();
-      });
-      parsleyInstance._ui.$errorsWrapper.removeClass('filled');
+      parsleyInstance._ui.$errorsWrapper
+        .removeClass('filled')
+        .children()
+        .remove();
 
       // Reset validation class
       this._resetClass(parsleyInstance);

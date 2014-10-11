@@ -15,7 +15,7 @@ textarea.parsley-error {
 }
 
 .parsley-errors-list {
-  margin: 2px 0 3px 0;
+  margin: 2px 0 3px;
   padding: 0;
   list-style-type: none;
   font-size: 0.9em;
