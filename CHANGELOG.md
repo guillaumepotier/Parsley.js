@@ -2,6 +2,8 @@
 
 ## next stable release
 
+- removed buggy special char in remote.js plugin (#755)
+
 ## 2.0.5
 
   - fixed AMD

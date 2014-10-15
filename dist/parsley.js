@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.5 - built Thu Aug 28 2014 11:27:36
+* Version 2.0.5 - built Wed Oct 15 2014 10:16:06
 * MIT Licensed
 *
 */
@@ -1001,11 +1001,11 @@ var Validator = ( function ( ) {
       },
       maxlength: function (value) {
         return $.extend(new Validator.Assert().Length({ max: value }), {
-        priority: 30,
-        requirementsTransformer: function () {
+          priority: 30,
+          requirementsTransformer: function () {
             return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
           }
-      });
+        });
       },
       length: function (array) {
         return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
@@ -1343,9 +1343,10 @@ var Validator = ( function ( ) {
       if ('ParsleyForm' === parsleyInstance.__class__)
         return;
       // Reset all errors' li
-      parsleyInstance._ui.$errorsWrapper.children().each(function () {
-        $(this).remove();
-      });
+      parsleyInstance._ui.$errorsWrapper
+        .removeClass('filled')
+        .children()
+        .remove();
       // Reset validation class
       this._resetClass(parsleyInstance);
       // Reset validation flags and last validation result
@@ -2054,7 +2055,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
   if (false !== ParsleyUtils.get(window, 'ParsleyConfig.autoBind'))
-    $(document).ready(function () {
+    $(function () {
       // Works only on `data-parsley-validate`.
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();

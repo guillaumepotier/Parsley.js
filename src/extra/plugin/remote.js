@@ -170,7 +170,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
       data = {},
       ajaxOptions,
       csr,
-      validator = this.options.remoteValidator || (true === this.options.remoteReverse ? 'reverse' : 'default');
+      validator = this.options.remoteValidator || (true === this.options.remoteReverse ? 'reverse' : 'default');
 
     validator = validator.toLowerCase();
 
