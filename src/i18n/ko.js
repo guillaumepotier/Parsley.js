@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
+window.ParsleyConfig.i18n.ko = $.extend(window.ParsleyConfig.i18n.ko || {}, {
   defaultMessage: "입력하신 내용이 올바르지 않습니다.",
   type: {
     email:        "입력하신 이메일이 유효하지 않습니다.",
@@ -30,4 +30,4 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
+  window.ParsleyValidator.addCatalog('ko', window.ParsleyConfig.i18n.ko, true);
