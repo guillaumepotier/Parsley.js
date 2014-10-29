@@ -9,7 +9,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   asyncSupport: true,
 
   asyncValidators: $.extend({
-    default: {
+    'default': {
       fn: function (xhr) {
         return 'resolved' === xhr.state();
       },
