@@ -39,5 +39,13 @@
   "scripts": {
     "test": "mocha-phantomjs test/index.html",
     "test-all": "mocha-phantomjs test/index.html && mocha-phantomjs test/env/amd.html && mocha-phantomjs test/env/browserify.html"
+  },
+  "spm": {
+    "main": "dist/parsley.js",
+    "ignore": [
+      "doc",
+      "test",
+      "src"
+    ]
   }
 }
