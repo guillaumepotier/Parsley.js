@@ -66,8 +66,13 @@ define(function () {
         expect(parsleyField.constraints[0].name).to.be('notblank');
       });
       it('should return an empty array for fields withoud constraints', function () {
-        $('body').append('<input type="text" id="element" value="" />');
-        expect(new Parsley($('#element')).isValid()).to.eql([]);
+        $('body').append('<input type="text" id="element" value="hola" data-parsley-minlength="5" />');
+        var parsleyField = new Parsley($('#element'));
+        // Start with some validation errors:
+        expect(parsleyField.isValid()).to.eql(false);
+        // The remove constraint and check result:
+        $('#element').removeAttr('data-parsley-minlength');
+        expect(parsleyField.isValid()).to.eql([]);
       });
       it('should properly bind HTML5 supported constraints', function () {
         $('body').append('<input type="email" pattern="\\w+" id="element" required min="5" max="100" />');

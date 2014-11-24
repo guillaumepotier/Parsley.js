@@ -59,7 +59,8 @@ define('parsley/field', [
 
       // Sort priorities to validate more important first
       var priorities = this._getConstraintsSortedPriorities();
-
+      if (0 === priorities.length)
+        return this.validationResult = [];
       // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
       value = value || this.getValue();
 
