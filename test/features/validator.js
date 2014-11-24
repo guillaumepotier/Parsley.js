@@ -92,7 +92,7 @@ define(function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.type('alphanum'))).to.be(true);
         expect(parsleyValidator.validate('foo bar', parsleyValidator.validators.type('alphanum'))).not.to.be(true);
         expect(parsleyValidator.validate('foo$', parsleyValidator.validators.type('alphanum'))).not.to.be(true);
-        $('body').append('<input type="alphanum" id="element" value="v4kRRyhYvo0P" />');
+        $('body').append('<input data-parsley-type="alphanum" id="element" value="v4kRRyhYvo0P" />');
         expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a type="url" validator', function () {
