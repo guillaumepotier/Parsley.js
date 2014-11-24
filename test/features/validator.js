@@ -121,13 +121,13 @@ define(function () {
       it('should have a minlength validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.minlength(3))).to.be(true);
         expect(parsleyValidator.validate('fo', parsleyValidator.validators.minlength(3))).not.to.be(true);
-        $('body').append('<input type="text" id="element" value="foo" minlength="2" />');
+        $('body').append('<input type="text" id="element" value="foo" data-parsley-minlength="2" />');
         expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a maxlength validator', function () {
         expect(parsleyValidator.validate('foo', parsleyValidator.validators.maxlength(3))).to.be(true);
         expect(parsleyValidator.validate('foobar', parsleyValidator.validators.maxlength(3))).not.to.be(true);
-        $('body').append('<input type="text" id="element" value="foo" maxlength="10" />');
+        $('body').append('<input type="text" id="element" value="foo" data-parsley-maxlength="10" />');
         expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a check validator', function () {
