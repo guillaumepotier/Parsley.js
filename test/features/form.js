@@ -76,17 +76,23 @@ define(function () {
       it('should handle group validation with controls with multiple group names', function () {
         $('body').append(
           '<form id="element">'                                                                        +
-            '<input id="field1" type="text" data-parsley-group=\'["foo", "baz"]\' data-parsley-required="true" />'  +
-            '<div id="field2"></div>'                                                                  +
-            '<textarea id="field3" data-parsley-group="bar" data-parsley-required="true"></textarea>'  +
+            '<input id="field1" type="text" data-parsley-group=\'["foo", "bar"]\' data-parsley-required="true" />'  +
+            '<input id="field2" type="text" data-parsley-group=\'["bar", "baz"]\' data-parsley-required="true" />'  +
+            '<textarea id="field3" data-parsley-group=\'["baz", "qux"]\' data-parsley-required="true"></textarea>'  +
           '</form>');
           var parsleyForm = new Parsley($('#element'));
           expect(parsleyForm.isValid()).to.be(false);
           $('#field1').val('value');
+          $('#field2').val('value');
           expect(parsleyForm.isValid()).to.be(false);
+          // group name only on one required field, with value
           expect(parsleyForm.isValid('foo')).to.be(true);
-          expect(parsleyForm.isValid('baz')).to.be(true);
-          expect(parsleyForm.isValid('bar')).to.be(false);
+          // group name on multiple required fields, all with values
+          expect(parsleyForm.isValid('bar')).to.be(true);
+          // group name on multiple required fields, one missing a value
+          expect(parsleyForm.isValid('baz')).to.be(false);
+          // group name on single required field, without value
+          expect(parsleyForm.isValid('qux')).to.be(false);
       });
       it('should handle `onFormSubmit` validation', function () {
         $('body').append(

@@ -84,10 +84,25 @@ define(function () {
         // still 4 validators, with max instead of range now
         expect(parsleyField.actualizeOptions().constraints.length).to.be(4);
       });
-      it('should properly bind special HTML5 `number` type', function () {
+      it('should use integer validation HTML5 `number` type without a step attribute', function () {
         $('body').append('<input type="number" id="element" />');
         var parsleyField = new Parsley($('#element'));
         expect(parsleyField.constraints[0].requirements).to.be('integer');
+      });
+      it('should use integer validation HTML5 `number` type with integer value step', function () {
+        $('body').append('<input type="number" id="element" step="3" />');
+        var parsleyField = new Parsley($('#element'));
+        expect(parsleyField.constraints[0].requirements).to.be('integer');
+      });
+      it('should use number validation for HTML5 `number` with float value step', function () {
+        $('body').append('<input type="number" id="element" step="0.3" />');
+        var parsleyField = new Parsley($('#element'));
+        expect(parsleyField.constraints[0].requirements).to.be('number');
+      });
+      it('should use number validation for HTML5 `number` with step="any"', function () {
+        $('body').append('<input type="number" id="element" step="any" />');
+        var parsleyField = new Parsley($('#element'));
+        expect(parsleyField.constraints[0].requirements).to.be('number');
       });
       it('should valid simple validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
