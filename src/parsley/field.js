@@ -141,7 +141,7 @@ define('parsley/field', [
           this.constraints.splice(i, 1);
           break;
         }
-
+      delete this.constraintsByName[name];
       return this;
     },
 
@@ -156,14 +156,17 @@ define('parsley/field', [
     // Internal only.
     // Bind constraints from config + options + DOM
     _bindConstraints: function () {
-      var constraints = [];
+      var constraints = [], constraintsByName = {};
 
       // clean all existing DOM constraints to only keep javascript user constraints
       for (var i = 0; i < this.constraints.length; i++)
-        if (false === this.constraints[i].isDomConstraint)
+        if (false === this.constraints[i].isDomConstraint) {
           constraints.push(this.constraints[i]);
+          constraintsByName[this.constraints[i].name] = this.constraints[i];
+        }
 
       this.constraints = constraints;
+      this.constraintsByName = constraintsByName;
 
       // then re-add Parsley DOM-API constraints
       for (var name in this.options)

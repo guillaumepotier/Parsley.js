@@ -64,6 +64,7 @@ define(function () {
           .removeConstraint('required');
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].name).to.be('notblank');
+        expect(parsleyField._isRequired()).to.be(false);
       });
       it('should return an empty array for fields withoud constraints', function () {
         $('body').append('<input type="text" id="element" value="hola" data-parsley-minlength="5" />');
