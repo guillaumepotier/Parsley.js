@@ -116,7 +116,7 @@ define([
       }
 
       // Remove special chars
-      multiple = multiple.replace(/(:|\.|\[|\]|\$)/g, '');
+      multiple = multiple.replace(/(:|\.|\[|\]|\{|\}|\$)/g, '');
 
       // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
       if ('undefined' !== typeof name) {

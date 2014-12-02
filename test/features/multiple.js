@@ -1,6 +1,16 @@
 define(function () {
   return function (Parsley) {
     describe('ParsleyMultiple', function () {
+      it('should not throw errors with multiple items with weird automated generated names', function () {
+        $('body').append(
+          '<form id="element">' +
+            '<input type="checkbox" name="hello[]" id="check1" value="1" />'  +
+            '<input type="checkbox" name="{{ hello }}" id="check2" value="2" />'  +
+            '<input type="checkbox" name="$hello$" id="check3" value="3" />'  +
+            '<input type="checkbox" value="foo" />' +
+          '</form>');
+        $('#element').parsley();
+      });
       it('should return same ParsleyMultiple instance for each field in same multiple group, and it should count as one field in form', function () {
         $('body').append(
           '<form id="element" >' +
