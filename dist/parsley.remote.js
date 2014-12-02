@@ -9,7 +9,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   asyncSupport: true,
 
   asyncValidators: $.extend({
-    default: {
+    'default': {
       fn: function (xhr) {
         return 'resolved' === xhr.state();
       },
@@ -259,7 +259,7 @@ window.ParsleyConfig.validators.remote = {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.5 - built Wed Oct 15 2014 10:16:06
+* Version 2.0.6 - built Tue Dec 02 2014 17:12:12
 * MIT Licensed
 *
 */
@@ -1724,7 +1724,7 @@ var Validator = ( function ( ) {
     },
     _isFieldInGroup: function (field, group) {
       if(ParsleyUtils.isArray(field.options.group))
-        return -1 !== $.inArray(field.options.group, group);
+        return -1 !== $.inArray(group, field.options.group);
       return field.options.group === group;
     },
     _refreshFields: function () {
@@ -1815,11 +1815,13 @@ var Validator = ( function ( ) {
       this.refreshConstraints();
       // Sort priorities to validate more important first
       var priorities = this._getConstraintsSortedPriorities();
+      if (0 === priorities.length)
+        return this.validationResult = [];
       // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
       value = value || this.getValue();
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-      if (0 === value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty && true !== force)
+      if (!value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty && true !== force)
         return this.validationResult = [];
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
@@ -1879,6 +1881,7 @@ var Validator = ( function ( ) {
           this.constraints.splice(i, 1);
           break;
         }
+      delete this.constraintsByName[name];
       return this;
     },
     // Update a constraint (Remove + re-add)
@@ -1890,12 +1893,15 @@ var Validator = ( function ( ) {
     // Internal only.
     // Bind constraints from config + options + DOM
     _bindConstraints: function () {
-      var constraints = [];
+      var constraints = [], constraintsByName = {};
       // clean all existing DOM constraints to only keep javascript user constraints
       for (var i = 0; i < this.constraints.length; i++)
-        if (false === this.constraints[i].isDomConstraint)
+        if (false === this.constraints[i].isDomConstraint) {
           constraints.push(this.constraints[i]);
+          constraintsByName[this.constraints[i].name] = this.constraints[i];
+        }
       this.constraints = constraints;
+      this.constraintsByName = constraintsByName;
       // then re-add Parsley DOM-API constraints
       for (var name in this.options)
         this.addConstraint(name, this.options[name]);
@@ -1924,12 +1930,17 @@ var Validator = ( function ( ) {
       var type = this.$element.attr('type');
       if ('undefined' === typeof type)
         return this;
-      // Small special case here for HTML5 number, that is in fact an integer validator
-      if ('number' === type)
-        return this.addConstraint('type', 'integer', undefined, true);
+      // Small special case here for HTML5 number: integer validator if step attribute is undefined or an integer value, number otherwise
+      if ('number' === type) {
+        if (('undefined' === typeof this.$element.attr('step')) || (0 === parseFloat(this.$element.attr('step')) % 1)) {
+          return this.addConstraint('type', 'integer', undefined, true);
+        } else {
+          return this.addConstraint('type', 'number', undefined, true);
+        }
       // Regular other HTML5 supported types
-      else if (new RegExp(type, 'i').test('email url range'))
+      } else if (new RegExp(type, 'i').test('email url range')) {
         return this.addConstraint('type', type, undefined, true);
+      }
       return this;
     },
     // Internal only.
@@ -2122,7 +2133,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.0.5
+//     Parsley.js 2.0.6
 //     http://parsleyjs.org
 //     (c) 20012-2014 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2130,7 +2141,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### Parsley factory
   var Parsley = function (element, options, parsleyFormInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.5';
+    this.__version__ = '2.0.6';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instanciated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
@@ -2193,7 +2204,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
         return this;
       }
       // Remove special chars
-      multiple = multiple.replace(/(:|\.|\[|\]|\$)/g, '');
+      multiple = multiple.replace(/(:|\.|\[|\]|\{|\}|\$)/g, '');
       // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
       if ('undefined' !== typeof name) {
         $('input[name="' + name + '"]').each(function () {

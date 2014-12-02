@@ -1,8 +1,11 @@
 # Parsley 2.x changelog
 
-## next stable release
+## 2.0.6
 
 - removed buggy special char in remote.js plugin (#755)
+- fixed bug where isValid returned old errors on field with no constraints
+  anymore (#776)
+- fix a lot of tests
 
 ## 2.0.5
 
