@@ -1,0 +1,45 @@
+{
+  "name": "guillaumepotier/parsleyjs",
+  "description": "Validate your forms, frontend, without writing a single line of javascript!",
+  "type": "component",
+  "keywords": [
+    "parsley",
+    "form",
+    "validation",
+    "html5",
+    "polyfill"
+  ],
+  "homepage": "http://parsleyjs.org",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Guillaume Potier",
+      "email": "guillaume@wisembly.com",
+      "url": "http://guillaumepotier.com/"
+    }
+  ],
+  "require": {
+    "components/jquery": ">=1.8"
+  },
+  "extra": {
+    "component": {
+      "main": "dist/parsley.js",
+      "scripts": [
+        "dist/parsley.js",
+        "dist/parsley.remote.js"
+      ],
+      "files": [
+        "dist/parsley.js",
+        "dist/parsley.min.js",
+        "dist/parsley.remote.min.js",
+        "dist/parsley.remote.js"
+      ],
+      "shim": {
+        "deps": [
+          "jquery"
+        ],
+        "exports": "Parsley"
+      }
+    }
+  }
+}
