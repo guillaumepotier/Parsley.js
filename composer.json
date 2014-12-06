@@ -14,8 +14,7 @@
   "authors": [
     {
       "name": "Guillaume Potier",
-      "email": "guillaume@wisembly.com",
-      "url": "http://guillaumepotier.com/"
+      "email": "guillaume@wisembly.com"
     }
   ],
   "require": {
