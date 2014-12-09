@@ -907,10 +907,22 @@ window.ParsleyValidator
               <td>Fired when a form validation is triggered, <strong>before</strong> its validation.</td>
             </tr>
             <tr>
+              <td><code>parsley:form:success</code> <version>#2.0</version></td>
+              <td><code>ParsleyForm</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired when a form validation is triggered, <strong>after</strong> its validation succeeds.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:form:error</code> <version>#2.0</version></td>
+              <td><code>ParsleyForm</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired when a form validation is triggered, <strong>after</strong> its validation fails.</td>
+            </tr>
+            <tr>
               <td><code>parsley:form:validated</code> <version>#2.0</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a form validation is triggered, <strong>after</strong> its validation.</td>
+              <td>Fired when a form validation is triggered, <strong>after</strong> its validation finishes (with success or with errors).</td>
             </tr>
             <tr>
               <td><code>parsley:field:init</code> <version>#2.0</version></td>
@@ -935,6 +947,12 @@ window.ParsleyValidator
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
               <td>Fired when a field validation fails.</td>
+            </tr>
+            <tr>
+              <td><code>parsley:field:validated</code> <version>#2.0</version></td>
+              <td><code>ParsleyField</code></td>
+              <td><code>.validate()</code></td>
+              <td>Fired after a field is validated (with success or with errors).</td>
             </tr>
           </tbody>
         </table>

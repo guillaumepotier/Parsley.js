@@ -104,6 +104,12 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     }
 
     return $.when.apply($, promises)
+      .done(function () {
+        $.emit('parsley:form:success', that);
+      })
+      .fail(function () {
+        $.emit('parsley:form:error', that);
+      })
       .always(function () {
         $.emit('parsley:form:validated', that);
       });
