@@ -1068,7 +1068,7 @@ var Validator = ( function ( ) {
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-        
+
         if (this === null) {
             throw new TypeError();
         }
@@ -1119,7 +1119,7 @@ var Validator = ( function ( ) {
     window[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = exports;
   }
 
-  return exports; 
+  return exports;
 } )( );
 
   // This is needed for Browserify usage that requires Validator.js through module.exports
