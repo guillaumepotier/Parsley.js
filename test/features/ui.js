@@ -149,7 +149,7 @@ define(function () {
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
         expect($('#element').hasClass('parsley-error')).to.be(true);
       });
-      it('should handle simple triggers (change, focus..)', function () {
+      it('should handle simple triggers (change, focus...)', function () {
         $('body').append('<input type="email" id="element" required data-parsley-trigger="change" />');
         var parsleyField = $('#element').psly();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
@@ -181,7 +181,7 @@ define(function () {
         $('#element').trigger($.Event('change'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(false);
       });
-      it('should handle complex triggers (keyup, keypress..)', function () {
+      it('should handle complex triggers (keyup, keypress...)', function () {
         $('body').append('<input type="email" id="element" required data-parsley-trigger="keyup" />');
         var parsleyField = $('#element').psly();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);

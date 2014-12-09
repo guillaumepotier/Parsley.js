@@ -36,7 +36,7 @@ define('parsley/field', [
     // @returns validationResult:
     //  - `true` if all constraint passes
     //  - `[]` if not required field and empty (not validated)
-    //  - `[Violation, [Violation..]]` if there were validation errors
+    //  - `[Violation, [Violation...]]` if there were validation errors
     validate: function (force) {
       this.value = this.getValue();
 
