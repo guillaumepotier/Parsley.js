@@ -10,14 +10,14 @@ define('parsley/factory/constraint', [
       'Assert' !== window.ParsleyValidator.validators[name](requirements).__parentClass__)
       throw new Error('Valid validator expected');
 
-    var getPriority = function (parsleyField, name) {
+    var getPriority = function () {
       if ('undefined' !== typeof parsleyField.options[name + 'Priority'])
         return parsleyField.options[name + 'Priority'];
 
       return ParsleyUtils.get(window.ParsleyValidator.validators[name](requirements), 'priority') || 2;
     };
 
-    priority = priority || getPriority(parsleyField, name);
+    priority = priority || getPriority();
 
     // If validator have a requirementsTransformer, execute it
     if ('function' === typeof window.ParsleyValidator.validators[name](requirements).requirementsTransformer)
