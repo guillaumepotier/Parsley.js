@@ -96,7 +96,6 @@ define(function () {
 
           expect($('#element').data('Parsley')).to.be(undefined);
           expect($('#field1').data('Parsley')).to.be(undefined);
-
           $(document).off('form:validate.parsley');
           done();
         });
