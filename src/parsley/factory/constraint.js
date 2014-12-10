@@ -6,7 +6,7 @@ define('parsley/factory/constraint', [
     if (!new RegExp('ParsleyField').test(ParsleyUtils.get(parsleyField, '__class__')))
       throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
 
-    if ('function' !== typeof window.ParsleyValidator.validators[name] &&
+    if ('function' !== typeof window.ParsleyValidator.validators[name] ||
       'Assert' !== window.ParsleyValidator.validators[name](requirements).__parentClass__)
       throw new Error('Valid validator expected');
 
