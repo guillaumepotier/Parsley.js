@@ -54,7 +54,7 @@ define('parsley/form', [
           this.validationResult = false;
       }
 
-      $.emit('parsley:form:' + this.validationResult ? 'success' : 'error', this);
+      $.emit('parsley:form:' + (this.validationResult ? 'success' : 'error'), this);
       $.emit('parsley:form:validated', this);
 
       return this.validationResult;
