@@ -16,7 +16,7 @@ define(function () {
         );
         expect(options.staticOptions).to.eql({ foo: null, bar: 'BAZ', baz: 'qux' });
       });
-      it('should throw an exception if get() called withoud a Parsley instance', function () {
+      it('should throw an exception if get() called without a Parsley instance', function () {
         expect(new ParlseyOptionsFactory().get).to.throwException();
       });
       it('should handle properly ParsleyForm options', function () {

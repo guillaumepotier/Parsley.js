@@ -16,7 +16,7 @@ window.ParsleyConfig.i18n.fr = $.extend(window.ParsleyConfig.i18n.fr || {}, {
   notblank:       "Cette valeur ne peut pas être vide.",
   required:       "Ce champ est requis.",
   pattern:        "Cette valeur semble non valide.",
-  min:            "Cette valeur ne doit pas être inféreure à %s.",
+  min:            "Cette valeur ne doit pas être inférieure à %s.",
   max:            "Cette valeur ne doit pas excéder %s.",
   range:          "Cette valeur doit être comprise entre %s et %s.",
   minlength:      "Cette chaîne est trop courte. Elle doit avoir au minimum %s caractères.",
@@ -25,7 +25,7 @@ window.ParsleyConfig.i18n.fr = $.extend(window.ParsleyConfig.i18n.fr || {}, {
   mincheck:       "Vous devez sélectionner au moins %s choix.",
   maxcheck:       "Vous devez sélectionner %s choix maximum.",
   check:          "Vous devez sélectionner entre %s et %s choix.",
-  equalto:        "Cette valeur devrait être identique"
+  equalto:        "Cette valeur devrait être identique."
 });
 
 // If file is loaded after Parsley main file, auto-load locale

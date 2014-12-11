@@ -34,7 +34,7 @@ define('parsley/field', [
     // # Public API
     // Validate field and $.emit some events for mainly `ParsleyUI`
     // @returns validationResult:
-    //  - `true` if all constraint passes
+    //  - `true` if all constraints pass
     //  - `[]` if not required field and empty (not validated)
     //  - `[Violation, [Violation...]]` if there were validation errors
     validate: function (force) {
