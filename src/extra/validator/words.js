@@ -8,21 +8,21 @@ var countWords = function (string) {
       .split(' ').length;
 };
 
-ParsleyValidator.addValidator(
+window.ParsleyValidator.addValidator(
 	'minwords',
 	function (value, nbWords) {
 		return countWords(value) >= nbWords;
 	}, 32)
 	.addMessage('en', 'minwords', 'This value needs more words');
 
-ParsleyValidator.addValidator(
+window.ParsleyValidator.addValidator(
 	'maxwords',
 	function (value, nbWords) {
 		return countWords(value) <= nbWords;
 	}, 32)
 	.addMessage('en', 'maxwords', 'This value needs fewer words');
 
-ParsleyValidator.addValidator(
+window.ParsleyValidator.addValidator(
 	'words',
 	function (value, arrayRange) {
 		var length = countWords(value);
