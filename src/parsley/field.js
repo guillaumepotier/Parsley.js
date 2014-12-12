@@ -47,7 +47,9 @@ define('parsley/field', [
     },
 
     // Just validate field. Do not trigger any event
-    // Same @return as `validate()`
+    //  - `true` if all constraint passes
+    //  - `[]` if not required field and empty (not validated)
+    //  - `false` if there were validation errors
     isValid: function (force, value) {
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
