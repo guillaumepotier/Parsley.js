@@ -36,10 +36,10 @@ define('parsley/form', [
 
       var fieldValidationResult = [];
 
+      this._trigger('validate');
+
       // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
-
-      this._trigger('validate');
 
       // loop through fields to validate them one by one
       for (var i = 0; i < this.fields.length; i++) {

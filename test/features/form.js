@@ -169,6 +169,13 @@ define(function () {
         $form.submit();
         expect(callbacks.join()).to.be('validate,error,validated,validate,success,validated');
       });
+      it('should fire "parsley:form:validate" to give the opportunity for changes before validation occurs', function() {
+        var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
+        $form.parsley().subscribe('parsley:form:validate', function(psly) {
+          psly.$element.find('input').remove();
+        });
+        expect($form.parsley().validate()).to.be(true);
+      });
       it('should stop event propagation on form submit', function (done) {
         $('body').append('<form id="element"><input type="text" required/></form>');
         var parsleyInstance = $('#element').parsley();
