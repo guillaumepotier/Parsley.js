@@ -50,7 +50,7 @@ define(function () {
           '<form id="element" data-parsley-trigger="change">'                 +
             '<input id="field1" type="text" data-parsley-required="true" />'  +
             '<div id="field2"></div>'                                         +
-            '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
+            '<textarea id="field3" data-parsley-notblank="true">  </textarea>'  +
           '</form>');
           var parsleyForm = new Parsley($('#element'));
           parsleyForm.validate();
