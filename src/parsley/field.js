@@ -56,8 +56,11 @@ define('parsley/field', [
 
       // Sort priorities to validate more important first
       var priorities = this._getConstraintsSortedPriorities();
+
+      this.validationResult = [];
       if (0 === priorities.length)
-        return this.validationResult = [];
+        return true;
+
       // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
       if ('undefined' === typeof value || null === value)
         value = this.getValue();
@@ -65,7 +68,7 @@ define('parsley/field', [
       // If a field is empty and not required, leave it alone, it's just fine
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
       if (!value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty && true !== force)
-        return this.validationResult = [];
+        return [];
 
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
