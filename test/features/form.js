@@ -50,11 +50,11 @@ define(function () {
           '<form id="element" data-parsley-trigger="change">'                 +
             '<input id="field1" type="text" data-parsley-required="true" />'  +
             '<div id="field2"></div>'                                         +
-            '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
+            '<textarea id="field3" data-parsley-notblank="true">  </textarea>'  +
           '</form>');
           var parsleyForm = new Parsley($('#element'));
           parsleyForm.validate();
-          expect(parsleyForm.validationResult).to.be(false);
+          expect(parsleyForm.validationResult.length).to.be(2);
           $('#field1').val('foo');
           $('#field3').val('foo');
           expect(parsleyForm.validate()).to.be(true);
