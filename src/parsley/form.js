@@ -21,7 +21,7 @@ define('parsley/form', [
       this.validate(undefined, undefined, event);
 
       // prevent form submission if validation fails
-      if (false === this.validationResult && event instanceof $.Event) {
+      if (true !== this.validationResult && event instanceof $.Event) {
         event.stopImmediatePropagation();
         event.preventDefault();
       }
@@ -32,9 +32,9 @@ define('parsley/form', [
     // @returns boolean
     validate: function (group, force, event) {
       this.submitEvent = event;
-      this.validationResult = true;
 
-      var fieldValidationResult = [];
+      var fieldValidationResult,
+        violationLists = [];
 
       // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
@@ -50,14 +50,19 @@ define('parsley/form', [
 
         fieldValidationResult = this.fields[i].validate(force);
 
-        if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
-          this.validationResult = false;
+        if (true !== fieldValidationResult && fieldValidationResult.length > 0)
+          violationLists.push(fieldValidationResult);
       }
-
-      $.emit('parsley:form:' + (this.validationResult ? 'success' : 'error'), this);
+      if (violationLists.length > 0) {
+        this.validationResult = Array.prototype.concat.apply([], violationLists);
+        $.emit('parsley:form:error', this);
+      } else {
+        this.validationResult = true;
+        $.emit('parsley:form:success', this);
+      }
       $.emit('parsley:form:validated', this);
 
-      return this.validationResult;
+      return violationLists.length === 0;
     },
 
     // Iterate over refreshed fields, and stop on first failure

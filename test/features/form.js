@@ -54,7 +54,7 @@ define(function () {
           '</form>');
           var parsleyForm = new Parsley($('#element'));
           parsleyForm.validate();
-          expect(parsleyForm.validationResult).to.be(false);
+          expect(parsleyForm.validationResult.length).to.be(2);
           $('#field1').val('foo');
           $('#field3').val('foo');
           expect(parsleyForm.validate()).to.be(true);
