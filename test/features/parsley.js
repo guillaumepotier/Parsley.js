@@ -24,18 +24,17 @@ define(function () {
         expect(parsleyInstance).to.be.an('object');
         expect(parsleyInstance.__class__).to.be('ParsleyField');
       });
-      it('should return Parsley if instantiated on an unsupported element', function () {
+      it('should return ParsleyField even if instantiated on an unsupported element', function () {
         $('body').append('<div id="element"></div>');
         var parsleyInstance = new Parsley($('#element'));
         expect(parsleyInstance).to.be.an('object');
-        expect(parsleyInstance.__class__).to.be('Parsley');
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
       });
-      it('should return Parsley instance if instantiated on an excluded field type, and do not have an errors container', function () {
+      it('should return ParsleyField instance even if instantiated on an excluded field type, and do not have an errors container', function () {
         $('body').append('<input type="submit" id="element" />');
         var parsleyInstance = new Parsley($('#element'));
         expect(parsleyInstance).to.be.an('object');
-        expect(parsleyInstance.__class__).to.be('Parsley');
-        expect($('#parsley-id-' + parsleyInstance.__id__).length).to.be(0);
+        expect(parsleyInstance.__class__).to.be('ParsleyField');
       });
       it('should have excluded fields by default', function () {
         $('body').append(
@@ -61,15 +60,18 @@ define(function () {
         expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-parsley-');
 
         // global JS config
+        $('#element').parsley().destroy()
         window.ParsleyConfig.namespace = 'data-foo-';
         expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-foo-');
 
         // option on the go
+        $('#element').parsley().destroy()
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
         }).OptionsFactory.staticOptions.namespace).to.be('data-bar-');
 
         // data- DOM-API
+        $('#element').parsley().destroy()
         $('#element').attr('data-parsley-namespace', 'data-baz-');
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
