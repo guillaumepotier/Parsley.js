@@ -72,11 +72,8 @@ define([
       if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
         return this.bind('parsleyForm');
 
-      // Every other supported element and not excluded element is binded as a `ParsleyField` or `ParsleyFieldMultiple`
-      else if (this.$element.is(this.options.inputs) && !this.$element.is(this.options.excluded))
-        return this.isMultiple() ? this.handleMultiple(parsleyFormInstance) : this.bind('parsleyField', parsleyFormInstance);
-
-      return this;
+      // Every other element is binded as a `ParsleyField` or `ParsleyFieldMultiple`
+      return this.isMultiple() ? this.handleMultiple(parsleyFormInstance) : this.bind('parsleyField', parsleyFormInstance);
     },
 
     isMultiple: function () {
