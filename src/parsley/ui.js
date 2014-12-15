@@ -298,9 +298,7 @@ define('parsley/ui', [
 
       // Remove Parsley events already binded on this field
       if (fieldInstance.options.multiple)
-        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
-          $(this).off('.Parsley');
-        });
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').off('.Parsley');
       else
         fieldInstance.$element.off('.Parsley');
 
