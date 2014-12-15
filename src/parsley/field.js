@@ -199,6 +199,20 @@ define('parsley/field', [
       else if ('undefined' !== typeof this.$element.attr('max'))
         this.addConstraint('max', this.$element.attr('max'), undefined, true);
 
+    
+      // length
+      if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
+        this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);
+
+      // HTML5 minlength
+      else if ('undefined' !== typeof this.$element.attr('minlength'))
+        this.addConstraint('minlength', this.$element.attr('minlength'), undefined, true);
+
+      // HTML5 maxlength
+      else if ('undefined' !== typeof this.$element.attr('maxlength'))
+        this.addConstraint('maxlength', this.$element.attr('maxlength'), undefined, true);
+
+
       // html5 types
       var type = this.$element.attr('type');
 
