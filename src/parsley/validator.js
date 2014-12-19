@@ -22,7 +22,7 @@ define('parsley/validator', [
       for (var name in validators)
         this.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
 
-      $.emit('parsley:validator:init');
+      $(document).trigger('parsley:validator:init');
     },
 
     // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
