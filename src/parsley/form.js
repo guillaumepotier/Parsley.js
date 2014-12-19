@@ -111,7 +111,7 @@ define('parsley/form', [
     // Internal only.
     // Shortcut to trigger an event
     _trigger: function(event) {
-      $.emit('parsley:form:' + event, this);
+      this.$element.trigger('form:' + event + '.parsley', [this]);
     }
 
   };

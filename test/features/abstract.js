@@ -23,8 +23,8 @@ define(function () {
           done();
         });
 
-        $.emit('parsley:field:foo', 'bar');
-        $.emit('parsley:field:foo', parsleyField, 'baz');
+        $(document).trigger('field:foo', 'bar');
+        $('#element').trigger('field:foo', [$('#element').parsley(), 'baz']);
       });
       it('should use unsubscribe()', function () {
         $('body').append('<input type="email" id="element" />');

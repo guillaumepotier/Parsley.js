@@ -32,7 +32,7 @@ define('parsley/field', [
 
   ParsleyField.prototype = {
     // # Public API
-    // Validate field and $.emit some events for mainly `ParsleyUI`
+    // Validate field and trigger some events for mainly `ParsleyUI`
     // @returns validationResult:
     //  - `true` if all constraints pass
     //  - `[]` if not required field and empty (not validated)
@@ -246,7 +246,7 @@ define('parsley/field', [
     // Internal only.
     // Shortcut to trigger an event
     _trigger: function(event) {
-      $.emit('parsley:field:' + event, this);
+      this.$element.trigger('field:' + event + '.parsley', [this]);
     },
 
     // Internal only.
