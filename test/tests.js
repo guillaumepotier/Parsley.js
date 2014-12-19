@@ -37,9 +37,15 @@ require(['config'], function () {
         'features/ui'
       ], function (utils, parsleyBase, options, pubsub, abstract, field, multiple, form, validator, ui) {
         describe('ParsleyStandard', function () {
-          // beforeEach(function () {
-          //   window.ParsleyConfig = $.extend(true, {}, window.ParsleyConfig, { excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[disabled]' });
-          // });
+          // Use a pristine ParsleyExtend for the standard suite:
+          var previousExtend;
+          before(function () {
+            previousExtend = window.ParsleyExtend;
+            window.ParsleyExtend = {};
+          });
+          after(function () {
+            window.ParsleyExtend = previousExtend;
+          });
           utils(ParsleyUtils);
           parsleyBase(Parsley);
           options(ParsleyOptionsFactory);
