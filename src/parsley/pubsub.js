@@ -3,7 +3,13 @@ define('parsley/pubsub', [
   'parsley/form'
 ], function (ParsleyField, ParsleyForm) {
   var
-    o = $({});
+    o = $({}),
+    deprecated = function() {
+      if (window.console && window.console.log)
+        window.console.log("Parsley's pubsub module is deprecated; use the corresponding jQuery event method instead");
+      // Warn only once:
+      deprecated = function() {}
+    };
 
   // Returns an event handler that calls `fn` with the arguments it expects
   function adapt(fn, context) {
@@ -26,10 +32,10 @@ define('parsley/pubsub', [
     return name;
   };
 
-  // $.listen(name, callback);
-  // $.listen(name, context, callback);
+  // $.listen is deprecated. Use jQuery events instead.
   $.listen = function (name, callback) {
     var context;
+    deprecated();
     if ('object' === typeof arguments[1] && 'function' === typeof arguments[2]) {
       context = arguments[1];
       callback = arguments[2];
@@ -42,6 +48,7 @@ define('parsley/pubsub', [
   };
 
   $.listenTo = function (instance, name, fn) {
+    deprecated();
     if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
       throw new Error('Must give Parsley instance');
 
@@ -52,26 +59,29 @@ define('parsley/pubsub', [
   };
 
   $.unsubscribe = function (name, fn) {
+    deprecated();
     if ('string' !== typeof name || 'function' !== typeof fn)
       throw new Error('Wrong arguments');
     $(document).off(eventName(name), fn.parsleyAdaptedCallback);
   };
 
   $.unsubscribeTo = function (instance, name) {
+    deprecated();
     if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
       throw new Error('Must give Parsley instance');
     $(instance.$element).off(eventName(name));
   };
 
   $.unsubscribeAll = function (name) {
+    deprecated();
     $(document).off(eventName(name));
     $('form,input').off(eventName(name));
   };
 
-  // $.emit(name [, arguments...]);
-  // $.emit(name, instance [, arguments...]);
+  // $.emit is deprecated. Use jQuery events instead.
   $.emit = function (name, instance) {
     var $target = $(document);
+    deprecated();
     if ((instance instanceof ParsleyField) || (instance instanceof ParsleyForm)) {
       $target = instance.$element;
     }
