@@ -8,10 +8,12 @@ define(function () {
         var UI = new ParsleyUI();
         expect(UI.listen).not.to.be(undefined);
       });
-      it('should create proper errors container', function () {
+      it('should create proper errors container when needed', function () {
         $('body').append('<input type="text" id="element" data-parsley-required />');
         var parsleyField = $('#element').psly();
         expect($('#element').attr('data-parsley-id')).to.be(parsleyField.__id__);
+        expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(0);
+        parsleyField.validate();
         expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(1);
         expect($('ul#parsley-id-' + parsleyField.__id__).hasClass('parsley-errors-list')).to.be(true);
       });
@@ -22,7 +24,7 @@ define(function () {
             '<div id="container"></div>'                                                             +
             '<div id="container2"></div>'                                                            +
           '</form>');
-        $('#element').psly();
+        $('#element').psly().validate();
         expect($('#container .parsley-errors-list').length).to.be(1);
         $('#element').psly().destroy();
         $('#field1').removeAttr('data-parsley-errors-container');
@@ -32,9 +34,9 @@ define(function () {
         expect($('#container2 .parsley-errors-list').length).to.be(1);
       });
       it('should handle wrong errors-container option', function () {
-        $('body').append('<input type="text" id="element" data-parsley-errors-container="#donotexist" />');
+        $('body').append('<input type="text" id="element" data-parsley-errors-container="#donotexist" required/>');
         window.console.warn = sinon.spy();
-        var parsleyInstance = $('#element').psly();
+        $('#element').psly().validate();
         expect(window.console.warn.called).to.be(true);
       });
       it('should add proper parsley class on success or failure (type=text)', function () {
