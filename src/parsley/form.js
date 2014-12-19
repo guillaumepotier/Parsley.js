@@ -40,6 +40,7 @@ define('parsley/form', [
 
       // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
+      this._trigger('validate');
 
       // loop through fields to validate them one by one
       for (var i = 0; i < this.fields.length; i++) {
@@ -54,8 +55,8 @@ define('parsley/form', [
           this.validationResult = false;
       }
 
-      $.emit('parsley:form:' + (this.validationResult ? 'success' : 'error'), this);
-      $.emit('parsley:form:validated', this);
+      this._trigger(this.validationResult ? 'success' : 'error');
+      this._trigger('validated');
 
       return this.validationResult;
     },
@@ -105,7 +106,14 @@ define('parsley/form', [
       });
 
       return this;
+    },
+
+    // Internal only.
+    // Shortcut to trigger an event
+    _trigger: function(event) {
+      $.emit('parsley:form:' + event, this);
     }
+
   };
 
   return ParsleyForm;
