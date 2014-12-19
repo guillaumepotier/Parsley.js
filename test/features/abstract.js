@@ -13,26 +13,6 @@ define(function () {
         expect(parsleyField.options).not.to.have.key('pattern');
         expect(parsleyField.options).have.key('required');
       });
-      it('should use subscribe()', function (done) {
-        $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
-        var parsleyField = new Parsley('#element');
-
-        parsleyField.subscribe('parsley:field:foo', function (instance, val) {
-          expect(instance.__id__).to.be(parsleyField.__id__);
-          expect(val).to.be('baz');
-          done();
-        });
-
-        $(document).trigger('field:foo', 'bar');
-        $('#element').trigger('field:foo', [$('#element').parsley(), 'baz']);
-      });
-      it('should use unsubscribe()', function () {
-        $('body').append('<input type="email" id="element" />');
-        var parsleyInstance = $('#element').parsley();
-        parsleyInstance.subscribe('foo', function () { expect(true).to.be(false); });
-        parsleyInstance.unsubscribe('foo');
-        $.emit('foo', parsleyInstance);
-      });
       it('should use reset() on field', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
         var parsleyField = new Parsley('#element');
@@ -106,7 +86,7 @@ define(function () {
         expect(formEventsCount).to.be(1);
 
         // we should never enter here since parsley form instance is destroyed
-        $.listen('parsley:form:validate', function () {
+        $(document).on('form:validate.parsley', function () {
           expect(true).to.be(false);
         });
 
@@ -117,7 +97,7 @@ define(function () {
           expect($('#element').data('Parsley')).to.be(undefined);
           expect($('#field1').data('Parsley')).to.be(undefined);
 
-          $.unsubscribeAll('parsley:form:validate');
+          $(document).off('form:validate.parsley');
           done();
         });
 
