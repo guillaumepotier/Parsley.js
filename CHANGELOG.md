@@ -1,5 +1,10 @@
 # Parsley 2.x changelog
 
+## 2.1.0-rc1
+
+- jQuery events are now used instead of our pubsub code.
+The pubsub functions are now deprecated and will be removed in 3.0.0
+
 ## 2.0.7
 
 - support of html5 `maxlength` and `minlength` (#731)

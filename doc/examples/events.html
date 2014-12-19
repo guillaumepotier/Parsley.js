@@ -150,7 +150,7 @@
 
 &lt;script type="text/javascript">
 $(document).ready(function () {
-  $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
+  $('#demo-form').on('form:validate.parsley', function (evt, formInstance) {
 
     // if one of these blocks is not failing do not prevent submission
     // we use here group validation with option force (validate even non required fields)

@@ -16,16 +16,14 @@ define('parsley/abstract', [
       return window.ParsleyValidator.validate(value, constraints, priority);
     },
 
-    // Subscribe an event and a handler for a specific field or a specific form
-    // If on a ParsleyForm instance, it will be attached to form instance and also
-    // To every field instance for this form
+    // Deprecated. Use jQuery events
     subscribe: function (name, fn) {
       $.listenTo(this, name.toLowerCase(), fn);
 
       return this;
     },
 
-    // Same as subscribe above. Unsubscribe an event for field, or form + its fields
+    // Deprecated. Use jQuery events
     unsubscribe: function (name) {
       $.unsubscribeTo(this, name.toLowerCase());
 
