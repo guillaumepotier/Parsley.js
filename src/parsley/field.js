@@ -41,12 +41,12 @@ define('parsley/field', [
       this.value = this.getValue();
 
       // Field Validate event. `this.value` could be altered for custom needs
-      $.emit('parsley:field:validate', this);
+      this._trigger('validate');
 
-      $.emit('parsley:field:' + (this.isValid(force, this.value) ? 'success' : 'error'), this);
+      this._trigger(this.isValid(force, this.value) ? 'success' : 'error');
 
       // Field validated event. `this.validationResult` could be altered for custom needs too
-      $.emit('parsley:field:validated', this);
+      this._trigger('validated');
 
       return this.validationResult;
     },
@@ -200,7 +200,7 @@ define('parsley/field', [
       else if ('undefined' !== typeof this.$element.attr('max'))
         this.addConstraint('max', this.$element.attr('max'), undefined, true);
 
-    
+
       // length
       if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
         this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);
@@ -241,6 +241,12 @@ define('parsley/field', [
         return false;
 
       return false !== this.constraintsByName.required.requirements;
+    },
+
+    // Internal only.
+    // Shortcut to trigger an event
+    _trigger: function(event) {
+      $.emit('parsley:field:' + event, this);
     },
 
     // Internal only.

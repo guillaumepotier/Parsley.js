@@ -36,13 +36,13 @@ define('parsley/abstract', [
     reset: function () {
       // Field case: just emit a reset event for UI
       if ('ParsleyForm' !== this.__class__)
-        return $.emit('parsley:field:reset', this);
+        return this._trigger('reset');
 
       // Form case: emit a reset event for each field
       for (var i = 0; i < this.fields.length; i++)
-        $.emit('parsley:field:reset', this.fields[i]);
+        this.fields[i]._trigger('reset');
 
-      $.emit('parsley:form:reset', this);
+      this._trigger('reset');
     },
 
     // Destroy Parsley instance (+ UI)
@@ -51,7 +51,7 @@ define('parsley/abstract', [
       if ('ParsleyForm' !== this.__class__) {
         this.$element.removeData('Parsley');
         this.$element.removeData('ParsleyFieldMultiple');
-        $.emit('parsley:field:destroy', this);
+        this._trigger('destroy');
 
         return;
       }
@@ -61,7 +61,7 @@ define('parsley/abstract', [
         this.fields[i].destroy();
 
       this.$element.removeData('Parsley');
-      $.emit('parsley:form:destroy', this);
+      this._trigger('destroy');
     }
   };
 
