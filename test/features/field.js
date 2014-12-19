@@ -195,35 +195,35 @@ define(function () {
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(3);
       });
-      it('should fire parsley:field:validate event', function (done) {
+      it('should trigger field:validate event', function (done) {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        $.listenTo($('#element').psly(), 'parsley:field:validate', function (instance) {
+        $('#element').on('field:validate.parsley', function (event, instance) {
           // we are before validation!
           expect(instance.validationResult.length).to.be(0);
           done();
         });
         $('#element').psly().validate();
       });
-      it('should fire parsley:field:validated event', function (done) {
+      it('should trigger field:validated event', function (done) {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        $.listenTo($('#element').psly(), 'parsley:field:validated', function (instance) {
+        $('#element').on('field:validated.parsley', function (event, instance) {
           // we are after validation!
           expect(instance.validationResult.length).to.be(1);
           done();
         });
         $('#element').psly().validate();
       });
-      it('should fire parsley:field:error event', function (done) {
+      it('should trigger field:error event', function (done) {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        $.listenTo($('#element').psly(), 'parsley:field:error', function (instance) {
+        $('#element').on('field:error.parsley', function (event, instance) {
           expect(instance.validationResult.length).to.be(1);
           done();
         });
         $('#element').psly().validate();
       });
-      it('should fire parsley:field:success event', function (done) {
+      it('should trigger field:success event', function (done) {
         $('body').append('<input type="email" required id="element" value="foo@bar.baz" />');
-        $.listenTo($('#element').psly(), 'parsley:field:success', function (instance) {
+        $('#element').on('field:success.parsley', function (event, instance) {
           expect(instance.validationResult).to.be(true);
           done();
         });
