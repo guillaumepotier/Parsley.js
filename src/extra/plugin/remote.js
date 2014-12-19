@@ -92,7 +92,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
     this._refreshFields();
 
-    $.emit('parsley:form:validate', this);
+    this._trigger('validate');
 
     for (var i = 0; i < this.fields.length; i++) {
 
@@ -105,13 +105,13 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
     return $.when.apply($, promises)
       .done(function () {
-        $.emit('parsley:form:success', that);
+        that._trigger('success');
       })
       .fail(function () {
-        $.emit('parsley:form:error', that);
+        that._trigger('error');
       })
       .always(function () {
-        $.emit('parsley:form:validated', that);
+        that._trigger('validated');
       });
   },
 
@@ -134,17 +134,17 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   _asyncValidateField: function (force) {
     var that = this;
 
-    $.emit('parsley:field:validate', this);
+    this._trigger('validate');
 
     return this._asyncIsValidField(force)
       .done(function () {
-        $.emit('parsley:field:success', that);
+        that._trigger('success');
       })
       .fail(function () {
-        $.emit('parsley:field:error', that);
+        that._trigger('error');
       })
       .always(function () {
-        $.emit('parsley:field:validated', that);
+        that._trigger('validated');
       });
   },
 

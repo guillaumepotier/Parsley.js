@@ -208,7 +208,7 @@ define([
         this.$element.data('Parsley', parsleyInstance);
 
         // Tell the world we got a new ParsleyForm or ParsleyField instance!
-        $.emit('parsley:' + ('parsleyForm' === type ? 'form' : 'field') + ':init', parsleyInstance);
+        parsleyInstance._trigger('init');
       }
 
       return parsleyInstance;
