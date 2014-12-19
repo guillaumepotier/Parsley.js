@@ -127,7 +127,7 @@
     validationThreshold: 3,
     // Focused field on form validation error. 'fist'|'last'|'none'
     focus: 'first',
-    // `$.Event()` that will trigger validation. eg: `keyup`, `change`..
+    // `$.Event()` that will trigger validation. eg: `keyup`, `change`...
     trigger: false,
     // Class that would be added on every failing validation Parsley field
     errorClass: 'parsley-error',
@@ -810,7 +810,7 @@ var Validator = ( function ( ) {
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-        
+
         if (this === null) {
             throw new TypeError();
         }
@@ -861,7 +861,7 @@ var Validator = ( function ( ) {
     window[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = exports;
   }
 
-  return exports; 
+  return exports;
 } )( );
 
   // This is needed for Browserify usage that requires Validator.js through module.exports

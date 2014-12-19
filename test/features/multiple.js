@@ -125,7 +125,7 @@ define(function () {
           '</select>');
         expect($('#element').parsley().isValid()).to.be(false);
       });
-      it('should not bind radio or checkboxes withoud a name or and id or a multiple option', function () {
+      it('should not bind radio or checkboxes without a name or and id or a multiple option', function () {
         $('body').append('<input type="radio" value="foo" />');
         window.console.warn = sinon.spy();
         var parsleyInstance = $('input[type=radio]').psly();

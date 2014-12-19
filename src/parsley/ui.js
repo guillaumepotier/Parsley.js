@@ -32,7 +32,7 @@ define('parsley/ui', [
       // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
 
-      // Field have been validated at least once if here. Useful for binded key events..
+      // Field have been validated at least once if here. Useful for binded key events...
       fieldInstance._ui.validatedOnce = true;
 
       // Handle valid / invalid / none field class
@@ -108,7 +108,7 @@ define('parsley/ui', [
     },
 
     // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
-    // but a little bit complex for above internal usage, with forced undefined parametter..
+    // but a little bit complex for above internal usage, with forced undefined parameter...
     addError: function (fieldInstance, name, message, assert, doNotUpdateClass) {
       fieldInstance._ui.$errorsWrapper
         .addClass('filled')
@@ -263,7 +263,7 @@ define('parsley/ui', [
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
 
-      // Otherwise, if simple element (input, texatrea, select..) it will perfectly host the classes
+      // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
       if ('undefined' === typeof fieldInstance.options.multiple || fieldInstance.$element.is('select'))
         return fieldInstance.$element;
 
@@ -327,7 +327,7 @@ define('parsley/ui', [
 
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
     eventValidate: function(event) {
-      // For keyup, keypress, keydown.. events that could be a little bit obstrusive
+      // For keyup, keypress, keydown... events that could be a little bit obstrusive
       // do not validate if val length < min threshold on first validation. Once field have been validated once and info
       // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
       if (new RegExp('key').test(event.type))

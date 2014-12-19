@@ -630,7 +630,7 @@ window.ParsleyConfig = {
                     </tr>
                   </table>
                 </td>
-                <td>Validates that a given number is greater than some minimum number.</td>
+                <td>Validates that a given number is greater than or equal to some minimum number.</td>
               </tr>
               <tr>
                 <td>
@@ -649,7 +649,7 @@ window.ParsleyConfig = {
                     </tr>
                   </table>
                 </td>
-                <td>Validates that a given number is less than some maximum number.</td>
+                <td>Validates that a given number is less than or equal to some maximum number.</td>
               </tr>
               <tr>
                 <td>
@@ -719,7 +719,7 @@ window.ParsleyConfig = {
                   Equalto <version>#2.0</version>
                 </td>
                 <td><code>data-parsley-equalto="#anotherfield"</code></td>
-                <td>Validates that the value is identical to another field value (useful for password confirmation check).</td>
+                <td>Validates that the value is identical to another field's value (useful for password confirmation check).</td>
               </tr>
             </tbody>
           </table>
@@ -758,7 +758,7 @@ window.ParsleyConfig = {
 &lt;/script>
 </code></pre>
             </li>
-            <li>By registering them in <code>ParsleyValidator</code> <strong>after</strong> that <code>parsley.js</code> is loaded:
+            <li>By registering them in <code>ParsleyValidator</code> <strong>after</strong> <code>parsley.js</code> is loaded:
 
 <pre><code>&lt;input type="text" data-parsley-multiple="3" />
 [...]
@@ -1190,7 +1190,11 @@ $('[name="q"]').parsley()
                  </tr>
                </table>
              </td>
+<<<<<<< HEAD
              <td>Validates that the value is less than another field's value or some strict maximum number.</td>
+=======
+             <td>Validates that the value is less than another field's value</td>
+>>>>>>> Fix language
            </tr>
            <tr>
              <td>
@@ -1209,7 +1213,11 @@ $('[name="q"]').parsley()
                  </tr>
                </table>
              </td>
+<<<<<<< HEAD
              <td>Validates that the value is less than or equal to another field's value or some minimum number.</td>
+=======
+             <td>Validates that the value is less than or equal to another field's value</td>
+>>>>>>> Fix language
            </tr>
            <tr>
              <td>

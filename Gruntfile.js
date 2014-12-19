@@ -208,7 +208,7 @@ function convert(name, path, contents) {
     // Makes sure the self-executing wrapper function returns an object
     var lastClosingBraceIndex = contents.lastIndexOf("}");
     contents = contents.substring(0, lastClosingBraceIndex)
-      + "\n\n  return exports; \n}"
+      + "\n\n  return exports;\n}"
       + contents.substring(lastClosingBraceIndex + 1);
 
     return contents;

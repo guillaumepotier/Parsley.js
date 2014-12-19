@@ -66,7 +66,7 @@ define('parsley/pubsub', [
   };
 
   // $.emit(name [, arguments...]);
-  // $.emit(name, instance [, arguments..]);
+  // $.emit(name, instance [, arguments...]);
   $.emit = function (name, instance) {
     if ('undefined' === typeof subscribed[name])
       return;

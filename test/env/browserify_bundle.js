@@ -9919,7 +9919,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
     validationThreshold: 3,
     // Focused field on form validation error. 'fist'|'last'|'none'
     focus: 'first',
-    // `$.Event()` that will trigger validation. eg: `keyup`, `change`..
+    // `$.Event()` that will trigger validation. eg: `keyup`, `change`...
     trigger: false,
     // Class that would be added on every failing validation Parsley field
     errorClass: 'parsley-error',
@@ -10602,7 +10602,7 @@ var Validator = ( function ( ) {
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-        
+
         if (this === null) {
             throw new TypeError();
         }
@@ -10653,7 +10653,7 @@ var Validator = ( function ( ) {
     window[ 'undefined' !== typeof validatorjs_ns ? validatorjs_ns : 'Validator' ] = exports;
   }
 
-  return exports; 
+  return exports;
 } )( );
 
   // This is needed for Browserify usage that requires Validator.js through module.exports
@@ -10870,7 +10870,7 @@ var Validator = ( function ( ) {
       var diff = this._diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
       // Then store current validation result for next reflow
       fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
-      // Field have been validated at least once if here. Useful for binded key events..
+      // Field have been validated at least once if here. Useful for binded key events...
       fieldInstance._ui.validatedOnce = true;
       // Handle valid / invalid / none field class
       this.manageStatusClass(fieldInstance);
@@ -10929,7 +10929,7 @@ var Validator = ( function ( ) {
         this.updateError(fieldInstance, diff.kept[i].assert.name, undefined, diff.kept[i].assert, true);
     },
     // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
-    // but a little bit complex for above internal usage, with forced undefined parametter..
+    // but a little bit complex for above internal usage, with forced undefined parametter...
     addError: function (fieldInstance, name, message, assert, doNotUpdateClass) {
       fieldInstance._ui.$errorsWrapper
         .addClass('filled')
@@ -11048,7 +11048,7 @@ var Validator = ( function ( ) {
       // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
-      // Otherwise, if simple element (input, texatrea, select..) it will perfectly host the classes
+      // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
       if ('undefined' === typeof fieldInstance.options.multiple || fieldInstance.$element.is('select'))
         return fieldInstance.$element;
       // But if multiple element (radio, checkbox), that would be their parent
@@ -11331,7 +11331,7 @@ var Validator = ( function ( ) {
     // @returns validationResult:
     //  - `true` if all constraint passes
     //  - `[]` if not required field and empty (not validated)
-    //  - `[Violation, [Violation..]]` if there were validation errors
+    //  - `[Violation, [Violation...]]` if there were validation errors
     validate: function (force) {
       this.value = this.getValue();
       // Field Validate event. `this.value` could be altered for custom needs
@@ -11700,7 +11700,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       return (this.$element.is('input[type=radio], input[type=checkbox]') && 'undefined' === typeof this.options.multiple) || (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple'));
     },
     // Multiples fields are a real nightmare :(
-    // Maybe some refacto would be appreciated here..
+    // Maybe some refacto would be appreciated here...
     handleMultiple: function (parsleyFormInstance) {
       var
         that = this,
