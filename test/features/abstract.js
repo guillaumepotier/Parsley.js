@@ -13,6 +13,26 @@ define(function () {
         expect(parsleyField.options.pattern).to.be(undefined);
         expect(parsleyField.options.required).to.eql('');
       });
+      it('should use subscribe()', function (done) {
+        $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
+        var parsleyField = new Parsley('#element');
+
+        parsleyField.subscribe('parsley:field:foo', function (instance, val) {
+          expect(instance.__id__).to.be(parsleyField.__id__);
+          expect(val).to.be('baz');
+          done();
+        });
+
+        $.emit('parsley:field:foo', 'bar');
+        $.emit('parsley:field:foo', parsleyField, 'baz');
+      });
+      it('should use unsubscribe()', function () {
+        $('body').append('<input type="email" id="element" />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.subscribe('foo', function () { expect(true).to.be(false); });
+        parsleyInstance.unsubscribe('foo');
+        $.emit('foo', parsleyInstance);
+      });
       it('should use reset() on field', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
         var parsleyField = new Parsley('#element');
