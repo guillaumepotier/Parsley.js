@@ -12,7 +12,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
       throw new Error('`_bindFields` must be called on a form instance');
 
     if ('undefined' === typeof this.options.fields)
-      throw new Error('bind.js plugin needs to have Parsley instanciated with fields');
+      throw new Error('bind.js plugin needs to have Parsley instantiated with fields');
 
     var field;
     this.fields = [];
