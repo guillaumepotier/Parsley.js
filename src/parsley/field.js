@@ -135,7 +135,6 @@ define('parsley/field', [
     * @param {Boolean}  isDomConstraint   optional
     */
     addConstraint: function (name, requirements, priority, isDomConstraint) {
-      name = name.toLowerCase();
 
       if ('function' === typeof window.ParsleyValidator.validators[name]) {
         var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
