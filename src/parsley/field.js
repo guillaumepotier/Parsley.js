@@ -118,7 +118,6 @@ define('parsley/field', [
     * @param {Boolean}  isDomConstraint   optional
     */
     addConstraint: function (name, requirements, priority, isDomConstraint) {
-      name = name.toLowerCase();
 
       if ('function' === typeof window.ParsleyValidator.validators[name]) {
         var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
@@ -199,7 +198,7 @@ define('parsley/field', [
       else if ('undefined' !== typeof this.$element.attr('max'))
         this.addConstraint('max', this.$element.attr('max'), undefined, true);
 
-    
+
       // length
       if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
         this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);
