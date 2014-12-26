@@ -258,6 +258,10 @@ define(function () {
         $('#element').attr('data-parsley-trim-value', true).parsley().actualizeOptions();
         expect($('#element').parsley().getValue()).to.be('foo');
       });
+      it('should have a value option', function () {
+        $('body').append('<input type="text" id="element"/>');
+        expect($('#element').parsley({value: 'foo'}).getValue()).to.be('foo');
+      });
       it('should properly handle null or undefined values', function () {
         $('body').append('<input type="text" id="element" required value/>');
         expect($('#element').parsley().isValid()).to.be(false);
