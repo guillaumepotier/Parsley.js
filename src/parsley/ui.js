@@ -294,8 +294,6 @@ define('parsley/ui', [
     },
 
     actualizeTriggers: function (fieldInstance) {
-      var that = this;
-
       // Remove Parsley events already binded on this field
       if (fieldInstance.options.multiple)
         $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').off('.Parsley');
@@ -313,12 +311,10 @@ define('parsley/ui', [
 
       // Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise
       if (fieldInstance.options.multiple)
-        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
-          $(this).on(
-            triggers.split(' ').join('.Parsley ') + '.Parsley',
-            false,
-            $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : that.eventValidate, fieldInstance));
-        });
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').on(
+          triggers.split(' ').join('.Parsley ') + '.Parsley',
+          false,
+          $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
       else
         fieldInstance.$element
           .on(
