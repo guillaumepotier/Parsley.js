@@ -81,8 +81,10 @@ define('parsley/field', [
     getValue: function () {
       var value;
 
-      // Value could be overriden in DOM
-      if ('undefined' !== typeof this.options.value)
+      // Value could be overriden in DOM or with explicit options
+      if ('function' === typeof this.options.value)
+        value = this.options.value(this);
+      else if ('undefined' !== typeof this.options.value)
         value = this.options.value;
       else
         value = this.$element.val();

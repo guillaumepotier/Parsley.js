@@ -345,7 +345,15 @@
             <tbody>
               <tr>
                 <td><code>data-parsley-value</code> <version>#2.0</version></td>
-                <td>Set a specific field value for Parsley validation, dissociated from the real one. eg: <code>data-parsley-value="foo"</code></td>
+                <td>Set a specific field value for Parsley validation, dissociated from the real one. eg: <code>data-parsley-value="foo"</code>
+                  <br/>
+                The JavaScript API allows one to pass a function to be called. eg:
+                <code>
+                  $('&lt;input type="text"&gt;').appendTo($('form')).<br/>
+                  parsley({<br/>
+                  &nbsp;&nbsp;value: function(parsley) { return 'foo'; }<br/>
+                  });
+                </code></td>
               </tr>
               <tr>
                 <td><code>data-parsley-group</code> <version>#2.0</version></td>

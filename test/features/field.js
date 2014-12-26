@@ -275,6 +275,13 @@ define(function () {
         $('body').append('<input type="text" id="element"/>');
         expect($('#element').parsley({value: 'foo'}).getValue()).to.be('foo');
       });
+      it('should accept a function as value option', function () {
+        $('body').append('<input type="text" id="element"/>');
+        var str = 'fo';
+        var parsley = $('#element').parsley({value: function () { return str = str + 'o' } });
+        expect(parsley.getValue()).to.be('foo');
+        expect(parsley.getValue()).to.be('fooo');
+      });
       it('should properly handle null or undefined values', function () {
         $('body').append('<input type="text" id="element" required value/>');
         expect($('#element').parsley().isValid()).to.be(false);

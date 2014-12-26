@@ -4,6 +4,7 @@
 
   - jQuery events are now used instead of our pubsub code.
     The pubsub functions are now deprecated and will be removed in 3.0.0
+  - The `value` option can now be a function
 
 ## 2.0.6
 
