@@ -2,6 +2,7 @@
 
 ## 2.1.0-rc1
 
+<<<<<<< HEAD
 - jQuery events are now used instead of our pubsub code.
 The pubsub functions are now deprecated and will be removed in 3.0.0
 
@@ -12,6 +13,11 @@ The pubsub functions are now deprecated and will be removed in 3.0.0
 - improved test suite
 - various small code simplifications
 - updated TLD range for URL validator (#829)
+=======
+  - jQuery events are now used instead of our pubsub code.
+    The pubsub functions are now deprecated and will be removed in 3.0.0
+  - The `value` option can now be a function
+>>>>>>> Allow value option to be a function
 
 ## 2.0.6
 
