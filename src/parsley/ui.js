@@ -7,16 +7,15 @@ define('parsley/ui', [
 
   ParsleyUI.prototype = {
     listen: function () {
-      $.listen('parsley:form:init', this, this.setupForm);
-      $.listen('parsley:field:init', this, this.setupField);
-
-      $.listen('parsley:field:validated', this, this.reflow);
-      $.listen('parsley:form:validated', this, this.focus);
-
-      $.listen('parsley:field:reset', this, this.reset);
-
-      $.listen('parsley:form:destroy', this, this.destroy);
-      $.listen('parsley:field:destroy', this, this.destroy);
+      var that = this;
+      $(document)
+      .on('form:init.parsley',       function(evt, field) { that.setupForm (field) } )
+      .on('field:init.parsley',      function(evt, field) { that.setupField(field) } )
+      .on('field:validated.parsley', function(evt, field) { that.reflow    (field) } )
+      .on('form:validated.parsley',  function(evt, field) { that.focus     (field) } )
+      .on('field:reset.parsley',     function(evt, field) { that.reset     (field) } )
+      .on('form:destroy.parsley',    function(evt, field) { that.destroy   (field) } )
+      .on('field:destroy.parsley',   function(evt, field) { that.destroy   (field) } );
 
       return this;
     },
