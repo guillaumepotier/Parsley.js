@@ -136,7 +136,7 @@ define(function () {
 
         var parsleyField = new Parsley($('#element'))
           .addConstraint('multiple', 2);
-        expect(parsleyField.isValid()).to.eql([]);
+        expect(parsleyField.isValid()).to.eql(true);
         $('#element').val('1');
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('2');
@@ -231,7 +231,7 @@ define(function () {
       });
       it('should have validateIfEmpty option', function () {
         $('body').append('<input type="email" data-parsley-rangelength="[5, 10]" id="element" />');
-        expect($('#element').psly().isValid()).to.be.eql([]);
+        expect($('#element').psly().isValid()).to.be.eql(true);
         $('#element').attr('data-parsley-validate-if-empty', '');
         expect($('#element').psly().isValid()).to.be.eql(false);
       });
@@ -247,8 +247,8 @@ define(function () {
       });
       it('should have a force option for validate and isValid methods', function () {
         $('body').append('<input type="email" id="element" />');
-        expect($('#element').parsley().isValid()).to.be.eql([]);
-        expect($('#element').parsley().validate()).to.be.eql([]);
+        expect($('#element').parsley().isValid()).to.be.eql(true);
+        expect($('#element').parsley().validate()).to.be.eql(true);
         expect($('#element').parsley().isValid(true)).to.be(false);
         expect($('#element').parsley().validate(true).length).to.be(1);
       });

@@ -63,7 +63,7 @@ define('parsley/ui', [
     },
 
     manageStatusClass: function (fieldInstance) {
-      if (true === fieldInstance.validationResult)
+      if (fieldInstance.hasConstraints() && fieldInstance.needsValidation() && true === fieldInstance.validationResult)
         this._successClass(fieldInstance);
       else if (fieldInstance.validationResult.length > 0)
         this._errorClass(fieldInstance);

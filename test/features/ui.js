@@ -49,6 +49,20 @@ define(function () {
         expect($('#element').hasClass('parsley-success')).to.be(true);
         expect($('#element').hasClass('parsley-error')).to.be(false);
       });
+      it('should not add success class on a field without constraints', function () {
+        $('body').append('<input type="text" id="element" />');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('#element').hasClass('parsley-error')).to.be(false);
+        expect($('#element').hasClass('parsley-success')).to.be(false);
+      });
+      it('should not add success class on an empty optional field', function () {
+        $('body').append('<input type="number" id="element" />');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('#element').hasClass('parsley-error')).to.be(false);
+        expect($('#element').hasClass('parsley-success')).to.be(false);
+      });
       it('should add proper parsley class on success or failure (type=radio)', function () {
         $('body').append('<input type="radio" id="element" required />');
         var parsleyField = $('#element').psly();
