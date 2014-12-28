@@ -86,7 +86,7 @@ define(function () {
           '</form>');
 
         // if not required, field is optional and do not fail
-        expect($('#check1').parsley().isValid()).to.be.eql([]);
+        expect($('#check1').parsley().isValid()).to.be.eql(true);
         expect($('#element').parsley().isValid()).to.be(true);
 
         // once required, it fails if not rightly checked
