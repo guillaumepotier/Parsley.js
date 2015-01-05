@@ -13,7 +13,7 @@ define('parsley/abstract', [
 
     // ParsleyValidator validate proxy function . Could be replaced by third party scripts
     validateThroughValidator: function (value, constraints, priority) {
-      return window.ParsleyValidator.validate.apply(window.ParsleyValidator, [value, constraints, priority]);
+      return window.ParsleyValidator.validate(value, constraints, priority);
     },
 
     // Subscribe an event and a handler for a specific field or a specific form
