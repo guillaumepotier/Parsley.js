@@ -172,7 +172,7 @@ define(function () {
         $('#element').trigger($.Event('change'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
       });
-      it('should auto bind error trigger on selet field error (input=text)', function () {
+      it('should auto bind error trigger on select field error (input=text)', function () {
         $('body').append('<input type="email" id="element" required />');
         var parsleyField = $('#element').psly();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
@@ -182,7 +182,7 @@ define(function () {
         $('#element').val('foo').trigger($.Event('keyup'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
       });
-      it('should auto bind error trigger on selet field error (select)', function () {
+      it('should auto bind error trigger on select field error (select)', function () {
         $('body').append('<select id="element" required>'+
           '<option value="">Choose</option>' +
           '<option value="foo">foo</option>' +
