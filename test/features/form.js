@@ -159,8 +159,8 @@ define(function () {
 
         var callbacks = [];
         var parsleyInstance = $form.parsley();
-        $.each(['validate', 'error', 'success', 'validated'], function(i, cb) {
-          parsleyInstance.subscribe('parsley:form:' + cb, function() {
+        $.each(['validate', 'error', 'success', 'validated'], function (i, cb) {
+          parsleyInstance.subscribe('parsley:form:' + cb, function () {
             callbacks.push(cb);
           });
         });
@@ -171,7 +171,7 @@ define(function () {
       });
       it('should fire "parsley:form:validate" to give the opportunity for changes before validation occurs', function() {
         var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
-        $form.parsley().subscribe('parsley:form:validate', function(psly) {
+        $form.parsley().subscribe('parsley:form:validate', function (psly) {
           psly.$element.find('input').remove();
         });
         expect($form.parsley().validate()).to.be(true);
