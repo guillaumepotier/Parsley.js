@@ -69,7 +69,7 @@ define([
       this.options = this.OptionsFactory.get(this);
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
-      if (this.$element.is('form') || (ParsleyUtils.attr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
+      if (this.$element.is('form') || (ParsleyUtils.checkAttr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
         return this.bind('parsleyForm');
 
       // Every other element is binded as a `ParsleyField` or `ParsleyFieldMultiple`

@@ -48,30 +48,13 @@ define(function () {
         attr = ParsleyUtils.attr(element, 'data-parsley-');
 
         expect(attr).to.eql({'foo': 'bar', 'bar': [0, 42]});
-
-        // test if attr exist
-        expect(ParsleyUtils.attr(element, 'data-parsley-', 'foo')).to.be(true);
-        expect(ParsleyUtils.attr(element, 'data-parsley-', 'FoO')).to.be(true);
-        expect(ParsleyUtils.attr(element, 'data-parsley-', 'baz')).to.be(false);
       });
-      it('should have a checkAttr feature for attr() method', function () {
-        var element = [{
-          attributes: [
-            {
-              specified: true,
-              name: "data-parsley-required-message",
-              value: "foo"
-            },
-            {
-              specified: true,
-              name: "data-parsley-validate",
-              value: true
-            }
-          ]
-        }];
-        expect(ParsleyUtils.attr(element, 'data-parsley-', 'required')).to.be(false);
-        expect(ParsleyUtils.attr(element, 'data-parsley-', 'required-message')).to.be(true);
-        expect(ParsleyUtils.attr(element, 'data-parsley-', 'validate')).to.be(true);
+      it('should have a checkAttr feature', function () {
+        var $element = $('<span data-parsley-required-message="foo" data-parsley-validate="true">');
+        expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'required')).to.be(false);
+        expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'required-message')).to.be(true);
+        expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'validate')).to.be(true);
+        expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'vaLidate')).to.be(true);
       });
       it('should have a proper get() function', function () {
         var object = {
