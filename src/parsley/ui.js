@@ -78,6 +78,8 @@ define('parsley/ui', [
       // Case where we have errorMessage option that configure an unique field error message, regardless failing validators
       if ('undefined' !== typeof fieldInstance.options.errorMessage) {
         if ((diff.added.length || diff.kept.length)) {
+          this._insertErrorWrapper(fieldInstance);
+
           if (0 === fieldInstance._ui.$errorsWrapper.find('.parsley-custom-error-message').length)
             fieldInstance._ui.$errorsWrapper
               .append(
@@ -111,6 +113,7 @@ define('parsley/ui', [
     // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
     // but a little bit complex for above internal usage, with forced undefined parameter...
     addError: function (fieldInstance, name, message, assert, doNotUpdateClass) {
+      this._insertErrorWrapper(fieldInstance);
       fieldInstance._ui.$errorsWrapper
         .addClass('filled')
         .append(
@@ -243,12 +246,6 @@ define('parsley/ui', [
       // Store it in fieldInstance for later
       fieldInstance._ui = _ui;
 
-      // Stops excluded inputs from getting errorContainer added
-      if( !fieldInstance.$element.is(fieldInstance.options.excluded) ) {
-        /** Mess with DOM now **/
-        this._insertErrorWrapper(fieldInstance);
-      }
-
       // Bind triggers first time
       this.actualizeTriggers(fieldInstance);
     },
@@ -276,6 +273,10 @@ define('parsley/ui', [
 
     _insertErrorWrapper: function (fieldInstance) {
       var $errorsContainer;
+
+      // Nothing to do if already inserted
+      if (0 !== fieldInstance._ui.$errorsWrapper.parent().length)
+        return fieldInstance._ui.$errorsWrapper.parent();
 
       if ('string' === typeof fieldInstance.options.errorsContainer) {
         if ($(fieldInstance.options.errorsContainer).length)
