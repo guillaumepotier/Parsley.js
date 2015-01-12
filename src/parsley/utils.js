@@ -11,7 +11,7 @@ define('parsley/utils', function () {
         regex = new RegExp('^' + namespace, 'i');
 
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
-        return {};
+        return obj;
 
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
