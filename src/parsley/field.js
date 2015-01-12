@@ -50,10 +50,13 @@ define('parsley/field', [
     },
 
     // An empty optional field does not need validation
-    needsValidation: function () {
+    needsValidation: function (value) {
+      if ('undefined' === typeof value)
+        value = this.getValue();
+
       // If a field is empty and not required, it is valid
       // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-      if (!this.getValue().length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty)
+      if (!value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty)
         return false;
 
       return true;
@@ -76,7 +79,7 @@ define('parsley/field', [
         value = this.getValue();
 
       // An empty optional field is valid
-      if (!value.length && !this.needsValidation() && true !== force)
+      if (!value.length && !this.needsValidation(value) && true !== force)
         return true;
 
       // If we want to validate field against all constraints, just call Validator and let it do the job
