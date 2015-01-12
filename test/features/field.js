@@ -252,6 +252,12 @@ define(function () {
         expect($('#element').parsley().isValid(true)).to.be(false);
         expect($('#element').parsley().validate(true).length).to.be(1);
       });
+      it('should allow passing a specific value to `isValid` method', function () {
+        expect(true, $('<input type="email" value="">').parsley().isValid(false));
+        expect(true, $('<input type="email" value="foo@bar.baz">').parsley().isValid(false, ""));
+        expect(false, $('<input type="email" value="">').parsley().isValid(true));
+        expect(false, $('<input type="email" value="foo@bar.baz">').parsley().isValid(true, ""));
+      });
       it('should have a trim-value option', function () {
         $('body').append('<input type="text" id="element" value=" foo " />');
         expect($('#element').parsley().getValue()).to.be(' foo ');
