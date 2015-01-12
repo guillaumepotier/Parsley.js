@@ -2,8 +2,7 @@ define('parsley/utils', function () {
   return {
     // Parsley DOM-API
     // returns object from dom attributes and values
-    // if attr is given, returns bool if attr present in DOM or not
-    attr: function ($element, namespace, checkAttr) {
+    attr: function ($element, namespace) {
       var
         attribute,
         obj = {},
@@ -17,14 +16,15 @@ define('parsley/utils', function () {
         attribute = $element[0].attributes[i];
 
         if ('undefined' !== typeof attribute && null !== attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
-          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr + '$', 'i').test(attribute.name))
-            return true;
-
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
         }
       }
 
-      return 'undefined' === typeof checkAttr ? obj : false;
+      return obj;
+    },
+
+    checkAttr: function ($element, namespace, checkAttr) {
+      return $element.is('[' + namespace + checkAttr + ']');
     },
 
     setAttr: function ($element, namespace, attr, value) {
