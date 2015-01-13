@@ -64,9 +64,9 @@ define([
         return savedparsleyFormInstance;
       }
 
-      // Handle 'static' options
-      this.OptionsFactory = new ParsleyOptionsFactory(window.ParsleyConfig, options, this.getNamespace(options));
-      this.options = this.OptionsFactory.get(this);
+      // Pre-compute options
+      this.parent = parsleyFormInstance;
+      this._resetOptions(options);
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
       if (this.$element.is('form') || (ParsleyUtils.checkAttr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
@@ -88,9 +88,6 @@ define([
         name,
         multiple,
         parsleyMultipleInstance;
-
-      // Get parsleyFormInstance options if exist, mixed with element attributes
-      this.options = $.extend(this.options, parsleyFormInstance ? parsleyFormInstance.OptionsFactory.get(parsleyFormInstance) : {}, ParsleyUtils.attr(this.$element, this.options.namespace));
 
       // Handle multiple name
       if (this.options.multiple)
@@ -163,19 +160,19 @@ define([
       switch (type) {
         case 'parsleyForm':
           parsleyInstance = $.extend(
-            new ParsleyForm(this.$element, this.OptionsFactory),
+            new ParsleyForm(this.$element, this.options),
             window.ParsleyExtend
           )._bindFields();
           break;
         case 'parsleyField':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance),
+            new ParsleyField(this.$element, this.options, parentParsleyFormInstance),
             window.ParsleyExtend
           );
           break;
         case 'parsleyFieldMultiple':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance),
+            new ParsleyField(this.$element, this.options, parentParsleyFormInstance),
             new ParsleyMultiple(),
             window.ParsleyExtend
           )._init(multiple);
@@ -210,6 +207,8 @@ define([
   // This way, the constructors will have access to those methods
   $.extend(ParsleyField.prototype, ParsleyAbstract.prototype);
   $.extend(ParsleyForm.prototype, ParsleyAbstract.prototype);
+  // Inherit actualizeOptions and _resetOptions:
+  $.extend(Parsley.prototype, ParsleyAbstract.prototype);
 
   // ### jQuery API
   // `$('.elem').parsley(options)` or `$('.elem').psly(options)`

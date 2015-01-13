@@ -75,7 +75,7 @@ define(function () {
         $('#element').attr('data-parsley-namespace', 'data-baz-');
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
-        }).options.namespace).to.be('data-baz-');
+        }).options.namespace).to.be('data-bar-');
         delete window.ParsleyConfig.namespace;
       });
       it('should handle proper options management', function () {
