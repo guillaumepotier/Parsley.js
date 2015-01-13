@@ -65,7 +65,7 @@ define([
       }
 
       // Handle 'static' options
-      this.OptionsFactory = new ParsleyOptionsFactory($.extend(true, {}, ParsleyDefaults, window.ParsleyConfig), options, this.getNamespace(options));
+      this.OptionsFactory = new ParsleyOptionsFactory(window.ParsleyConfig, options, this.getNamespace(options));
       this.options = this.OptionsFactory.get(this);
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
@@ -153,10 +153,7 @@ define([
         return this.$element.data('parsleyNamespace');
       if ('undefined' !== typeof ParsleyUtils.get(options, 'namespace'))
         return options.namespace;
-      if ('undefined' !== typeof ParsleyUtils.get(window, 'ParsleyConfig.namespace'))
-        return window.ParsleyConfig.namespace;
-
-      return ParsleyDefaults.namespace;
+      return window.ParsleyConfig.namespace;
     },
 
     // Return proper `ParsleyForm`, `ParsleyField` or `ParsleyFieldMultiple`
@@ -250,10 +247,8 @@ define([
     window.ParsleyExtend = {};
 
   // ### ParsleyConfig
-  // Ensure that defined if not already the case
-  if ('undefined' === typeof window.ParsleyConfig)
-    window.ParsleyConfig = {};
-
+  // Inherit from ParsleyDefault, and copy over any existing values
+  window.ParsleyConfig = $.extend(ParsleyUtils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
   // ### Globals
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
