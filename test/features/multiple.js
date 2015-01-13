@@ -219,8 +219,6 @@ define(function () {
         expect(parsleyInstance.$elements.length).to.be(3);
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
-
         if ($('#element').length)
           $('#element').remove();
         if ($('.parsley-errors-list').length)
