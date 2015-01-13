@@ -17,8 +17,6 @@ define([
   'parsley/validator',
   // `ParsleyUI` static class. Handle all UI and UX
   'parsley/ui',
-  // Handle default javascript config and DOM-API config
-  'parsley/factory/options',
   // `ParsleyForm` Class. Handle form validation
   'parsley/form',
   // `ParsleyField` Class. Handle field validation
@@ -29,7 +27,7 @@ define([
   'parsley/pubsub',
   // Default en constraints messages
   'i18n/en'
-], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyOptionsFactory, ParsleyForm, ParsleyField, ParsleyMultiple) {
+], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple) {
   // ### Parsley factory
   var Parsley = function (element, options, parsleyFormInstance) {
     this.__class__ = 'Parsley';

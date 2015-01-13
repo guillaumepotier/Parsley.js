@@ -14,20 +14,18 @@ require(['config'], function () {
     // load then Parsley modules for UT
     require([
       'src/parsley',
-      'parsley/factory/options',
       'parsley/form',
       'parsley/field',
       'parsley/ui',
       'parsley/utils',
       'parsley/validator',
       'i18n/fr'
-    ], function (Parsley, ParsleyOptionsFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
+    ], function (Parsley, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
 
       // load full parsley.js + UT
       require([
         'features/utils',
         'features/parsley',
-        'features/options',
         'features/pubsub',
         'features/abstract',
         'features/field',
@@ -35,7 +33,7 @@ require(['config'], function () {
         'features/form',
         'features/validator',
         'features/ui'
-      ], function (utils, parsleyBase, options, pubsub, abstract, field, multiple, form, validator, ui) {
+      ], function (utils, parsleyBase, pubsub, abstract, field, multiple, form, validator, ui) {
         describe('ParsleyStandard', function () {
           // Use a pristine ParsleyExtend for the standard suite:
           var previousExtend;
@@ -48,7 +46,6 @@ require(['config'], function () {
           });
           utils(ParsleyUtils);
           parsleyBase(Parsley);
-          options(ParsleyOptionsFactory);
           pubsub();
           abstract(Parsley);
           field(ParsleyField, Parsley);
