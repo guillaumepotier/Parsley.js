@@ -40,10 +40,10 @@ define(function () {
         var parsleyForm = new Parsley($('#element'));
         expect(parsleyForm.fields.length).to.be(2);
         expect(new Parsley('#field1').options.trigger).to.be('change');
-        expect(new Parsley('#field1').options).to.have.key('required');
-        expect(new Parsley('#field1').options).to.not.have.key('notblank');
-        expect(new Parsley('#field3').options).to.have.key('notblank');
-        expect(new Parsley('#field3').options).to.not.have.key('required');
+        expect(new Parsley('#field1').options.required).to.eql(true);
+        expect(new Parsley('#field1').options.notblank).to.be(undefined);
+        expect(new Parsley('#field3').options.notblank).to.eql(true);
+        expect(new Parsley('#field3').options.required).to.be(undefined);
       });
       it('should properly store validation state after `validate()`', function () {
         $('body').append(
