@@ -65,7 +65,7 @@ define([
       }
 
       // Handle 'static' options
-      this.OptionsFactory = new ParsleyOptionsFactory(ParsleyDefaults, window.ParsleyConfig, options, this.getNamespace(options));
+      this.OptionsFactory = new ParsleyOptionsFactory($.extend(true, {}, ParsleyDefaults, window.ParsleyConfig), options, this.getNamespace(options));
       this.options = this.OptionsFactory.get(this);
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
