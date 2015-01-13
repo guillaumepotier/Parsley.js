@@ -49,6 +49,17 @@ define(function () {
 
         expect(attr).to.eql({'foo': 'bar', 'bar': [0, 42]});
       });
+      it('should have a proper attr() function that rewrites a given object', function () {
+        var obj = ParsleyUtils.objectCreate({foo: 'x', fox: 'trot'});
+        obj.deleteMe = 'please';
+        var $element = $('<b data-parsley-foo="a" data-parsley-bar="[0, 42]" parsley-baz="baz">');
+
+        ParsleyUtils.attr($element, 'data-parsley-', obj);
+
+        expect(obj).to.eql({foo: "a", bar: [0, 42]});
+        expect(obj.fox).to.eql('trot');
+      });
+
       it('should have a checkAttr feature', function () {
         var $element = $('<span data-parsley-required-message="foo" data-parsley-validate="true">');
         expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'required')).to.be(false);

@@ -2,12 +2,21 @@ define('parsley/utils', function () {
   return {
     // Parsley DOM-API
     // returns object from dom attributes and values
-    attr: function ($element, namespace) {
+    attr: function ($element, namespace, obj) {
       var
         attribute,
-        obj = {},
         msie = this.msieversion(),
         regex = new RegExp('^' + namespace, 'i');
+
+      if ('undefined' === typeof obj)
+        obj = {};
+      else {
+        // Clear all own properties. This won't affect prototype's values
+        for (var i in obj) {
+          if (obj.hasOwnProperty(i))
+            delete obj[i];
+        }
+      }
 
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
         return obj;
