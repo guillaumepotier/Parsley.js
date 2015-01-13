@@ -86,6 +86,8 @@ define(function () {
         expect(parsleyInstance.options.baz).to.be('baz');
         expect(parsleyInstance.options.bar).to.be('baz');
         expect(parsleyInstance.options.qux).to.be('bux');
+        delete ParsleyConfig.bar;
+        delete ParsleyConfig.baz;
       });
       it('should have a jquery plugin API', function () {
         $('body').append('<input type="text" id="element" data-parsley-namespace="baz-"></div>');
@@ -107,8 +109,6 @@ define(function () {
         expect($('input').parsley().length).to.be(2);
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
-
         $('#element').remove();
       });
     });

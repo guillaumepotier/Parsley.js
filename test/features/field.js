@@ -263,8 +263,6 @@ define(function () {
         expect($('#element').parsley().isValid()).to.be(false);
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
-
         $('#element, .parsley-errors-list').remove();
       });
     });
