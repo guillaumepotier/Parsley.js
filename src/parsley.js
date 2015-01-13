@@ -56,8 +56,10 @@ define([
         var savedparsleyFormInstance = this.$element.data('Parsley');
 
         // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
-        if ('undefined' !== typeof parsleyFormInstance)
+        if ('undefined' !== typeof parsleyFormInstance && !savedparsleyFormInstance.parent) {
           savedparsleyFormInstance.parent = parsleyFormInstance;
+          savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
+        }
 
         return savedparsleyFormInstance;
       }
