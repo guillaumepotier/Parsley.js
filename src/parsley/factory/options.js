@@ -1,14 +1,14 @@
 define('parsley/factory/options', [
   'parsley/utils'
 ], function (ParsleyUtils) {
-  var ParsleyOptionsFactory = function (defaultOptions, globalOptions, userOptions, namespace) {
+  var ParsleyOptionsFactory = function (globalOptions, userOptions, namespace) {
     this.__class__ = 'OptionsFactory';
     this.__id__ = ParsleyUtils.hash(4);
 
     this.formOptions = null;
     this.fieldOptions = null;
 
-    this.staticOptions = $.extend(true, {}, defaultOptions, globalOptions, userOptions, { namespace: namespace });
+    this.staticOptions = $.extend(true, {}, globalOptions, userOptions, { namespace: namespace });
   };
 
   ParsleyOptionsFactory.prototype = {

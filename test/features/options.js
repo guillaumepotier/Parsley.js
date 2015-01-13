@@ -10,8 +10,7 @@ define(function () {
       });
       it('should handle simple instanciation', function () {
         var options = new ParlseyOptionsFactory(
-          { foo: 'bar', bar: 'baz', baz: 'qux' },
-          { foo: 'BAR', bar: 'BAZ' },
+          { foo: 'BAR', bar: 'BAZ', baz: 'qux' },
           { foo: null }
         );
         expect(options.staticOptions).to.eql({ foo: null, bar: 'BAZ', baz: 'qux' });
@@ -21,16 +20,14 @@ define(function () {
       });
       it('should handle properly ParsleyForm options', function () {
         var options = new ParlseyOptionsFactory(
-          { foo: 'bar', bar: 'baz', baz: 'qux' },
-          { foo: 'BAR', bar: 'BAZ' },
+          { foo: 'BAR', bar: 'BAZ', baz: 'qux' },
           { foo: null }
         );
         expect(options.get({'__class__': 'ParsleyForm'})).to.eql({ foo: null, bar: 'bar', baz: 'qux', qux: 'bux' });
       });
       it('should handle properly ParsleyField options', function () {
         var options = new ParlseyOptionsFactory(
-          { foo: 'bar', bar: 'baz', baz: 'qux' },
-          { foo: 'BAR', bar: 'BAZ' },
+          { foo: 'BAR', bar: 'BAZ', baz: 'qux' },
           { foo: null }
         );
         options.formOptions = { bar: 'bux', bux: 'bux' };
