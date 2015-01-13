@@ -4,14 +4,14 @@ define(function () {
       it('should provide a actualizeOptions() method', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
         var parsleyField = new Parsley('#element', { foo: 'bar' });
-        expect(parsleyField.options).have.key('pattern');
-        expect(parsleyField.options).have.key('required');
+        expect(parsleyField.options.pattern).to.eql('[A-F][0-9]{5}');
+        expect(parsleyField.options.required).to.eql('');
 
         $('#element').removeAttr('data-parsley-pattern');
         parsleyField.actualizeOptions();
 
-        expect(parsleyField.options).not.to.have.key('pattern');
-        expect(parsleyField.options).have.key('required');
+        expect(parsleyField.options.pattern).to.be(undefined);
+        expect(parsleyField.options.required).to.eql('');
       });
       it('should use reset() on field', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
