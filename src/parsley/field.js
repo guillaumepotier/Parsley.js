@@ -78,8 +78,7 @@ define('parsley/field', [
       if ('undefined' === typeof value || null === value)
         value = this.getValue();
 
-      // An empty optional field is valid
-      if (!value.length && !this.needsValidation(value) && true !== force)
+      if (!this.needsValidation(value) && true !== force)
         return true;
 
       // If we want to validate field against all constraints, just call Validator and let it do the job
