@@ -266,6 +266,11 @@ define(function () {
         $('#element').parsley();
         expect(psly.isValid()).to.be(false);
       });
+      it('should have options that can be set easily', function () {
+        var psly = $('<input type="text"/>').parsley();
+        psly.options.required = true;
+        expect(psly.isValid()).to.be(false);
+      });
       it('should properly handle null or undefined values', function () {
         $('body').append('<input type="text" id="element" required value/>');
         expect($('#element').parsley().isValid()).to.be(false);
