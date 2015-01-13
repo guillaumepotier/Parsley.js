@@ -167,21 +167,18 @@ define([
         case 'parsleyForm':
           parsleyInstance = $.extend(
             new ParsleyForm(this.$element, this.OptionsFactory),
-            new ParsleyAbstract(),
             window.ParsleyExtend
           )._bindFields();
           break;
         case 'parsleyField':
           parsleyInstance = $.extend(
             new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance),
-            new ParsleyAbstract(),
             window.ParsleyExtend
           );
           break;
         case 'parsleyFieldMultiple':
           parsleyInstance = $.extend(
             new ParsleyField(this.$element, this.OptionsFactory, parentParsleyFormInstance),
-            new ParsleyAbstract(),
             new ParsleyMultiple(),
             window.ParsleyExtend
           )._init(multiple);
@@ -211,6 +208,11 @@ define([
       return parsleyInstance;
     }
   };
+
+  // Supplement ParsleyField and Form with ParsleyAbstract
+  // This way, the constructors will have access to those methods
+  $.extend(ParsleyField.prototype, ParsleyAbstract.prototype);
+  $.extend(ParsleyForm.prototype, ParsleyAbstract.prototype);
 
   // ### jQuery API
   // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
