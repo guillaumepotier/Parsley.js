@@ -77,11 +77,7 @@ define(function () {
         expect($.subscribed().foo.length).to.be(0);
       });
       afterEach(function () {
-        if ($('#element').length)
-          $('#element').remove();
-
-        if ($('#element2').length)
-          $('#element2').remove();
+        $('#element, #element2').remove();
 
         $.unsubscribeAll('foo');
       });
