@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "grunt": "~0.4.1",
-    "mocha": "1.9.0",
+    "mocha": "*",
     "mocha-phantomjs": "*",
     "expect.js": "*",
     "grunt-contrib-requirejs": "~0.4.1",
