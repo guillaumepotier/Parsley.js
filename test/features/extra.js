@@ -181,11 +181,7 @@ define('features/extra', [
         });
       });
       afterEach(function () {
-        if ($('#element').length)
-          $('#element').remove();
-
-        if ($('.parsley-errors-list').length)
-          $('.parsley-errors-list').remove();
+        $('#element, .parsley-errors-list').remove();
       });
     });
   };

@@ -212,11 +212,7 @@ define('features/remote', [
       });
       it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
-        if ($('#element').length)
-          $('#element').remove();
-
-        if ($('.parsley-errors-list').length)
-          $('.parsley-errors-list').remove();
+        $('#element, .parsley-errors-list').remove();
       });
     });
 

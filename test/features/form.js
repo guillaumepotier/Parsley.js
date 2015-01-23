@@ -192,8 +192,7 @@ define(function () {
         $('#element').submit();
       });
       afterEach(function () {
-        if ($('#element').length)
-          $('#element').remove();
+        $('#element').remove();
       });
     });
   };

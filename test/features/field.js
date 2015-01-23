@@ -78,13 +78,13 @@ define(function () {
       it('should properly bind HTML5 supported constraints', function () {
         $('body').append('<input type="email" pattern="\\w+" id="element" required min="5" max="100" minlength="1" maxlength="3" />');
         var parsleyField = new Parsley($('#element'));
-        // 4 validators: type=email, pattern, required, (min+max => range) and (minlength+maxlength => length)
+        // 5 validators: type=email, pattern, required, (min+max => range) and (minlength+maxlength => length)
         expect(parsleyField.constraints.length).to.be(5);
         $('#element').removeAttr('min');
-        // still 4 validators, with max instead of range now
+        // still 5 validators, with max instead of range now
         expect(parsleyField.actualizeOptions().constraints.length).to.be(5);
         $('#element').removeAttr('minlength');
-        // still 4 validators, with maxlength instead of length now
+        // still 5 validators, with maxlength instead of length now
         expect(parsleyField.actualizeOptions().constraints.length).to.be(5);
       });
       it('should use integer validation HTML5 `number` type without a step attribute', function () {
@@ -265,10 +265,7 @@ define(function () {
       afterEach(function () {
         window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
 
-        if ($('#element').length)
-          $('#element').remove();
-        if ($('.parsley-errors-list').length)
-          $('.parsley-errors-list').remove();
+        $('#element, .parsley-errors-list').remove();
       });
     });
   };
