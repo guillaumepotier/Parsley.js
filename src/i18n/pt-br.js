@@ -7,7 +7,7 @@ window.ParsleyConfig.i18n['pt-br'] = $.extend(window.ParsleyConfig.i18n['pt-br']
   defaultMessage: "Este valor parece ser inválido.",
   type: {
     email:        "Este campo deve ser um email válido.",
-    url:          "Este campo deve ser uma URL válida.",
+    url:          "Este campo deve ser um URL válida.",
     number:       "Este campo deve ser um número válido.",
     integer:      "Este campo deve ser um inteiro válido.",
     digits:       "Este campo deve conter apenas dígitos.",
