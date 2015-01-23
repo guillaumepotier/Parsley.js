@@ -1,14 +1,28 @@
 define('parsley/abstract', [
-], function () {
+  'parsley/utils'
+], function (ParsleyUtils) {
   var ParsleyAbstract = function() {};
 
   ParsleyAbstract.prototype = {
     asyncSupport: false,
 
     actualizeOptions: function () {
-      this.options = this.OptionsFactory.get(this);
-
+      ParsleyUtils.attr(this.$element, this.options.namespace, this.domOptions);
+      if (this.parent)
+        this.parent.actualizeOptions();
       return this;
+    },
+
+    _resetOptions: function(initOptions) {
+      var baseOptions = this.parent ? this.parent.options : window.ParsleyConfig;
+      this.domOptions = ParsleyUtils.objectCreate(baseOptions);
+      this.options = ParsleyUtils.objectCreate(this.domOptions);
+      // Shallow copy of ownProperties of initOptions:
+      for (var i in initOptions) {
+        if (initOptions.hasOwnProperty(i))
+          this.options[i] = initOptions[i];
+      }
+      this.actualizeOptions();
     },
 
     // ParsleyValidator validate proxy function . Could be replaced by third party scripts

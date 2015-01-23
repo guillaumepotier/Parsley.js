@@ -258,13 +258,24 @@ define(function () {
         $('#element').attr('data-parsley-trim-value', true).parsley().actualizeOptions();
         expect($('#element').parsley().getValue()).to.be('foo');
       });
+      it('should inherit options from the form, even if the form is bound after', function () {
+        $('body').append('<form id="element" data-parsley-required>' +
+          '<input type="text"/></form>');
+        var psly = $('#element input').parsley();
+        expect(psly.isValid()).not.to.be(false);
+        $('#element').parsley();
+        expect(psly.isValid()).to.be(false);
+      });
+      it('should have options that can be set easily', function () {
+        var psly = $('<input type="text"/>').parsley();
+        psly.options.required = true;
+        expect(psly.isValid()).to.be(false);
+      });
       it('should properly handle null or undefined values', function () {
         $('body').append('<input type="text" id="element" required value/>');
         expect($('#element').parsley().isValid()).to.be(false);
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
-
         if ($('#element').length)
           $('#element').remove();
         if ($('.parsley-errors-list').length)

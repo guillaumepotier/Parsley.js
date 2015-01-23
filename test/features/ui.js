@@ -271,7 +271,7 @@ define(function () {
       it('should not have errors ul created for excluded fields', function () {
         $('body').append('<input type="hidden" id="element" value="foo" data-parsley-minlength="5" />');
         var parsleyInstance = $('#element').parsley();
-        expect($('body ul').length).to.be(0);
+        expect($('.parsley-errors-list').length).to.be(0);
       });
       it('should remove filled class from errors container when reseting', function () {
         $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');

@@ -2,18 +2,14 @@ define('parsley/form', [
   'parsley/abstract',
   'parsley/utils'
 ], function (ParsleyAbstract, ParsleyUtils) {
-  var ParsleyForm = function (element, OptionsFactory) {
+  var ParsleyForm = function (element, options) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
 
-    if ('OptionsFactory' !== ParsleyUtils.get(OptionsFactory, '__class__'))
-      throw new Error('You must give an OptionsFactory instance');
-
-    this.OptionsFactory = OptionsFactory;
     this.$element = $(element);
+    this._resetOptions(options);
 
     this.validationResult = null;
-    this.options = this.OptionsFactory.get(this);
   };
 
   ParsleyForm.prototype = {

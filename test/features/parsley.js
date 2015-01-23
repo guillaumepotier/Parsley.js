@@ -57,25 +57,25 @@ define(function () {
         $('body').append('<div id="element"></div>');
 
         // default ParsleyOptions.namespace
-        expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-parsley-');
+        expect(new Parsley($('#element')).options.namespace).to.be('data-parsley-');
 
         // global JS config
         $('#element').parsley().destroy()
         window.ParsleyConfig.namespace = 'data-foo-';
-        expect(new Parsley($('#element')).OptionsFactory.staticOptions.namespace).to.be('data-foo-');
+        expect(new Parsley($('#element')).options.namespace).to.be('data-foo-');
 
         // option on the go
         $('#element').parsley().destroy()
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
-        }).OptionsFactory.staticOptions.namespace).to.be('data-bar-');
+        }).options.namespace).to.be('data-bar-');
 
         // data- DOM-API
         $('#element').parsley().destroy()
         $('#element').attr('data-parsley-namespace', 'data-baz-');
         expect(new Parsley($('#element'), {
           namespace: "data-bar-"
-        }).OptionsFactory.staticOptions.namespace).to.be('data-baz-');
+        }).options.namespace).to.be('data-bar-');
         delete window.ParsleyConfig.namespace;
       });
       it('should handle proper options management', function () {
@@ -86,6 +86,8 @@ define(function () {
         expect(parsleyInstance.options.baz).to.be('baz');
         expect(parsleyInstance.options.bar).to.be('baz');
         expect(parsleyInstance.options.qux).to.be('bux');
+        delete ParsleyConfig.bar;
+        delete ParsleyConfig.baz;
       });
       it('should have a jquery plugin API', function () {
         $('body').append('<input type="text" id="element" data-parsley-namespace="baz-"></div>');
@@ -107,8 +109,6 @@ define(function () {
         expect($('input').parsley().length).to.be(2);
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
-
         if ($('#element').length)
           $('#element').remove();
       });
