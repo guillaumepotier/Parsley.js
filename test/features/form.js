@@ -152,7 +152,7 @@ define(function () {
         expect(fieldInstance.parent.__class__).to.be('ParsleyForm');
       });
       it('should fire the right callbacks in the right order', function () {
-        var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
+        var $form = $('<form id="element"><input type="string" required /><form>').appendTo($('body'));
         $form.on('submit', function (e) {
           e.preventDefault();
         });

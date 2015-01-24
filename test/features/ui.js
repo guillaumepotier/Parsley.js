@@ -267,9 +267,10 @@ define(function () {
         expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value is too short. It should have 5 characters or more.');
       });
       it('should not have errors ul created for excluded fields', function () {
-        $('body').append('<input type="hidden" id="element" value="foo" data-parsley-minlength="5" />');
+        $('body').append('<div id="hidden"><input type="hidden" id="element" value="foo" data-parsley-minlength="5" /></div>');
         var parsleyInstance = $('#element').parsley();
-        expect($('body ul').length).to.be(0);
+        expect($('#hidden ul').length).to.be(0);
+        $('#hidden').remove();
       });
       it('should remove filled class from errors container when reseting', function () {
         $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');
