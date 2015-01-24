@@ -49,6 +49,20 @@ define(function () {
         expect($('#element').hasClass('parsley-success')).to.be(true);
         expect($('#element').hasClass('parsley-error')).to.be(false);
       });
+      it('should not add success class on a field without constraints', function () {
+        $('body').append('<input type="text" id="element" />');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('#element').hasClass('parsley-error')).to.be(false);
+        expect($('#element').hasClass('parsley-success')).to.be(false);
+      });
+      it('should not add success class on an empty optional field', function () {
+        $('body').append('<input type="number" id="element" />');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('#element').hasClass('parsley-error')).to.be(false);
+        expect($('#element').hasClass('parsley-success')).to.be(false);
+      });
       it('should add proper parsley class on success or failure (type=radio)', function () {
         $('body').append('<input type="radio" id="element" required />');
         var parsleyField = $('#element').psly();
@@ -158,7 +172,7 @@ define(function () {
         $('#element').trigger($.Event('change'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
       });
-      it('should auto bind error trigger on selet field error (input=text)', function () {
+      it('should auto bind error trigger on select field error (input=text)', function () {
         $('body').append('<input type="email" id="element" required />');
         var parsleyField = $('#element').psly();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
@@ -168,7 +182,7 @@ define(function () {
         $('#element').val('foo').trigger($.Event('keyup'));
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
       });
-      it('should auto bind error trigger on selet field error (select)', function () {
+      it('should auto bind error trigger on select field error (select)', function () {
         $('body').append('<select id="element" required>'+
           '<option value="">Choose</option>' +
           '<option value="foo">foo</option>' +

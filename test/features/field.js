@@ -66,14 +66,14 @@ define(function () {
         expect(parsleyField.constraints[0].name).to.be('notblank');
         expect(parsleyField._isRequired()).to.be(false);
       });
-      it('should return an empty array for fields withoud constraints', function () {
+      it('should return true for fields without constraints', function () {
         $('body').append('<input type="text" id="element" value="hola" data-parsley-minlength="5" />');
         var parsleyField = new Parsley($('#element'));
         // Start with some validation errors:
         expect(parsleyField.isValid()).to.eql(false);
         // The remove constraint and check result:
         $('#element').removeAttr('data-parsley-minlength');
-        expect(parsleyField.isValid()).to.eql([]);
+        expect(parsleyField.isValid()).to.be(true);
       });
       it('should properly bind HTML5 supported constraints', function () {
         $('body').append('<input type="email" pattern="\\w+" id="element" required min="5" max="100" minlength="1" maxlength="3" />');
@@ -136,7 +136,7 @@ define(function () {
 
         var parsleyField = new Parsley($('#element'))
           .addConstraint('multiple', 2);
-        expect(parsleyField.isValid()).to.eql([]);
+        expect(parsleyField.isValid()).to.eql(true);
         $('#element').val('1');
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('2');
@@ -231,7 +231,7 @@ define(function () {
       });
       it('should have validateIfEmpty option', function () {
         $('body').append('<input type="email" data-parsley-rangelength="[5, 10]" id="element" />');
-        expect($('#element').psly().isValid()).to.be.eql([]);
+        expect($('#element').psly().isValid()).to.be.eql(true);
         $('#element').attr('data-parsley-validate-if-empty', '');
         expect($('#element').psly().isValid()).to.be.eql(false);
       });
@@ -247,10 +247,17 @@ define(function () {
       });
       it('should have a force option for validate and isValid methods', function () {
         $('body').append('<input type="email" id="element" />');
-        expect($('#element').parsley().isValid()).to.be.eql([]);
-        expect($('#element').parsley().validate()).to.be.eql([]);
+        expect($('#element').parsley().isValid()).to.be.eql(true);
+        expect($('#element').parsley().validate()).to.be.eql(true);
         expect($('#element').parsley().isValid(true)).to.be(false);
         expect($('#element').parsley().validate(true).length).to.be(1);
+      });
+      it('should allow passing a specific value to `isValid` method', function () {
+        expect($('<input type="email" value="">').parsley().isValid(false)).to.be(true);
+        expect($('<input type="email" value="foo">').parsley().isValid()).to.be(false);
+        expect($('<input type="email" value="foo">').parsley().isValid(false, "")).to.be(true);
+        expect($('<input type="email" value="">').parsley().isValid(true)).to.be(false);
+        expect($('<input type="email" value="foo">').parsley().isValid(true, "")).to.be(false);
       });
       it('should have a trim-value option', function () {
         $('body').append('<input type="text" id="element" value=" foo " />');
@@ -270,6 +277,17 @@ define(function () {
         var psly = $('<input type="text"/>').parsley();
         psly.options.required = true;
         expect(psly.isValid()).to.be(false);
+      });
+      it('should have a value option', function () {
+        $('body').append('<input type="text" id="element"/>');
+        expect($('#element').parsley({value: 'foo'}).getValue()).to.be('foo');
+      });
+      it('should accept a function as value option', function () {
+        $('body').append('<input type="text" id="element"/>');
+        var str = 'fo';
+        var parsley = $('#element').parsley({value: function () { return str = str + 'o' } });
+        expect(parsley.getValue()).to.be('foo');
+        expect(parsley.getValue()).to.be('fooo');
       });
       it('should properly handle null or undefined values', function () {
         $('body').append('<input type="text" id="element" required value/>');
