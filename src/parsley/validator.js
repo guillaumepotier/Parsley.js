@@ -62,7 +62,7 @@ define('parsley/validator', [
 
     // Add a new validator
     addValidator: function (name, fn, priority, requirementsTransformer) {
-      this.validators[name.toLowerCase()] = function (requirements) {
+      this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), {
           priority: priority,
           requirementsTransformer: requirementsTransformer
