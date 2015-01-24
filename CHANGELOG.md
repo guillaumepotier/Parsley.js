@@ -1,5 +1,13 @@
 # Parsley 2.x changelog
 
+## 2.0.7
+
+- support of html5 `maxlength` and `minlength` (#731)
+- various doc updates
+- improved test suite
+- various small code simplifications
+- updated TLD range for URL validator (#829)
+
 ## 2.0.6
 
 - removed buggy special char in remote.js plugin (#755)
