@@ -86,12 +86,13 @@ define('parsley/validator', [
       var message;
 
       // Type constraints are a bit different, we have to match their requirements too to find right error message
-      if ('type' === constraint.name)
-        message = this.catalog[this.locale][constraint.name][constraint.requirements];
-      else
+      if ('type' === constraint.name) {
+        var typeMessages = this.catalog[this.locale][constraint.name] || {};
+        message = typeMessages[constraint.requirements];
+      } else
         message = this.formatMessage(this.catalog[this.locale][constraint.name], constraint.requirements);
 
-      return '' !== message ? message : this.catalog[this.locale].defaultMessage;
+      return message || this.catalog[this.locale].defaultMessage || this.catalog.en.defaultMessage;
     },
 
     // Kind of light `sprintf()` implementation

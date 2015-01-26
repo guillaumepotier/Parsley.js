@@ -163,6 +163,11 @@ define(function () {
         expect(parsleyValidator.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('Cette valeur doit contenir entre 3 et 6 caractères.');
         expect(parsleyValidator.getErrorMessage({ name: 'notexisting' })).to.be('Cette valeur semble non valide.');
       });
+      it('should not break for an incomplete language', function () {
+        parsleyValidator.addCatalog('klingon', {}, true);
+        expect(parsleyValidator.getErrorMessage({ name: 'type', requirements: 'email' })).to.be('This value seems to be invalid.');
+        expect(parsleyValidator.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('This value seems to be invalid.');
+      });
       it('should handle parametersTransformer for custom validators', function () {
         parsleyValidator.addValidator('foo', function (requirements) {
           return requirements;
