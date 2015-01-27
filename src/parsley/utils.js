@@ -2,29 +2,38 @@ define('parsley/utils', function () {
   return {
     // Parsley DOM-API
     // returns object from dom attributes and values
-    // if attr is given, returns bool if attr present in DOM or not
-    attr: function ($element, namespace, checkAttr) {
+    attr: function ($element, namespace, obj) {
       var
         attribute,
-        obj = {},
         msie = this.msieversion(),
         regex = new RegExp('^' + namespace, 'i');
 
+      if ('undefined' === typeof obj)
+        obj = {};
+      else {
+        // Clear all own properties. This won't affect prototype's values
+        for (var i in obj) {
+          if (obj.hasOwnProperty(i))
+            delete obj[i];
+        }
+      }
+
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
-        return {};
+        return obj;
 
       for (var i in $element[0].attributes) {
         attribute = $element[0].attributes[i];
 
         if ('undefined' !== typeof attribute && null !== attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
-          if ('undefined' !== typeof checkAttr && new RegExp(checkAttr + '$', 'i').test(attribute.name))
-            return true;
-
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
         }
       }
 
-      return 'undefined' === typeof checkAttr ? obj : false;
+      return obj;
+    },
+
+    checkAttr: function ($element, namespace, checkAttr) {
+      return $element.is('[' + namespace + checkAttr + ']');
     },
 
     setAttr: function ($element, namespace, attr, value) {
@@ -92,6 +101,23 @@ define('parsley/utils', function () {
         .replace(/_/g, '-')
         .toLowerCase();
     },
+
+    // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
+    objectCreate: Object.create || (function() {
+      var Object = function() {};
+      return function (prototype) {
+        if (arguments.length > 1) {
+          throw Error('Second argument not supported');
+        }
+        if (typeof prototype != 'object') {
+          throw TypeError('Argument must be an object');
+        }
+        Object.prototype = prototype;
+        var result = new Object();
+        Object.prototype = null;
+        return result;
+      };
+    })(),
 
     // http://support.microsoft.com/kb/167820
     // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie

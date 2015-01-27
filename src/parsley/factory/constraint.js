@@ -33,7 +33,7 @@ define('parsley/factory/constraint', [
       requirements: requirements,
       priority: priority,
       groups: [priority],
-      isDomConstraint: isDomConstraint || ParsleyUtils.attr(parsleyField.$element, parsleyField.options.namespace, name)
+      isDomConstraint: isDomConstraint || ParsleyUtils.checkAttr(parsleyField.$element, parsleyField.options.namespace, name)
     });
   };
 

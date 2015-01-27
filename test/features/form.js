@@ -40,10 +40,10 @@ define(function () {
         var parsleyForm = new Parsley($('#element'));
         expect(parsleyForm.fields.length).to.be(2);
         expect(new Parsley('#field1').options.trigger).to.be('change');
-        expect(new Parsley('#field1').options).to.have.key('required');
-        expect(new Parsley('#field1').options).to.not.have.key('notblank');
-        expect(new Parsley('#field3').options).to.have.key('notblank');
-        expect(new Parsley('#field3').options).to.not.have.key('required');
+        expect(new Parsley('#field1').options.required).to.eql(true);
+        expect(new Parsley('#field1').options.notblank).to.be(undefined);
+        expect(new Parsley('#field3').options.notblank).to.eql(true);
+        expect(new Parsley('#field3').options.required).to.be(undefined);
       });
       it('should properly store validation state after `validate()`', function () {
         $('body').append(
@@ -159,8 +159,8 @@ define(function () {
 
         var callbacks = [];
         var parsleyInstance = $form.parsley();
-        $.each(['validate', 'error', 'success', 'validated'], function(i, cb) {
-          parsleyInstance.subscribe('parsley:form:' + cb, function() {
+        $.each(['validate', 'error', 'success', 'validated'], function (i, cb) {
+          parsleyInstance.subscribe('parsley:form:' + cb, function () {
             callbacks.push(cb);
           });
         });
@@ -171,7 +171,7 @@ define(function () {
       });
       it('should fire "parsley:form:validate" to give the opportunity for changes before validation occurs', function() {
         var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
-        $form.parsley().subscribe('parsley:form:validate', function(psly) {
+        $form.parsley().subscribe('parsley:form:validate', function (psly) {
           psly.$element.find('input').remove();
         });
         expect($form.parsley().validate()).to.be(true);

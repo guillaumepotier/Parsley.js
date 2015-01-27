@@ -4,14 +4,14 @@ define(function () {
       it('should provide a actualizeOptions() method', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
         var parsleyField = new Parsley('#element', { foo: 'bar' });
-        expect(parsleyField.options).have.key('pattern');
-        expect(parsleyField.options).have.key('required');
+        expect(parsleyField.options.pattern).to.eql('[A-F][0-9]{5}');
+        expect(parsleyField.options.required).to.eql('');
 
         $('#element').removeAttr('data-parsley-pattern');
         parsleyField.actualizeOptions();
 
-        expect(parsleyField.options).not.to.have.key('pattern');
-        expect(parsleyField.options).have.key('required');
+        expect(parsleyField.options.pattern).to.be(undefined);
+        expect(parsleyField.options.required).to.eql('');
       });
       it('should use subscribe()', function (done) {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
@@ -29,10 +29,9 @@ define(function () {
       it('should use unsubscribe()', function () {
         $('body').append('<input type="email" id="element" />');
         var parsleyInstance = $('#element').parsley();
-        parsleyInstance.subscribe('foo', function () { return 'bar'; });
-        expect($.subscribed().foo.length).to.be(1);
+        parsleyInstance.subscribe('foo', function () { expect(true).to.be(false); });
         parsleyInstance.unsubscribe('foo');
-        expect($.subscribed().foo.length).to.be(0);
+        $.emit('foo', parsleyInstance);
       });
       it('should use reset() on field', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
@@ -84,7 +83,7 @@ define(function () {
             '<textarea id="field2"></textarea>' +
           '</form>');
         var parsleyForm = new Parsley($('#element'));
-        var fieldEventsCount = 0;
+        var fieldEventsCount = 0, formEventsCount = 0;
 
         // Test that a subscribed field event on parent form would be triggered by fields too
         // Here we only have field1 and field2 as valid parsley fields
@@ -93,27 +92,7 @@ define(function () {
         });
 
         parsleyForm.subscribe('parsley:form:destroy', function () {
-          // we properly triggered before the 2 field:destroy events for this form
-          expect(fieldEventsCount).to.be(2);
-
-          // we should never enter here since parsley form instance is destroyed
-          $.listen('parsley:form:validate', function () {
-            expect(true).to.be(false);
-          });
-
-          // test that a submit event does not trigger parsley validation anymore
-          $('#element').on('submit', function (e) {
-            e.preventDefault();
-
-            expect($('#element').data('Parsley')).to.be(undefined);
-            expect($('#field1').data('Parsley')).to.be(undefined);
-
-
-            $.unsubscribeAll('parsley:form:validate');
-            done();
-          });
-
-          $('#element').submit();
+          formEventsCount++;
         });
 
         expect($('#element').data('Parsley')).to.have.key('__class__');
@@ -122,6 +101,26 @@ define(function () {
         expect($('#field1').data('Parsley').__class__).to.be('ParsleyField');
 
         parsleyForm.destroy();
+
+        expect(fieldEventsCount).to.be(2);
+        expect(formEventsCount).to.be(1);
+
+        // we should never enter here since parsley form instance is destroyed
+        $(document).on('form:validate.parsley', function () {
+          expect(true).to.be(false);
+        });
+
+        // test that a submit event does not trigger parsley validation anymore
+        $('#element').on('submit', function (e) {
+          e.preventDefault();
+
+          expect($('#element').data('Parsley')).to.be(undefined);
+          expect($('#field1').data('Parsley')).to.be(undefined);
+          $(document).off('form:validate.parsley');
+          done();
+        });
+
+        $('#element').submit();
       });
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();

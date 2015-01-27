@@ -3,23 +3,18 @@ define('parsley/field', [
     'parsley/ui',
     'parsley/utils'
 ], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
-  var ParsleyField = function (field, OptionsFactory, parsleyFormInstance) {
+  var ParsleyField = function (field, options, parsleyFormInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.hash(4);
 
     this.$element = $(field);
 
-    // If we have a parent `ParsleyForm` instance given, use its `OptionsFactory`, and save parent
+    // Set parent if we have one
     if ('undefined' !== typeof parsleyFormInstance) {
       this.parent = parsleyFormInstance;
-      this.OptionsFactory = this.parent.OptionsFactory;
-      this.options = this.OptionsFactory.get(this);
-
-    // Else, take the `Parsley` one
-    } else {
-      this.OptionsFactory = OptionsFactory;
-      this.options = this.OptionsFactory.get(this);
     }
+
+    this._resetOptions(options);
 
     // Initialize some properties
     this.constraints = [];
@@ -32,47 +27,66 @@ define('parsley/field', [
 
   ParsleyField.prototype = {
     // # Public API
-    // Validate field and $.emit some events for mainly `ParsleyUI`
+    // Validate field and trigger some events for mainly `ParsleyUI`
     // @returns validationResult:
-    //  - `true` if all constraints pass
-    //  - `[]` if not required field and empty (not validated)
+    //  - `true` if field valid
     //  - `[Violation, [Violation...]]` if there were validation errors
     validate: function (force) {
       this.value = this.getValue();
 
       // Field Validate event. `this.value` could be altered for custom needs
-      $.emit('parsley:field:validate', this);
+      this._trigger('validate');
 
-      $.emit('parsley:field:' + (this.isValid(force, this.value) ? 'success' : 'error'), this);
+      this._trigger(this.isValid(force, this.value) ? 'success' : 'error');
 
       // Field validated event. `this.validationResult` could be altered for custom needs too
-      $.emit('parsley:field:validated', this);
+      this._trigger('validated');
 
       return this.validationResult;
     },
 
+    hasConstraints: function () {
+      return 0 !== this.constraints.length;
+    },
+
+    // An empty optional field does not need validation
+    needsValidation: function (value) {
+      if ('undefined' === typeof value)
+        value = this.getValue();
+
+      // If a field is empty and not required, it is valid
+      // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
+      if (!value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty)
+        return false;
+
+      return true;
+    },
+
     // Just validate field. Do not trigger any event
-    // Same @return as `validate()`
+    //  - `false` if there are constraints and at least one of them failed
+    //  - `true` in all other cases
     isValid: function (force, value) {
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
+      this.validationResult = true;
 
-      // Sort priorities to validate more important first
-      var priorities = this._getConstraintsSortedPriorities();
-      if (0 === priorities.length)
-        return this.validationResult = [];
+      // A field without constraint is valid
+      if (!this.hasConstraints())
+        return true;
+
       // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
       if ('undefined' === typeof value || null === value)
         value = this.getValue();
 
-      // If a field is empty and not required, leave it alone, it's just fine
-      // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-      if (!value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty && true !== force)
-        return this.validationResult = [];
+      if (!this.needsValidation(value) && true !== force)
+        return true;
 
       // If we want to validate field against all constraints, just call Validator and let it do the job
       if (false === this.options.priorityEnabled)
         return true === (this.validationResult = this.validateThroughValidator(value, this.constraints, 'Any'));
+
+      // Sort priorities to validate more important first
+      var priorities = this._getConstraintsSortedPriorities();
 
       // Else, iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++)
@@ -86,8 +100,10 @@ define('parsley/field', [
     getValue: function () {
       var value;
 
-      // Value could be overriden in DOM
-      if ('undefined' !== typeof this.options.value)
+      // Value could be overriden in DOM or with explicit options
+      if ('function' === typeof this.options.value)
+        value = this.options.value(this);
+      else if ('undefined' !== typeof this.options.value)
         value = this.options.value;
       else
         value = this.$element.val();
@@ -200,7 +216,7 @@ define('parsley/field', [
       else if ('undefined' !== typeof this.$element.attr('max'))
         this.addConstraint('max', this.$element.attr('max'), undefined, true);
 
-    
+
       // length
       if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
         this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);
@@ -241,6 +257,12 @@ define('parsley/field', [
         return false;
 
       return false !== this.constraintsByName.required.requirements;
+    },
+
+    // Internal only.
+    // Shortcut to trigger an event
+    _trigger: function(event) {
+      this.$element.trigger('field:' + event + '.parsley', [this]);
     },
 
     // Internal only.

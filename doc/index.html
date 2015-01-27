@@ -345,7 +345,15 @@
             <tbody>
               <tr>
                 <td><code>data-parsley-value</code> <version>#2.0</version></td>
-                <td>Set a specific field value for Parsley validation, dissociated from the real one. eg: <code>data-parsley-value="foo"</code></td>
+                <td>Set a specific field value for Parsley validation, dissociated from the real one. eg: <code>data-parsley-value="foo"</code>
+                  <br/>
+                The JavaScript API allows one to pass a function to be called. eg:
+                <code>
+                  $('&lt;input type="text"&gt;').appendTo($('form')).<br/>
+                  parsley({<br/>
+                  &nbsp;&nbsp;value: function(parsley) { return 'foo'; }<br/>
+                  });
+                </code></td>
               </tr>
               <tr>
                 <td><code>data-parsley-group</code> <version>#2.0</version></td>
@@ -899,7 +907,7 @@ window.ParsleyValidator
         <!-- ****************** Events ****************** -->
         <h1 id="events" class="page-header">Events</h1>
         <h3 id="events-overview">Overview</h3>
-        <p>Parsley comes with a tiny <a href="annotated-source/pubsub.html" target="_blank">pub/sub mechanism</a> that allows ParsleyUI to work. Further more, it could allow you to do some powerful magic if you listen properly to the right events!</p>
+        <p>Parsley triggers jQuery events that allows ParsleyUI to work. Further more, it could allow you to do some powerful magic if you listen properly to the right events!</p>
 
         <h3 id="events-list">Events List</h3>
         <table class="table table-stripped table-bordered">
@@ -913,96 +921,64 @@ window.ParsleyValidator
           </thead>
           <tbody>
             <tr>
-              <td><code>parsley:form:init</code> <version>#2.0</version></td>
+              <td><code>form:init.parlsey</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>new Parsley()</code></td>
-              <td>Fired when a Form is bound for the first time.</td>
+              <td>Triggered when a Form is bound for the first time.</td>
             </tr>
             <tr>
-              <td><code>parsley:form:validate</code> <version>#2.0</version></td>
+              <td><code>form:validate.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a form validation is triggered, <strong>before</strong> its validation.</td>
+              <td>Triggered when a form validation is triggered, <strong>before</strong> its validation.</td>
             </tr>
             <tr>
-              <td><code>parsley:form:success</code> <version>#2.0</version></td>
+              <td><code>form:success.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a form validation is triggered, <strong>after</strong> its validation succeeds.</td>
+              <td>Triggered when a form validation is triggered, <strong>after</strong> its validation succeeds.</td>
             </tr>
             <tr>
-              <td><code>parsley:form:error</code> <version>#2.0</version></td>
+              <td><code>form:error.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a form validation is triggered, <strong>after</strong> its validation fails.</td>
+              <td>Triggered when a form validation is triggered, <strong>after</strong> its validation fails.</td>
             </tr>
             <tr>
-              <td><code>parsley:form:validated</code> <version>#2.0</version></td>
+              <td><code>form:validated.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a form validation is triggered, <strong>after</strong> its validation finishes (with success or with errors).</td>
+              <td>Triggered when a form validation is triggered, <strong>after</strong> its validation finishes (with success or with errors).</td>
             </tr>
             <tr>
-              <td><code>parsley:field:init</code> <version>#2.0</version></td>
+              <td><code>field:init.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>new Parsley()</code></td>
-              <td>Fired when a Field is bound for the first time.</td>
+              <td>Triggered when a Field is bound for the first time.</td>
             </tr>
             <tr>
-              <td><code>parsley:field:validate</code> <version>#2.0</version></td>
+              <td><code>field:validate.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a field validation is triggered, <strong>before</strong> its validation.</td>
+              <td>Triggered when a field validation is triggered, <strong>before</strong> its validation.</td>
             </tr>
             <tr>
-              <td><code>parsley:field:success</code> <version>#2.0</version></td>
+              <td><code>field:success.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a field validation succeeds.</td>
+              <td>Triggered when a field validation succeeds.</td>
             </tr>
             <tr>
-              <td><code>parsley:field:error</code> <version>#2.0</version></td>
+              <td><code>field:error.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired when a field validation fails.</td>
+              <td>Triggered when a field validation fails.</td>
             </tr>
             <tr>
-              <td><code>parsley:field:validated</code> <version>#2.0</version></td>
+              <td><code>field:validated.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
-              <td>Fired after a field is validated (with success or with errors).</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h3 id="events-usage">Usage</h3>
-        <table class="table table-stripped table-bordered">
-          <thead>
-            <tr>
-              <th class="col-md-3">Method</th>
-              <th class="col-md-6">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>$.listen('name', callback)</code> <version>#2.0</version></td>
-              <td>Listen to a specific event. Fire a callback function.</td>
-            </tr>
-            <tr>
-              <td><code>$.listen('name', context, callback)</code> <version>#2.0</version></td>
-              <td>Listen to a specific event. Fire a callback function that would have a specific context.</td>
-            </tr>
-            <tr>
-              <td><code>.subscribe('name', callback)</code> <version>#2.0</version></td>
-              <td>On a <code>ParsleyField</code>, it would only be fired if the specific event is fired by the specific field. On a <code>ParsleyForm</code>, it would be fired if the event is fired by the form, or <strong>by any of its fields</strong>.</td>
-            </tr>
-            <tr>
-              <td><code>.unsubscribe('name')</code> <version>#2.0</version></td>
-              <td>Unsubscribe all callbacks subscribed to an event name.</td>
-            </tr>
-            <tr>
-              <td><code>$.emit('name')</code> <version>#2.0</version></td>
-              <td>Emit an event for listeners and subscribers.</td>
+              <td>Triggered after a field is validated (with success or with errors).</td>
             </tr>
           </tbody>
         </table>

@@ -1,5 +1,14 @@
 # Parsley 2.x changelog
 
+## 2.1.0-rc1
+
+- jQuery events are now used instead of our pubsub code.
+The pubsub functions are now deprecated and will be removed in 3.0.0
+- The `value` option can now be a function
+- [BC Break] `isValid()` field method now returns just a boolean, `[]` is no
+more returned when field is optional and empty. `needsValidation()` appears
+now to indicate if a valid field needed a validation.
+
 ## 2.0.7
 
 - support of html5 `maxlength` and `minlength` (#731)

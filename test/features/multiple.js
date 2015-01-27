@@ -86,7 +86,7 @@ define(function () {
           '</form>');
 
         // if not required, field is optional and do not fail
-        expect($('#check1').parsley().isValid()).to.be.eql([]);
+        expect($('#check1').parsley().isValid()).to.be.eql(true);
         expect($('#element').parsley().isValid()).to.be(true);
 
         // once required, it fails if not rightly checked
@@ -219,8 +219,6 @@ define(function () {
         expect(parsleyInstance.$elements.length).to.be(3);
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
-
         $('#element, .parsley-errors-list').remove();
       });
     });

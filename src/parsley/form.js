@@ -2,18 +2,14 @@ define('parsley/form', [
   'parsley/abstract',
   'parsley/utils'
 ], function (ParsleyAbstract, ParsleyUtils) {
-  var ParsleyForm = function (element, OptionsFactory) {
+  var ParsleyForm = function (element, options) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.hash(4);
 
-    if ('OptionsFactory' !== ParsleyUtils.get(OptionsFactory, '__class__'))
-      throw new Error('You must give an OptionsFactory instance');
-
-    this.OptionsFactory = OptionsFactory;
     this.$element = $(element);
+    this._resetOptions(options);
 
     this.validationResult = null;
-    this.options = this.OptionsFactory.get(this);
   };
 
   ParsleyForm.prototype = {
@@ -36,7 +32,8 @@ define('parsley/form', [
 
       var fieldValidationResult = [];
 
-      $.emit('parsley:form:validate', this);
+      // fire validate event to eventually modify things before very validation
+      this._trigger('validate');
 
       // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
@@ -54,8 +51,8 @@ define('parsley/form', [
           this.validationResult = false;
       }
 
-      $.emit('parsley:form:' + (this.validationResult ? 'success' : 'error'), this);
-      $.emit('parsley:form:validated', this);
+      this._trigger(this.validationResult ? 'success' : 'error');
+      this._trigger('validated');
 
       return this.validationResult;
     },
@@ -105,7 +102,14 @@ define('parsley/form', [
       });
 
       return this;
+    },
+
+    // Internal only.
+    // Shortcut to trigger an event
+    _trigger: function(event) {
+      this.$element.trigger('form:' + event + '.parsley', [this]);
     }
+
   };
 
   return ParsleyForm;

@@ -7,13 +7,12 @@ define(function () {
         expect(ParsleyValidator).to.be.a('function');
       });
       it('should bind global config validators if given in constructor', function () {
-        window.ParsleyConfig = {
-          i18n : window.ParsleyConfig.i18n,
-          validators: $.extend(window.ParsleyConfig.validators, {
+        $.extend(true, window.ParsleyConfig, {
+          validators: {
             foo: { fn: function () {}, priority: 42 },
             bar: { fn: function () {}, priority: 12 }
-          })
-        };
+          }
+        });
         var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators);
         expect(parsleyValidator.validators).to.have.key('foo');
         expect(parsleyValidator.validators).to.have.key('bar');
@@ -183,8 +182,6 @@ define(function () {
         expect(parsleyValidator.validators.foo).to.be(undefined);
       });
       afterEach(function () {
-        window.ParsleyConfig = { i18n: window.ParsleyConfig.i18n, validators: window.ParsleyConfig.validators };
-
         $('#element').remove();
       });
     });
