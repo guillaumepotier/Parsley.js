@@ -18,7 +18,7 @@ jQuery >= 1.8
 
 ## Contributing
 
-See `CONTRIBUTING.md` file
+See the [`CONTRIBUTING.md` file](https://github.com/guillaumepotier/Parsley.js/blob/master/CONTRIBUTING.md)
 
 ## Integrations
 
