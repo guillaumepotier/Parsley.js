@@ -102,6 +102,7 @@ define(function () {
         expect(parsleyValidator.validate('www.foo.bar', parsleyValidator.validators.type('url'))).to.be(true);
         expect(parsleyValidator.validate('http://www.foo.bar', parsleyValidator.validators.type('url'))).to.be(true);
         expect(parsleyValidator.validate('https://www.foo.bar', parsleyValidator.validators.type('url'))).to.be(true);
+        expect(parsleyValidator.validate('http://192.168.1.1/foo/bar', parsleyValidator.validators.type('url'))).to.be(true);
       });
       it('should have a pattern validator', function () {
         expect(parsleyValidator.validate('a', parsleyValidator.validators.pattern('[a-z]+'))).to.be(true);
