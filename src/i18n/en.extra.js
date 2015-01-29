@@ -9,5 +9,6 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
   gt:       "This value should be greater.",
   gte:      "This value should be greater or equal.",
   lt:       "This value should be less.",
-  lte:      "This value should be less or equal."
+  lte:      "This value should be less or equal.",
+  notequalto: "This value should be different."
 });

@@ -2,6 +2,7 @@ define('features/extra', [
   'extra/validator/comparison',
   'extra/validator/dateiso',
   'extra/validator/words',
+  'extra/validator/notequalto',
 ], function () {
 
   return function (ParsleyValidator) {
@@ -149,6 +150,21 @@ define('features/extra', [
         $('#element').val('foo bar baz qux bux');
         expect($('#element').psly().isValid()).to.be(false);
       });
+
+      it('should have a notequalto validator', function () {
+        $('body').append('<input type="text" id="element" data-parsley-notequalto="hello" value="hello"/>'
+            + '<input type="text" class="fixture not" value="world"/>');
+        var p = $('#element').psly();
+        expect(p.isValid()).to.be(false);
+        $('#element').val('world');
+        expect(p.isValid()).to.be(true);
+        $('#element').attr('data-parsley-notequalto', '.not');
+        debugger
+        expect(p.isValid()).to.be(false);
+        $('#element').val('hello');
+        expect(p.isValid()).to.be(true);
+      });
+
       it('should have a bind.js plugin allowing to give pure json validation config to parsley constructor', function (done) {
         require(['extra/plugin/bind'], function () {
           $('body').append(
@@ -181,7 +197,7 @@ define('features/extra', [
         });
       });
       afterEach(function () {
-        $('#element, .parsley-errors-list').remove();
+        $('#element, .fixture, .parsley-errors-list').remove();
       });
     });
   };

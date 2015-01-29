@@ -6,7 +6,7 @@ var parseRequirement = function (requirement) {
     return +requirement;
 };
 
-// gt, gte, lt, lte extra validators
+// gt, gte, lt, lte, notequalto extra validators
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
 
@@ -35,6 +35,14 @@ window.ParsleyConfig.validators.lt = {
 };
 
 // Less than or equal to validator
+window.ParsleyConfig.validators.lte = {
+  fn: function (value, requirement) {
+    return parseFloat(value) <= parseRequirement(requirement);
+  },
+  priority: 32
+};
+
+// Not equal to validator
 window.ParsleyConfig.validators.lte = {
   fn: function (value, requirement) {
     return parseFloat(value) <= parseRequirement(requirement);
