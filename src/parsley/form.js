@@ -4,7 +4,7 @@ define('parsley/form', [
 ], function (ParsleyAbstract, ParsleyUtils) {
   var ParsleyForm = function (element, options) {
     this.__class__ = 'ParsleyForm';
-    this.__id__ = ParsleyUtils.hash(4);
+    this.__id__ = ParsleyUtils.generateID();
 
     this.$element = $(element);
     this._resetOptions(options);

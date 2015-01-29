@@ -5,7 +5,7 @@ define('parsley/field', [
 ], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
   var ParsleyField = function (field, options, parsleyFormInstance) {
     this.__class__ = 'ParsleyField';
-    this.__id__ = ParsleyUtils.hash(4);
+    this.__id__ = ParsleyUtils.generateID();
 
     this.$element = $(field);
 

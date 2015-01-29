@@ -1,4 +1,5 @@
 define('parsley/utils', function () {
+  var globalID = 1;
   return {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -55,8 +56,8 @@ define('parsley/utils', function () {
       return undefined;
     },
 
-    hash: function (length) {
-      return String(Math.random()).substring(2, length ? length + 2 : 9);
+    generateID: function () {
+      return '' + globalID++;
     },
 
     /** Third party functions **/

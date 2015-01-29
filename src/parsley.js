@@ -32,7 +32,7 @@ define([
   var Parsley = function (element, options, parsleyFormInstance) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
-    this.__id__ = ParsleyUtils.hash(4);
+    this.__id__ = ParsleyUtils.generateID();
 
     // Parsley must be instantiated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
