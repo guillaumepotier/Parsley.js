@@ -159,7 +159,6 @@ define('features/extra', [
         $('#element').val('world');
         expect(p.isValid()).to.be(true);
         $('#element').attr('data-parsley-notequalto', '.not');
-        debugger
         expect(p.isValid()).to.be(false);
         $('#element').val('hello');
         expect(p.isValid()).to.be(true);
