@@ -210,6 +210,22 @@ define('features/remote', [
             done();
           });
       });
+
+      it('should clear the cache when submitting a form', function () {
+        var parsleyInstance =
+          $('<form id="element"><input type="text" required></form>')
+          .appendTo('body')
+          .on('submit', function(evt) { evt.preventDefault(); } )
+          .parsley();
+        parsleyInstance._remoteCache = {dummy: 42};
+        $('#element').submit();
+        $('#element input').val('hello');
+        parsleyInstance.validate();
+        expect(parsleyInstance._remoteCache.dummy).to.be(42);
+        $('#element').submit();
+        expect(parsleyInstance._remoteCache.dummy).to.be(undefined);
+      });
+
       it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();
