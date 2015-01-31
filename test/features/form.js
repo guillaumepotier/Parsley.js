@@ -159,7 +159,7 @@ define(function () {
 
         var callbacks = [];
         var parsleyInstance = $form.parsley();
-        $.each(['validate', 'error', 'success', 'validated'], function (i, cb) {
+        $.each(['validate', 'error', 'success', 'validated', 'submit'], function (i, cb) {
           parsleyInstance.subscribe('parsley:form:' + cb, function () {
             callbacks.push(cb);
           });
@@ -167,7 +167,7 @@ define(function () {
         $form.submit();
         $form.find('input').val('Hello');
         $form.submit();
-        expect(callbacks.join()).to.be('validate,error,validated,validate,success,validated');
+        expect(callbacks.join()).to.be('validate,error,validated,validate,success,validated,submit');
       });
       it('should fire "parsley:form:validate" to give the opportunity for changes before validation occurs', function() {
         var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
@@ -191,6 +191,17 @@ define(function () {
 
         $('#element').submit();
       });
+
+      it('should fire form:submit.event and be interruptable when validated', function (done) {
+        $('<form id="element"></form>').on('form:submit.parsley', function(evt) {
+          evt.preventDefault();
+          done();
+        })
+        .appendTo('body')
+        .parsley();
+        $('#element').submit();
+      });
+
       afterEach(function () {
         $('#element').remove();
       });

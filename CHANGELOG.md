@@ -4,6 +4,7 @@
 
 - Support for validators with compound names by restoring ful case sensitivity
   to error messages. (#805)
+- new event 'form:submit.parsley' fired before a form is submitted.
 
 ## 2.1.0-rc1
 

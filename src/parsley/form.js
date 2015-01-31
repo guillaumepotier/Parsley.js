@@ -17,7 +17,7 @@ define('parsley/form', [
       this.validate(undefined, undefined, event);
 
       // prevent form submission if validation fails
-      if (false === this.validationResult && event instanceof $.Event) {
+      if ((false === this.validationResult || !this._trigger('submit')) && event instanceof $.Event) {
         event.stopImmediatePropagation();
         event.preventDefault();
       }
@@ -106,8 +106,11 @@ define('parsley/form', [
 
     // Internal only.
     // Shortcut to trigger an event
-    _trigger: function(event) {
-      this.$element.trigger('form:' + event + '.parsley', [this]);
+    // Returns true iff event is not interrupted and default not prevented.
+    _trigger: function(eventName) {
+      var event = jQuery.Event('form:' + eventName + '.parsley');
+      this.$element.trigger(event, [this]);
+      return !(event.isDefaultPrevented() || event.isImmediatePropagationStopped() || event.isPropagationStopped());
     }
 
   };

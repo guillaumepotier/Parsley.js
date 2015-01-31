@@ -951,6 +951,13 @@ window.ParsleyValidator
               <td>Triggered when a form validation is triggered, <strong>after</strong> its validation finishes (with success or with errors).</td>
             </tr>
             <tr>
+              <td><code>form:submit.parsley</code> <version>#2.2</version></td>
+              <td><code>ParsleyForm</code></td>
+              <td><code>submit()</code></td>
+              <td>Triggered when after a form validation succeeds and before the form is actually submitted.<br/>
+                Prevent the default to interrupt submission.</td>
+            </tr>
+            <tr>
               <td><code>field:init.parsley</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>new Parsley()</code></td>
