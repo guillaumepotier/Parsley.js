@@ -46,11 +46,6 @@ define('parsley/utils', function () {
     },
 
     /** Third party functions **/
-    // Underscore isArray
-    isArray: function (mixed) {
-      return Object.prototype.toString.call(mixed) === '[object Array]';
-    },
-
     // Underscore isObject
     isObject: function (mixed) {
       return mixed === Object(mixed);
