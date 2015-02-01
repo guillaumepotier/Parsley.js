@@ -224,12 +224,6 @@ define([
     return new Parsley(this, options);
   };
 
-  // ### ParsleyUI
-  // UI is a class apart that only listen to some events and them modify DOM accordingly
-  // Could be overriden by defining a `window.ParsleyConfig.ParsleyUI` appropriate class (with `listen()` method basically)
-  window.ParsleyUI = 'function' === typeof ParsleyUtils.get(window, 'ParsleyConfig.ParsleyUI') ?
-    new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
-
   // ### ParsleyField and ParsleyForm extension
   // Ensure that defined if not already the case
   if ('undefined' === typeof window.ParsleyExtend)
@@ -238,6 +232,13 @@ define([
   // ### ParsleyConfig
   // Inherit from ParsleyDefault, and copy over any existing values
   window.ParsleyConfig = $.extend(ParsleyUtils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
+
+  // ### ParsleyUI
+  // UI is a class apart that only listen to some events and them modify DOM accordingly
+  // Could be overriden by defining a `window.ParsleyConfig.ParsleyUI` appropriate class (with `listen()` method basically)
+  window.ParsleyUI = 'function' === typeof ParsleyUtils.get(window, 'ParsleyConfig.ParsleyUI') ?
+    new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
+
   // ### Globals
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
