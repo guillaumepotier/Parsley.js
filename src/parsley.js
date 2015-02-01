@@ -143,16 +143,6 @@ define([
       return parsleyMultipleInstance || this.bind('parsleyFieldMultiple', parsleyFormInstance, multiple);
     },
 
-    // Retrieve namespace used for DOM-API
-    getNamespace: function (options) {
-      // `data-parsley-namespace=<namespace>`
-      if ('undefined' !== typeof this.$element.data('parsleyNamespace'))
-        return this.$element.data('parsleyNamespace');
-      if ('undefined' !== typeof ParsleyUtils.get(options, 'namespace'))
-        return options.namespace;
-      return window.ParsleyConfig.namespace;
-    },
-
     // Return proper `ParsleyForm`, `ParsleyField` or `ParsleyFieldMultiple`
     bind: function (type, parentParsleyFormInstance, multiple, doNotStore) {
       var parsleyInstance;
