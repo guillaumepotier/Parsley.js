@@ -67,15 +67,6 @@ define(function () {
         expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'validate')).to.be(true);
         expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'vaLidate')).to.be(true);
       });
-      it('should have a proper get() function', function () {
-        var object = {
-          foo: {bar: 'baz'},
-          bar: 'qux'
-        };
-        expect(ParsleyUtils.get(object, 'bar')).to.be('qux');
-        expect(ParsleyUtils.get(object, 'foo.bar')).to.be('baz');
-        expect(ParsleyUtils.get(object, 'foo.baz')).to.be(undefined);
-      });
     });
   }
 });

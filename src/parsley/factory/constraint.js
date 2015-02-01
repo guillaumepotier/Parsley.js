@@ -4,7 +4,7 @@ define('parsley/factory/constraint', [
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
     var assert = {};
 
-    if (!new RegExp('ParsleyField').test(ParsleyUtils.get(parsleyField, '__class__')))
+    if (!new RegExp('ParsleyField').test(parsleyField.__class__))
       throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
 
     if ('function' === typeof window.ParsleyValidator.validators[name])
@@ -16,7 +16,7 @@ define('parsley/factory/constraint', [
       if ('undefined' !== typeof parsleyField.options[name + 'Priority'])
         return parsleyField.options[name + 'Priority'];
 
-      return ParsleyUtils.get(assert, 'priority') || 2;
+      return assert.priority || 2;
     };
 
     priority = priority || getPriority();

@@ -41,21 +41,6 @@ define('parsley/utils', function () {
       $element[0].setAttribute(this.dasherize(namespace + attr), String(value));
     },
 
-    // Recursive object / array getter
-    get: function (obj, path) {
-      var
-        i = 0,
-        paths = (path || '').split('.');
-
-      while (this.isObject(obj) || this.isArray(obj)) {
-        obj = obj[paths[i++]];
-        if (i === paths.length)
-          return obj;
-      }
-
-      return undefined;
-    },
-
     generateID: function () {
       return '' + globalID++;
     },
