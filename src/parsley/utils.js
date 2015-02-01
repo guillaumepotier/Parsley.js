@@ -1,12 +1,24 @@
 define('parsley/utils', function () {
-  var globalID = 1;
+  var globalID = 1,
+    // http://support.microsoft.com/kb/167820
+    // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
+    msie = (function () {
+          var
+            ua = window.navigator.userAgent,
+            msie = ua.indexOf('MSIE ');
+
+          if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
+            return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+
+          return 0;
+       })();
+
   return {
     // Parsley DOM-API
     // returns object from dom attributes and values
     attr: function ($element, namespace, obj) {
       var
         attribute,
-        msie = this.msieversion(),
         regex = new RegExp('^' + namespace, 'i');
 
       if ('undefined' === typeof obj)
@@ -93,19 +105,6 @@ define('parsley/utils', function () {
         Object.prototype = null;
         return result;
       };
-    })(),
-
-    // http://support.microsoft.com/kb/167820
-    // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
-    msieversion: function () {
-      var
-        ua = window.navigator.userAgent,
-        msie = ua.indexOf('MSIE ');
-
-      if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
-        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-
-      return 0;
-   }
+    })()
   };
 });
