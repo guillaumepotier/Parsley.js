@@ -1,5 +1,10 @@
 # Parsley 2.x changelog
 
+## master
+
+- Support for validators with compound names by restoring ful case sensitivity
+  to error messages. (#805)
+
 ## 2.1.0-rc1
 
 - jQuery events are now used instead of our pubsub code.
