@@ -46,11 +46,6 @@ define('parsley/utils', function () {
     },
 
     /** Third party functions **/
-    // Underscore isObject
-    isObject: function (mixed) {
-      return mixed === Object(mixed);
-    },
-
     // Zepto deserialize function
     deserializeValue: function (value) {
       var num;
