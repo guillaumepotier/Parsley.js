@@ -44,7 +44,7 @@ define('parsley/ui', [
       this.actualizeTriggers(fieldInstance);
 
       // If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user
-      if ((diff.kept.length || diff.added.length) && 'undefined' === typeof fieldInstance._ui.failedOnce)
+      if ((diff.kept.length || diff.added.length) && true !== fieldInstance._ui.failedOnce)
         this.manageFailingFieldTrigger(fieldInstance);
     },
 
@@ -374,6 +374,7 @@ define('parsley/ui', [
       parsleyInstance._ui.validatedOnce = false;
       parsleyInstance._ui.lastValidationResult = [];
       parsleyInstance._ui.validationInformationVisible = false;
+      parsleyInstance._ui.failedOnce = false;
     },
 
     destroy: function (parsleyInstance) {

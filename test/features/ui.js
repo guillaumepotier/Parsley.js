@@ -295,6 +295,31 @@ define(function () {
         parsleyInstance.reset();
         expect($('ul#parsley-id-' + parsleyInstance.__id__).hasClass('filled')).to.be(false);
       });
+      it('should re-bind error triggers after a reset (input=text)', function () {
+        $('body').append('<input type="text" id="element" required />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.validate();
+        parsleyInstance.reset();
+        parsleyInstance.validate();
+        expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(1);
+        $('#element').val('foo').trigger($.Event('keyup'));
+        expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
+      });
+      it('should re-bind error triggers after a reset (select)', function () {
+        $('body').append('<select id="element" required>'+
+          '<option value="">Choose</option>' +
+          '<option value="foo">foo</option>' +
+          '<option value="bar">bar</option>' +
+        '</select>');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.validate();
+        parsleyInstance.reset();
+        parsleyInstance.validate();
+        expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(1);
+        $('#element option[value="foo"]').prop('selected', true);
+        $('#element').trigger($.Event('change'));
+        expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
+      });
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();
       });
