@@ -184,7 +184,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
       throw new Error('Calling an undefined async validator: `' + validator + '`');
 
     // Fill data with current value
-    data[this.$element.attr('name') || this.$element.attr('id')] = this.getValue();
+    data[this.$element.data('name') || this.$element.attr('name') || this.$element.attr('id')] = this.getValue();
 
     // Merge options passed in from the function with the ones in the attribute
     this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {} , this.asyncValidators[validator].options);
