@@ -13,7 +13,7 @@ define('parsley/utils', function () {
           return 0;
        })();
 
-  return {
+  var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
     attr: function ($element, namespace, obj) {
@@ -107,4 +107,6 @@ define('parsley/utils', function () {
       };
     })()
   };
+
+  return ParsleyUtils;
 });

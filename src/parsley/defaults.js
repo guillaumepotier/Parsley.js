@@ -4,7 +4,7 @@
 // eg: `data-parsley-stop-on-first-failing-constraint="false"`
 
 define('parsley/defaults', function () {
-  return {
+  var ParsleyDefaults = {
     // ### General
 
     // Default data-namespace for DOM API
@@ -52,4 +52,6 @@ define('parsley/defaults', function () {
     // li elem that would receive error message
     errorTemplate: '<li></li>'
   };
+
+  return ParsleyDefaults;
 });

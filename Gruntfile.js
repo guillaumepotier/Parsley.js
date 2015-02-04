@@ -190,15 +190,6 @@ module.exports = function (grunt) {
 var rdefineEnd = /\}\);[^}\w]*$/;
 
 function convert(name, path, contents) {
-  // Convert ParsleyDefaults and ParsleyUtils that needs a special treatment
-  if (/(defaults|utils)/.test(path)) {
-    name = (/parsley\/([\w-]+)/.exec(name)[1]);
-
-    return contents
-      .replace(/define\([\w\W]*?return/, "  var Parsley" + name.charAt(0).toUpperCase() + name.slice(1) + " =")
-      .replace(rdefineEnd, "");
-  }
-
   // Update original validatorjs for non-AMD implementation
   if (/(dist\/validator.js)/.test(path)) {
 
