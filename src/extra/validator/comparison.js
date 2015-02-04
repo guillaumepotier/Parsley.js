@@ -13,7 +13,8 @@ window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
 // Greater than validator
 window.ParsleyConfig.validators.gt = {
   fn: function (value, requirement) {
-    return parseFloat(value) > parseRequirement(requirement);
+    var requirementVal = parseRequirement(requirement);
+    return !requirementVal || parseFloat(value) > requirementVal;
   },
   priority: 32
 };
@@ -21,7 +22,8 @@ window.ParsleyConfig.validators.gt = {
 // Greater than or equal to validator
 window.ParsleyConfig.validators.gte = {
   fn: function (value, requirement) {
-    return parseFloat(value) >= parseRequirement(requirement);
+    var requirementVal = parseRequirement(requirement);
+    return !requirementVal || parseFloat(value) >= requirementVal;
   },
   priority: 32
 };
@@ -29,7 +31,8 @@ window.ParsleyConfig.validators.gte = {
 // Less than validator
 window.ParsleyConfig.validators.lt = {
   fn: function (value, requirement) {
-    return parseFloat(value) < parseRequirement(requirement);
+    var requirementVal = parseRequirement(requirement);
+    return !requirementVal || parseFloat(value) < requirementVal;
   },
   priority: 32
 };
@@ -37,7 +40,8 @@ window.ParsleyConfig.validators.lt = {
 // Less than or equal to validator
 window.ParsleyConfig.validators.lte = {
   fn: function (value, requirement) {
-    return parseFloat(value) <= parseRequirement(requirement);
+    var requirementVal = parseRequirement(requirement);
+    return !requirementVal || parseFloat(value) <= requirementVal;
   },
   priority: 32
 };
