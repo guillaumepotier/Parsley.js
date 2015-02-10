@@ -9,6 +9,7 @@ define('parsley/form', [
     this.$element = $(element);
     this._resetOptions(options);
 
+    this.fields = [];
     this.validationResult = null;
   };
 
@@ -85,7 +86,8 @@ define('parsley/form', [
     },
 
     _bindFields: function () {
-      var self = this;
+      var self = this,
+        oldFields = this.fields;
 
       this.fields = [];
       this.fieldsMappedById = {};
@@ -101,6 +103,14 @@ define('parsley/form', [
           }
       });
 
+      $(oldFields).not(self.fields).each(function () {
+        this._trigger('reset');
+        // If DOM element is detached or removed from the form, also trigger
+        // at the form level:
+        if (!jQuery.contains(self.$element[0], this.$element[0])) {
+          self.$element.trigger('field:reset.parsley', [this]);
+        }
+      });
       return this;
     },
 

@@ -202,6 +202,49 @@ define(function () {
         $('#element').submit();
       });
 
+      it('should fire field:reset event if fields are removed or excluded', function () {
+        var parsleyInstance,
+          steps = [],
+          step = 'init',
+          parsleyForm = $('<form id="element"><input type="text" required></form>')
+            .appendTo('body')
+            .on('field:reset.parsley', function(evt, ins) {
+              steps.push('form: ' + step);
+              expect(ins).to.be(parsleyInstance);
+            })
+            .parsley();
+        parsleyInstance = $('#element input')
+          .on('field:reset.parsley', function(evt, ins) {
+              steps.push('field: ' + step);
+              expect(ins).to.be(parsleyInstance);
+            })
+          .parsley();
+
+        parsleyForm.validate();
+        parsleyForm.validate();
+        parsleyForm.options.excluded = '[required]';
+        step = 'excluded';
+        parsleyForm.validate();
+        parsleyForm.validate();
+        parsleyForm.options.excluded = '';
+        step = 'not excluded';
+        parsleyForm.validate();
+        parsleyForm.validate();
+        var $i = $('#element input').detach();
+        step = 'detached';
+        parsleyForm.validate();
+        parsleyForm.validate();
+        $i.appendTo('form');
+        step = 'reattached';
+        parsleyForm.validate();
+        parsleyForm.validate();
+        $i.remove();
+        step = 'removed';
+        parsleyForm.validate();
+        parsleyForm.validate();
+        expect(steps).to.eql(['field: excluded', 'form: excluded', 'field: detached', 'form: detached', 'form: removed']);
+      });
+
       afterEach(function () {
         $('#element').remove();
       });
