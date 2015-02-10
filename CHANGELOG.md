@@ -6,6 +6,7 @@
   to error messages. (#805)
 - new event 'form:submit.parsley' fired before a form is submitted.
 - remote cache now cleared after form submission (#813)
+- event 'field:reset.parsley' now fired if a field is no longer validated (because it is excluded, or removed) (#841)
 
 ## 2.1.0-rc1
 
