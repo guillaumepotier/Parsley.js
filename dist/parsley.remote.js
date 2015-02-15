@@ -1074,7 +1074,7 @@ var Validator = ( function ( ) {
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-        
+
         if (this === null) {
             throw new TypeError();
         }
@@ -1930,7 +1930,7 @@ var Validator = ( function ( ) {
       // HTML5 max
       else if ('undefined' !== typeof this.$element.attr('max'))
         this.addConstraint('max', this.$element.attr('max'), undefined, true);
-    
+
       // length
       if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
         this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);
@@ -2150,7 +2150,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
 
 //     Parsley.js 2.0.6
 //     http://parsleyjs.org
-//     (c) 20012-2014 Guillaume Potier, Wisembly
+//     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
 
   // ### Parsley factory
