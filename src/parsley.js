@@ -1,6 +1,6 @@
 //     Parsley.js @@version
 //     http://parsleyjs.org
-//     (c) 20012-2014 Guillaume Potier, Wisembly
+//     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
 
 define([
