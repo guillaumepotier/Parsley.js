@@ -9,13 +9,13 @@ define('parsley/ui', [
     listen: function () {
       var that = this;
       $(document)
-      .on('form:init.parsley',       function(evt, field) { that.setupForm (field) } )
-      .on('field:init.parsley',      function(evt, field) { that.setupField(field) } )
-      .on('field:validated.parsley', function(evt, field) { that.reflow    (field) } )
-      .on('form:validated.parsley',  function(evt, field) { that.focus     (field) } )
-      .on('field:reset.parsley',     function(evt, field) { that.reset     (field) } )
-      .on('form:destroy.parsley',    function(evt, field) { that.destroy   (field) } )
-      .on('field:destroy.parsley',   function(evt, field) { that.destroy   (field) } );
+      .on('form:init.parsley',       function (evt, field) { that.setupForm (field); } )
+      .on('field:init.parsley',      function (evt, field) { that.setupField(field); } )
+      .on('field:validated.parsley', function (evt, field) { that.reflow    (field); } )
+      .on('form:validated.parsley',  function (evt, field) { that.focus     (field); } )
+      .on('field:reset.parsley',     function (evt, field) { that.reset     (field); } )
+      .on('form:destroy.parsley',    function (evt, field) { that.destroy   (field); } )
+      .on('field:destroy.parsley',   function (evt, field) { that.destroy   (field); } );
 
       return this;
     },
@@ -296,7 +296,7 @@ define('parsley/ui', [
     actualizeTriggers: function (fieldInstance) {
       var $toBind = fieldInstance.$element;
       if (fieldInstance.options.multiple)
-        $toBind = $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]')
+        $toBind = $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]');
 
       // Remove Parsley events already binded on this field
       $toBind.off('.Parsley');
@@ -317,7 +317,7 @@ define('parsley/ui', [
     },
 
     // Called through $.proxy with fieldInstance. `this` context is ParsleyField
-    eventValidate: function(event) {
+    eventValidate: function (event) {
       // For keyup, keypress, keydown... events that could be a little bit obstrusive
       // do not validate if val length < min threshold on first validation. Once field have been validated once and info
       // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.

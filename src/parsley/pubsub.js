@@ -4,25 +4,25 @@ define('parsley/pubsub', [
 ], function (ParsleyField, ParsleyForm) {
   var
     o = $({}),
-    deprecated = function() {
+    deprecated = function () {
       if (window.console && window.console.log)
         window.console.log("Parsley's pubsub module is deprecated; use the corresponding jQuery event method instead");
       // Warn only once:
-      deprecated = function() {}
+      deprecated = function () {};
     };
 
   // Returns an event handler that calls `fn` with the arguments it expects
   function adapt(fn, context) {
     // Store to allow unbinding
     if (!fn.parsleyAdaptedCallback) {
-      fn.parsleyAdaptedCallback = function(evt, parsley) {
+      fn.parsleyAdaptedCallback = function (evt, parsley) {
         var args = Array.prototype.slice.call(arguments, 2);
         args.unshift(parsley);
         fn.apply(context || o, args);
-      }
+      };
     }
     return fn.parsleyAdaptedCallback;
-  };
+  }
 
   var eventPrefix = 'parsley:';
   // Converts 'parsley:form:validate' into 'form:validate.parsley'
@@ -30,7 +30,7 @@ define('parsley/pubsub', [
     if (name.lastIndexOf(eventPrefix, 0) === 0)
       return name.substr(eventPrefix.length) + '.parsley';
     return name;
-  };
+  }
 
   // $.listen is deprecated. Use jQuery events instead.
   $.listen = function (name, callback) {

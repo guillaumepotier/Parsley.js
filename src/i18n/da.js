@@ -31,4 +31,3 @@ window.ParsleyConfig.i18n.da = $.extend(window.ParsleyConfig.i18n.da || {}, {
 // If file is loaded after Parsley main file, auto-load locale
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('da', window.ParsleyConfig.i18n.da, true);
-  

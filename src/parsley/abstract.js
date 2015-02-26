@@ -1,7 +1,7 @@
 define('parsley/abstract', [
   'parsley/utils'
 ], function (ParsleyUtils) {
-  var ParsleyAbstract = function() {};
+  var ParsleyAbstract = function () {};
 
   ParsleyAbstract.prototype = {
     asyncSupport: false,
@@ -13,7 +13,7 @@ define('parsley/abstract', [
       return this;
     },
 
-    _resetOptions: function(initOptions) {
+    _resetOptions: function (initOptions) {
       var baseOptions = this.parent ? this.parent.options : window.ParsleyConfig;
       this.domOptions = ParsleyUtils.objectCreate(baseOptions);
       this.options = ParsleyUtils.objectCreate(this.domOptions);
