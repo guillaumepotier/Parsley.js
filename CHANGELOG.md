@@ -1,7 +1,8 @@
 # Parsley 2.x changelog
 
 ## master
-
+  
+- added `data-parsley-squish-value` option
 - Support for validators with compound names by restoring ful case sensitivity
   to error messages. (#805)
 - new event 'form:submit.parsley' fired before a form is submitted.
