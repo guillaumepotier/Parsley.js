@@ -260,7 +260,7 @@ define('parsley/field', [
 
     // Internal only.
     // Shortcut to trigger an event
-    _trigger: function(event) {
+    _trigger: function (event) {
       this.$element.trigger('field:' + event + '.parsley', [this]);
     },
 

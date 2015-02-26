@@ -77,7 +77,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
     if (new RegExp('key').test(event.type))
-      if (!this._ui.validationInformationVisible  && this.getValue().length <= this.options.validationThreshold)
+      if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationThreshold)
         return;
 
     this._ui.validatedOnce = true;
@@ -210,7 +210,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
         this._xhr.abort();
 
       // Make ajax call
-      this._xhr =  $.ajax(ajaxOptions)
+      this._xhr = $.ajax(ajaxOptions);
 
       // Store remote call result to avoid next calls with exact same parameters
       this._remoteCache[csr] = this._xhr;
@@ -262,7 +262,7 @@ window.ParsleyConfig.validators.remote = {
   priority: -1
 };
 
-$(document).on('form:submit.parsley', function(evt, parsleyForm) {
+$(document).on('form:submit.parsley', function (evt, parsleyForm) {
   if (!evt.isDefaultPrevented())
     parsleyForm._remoteCache = {};
-})
+});

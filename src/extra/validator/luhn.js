@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
 
 window.ParsleyConfig.validators.luhn = {
-  fn: function(value) {
+  fn: function (value) {
     value = value.replace(/[ -]/g, '');
     var digit, n, sum, _j, _len1, _ref2;
     sum = 0;

@@ -117,7 +117,7 @@ define('parsley/form', [
     // Internal only.
     // Shortcut to trigger an event
     // Returns true iff event is not interrupted and default not prevented.
-    _trigger: function(eventName) {
+    _trigger: function (eventName) {
       var event = jQuery.Event('form:' + eventName + '.parsley');
       this.$element.trigger(event, [this]);
       return !(event.isDefaultPrevented() || event.isImmediatePropagationStopped() || event.isPropagationStopped());

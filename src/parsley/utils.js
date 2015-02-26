@@ -76,7 +76,7 @@ define('parsley/utils', function () {
 
     // Zepto camelize function
     camelize: function (str) {
-      return str.replace(/-+(.)?/g, function(match, chr) {
+      return str.replace(/-+(.)?/g, function (match, chr) {
         return chr ? chr.toUpperCase() : '';
       });
     },
@@ -91,8 +91,8 @@ define('parsley/utils', function () {
     },
 
     // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
-    objectCreate: Object.create || (function() {
-      var Object = function() {};
+    objectCreate: Object.create || (function () {
+      var Object = function () {};
       return function (prototype) {
         if (arguments.length > 1) {
           throw Error('Second argument not supported');
