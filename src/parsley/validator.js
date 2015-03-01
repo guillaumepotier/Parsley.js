@@ -62,22 +62,26 @@ define('parsley/validator', [
 
     // Add a new validator
     addValidator: function (name, fn, priority, requirementsTransformer) {
+      return this._setValidator(name, fn, priority, requirementsTransformer);
+    },
+
+    updateValidator: function (name, fn, priority, requirementsTransformer) {
+      return this._setValidator(name, fn, priority, requirementsTransformer);
+    },
+
+    removeValidator: function (name) {
+      delete this.validators[name];
+
+      return this;
+    },
+
+    _setValidator: function (name, fn, priority, requirementsTransformer) {
       this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), {
           priority: priority,
           requirementsTransformer: requirementsTransformer
         });
       };
-
-      return this;
-    },
-
-    updateValidator: function (name, fn, priority, requirementsTransformer) {
-      return this.addValidator(name, fn, priority, requirementsTransformer);
-    },
-
-    removeValidator: function (name) {
-      delete this.validators[name];
 
       return this;
     },
