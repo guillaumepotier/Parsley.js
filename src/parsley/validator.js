@@ -1,6 +1,7 @@
 define('parsley/validator', [
+  'parsley/defaults',
   'validator'
-], function (Validator) {
+], function (ParsleyDefaults, Validator) {
 
   // This is needed for Browserify usage that requires Validator.js through module.exports
   Validator = 'undefined' !== typeof Validator ? Validator : ('undefined' !== typeof module ? module.exports : null);
@@ -64,14 +65,27 @@ define('parsley/validator', [
 
     // Add a new validator
     addValidator: function (name, fn, priority, requirementsTransformer) {
+      if (this.validators[name])
+        ParsleyUtils.warn('Validator "' + name + '" is already defined.');
+      else if (ParsleyDefaults.hasOwnProperty(name)) {
+        ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
+        return;
+      };
       return this._setValidator(name, fn, priority, requirementsTransformer);
     },
 
     updateValidator: function (name, fn, priority, requirementsTransformer) {
+      if (!this.validators[name]) {
+        ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
+        return this.addValidator(name, fn, priority, requirementsTransformer);
+      }
       return this._setValidator(name, fn, priority, requirementsTransformer);
     },
 
     removeValidator: function (name) {
+      if (!this.validators[name])
+        ParsleyUtils.warn('Validator "' + name + '" is not defined.');
+
       delete this.validators[name];
 
       return this;

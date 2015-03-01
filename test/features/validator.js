@@ -188,6 +188,40 @@ define(function () {
       afterEach(function () {
         $('#element').remove();
       });
+
+      it('should warn if a custom validator has a reserved name', function () {
+        $.extend(true, window.ParsleyConfig, {
+          validators: {
+            excluded: { fn: function () {}, priority: 42 },
+          }
+        });
+
+        expectWarning(function() {
+          var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators);
+        });
+        delete window.ParsleyConfig.validators.excluded;
+      });
+
+      it('should warn when adding an already defined validator', function () {
+        parsleyValidator.addValidator('foo', $.noop);
+        expectWarning(function() {
+          parsleyValidator.addValidator('foo', $.noop);
+        });
+        parsleyValidator.removeValidator('foo');
+      });
+
+      it('should warn when updating or deleting a custom validator not already defined', function () {
+        expectWarning(function() {
+          parsleyValidator.updateValidator('foo', function () {});
+        });
+        parsleyValidator.removeValidator('foo');
+      });
+
+      it('should warn when updating or deleting a custom validator not already defined', function () {
+        expectWarning(function() {
+          parsleyValidator.removeValidator('foo');
+        });
+      });
     });
   };
 });
