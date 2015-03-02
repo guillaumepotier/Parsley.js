@@ -281,8 +281,8 @@ define('parsley/ui', [
       if ('string' === typeof fieldInstance.options.errorsContainer) {
         if ($(fieldInstance.options.errorsContainer).length)
           return $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
-        else if (window.console && window.console.warn)
-          window.console.warn('The errors container `' + fieldInstance.options.errorsContainer + '` does not exist in DOM');
+        else
+          ParsleyUtils.warn('The errors container `' + fieldInstance.options.errorsContainer + '` does not exist in DOM');
       }
       else if ('function' === typeof fieldInstance.options.errorsContainer)
         $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);

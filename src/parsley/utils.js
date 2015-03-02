@@ -90,6 +90,11 @@ define('parsley/utils', function () {
         .toLowerCase();
     },
 
+    warn: function() {
+      if (window.console && window.console.warn)
+        window.console.warn.apply(window.console, arguments);
+    },
+
     // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
     objectCreate: Object.create || (function () {
       var Object = function () {};

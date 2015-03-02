@@ -1,12 +1,12 @@
 define('parsley/pubsub', [
   'parsley/field',
-  'parsley/form'
-], function (ParsleyField, ParsleyForm) {
+  'parsley/form',
+  'parsley/utils'
+], function (ParsleyField, ParsleyForm, ParsleyUtils) {
   var
     o = $({}),
     deprecated = function () {
-      if (window.console && window.console.log)
-        window.console.log("Parsley's pubsub module is deprecated; use the corresponding jQuery event method instead");
+      ParsleyUtils.warn("Parsley's pubsub module is deprecated; use the corresponding jQuery event method instead");
       // Warn only once:
       deprecated = function () {};
     };

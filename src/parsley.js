@@ -103,8 +103,7 @@ define([
 
       // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
       } else if ('undefined' === typeof multiple) {
-        if (window.console && window.console.warn)
-          window.console.warn('To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
+        ParsleyUtils.warn('To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
 
         return this;
       }
@@ -215,8 +214,7 @@ define([
 
     // Return undefined if applied to non existing DOM element
     if (!$(this).length) {
-      if (window.console && window.console.warn)
-        window.console.warn('You must bind Parsley on an existing element.');
+      ParsleyUtils.warn('You must bind Parsley on an existing element.');
 
       return;
     }
