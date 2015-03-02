@@ -235,7 +235,7 @@ define('parsley/ui', [
       _ui.$errorClassHandler = this._manageClassHandler(fieldInstance);
 
       // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
-      _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
+      _ui.errorsWrapperId = 'parsley-id-' + (fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
       _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
 
       // ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
@@ -264,7 +264,7 @@ define('parsley/ui', [
         return $handler;
 
       // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
-      if ('undefined' === typeof fieldInstance.options.multiple || fieldInstance.$element.is('select'))
+      if (!fieldInstance.options.multiple || fieldInstance.$element.is('select'))
         return fieldInstance.$element;
 
       // But if multiple element (radio, checkbox), that would be their parent
@@ -290,7 +290,7 @@ define('parsley/ui', [
       if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
         return $errorsContainer.append(fieldInstance._ui.$errorsWrapper);
 
-      return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element.after(fieldInstance._ui.$errorsWrapper) : fieldInstance.$element.parent().after(fieldInstance._ui.$errorsWrapper);
+      return fieldInstance.options.multiple ? fieldInstance.$element.after(fieldInstance._ui.$errorsWrapper) : fieldInstance.$element.parent().after(fieldInstance._ui.$errorsWrapper);
     },
 
     actualizeTriggers: function (fieldInstance) {

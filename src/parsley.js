@@ -99,7 +99,7 @@ define([
         return this.bind('parsleyFieldMultiple', multiple || this.__id__);
 
       // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
-      } else if ('undefined' === typeof multiple) {
+      } else if (!multiple) {
         ParsleyUtils.warn('To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
 
         return this;
@@ -167,7 +167,7 @@ define([
           throw new Error(type + 'is not a supported Parsley type');
       }
 
-      if ('undefined' !== typeof multiple)
+      if (multiple)
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', multiple);
 
       if ('undefined' !== typeof doNotStore) {

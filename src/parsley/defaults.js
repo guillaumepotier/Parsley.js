@@ -19,6 +19,11 @@ define('parsley/defaults', function () {
     // Stop validating field on highest priority failing constraint
     priorityEnabled: true,
 
+    // ### Field only
+
+    // identifier used to group together inputs (e.g. radio buttons...)
+    multiple: null,
+
     // ### UI
     // Enable\Disable error messages
     uiEnabled: true,
