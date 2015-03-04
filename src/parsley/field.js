@@ -218,7 +218,7 @@ define('parsley/field', [
 
       // length
       if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
-        this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);
+        this.addConstraint('length', [parseInt(this.$element.attr('minlength')), parseInt(this.$element.attr('maxlength'))], undefined, true);
 
       // HTML5 minlength
       else if ('undefined' !== typeof this.$element.attr('minlength'))
