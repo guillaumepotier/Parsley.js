@@ -22,6 +22,24 @@ require(['config'], function () {
       'i18n/fr'
     ], function (Parsley, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
 
+      // Setup console.warn so we insure it is called when we expect it
+      beforeEach(function() {
+        sinon.spy(console, 'warn');
+        console.warn.expectedCallCount = 0;
+      });
+      afterEach(function() {
+        expect(console.warn.callCount).to.be(console.warn.expectedCallCount);
+        console.warn.restore();
+      });
+      window.expectWarning = function(fn) {
+        var w = console.warn;
+        expect(w.callCount).to.be(w.expectedCallCount);
+        var result = fn.call();
+        w.expectedCallCount++;
+        expect(w.callCount).to.be(w.expectedCallCount);
+        return result;
+      };
+
       // load full parsley.js + UT
       require([
         'features/utils',

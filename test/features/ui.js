@@ -35,9 +35,10 @@ define(function () {
       });
       it('should handle wrong errors-container option', function () {
         $('body').append('<input type="text" id="element" data-parsley-errors-container="#donotexist" required/>');
-        window.console.warn = sinon.spy();
-        $('#element').psly().validate();
-        expect(window.console.warn.called).to.be(true);
+        var parsley = $('#element').psly();
+        expectWarning(function() {
+          parsley.validate();
+        });
       });
       it('should add proper parsley class on success or failure (type=text)', function () {
         $('body').append('<input type="text" id="element" required />');

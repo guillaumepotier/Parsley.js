@@ -2,10 +2,12 @@ define(function () {
   return function () {
     describe('PubSub', function () {
       it('listen() without context', function (done) {
-        $.listen('foo', function (arg) {
-          expect(arg).to.be('bar');
-          done();
-        });
+        expectWarning(function(){
+          $.listen('foo', function (arg) {
+            expect(arg).to.be('bar');
+            done();
+          });
+        })
         $.emit('foo', 'bar');
       });
       it('listen() with context', function (done) {

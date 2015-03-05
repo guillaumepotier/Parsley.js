@@ -97,9 +97,9 @@ define(function () {
         expect(parsleyInstance.options.foo).to.be('bar');
       });
       it('should have a jquery API returning undefined if done on a non existing element', function () {
-        window.console.warn = sinon.spy();
-        expect($('#foo').parsley()).to.be(undefined);
-        expect(window.console.warn.called).to.be(true);
+        expectWarning(function() {
+          expect($('#foo').parsley()).to.be(undefined);
+        });
       });
       it('should have a jquery API that binds multiple selectors', function () {
         $('body').append('<div id="element">'+
