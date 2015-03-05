@@ -4,6 +4,8 @@
 // Events like onkeyup when field is invalid or on form submit. These validation methods adds an
 // Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
 // Because returns promises instead of booleans.
+(function($){
+
 window.ParsleyExtend = window.ParsleyExtend || {};
 window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   asyncSupport: true,
@@ -266,3 +268,5 @@ $(document).on('form:submit.parsley', function (evt, parsleyForm) {
   if (!evt.isDefaultPrevented())
     parsleyForm._remoteCache = {};
 });
+
+})(jQuery);

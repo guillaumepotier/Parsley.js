@@ -1,6 +1,8 @@
 // This plugin replace Parsley default form behavior that auto bind its fields children
 // With this plugin you must register in constructor your form's fields and their constraints
 // You have this way a total javascript control over your form validation, and nothing needed in DOM
+(function($){
+
 window.ParsleyConfig = $.extend(true, window.ParsleyConfig, { autoBind: false });
 window.ParsleyExtend = window.ParsleyExtend || {};
 
@@ -41,3 +43,5 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     return this;
   }
 });
+
+})(jQuery);
