@@ -4,6 +4,8 @@ Hi there.
 
 Thanks for your interest in Parsley and your will to contribute. You're welcome!
 
+First thing: make sure you are using the **latest official release**.
+
 ## Questions?
 
 Please ask questions on [StackOverflow](http://stackoverflow.com/questions/ask) and be sure to include the `parsley.js` tag. Please **provide an example**, starting for example from [this jsfiddle](http://jsfiddle.net/marcandre/58vnaqur/)
