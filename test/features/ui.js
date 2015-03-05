@@ -321,6 +321,18 @@ define(function () {
         $('#element').trigger($.Event('change'));
         expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
       });
+
+      it('should handle custom error message for validators with compound names', function () {
+        $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
+        window.ParsleyValidator.addValidator('customValidator', function (value, requirement) {
+          return requirement === value;
+        }, 32);
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('custom-validator error');
+        window.ParsleyValidator.removeValidator('customValidator');
+      });
+
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();
       });

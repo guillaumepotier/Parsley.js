@@ -170,18 +170,6 @@ define(function () {
         expect(parsleyValidator.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('This value seems to be invalid.');
       });
 
-      it('should handle custom error message for validators with compound names', function () {
-        $('body').append('<input type="text" required id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
-        parsleyValidator.addValidator('customValidator', function (value, requirement) {
-          return requirement === value;
-        }, 32);
-        $('#element').val('1');
-        var parsleyField = $('#element').psly();
-        expect(parsleyField.isValid()).to.be(false);
-        parsleyField.validate();
-        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('custom-validator error');
-      });
-
       it('should handle parametersTransformer for custom validators', function () {
         parsleyValidator.addValidator('foo', function (requirements) {
           return requirements;
