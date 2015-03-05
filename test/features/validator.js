@@ -16,6 +16,7 @@ define(function () {
         var validator = new ParsleyValidator(window.ParsleyConfig.validators);
         expect(validator.validators).to.have.key('foo');
         expect(validator.validators).to.have.key('bar');
+        expect(parsleyValidator.validators).not.to.have.key('foo');
         delete window.ParsleyConfig.validators.foo;
         delete window.ParsleyConfig.validators.bar;
       });

@@ -18,6 +18,8 @@ define('parsley/validator', [
   ParsleyValidator.prototype = {
     init: function (validators, catalog) {
       this.catalog = catalog;
+      // Copy prototype's validators:
+      this.validators = $.extend({}, this.validators);
 
       for (var name in validators)
         this.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
