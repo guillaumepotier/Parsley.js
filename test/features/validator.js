@@ -129,6 +129,10 @@ define(function () {
         $('body').append('<input type="text" id="element" value="foo" data-parsley-maxlength="10" />');
         expect($('#element').parsley().isValid()).to.be(true);
       });
+      it('should handle maxlength and minlength with equal values', function () {
+        $('body').append('<input type="text" id="element" value="foo" minlength="3" maxlength="3" />');
+        expect($('#element').parsley().isValid()).to.be(true);
+      });
       it('should have a check validator', function () {
         expect(parsleyValidator.validate(['foo', 'bar', 'baz'], parsleyValidator.validators.check([3, 5]))).to.be(true);
         expect(parsleyValidator.validate(['foo', 'bar', 'baz', 'qux', 'bux'], parsleyValidator.validators.check([3, 4]))).not.to.be(true);
