@@ -13,9 +13,9 @@ define(function () {
             bar: { fn: function () {}, priority: 12 }
           }
         });
-        var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators);
-        expect(parsleyValidator.validators).to.have.key('foo');
-        expect(parsleyValidator.validators).to.have.key('bar');
+        var validator = new ParsleyValidator(window.ParsleyConfig.validators);
+        expect(validator.validators).to.have.key('foo');
+        expect(validator.validators).to.have.key('bar');
         delete window.ParsleyConfig.validators.foo;
         delete window.ParsleyConfig.validators.bar;
       });
