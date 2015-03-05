@@ -24,6 +24,9 @@ define('parsley/defaults', function () {
     // identifier used to group together inputs (e.g. radio buttons...)
     multiple: null,
 
+    // identifier (or array of identifiers) used to validate only a select group of inputs
+    group: null,
+
     // ### UI
     // Enable\Disable error messages
     uiEnabled: true,
