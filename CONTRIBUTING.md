@@ -8,7 +8,13 @@ Thanks for your interest in Parsley and your will to contribute. You're welcome!
 
 Please ask questions on [StackOverflow](http://stackoverflow.com/questions/ask) and be sure to include the `parsley.js` tag. Please **provide an example**, starting for example from [this jsfiddle](http://jsfiddle.net/marcandre/58vnaqur/)
 
-## Issues or Pull requests?
+## Issues?
+
+If you believe you have found a bug in `parsley`, please **provide an example**, starting for example from [this jsfiddle](http://jsfiddle.net/marcandre/58vnaqur/).
+
+This makes it possible for you to be sure you have isolated the issue to a minimal case. It also makes it much easier for us to understand your issue. Sometimes the issue is [completely different than what you would expect](https://github.com/guillaumepotier/Parsley.js/issues/711) and only an actual example can lead to a solution.
+
+## Pull requests?
 
 Here are a few simple rules you'll have to follow in order to ease code reviews,
 discussions and PR merging.
