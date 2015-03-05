@@ -5,7 +5,7 @@ require(['config'], function () {
     'expect',
     'mocha',
     'sinon'
-  ], function (jquery, expect, mocha, sinon) {
+  ], function (jquery, _expect, mocha, _sinon) {
     // setup mocha
     mocha.checkLeaks();
     mocha.setup('bdd');
