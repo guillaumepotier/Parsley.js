@@ -1,5 +1,6 @@
 define('parsley/utils', function () {
   var globalID = 1,
+    pastWarnings = {},
     // http://support.microsoft.com/kb/167820
     // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
     msie = (function () {
@@ -93,6 +94,13 @@ define('parsley/utils', function () {
     warn: function() {
       if (window.console && window.console.warn)
         window.console.warn.apply(window.console, arguments);
+    },
+
+    warnOnce: function(msg) {
+      if (!pastWarnings[msg]) {
+        pastWarnings[msg] = true;
+        this.warn.apply(this, arguments);
+      }
     },
 
     // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill

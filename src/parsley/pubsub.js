@@ -6,9 +6,7 @@ define('parsley/pubsub', [
   var
     o = $({}),
     deprecated = function () {
-      ParsleyUtils.warn("Parsley's pubsub module is deprecated; use the corresponding jQuery event method instead");
-      // Warn only once:
-      deprecated = function () {};
+      ParsleyUtils.warnOnce("Parsley's pubsub module is deprecated; use the corresponding jQuery event method instead");
     };
 
   // Returns an event handler that calls `fn` with the arguments it expects
