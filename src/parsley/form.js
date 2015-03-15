@@ -41,18 +41,18 @@ define('parsley/form', [
       this._refreshFields();
 
       this._withoutReactualizingFormOptions(function(){
-      // loop through fields to validate them one by one
-      for (var i = 0; i < this.fields.length; i++) {
+        // loop through fields to validate them one by one
+        for (var i = 0; i < this.fields.length; i++) {
 
-        // do not validate a field if not the same as given validation group
-        if (group && !this._isFieldInGroup(this.fields[i], group))
-          continue;
+          // do not validate a field if not the same as given validation group
+          if (group && !this._isFieldInGroup(this.fields[i], group))
+            continue;
 
-        fieldValidationResult = this.fields[i].validate(force);
+          fieldValidationResult = this.fields[i].validate(force);
 
-        if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
-          this.validationResult = false;
-      }
+          if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
+            this.validationResult = false;
+        }
       });
 
       this._trigger(this.validationResult ? 'success' : 'error');
@@ -66,17 +66,17 @@ define('parsley/form', [
       this._refreshFields();
 
       return this._withoutReactualizingFormOptions(function(){
-      for (var i = 0; i < this.fields.length; i++) {
+        for (var i = 0; i < this.fields.length; i++) {
 
-        // do not validate a field if not the same as given validation group
-        if (group && !this._isFieldInGroup(this.fields[i], group))
-          continue;
+          // do not validate a field if not the same as given validation group
+          if (group && !this._isFieldInGroup(this.fields[i], group))
+            continue;
 
-        if (false === this.fields[i].isValid(force))
-          return false;
-      }
+          if (false === this.fields[i].isValid(force))
+            return false;
+        }
 
-      return true;
+        return true;
       });
     },
 
@@ -98,25 +98,25 @@ define('parsley/form', [
       this.fieldsMappedById = {};
 
       this._withoutReactualizingFormOptions(function(){
-      this.$element.find(this.options.inputs).each(function () {
-        var fieldInstance = new window.Parsley(this, {}, self);
+        this.$element.find(this.options.inputs).each(function () {
+          var fieldInstance = new window.Parsley(this, {}, self);
 
-        // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
-        if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))
-          if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
-            self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
-            self.fields.push(fieldInstance);
+          // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
+          if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))
+            if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
+              self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
+              self.fields.push(fieldInstance);
+            }
+        });
+
+        $(oldFields).not(self.fields).each(function () {
+          this._trigger('reset');
+          // If DOM element is detached or removed from the form, also trigger
+          // at the form level:
+          if (!jQuery.contains(self.$element[0], this.$element[0])) {
+            self.$element.trigger('field:reset.parsley', [this]);
           }
-      });
-
-      $(oldFields).not(self.fields).each(function () {
-        this._trigger('reset');
-        // If DOM element is detached or removed from the form, also trigger
-        // at the form level:
-        if (!jQuery.contains(self.$element[0], this.$element[0])) {
-          self.$element.trigger('field:reset.parsley', [this]);
-        }
-      });
+        });
       });
       return this;
     },
