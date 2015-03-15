@@ -259,6 +259,12 @@ define(function () {
         expect($('<input type="email" value="">').parsley().isValid(true)).to.be(false);
         expect($('<input type="email" value="foo">').parsley().isValid(true, "")).to.be(false);
       });
+      it('should have a squish-value option', function () {
+        $('body').append('<input type="text" id="element" value=" foo    bar " />');
+        expect($('#element').parsley().getValue()).to.be(' foo    bar ');
+        $('#element').attr('data-parsley-squish-value', true).parsley().actualizeOptions();
+        expect($('#element').parsley().getValue()).to.be('foo bar');
+      });
       it('should have a trim-value option', function () {
         $('body').append('<input type="text" id="element" value=" foo " />');
         expect($('#element').parsley().getValue()).to.be(' foo ');

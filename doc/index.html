@@ -372,6 +372,10 @@
                 <td>Trim field value <strong>only for Parsley validation</strong> (and not inside the input itself, data sent by your form won't be trimmed). Useful if your backend already does so and if trailing spaces could unnecessarily mess with your validation. Use: <code>data-parsley-trim-value="true"</code>.</td>
               </tr>
               <tr>
+                <td><code>data-parsley-squish-value</code> <version>#2.1</version></td>
+                <td>Squish <em>(replace multiple sequential whitespace characters with a single whitespace character)</em> <strong>and</strong> trim field value <strong>only for Parsley validation</strong> (and not inside the input itself, data sent by your form won't be squished). Useful if your backend already does so and if multiple sequential whitespace characters could unnecessarily mess with your validation. Use: <code>data-parsley-squish-value="true"</code>.</td>
+              </tr>
+              <tr>
                 <td><code>data-parsley-ui-enabled</code> <version>#2.0</version></td>
                 <td>If set to <code>false</code>, Parsley will not affect UI for this field.</td>
               </tr>

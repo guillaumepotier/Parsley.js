@@ -112,6 +112,10 @@ define('parsley/field', [
       if ('undefined' === typeof value || null === value)
         return '';
 
+      // Use `data-parsley-squish-value="true"` to auto squish inputs entry
+      if (true === this.options.squishValue)
+        return value.replace(/\s{2,}/g, ' ').replace(/^\s+|\s+$/g, '')
+
       // Use `data-parsley-trim-value="true"` to auto trim inputs entry
       if (true === this.options.trimValue)
         return value.replace(/^\s+|\s+$/g, '');
