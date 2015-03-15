@@ -3,7 +3,7 @@ define('parsley/field', [
     'parsley/ui',
     'parsley/utils'
 ], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
-  var ParsleyField = function (field, options, parsleyFormInstance) {
+  var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.generateID();
 
@@ -14,7 +14,8 @@ define('parsley/field', [
       this.parent = parsleyFormInstance;
     }
 
-    this._resetOptions(options);
+    this.options = options;
+    this.domOptions = domOptions;
 
     // Initialize some properties
     this.constraints = [];

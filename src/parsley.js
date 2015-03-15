@@ -155,13 +155,13 @@ define([
           break;
         case 'parsleyField':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, this.options, parentParsleyFormInstance),
+            new ParsleyField(this.$element, this.domOptions, this.options, parentParsleyFormInstance),
             window.ParsleyExtend
           );
           break;
         case 'parsleyFieldMultiple':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, this.options, parentParsleyFormInstance),
+            new ParsleyField(this.$element, this.domOptions, this.options, parentParsleyFormInstance),
             new ParsleyMultiple(),
             window.ParsleyExtend
           )._init(multiple);
