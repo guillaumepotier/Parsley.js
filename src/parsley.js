@@ -52,17 +52,17 @@ define([
     if ('undefined' !== typeof parsleyFormInstance && 'ParsleyForm' !== parsleyFormInstance.__class__)
       throw new Error('Parent instance must be a ParsleyForm instance');
 
-    return this.init(options, parsleyFormInstance);
+    this.parent = parsleyFormInstance;
+    return this.init(options);
   };
 
   Parsley.prototype = {
-    init: function (options, parsleyFormInstance) {
+    init: function (options) {
       this.__class__ = 'Parsley';
       this.__version__ = '@@version';
       this.__id__ = ParsleyUtils.generateID();
 
       // Pre-compute options
-      this.parent = parsleyFormInstance;
       this._resetOptions(options);
 
       // A ParsleyForm instance is obviously a `<form>` elem but also every node that is not an input and have `data-parsley-validate` attribute
@@ -70,7 +70,7 @@ define([
         return this.bind('parsleyForm');
 
       // Every other element is binded as a `ParsleyField` or `ParsleyFieldMultiple`
-      return this.isMultiple() ? this.handleMultiple(parsleyFormInstance) : this.bind('parsleyField', parsleyFormInstance);
+      return this.isMultiple() ? this.handleMultiple() : this.bind('parsleyField');
     },
 
     isMultiple: function () {
@@ -79,7 +79,7 @@ define([
 
     // Multiples fields are a real nightmare :(
     // Maybe some refacto would be appreciated here...
-    handleMultiple: function (parsleyFormInstance) {
+    handleMultiple: function () {
       var
         that = this,
         name,
@@ -96,7 +96,7 @@ define([
 
       // Special select multiple input
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
-        return this.bind('parsleyFieldMultiple', parsleyFormInstance, multiple || this.__id__);
+        return this.bind('parsleyFieldMultiple', multiple || this.__id__);
 
       // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
       } else if ('undefined' === typeof multiple) {
@@ -134,13 +134,13 @@ define([
 
       // Create a secret ParsleyField instance for every multiple field. It would be stored in `data('ParsleyFieldMultiple')`
       // And would be useful later to access classic `ParsleyField` stuff while being in a `ParsleyFieldMultiple` instance
-      this.bind('parsleyField', parsleyFormInstance, multiple, true);
+      this.bind('parsleyField', multiple, true);
 
-      return parsleyMultipleInstance || this.bind('parsleyFieldMultiple', parsleyFormInstance, multiple);
+      return parsleyMultipleInstance || this.bind('parsleyFieldMultiple', multiple);
     },
 
     // Return proper `ParsleyForm`, `ParsleyField` or `ParsleyFieldMultiple`
-    bind: function (type, parentParsleyFormInstance, multiple, doNotStore) {
+    bind: function (type, multiple, doNotStore) {
       var parsleyInstance;
 
       switch (type) {
@@ -152,13 +152,13 @@ define([
           break;
         case 'parsleyField':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, this.domOptions, this.options, parentParsleyFormInstance),
+            new ParsleyField(this.$element, this.domOptions, this.options, this.parent),
             window.ParsleyExtend
           );
           break;
         case 'parsleyFieldMultiple':
           parsleyInstance = $.extend(
-            new ParsleyField(this.$element, this.domOptions, this.options, parentParsleyFormInstance),
+            new ParsleyField(this.$element, this.domOptions, this.options, this.parent),
             new ParsleyMultiple(),
             window.ParsleyExtend
           )._init(multiple);
