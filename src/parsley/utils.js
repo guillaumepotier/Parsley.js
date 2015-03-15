@@ -36,7 +36,7 @@ define('parsley/utils', function () {
         return obj;
 
       attributes = $element[0].attributes;
-      for (var i in attributes) {
+      for (var i = attributes.length; i--; ) {
         attribute = attributes[i];
 
         if ('undefined' !== typeof attribute && null !== attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
