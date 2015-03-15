@@ -32,6 +32,19 @@ define([
   var Parsley = function (element, options, parsleyFormInstance) {
     this.$element = $(element);
 
+    // If element have already been binded, returns its saved Parsley instance
+    var savedparsleyFormInstance = this.$element.data('Parsley');
+    if (savedparsleyFormInstance) {
+
+      // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
+      if ('undefined' !== typeof parsleyFormInstance && !savedparsleyFormInstance.parent) {
+        savedparsleyFormInstance.parent = parsleyFormInstance;
+        savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
+      }
+
+      return savedparsleyFormInstance;
+    }
+
     // Parsley must be instantiated with a DOM element or jQuery $element
     if (!this.$element.length)
       throw new Error('You must bind Parsley on an existing element.');
@@ -48,19 +61,6 @@ define([
 
   Parsley.prototype = {
     init: function (options, parsleyFormInstance) {
-      // If element have already been binded, returns its saved Parsley instance
-      var savedparsleyFormInstance = this.$element.data('Parsley');
-      if (savedparsleyFormInstance) {
-
-        // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
-        if ('undefined' !== typeof parsleyFormInstance && !savedparsleyFormInstance.parent) {
-          savedparsleyFormInstance.parent = parsleyFormInstance;
-          savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
-        }
-
-        return savedparsleyFormInstance;
-      }
-
       // Pre-compute options
       this.parent = parsleyFormInstance;
       this._resetOptions(options);
