@@ -49,10 +49,8 @@ define([
       if (!$element.length)
         throw new Error('You must bind Parsley on an existing element.');
 
-      this.$element = $element;
-
       // If element have already been binded, returns its saved Parsley instance
-      var savedparsleyFormInstance = this.$element.data('Parsley');
+      var savedparsleyFormInstance = $element.data('Parsley');
       if (savedparsleyFormInstance) {
 
         // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
@@ -63,6 +61,8 @@ define([
 
         return savedparsleyFormInstance;
       }
+
+      this.$element = $element;
 
       // Pre-compute options
       this.parent = parsleyFormInstance;
