@@ -49,10 +49,6 @@ define([
     if (!this.$element.length)
       throw new Error('You must bind Parsley on an existing element.');
 
-    this.__class__ = 'Parsley';
-    this.__version__ = '@@version';
-    this.__id__ = ParsleyUtils.generateID();
-
     if ('undefined' !== typeof parsleyFormInstance && 'ParsleyForm' !== parsleyFormInstance.__class__)
       throw new Error('Parent instance must be a ParsleyForm instance');
 
@@ -61,6 +57,10 @@ define([
 
   Parsley.prototype = {
     init: function (options, parsleyFormInstance) {
+      this.__class__ = 'Parsley';
+      this.__version__ = '@@version';
+      this.__id__ = ParsleyUtils.generateID();
+
       // Pre-compute options
       this.parent = parsleyFormInstance;
       this._resetOptions(options);
