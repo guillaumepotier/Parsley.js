@@ -30,27 +30,26 @@ define([
 ], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple) {
   // ### Parsley factory
   var Parsley = function (element, options, parsleyFormInstance) {
+    this.$element = $(element);
+
+    // Parsley must be instantiated with a DOM element or jQuery $element
+    if (!this.$element.length)
+      throw new Error('You must bind Parsley on an existing element.');
+
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
     this.__id__ = ParsleyUtils.generateID();
 
-    // Parsley must be instantiated with a DOM element or jQuery $element
-    if ('undefined' === typeof element)
-      throw new Error('You must give an element');
-
     if ('undefined' !== typeof parsleyFormInstance && 'ParsleyForm' !== parsleyFormInstance.__class__)
       throw new Error('Parent instance must be a ParsleyForm instance');
 
-    return this.init($(element), options, parsleyFormInstance);
+    return this.init(options, parsleyFormInstance);
   };
 
   Parsley.prototype = {
-    init: function ($element, options, parsleyFormInstance) {
-      if (!$element.length)
-        throw new Error('You must bind Parsley on an existing element.');
-
+    init: function (options, parsleyFormInstance) {
       // If element have already been binded, returns its saved Parsley instance
-      var savedparsleyFormInstance = $element.data('Parsley');
+      var savedparsleyFormInstance = this.$element.data('Parsley');
       if (savedparsleyFormInstance) {
 
         // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
@@ -61,8 +60,6 @@ define([
 
         return savedparsleyFormInstance;
       }
-
-      this.$element = $element;
 
       // Pre-compute options
       this.parent = parsleyFormInstance;
