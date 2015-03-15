@@ -40,6 +40,7 @@ define('parsley/form', [
       // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
 
+      this._withoutReactualizingFormOptions(function(){
       // loop through fields to validate them one by one
       for (var i = 0; i < this.fields.length; i++) {
 
@@ -52,6 +53,7 @@ define('parsley/form', [
         if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
           this.validationResult = false;
       }
+      });
 
       this._trigger(this.validationResult ? 'success' : 'error');
       this._trigger('validated');
@@ -63,6 +65,7 @@ define('parsley/form', [
     isValid: function (group, force) {
       this._refreshFields();
 
+      return this._withoutReactualizingFormOptions(function(){
       for (var i = 0; i < this.fields.length; i++) {
 
         // do not validate a field if not the same as given validation group
@@ -74,6 +77,7 @@ define('parsley/form', [
       }
 
       return true;
+      });
     },
 
     _isFieldInGroup: function (field, group) {
@@ -93,6 +97,7 @@ define('parsley/form', [
       this.fields = [];
       this.fieldsMappedById = {};
 
+      this._withoutReactualizingFormOptions(function(){
       this.$element.find(this.options.inputs).each(function () {
         var fieldInstance = new window.Parsley(this, {}, self);
 
@@ -112,7 +117,23 @@ define('parsley/form', [
           self.$element.trigger('field:reset.parsley', [this]);
         }
       });
+      });
       return this;
+    },
+
+    // Internal only.
+    // Looping on a form's fields to do validation or similar
+    // will trigger reactualizing options on all of them, which
+    // in turn will reactualize the form's options.
+    // To avoid calling actualizeOptions so many times on the form
+    // for nothing, _withoutReactualizingFormOptions temporarily disables
+    // the method actualizeOptions on this form while `fn` is called.
+    _withoutReactualizingFormOptions: function (fn) {
+      var oldActualizeOptions = this.actualizeOptions;
+      this.actualizeOptions = $.noop;
+      var result = fn.call(this); // Keep the current `this`.
+      this.actualizeOptions = oldActualizeOptions;
+      return result;
     },
 
     // Internal only.
