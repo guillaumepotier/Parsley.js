@@ -52,8 +52,8 @@ define([
       this.$element = $element;
 
       // If element have already been binded, returns its saved Parsley instance
-      if (this.$element.data('Parsley')) {
-        var savedparsleyFormInstance = this.$element.data('Parsley');
+      var savedparsleyFormInstance = this.$element.data('Parsley');
+      if (savedparsleyFormInstance) {
 
         // If saved instance have been binded without a ParsleyForm parent and there is one given in this call, add it
         if ('undefined' !== typeof parsleyFormInstance && !savedparsleyFormInstance.parent) {
