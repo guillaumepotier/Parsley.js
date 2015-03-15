@@ -12,7 +12,8 @@ define('parsley/utils', function () {
             return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
 
           return 0;
-       })();
+       })()
+    modern = !msie || msie >= 8;
 
   var ParsleyUtils = {
     // Parsley DOM-API
@@ -39,7 +40,7 @@ define('parsley/utils', function () {
       for (var i = attributes.length; i--; ) {
         attribute = attributes[i];
 
-        if (attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
+        if (attribute && (modern || attribute.specified) && regex.test(attribute.name)) {
           obj[this.camelize(attribute.name.slice(namespace.length))] = this.deserializeValue(attribute.value);
         }
       }
