@@ -19,7 +19,7 @@ define('parsley/utils', function () {
     // returns object from dom attributes and values
     attr: function ($element, namespace, obj) {
       var
-        attribute,
+        attribute, attributes,
         regex = new RegExp('^' + namespace, 'i');
 
       if ('undefined' === typeof obj)
@@ -35,8 +35,9 @@ define('parsley/utils', function () {
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
         return obj;
 
-      for (var i in $element[0].attributes) {
-        attribute = $element[0].attributes[i];
+      attributes = $element[0].attributes;
+      for (var i in attributes) {
+        attribute = attributes[i];
 
         if ('undefined' !== typeof attribute && null !== attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
           obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
