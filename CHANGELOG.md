@@ -2,6 +2,12 @@
 
 ## master
 
+## 2.1.0-rc3
+
+- Optimize (#855)
+
+## 2.1.0-rc2
+
 - Support for validators with compound names by restoring ful case sensitivity
   to error messages. (#805)
 - new event 'form:submit.parsley' fired before a form is submitted.
