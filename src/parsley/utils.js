@@ -40,7 +40,7 @@ define('parsley/utils', function () {
         attribute = attributes[i];
 
         if ('undefined' !== typeof attribute && null !== attribute && (!msie || msie >= 8 || attribute.specified) && regex.test(attribute.name)) {
-          obj[this.camelize(attribute.name.replace(namespace, ''))] = this.deserializeValue(attribute.value);
+          obj[this.camelize(attribute.name.slice(namespace.length))] = this.deserializeValue(attribute.value);
         }
       }
 
