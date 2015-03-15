@@ -12,9 +12,15 @@
               for (var i = $elem.attr('data-repeat'); i--; )
                 $elem.after($elem.clone());
             });
-            $('button').click(function() {
+            $('.bind').click(function() {
               console.profile('bind form')
               $('form').parsley();
+              console.profileEnd();
+            });
+            $('.validate').click(function() {
+              var p = $('form').parsley();
+              console.profile('validate form')
+              p.validate();
               console.profileEnd();
             });
           });
@@ -23,9 +29,11 @@
     </script>
 </head>
 <body>
-  <button>Bind</button>
+  <button class="bind">Bind</button>
+  <button class="validate">Validate</button>
   <form data-parsley-xx data-parsley-yy>
     <input type="text" data-repeat="1000">
+    <input type="text" required>
     <input type="submit">
   </form>
 </body>
