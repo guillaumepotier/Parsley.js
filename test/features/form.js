@@ -4,9 +4,6 @@ define(function () {
       it('should be a function', function () {
         expect(ParsleyForm).to.be.a('function');
       });
-      it('should throw an error if no element given', function () {
-        expect(ParsleyForm).to.throwException();
-      });
       it('should bind parsleyFields children', function () {
         $('body').append(
           '<form id="element">'                 +

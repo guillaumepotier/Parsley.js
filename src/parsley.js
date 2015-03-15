@@ -149,7 +149,7 @@ define([
       switch (type) {
         case 'parsleyForm':
           parsleyInstance = $.extend(
-            new ParsleyForm(this.$element, this.options),
+            new ParsleyForm(this.$element, this.domOptions, this.options),
             window.ParsleyExtend
           )._bindFields();
           break;

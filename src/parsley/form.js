@@ -2,12 +2,13 @@ define('parsley/form', [
   'parsley/abstract',
   'parsley/utils'
 ], function (ParsleyAbstract, ParsleyUtils) {
-  var ParsleyForm = function (element, options) {
+  var ParsleyForm = function (element, domOptions, options) {
     this.__class__ = 'ParsleyForm';
     this.__id__ = ParsleyUtils.generateID();
 
     this.$element = $(element);
-    this._resetOptions(options);
+    this.domOptions = domOptions;
+    this.options = options;
 
     this.fields = [];
     this.validationResult = null;
