@@ -1,19 +1,6 @@
 define('parsley/utils', function () {
   var globalID = 1,
-    pastWarnings = {},
-    // http://support.microsoft.com/kb/167820
-    // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
-    msie = (function () {
-          var
-            ua = window.navigator.userAgent,
-            msie = ua.indexOf('MSIE ');
-
-          if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
-            return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-
-          return 0;
-       })()
-    modern = !msie || msie >= 8;
+    pastWarnings = {};
 
   var ParsleyUtils = {
     // Parsley DOM-API
@@ -40,7 +27,7 @@ define('parsley/utils', function () {
       for (var i = attributes.length; i--; ) {
         attribute = attributes[i];
 
-        if (attribute && (modern || attribute.specified) && regex.test(attribute.name)) {
+        if (attribute && attribute.specified && regex.test(attribute.name)) {
           obj[this.camelize(attribute.name.slice(namespace.length))] = this.deserializeValue(attribute.value);
         }
       }
