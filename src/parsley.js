@@ -179,14 +179,11 @@ define([
         return parsleyInstance;
       }
 
-      // Store instance if `ParsleyForm`, `ParsleyField` or `ParsleyFieldMultiple`
-      if (new RegExp('ParsleyF', 'i').test(parsleyInstance.__class__)) {
-        // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
-        this.$element.data('Parsley', parsleyInstance);
+      // Store for later access the freshly binded instance in DOM element itself using jQuery `data()`
+      this.$element.data('Parsley', parsleyInstance);
 
-        // Tell the world we got a new ParsleyForm or ParsleyField instance!
-        parsleyInstance._trigger('init');
-      }
+      // Tell the world we got a new ParsleyForm or ParsleyField instance!
+      parsleyInstance._trigger('init');
 
       return parsleyInstance;
     }
