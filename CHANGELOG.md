@@ -1,6 +1,8 @@
 # Parsley 2.x changelog
 
 ## master
+- Compatible with jQuery.noConflict() (#859)
+- Detects name conflicts between validators and regular options
 
 ## 2.1.0-rc3
 
