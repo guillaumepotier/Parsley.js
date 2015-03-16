@@ -4,6 +4,8 @@
 // Events like onkeyup when field is invalid or on form submit. These validation methods adds an
 // Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
 // Because returns promises instead of booleans.
+(function($){
+
 window.ParsleyExtend = window.ParsleyExtend || {};
 window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   asyncSupport: true,
@@ -267,10 +269,12 @@ $(document).on('form:submit.parsley', function (evt, parsleyForm) {
     parsleyForm._remoteCache = {};
 });
 
+})(jQuery);
+
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0-rc3 - built Sun Mar 15 2015 17:50:03
+* Version 2.1.0-rc4 - built Mon Mar 16 2015 09:15:36
 * MIT Licensed
 *
 */
@@ -288,18 +292,7 @@ $(document).on('form:submit.parsley', function (evt, parsleyForm) {
   if ('undefined' === typeof $ && 'undefined' !== typeof window.jQuery)
     $ = window.jQuery;
   var globalID = 1,
-    pastWarnings = {},
-    // http://support.microsoft.com/kb/167820
-    // http://stackoverflow.com/questions/19999388/jquery-check-if-user-is-using-ie
-    msie = (function () {
-          var
-            ua = window.navigator.userAgent,
-            msie = ua.indexOf('MSIE ');
-          if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))
-            return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-          return 0;
-       })()
-    modern = !msie || msie >= 8;
+    pastWarnings = {};
   var ParsleyUtils = {
     // Parsley DOM-API
     // returns object from dom attributes and values
@@ -321,7 +314,7 @@ $(document).on('form:submit.parsley', function (evt, parsleyForm) {
       attributes = $element[0].attributes;
       for (var i = attributes.length; i--; ) {
         attribute = attributes[i];
-        if (attribute && (modern || attribute.specified) && regex.test(attribute.name)) {
+        if (attribute && attribute.specified && regex.test(attribute.name)) {
           obj[this.camelize(attribute.name.slice(namespace.length))] = this.deserializeValue(attribute.value);
         }
       }
@@ -407,6 +400,11 @@ $(document).on('form:submit.parsley', function (evt, parsleyForm) {
     excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
     // Stop validating field on highest priority failing constraint
     priorityEnabled: true,
+    // ### Field only
+    // identifier used to group together inputs (e.g. radio buttons...)
+    multiple: null,
+    // identifier (or array of identifiers) used to validate only a select group of inputs
+    group: null,
     // ### UI
     // Enable\Disable error messages
     uiEnabled: true,
@@ -1174,6 +1172,8 @@ var Validator = ( function ( ) {
   ParsleyValidator.prototype = {
     init: function (validators, catalog) {
       this.catalog = catalog;
+      // Copy prototype's validators:
+      this.validators = $.extend({}, this.validators);
       for (var name in validators)
         this.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
       $(document).trigger('parsley:validator:init');
@@ -1205,19 +1205,34 @@ var Validator = ( function ( ) {
     },
     // Add a new validator
     addValidator: function (name, fn, priority, requirementsTransformer) {
+      if (this.validators[name])
+        ParsleyUtils.warn('Validator "' + name + '" is already defined.');
+      else if (ParsleyDefaults.hasOwnProperty(name)) {
+        ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
+        return;
+      };
+      return this._setValidator(name, fn, priority, requirementsTransformer);
+    },
+    updateValidator: function (name, fn, priority, requirementsTransformer) {
+      if (!this.validators[name]) {
+        ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
+        return this.addValidator(name, fn, priority, requirementsTransformer);
+      }
+      return this._setValidator(name, fn, priority, requirementsTransformer);
+    },
+    removeValidator: function (name) {
+      if (!this.validators[name])
+        ParsleyUtils.warn('Validator "' + name + '" is not defined.');
+      delete this.validators[name];
+      return this;
+    },
+    _setValidator: function (name, fn, priority, requirementsTransformer) {
       this.validators[name] = function (requirements) {
         return $.extend(new Validator.Assert().Callback(fn, requirements), {
           priority: priority,
           requirementsTransformer: requirementsTransformer
         });
       };
-      return this;
-    },
-    updateValidator: function (name, fn, priority, requirementsTransformer) {
-      return this.addValidator(name, fn, priority, requirementsTransformer);
-    },
-    removeValidator: function (name) {
-      delete this.validators[name];
       return this;
     },
     getErrorMessage: function (constraint) {
@@ -1572,7 +1587,7 @@ var Validator = ( function ( ) {
       // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes
       _ui.$errorClassHandler = this._manageClassHandler(fieldInstance);
       // $errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer
-      _ui.errorsWrapperId = 'parsley-id-' + ('undefined' !== typeof fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
+      _ui.errorsWrapperId = 'parsley-id-' + (fieldInstance.options.multiple ? 'multiple-' + fieldInstance.options.multiple : fieldInstance.__id__);
       _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr('id', _ui.errorsWrapperId);
       // ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
       _ui.lastValidationResult = [];
@@ -1594,7 +1609,7 @@ var Validator = ( function ( ) {
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
       // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
-      if ('undefined' === typeof fieldInstance.options.multiple || fieldInstance.$element.is('select'))
+      if (!fieldInstance.options.multiple || fieldInstance.$element.is('select'))
         return fieldInstance.$element;
       // But if multiple element (radio, checkbox), that would be their parent
       return fieldInstance.$element.parent();
@@ -1614,7 +1629,7 @@ var Validator = ( function ( ) {
         $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
       if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
         return $errorsContainer.append(fieldInstance._ui.$errorsWrapper);
-      return 'undefined' === typeof fieldInstance.options.multiple ? fieldInstance.$element.after(fieldInstance._ui.$errorsWrapper) : fieldInstance.$element.parent().after(fieldInstance._ui.$errorsWrapper);
+      return fieldInstance.options.multiple ? fieldInstance.$element.after(fieldInstance._ui.$errorsWrapper) : fieldInstance.$element.parent().after(fieldInstance._ui.$errorsWrapper);
     },
     actualizeTriggers: function (fieldInstance) {
       var $toBind = fieldInstance.$element;
@@ -2202,7 +2217,7 @@ var Validator = ( function ( ) {
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 // Define then the messages
-window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
+window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {}, {
   defaultMessage: "This value seems to be invalid.",
   type: {
     email:        "This value should be a valid email.",
@@ -2230,7 +2245,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.1.0-rc3
+//     Parsley.js 2.1.0-rc4
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2259,7 +2274,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   Parsley.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.1.0-rc3';
+      this.__version__ = '2.1.0-rc4';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
@@ -2291,7 +2306,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
         return this.bind('parsleyFieldMultiple', multiple || this.__id__);
       // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
-      } else if ('undefined' === typeof multiple) {
+      } else if (!multiple) {
         ParsleyUtils.warn('To be binded by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
         return this;
       }
@@ -2348,7 +2363,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
         default:
           throw new Error(type + 'is not a supported Parsley type');
       }
-      if ('undefined' !== typeof multiple)
+      if (multiple)
         ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', multiple);
       if ('undefined' !== typeof doNotStore) {
         this.$element.data('ParsleyFieldMultiple', parsleyInstance);
