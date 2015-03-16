@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.ar = $.extend(window.ParsleyConfig.i18n.ar || {}, {
+window.ParsleyConfig.i18n.ar = jQuery.extend(window.ParsleyConfig.i18n.ar || {}, {
   defaultMessage: "تأكد من صحة القيمة المدخل",
   type: {
     email:        "تأكد من إدخال بريد الكتروني صحيح",

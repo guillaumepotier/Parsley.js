@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.fi = $.extend(window.ParsleyConfig.i18n.fi || {}, {
+window.ParsleyConfig.i18n.fi = jQuery.extend(window.ParsleyConfig.i18n.fi || {}, {
   defaultMessage: "Sy&ouml;tetty arvo on virheellinen.",
   type: {
     email:        "S&auml;hk&ouml;postiosoite on virheellinen.",

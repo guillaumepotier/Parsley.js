@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.nl = $.extend(window.ParsleyConfig.i18n.nl || {}, {
+window.ParsleyConfig.i18n.nl = jQuery.extend(window.ParsleyConfig.i18n.nl || {}, {
   defaultMessage: "Deze waarde lijkt onjuist.",
   type: {
     email:        "Dit lijkt geen geldig e-mail adres te zijn.",

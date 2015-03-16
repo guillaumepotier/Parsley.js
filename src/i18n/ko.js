@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.ko = $.extend(window.ParsleyConfig.i18n.ko || {}, {
+window.ParsleyConfig.i18n.ko = jQuery.extend(window.ParsleyConfig.i18n.ko || {}, {
   defaultMessage: "입력하신 내용이 올바르지 않습니다.",
   type: {
     email:        "입력하신 이메일이 유효하지 않습니다.",

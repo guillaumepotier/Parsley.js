@@ -8,7 +8,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.ru = $.extend(window.ParsleyConfig.i18n.ru || {}, {
+window.ParsleyConfig.i18n.ru = jQuery.extend(window.ParsleyConfig.i18n.ru || {}, {
   defaultMessage: "Некорректное значение.",
   type: {
     email:        "Введите адрес электронной почты.",

@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.de = $.extend(window.ParsleyConfig.i18n.de || {}, {
+window.ParsleyConfig.i18n.de = jQuery.extend(window.ParsleyConfig.i18n.de || {}, {
   defaultMessage: "Die Eingabe scheint nicht korrekt zu sein.",
   type: {
     email:        "Die Eingabe muss eine gültige E-Mail-Adresse sein.",

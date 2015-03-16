@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.zh_tw = $.extend(window.ParsleyConfig.i18n.zh_tw || {}, {
+window.ParsleyConfig.i18n.zh_tw = jQuery.extend(window.ParsleyConfig.i18n.zh_tw || {}, {
   defaultMessage: "這個值似乎是無效的。",
   type: {
     email:        "請輸入一個有效的email。",

@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.pl = $.extend(window.ParsleyConfig.i18n.pl || {}, {
+window.ParsleyConfig.i18n.pl = jQuery.extend(window.ParsleyConfig.i18n.pl || {}, {
   defaultMessage: "Wartość wygląda na nieprawidłową",
   type: {
     email:        "Wpisz poprawny adres e-mail.",

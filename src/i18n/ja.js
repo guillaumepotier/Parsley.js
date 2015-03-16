@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.ja = $.extend(window.ParsleyConfig.i18n.ja || {}, {
+window.ParsleyConfig.i18n.ja = jQuery.extend(window.ParsleyConfig.i18n.ja || {}, {
   defaultMessage: "無効な値です。",
   type: {
     email:        "正しいメールアドレスを入力してください。",

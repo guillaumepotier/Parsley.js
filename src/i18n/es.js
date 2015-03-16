@@ -2,7 +2,7 @@
 window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
-window.ParsleyConfig.i18n.es = $.extend(window.ParsleyConfig.i18n.es || {}, {
+window.ParsleyConfig.i18n.es = jQuery.extend(window.ParsleyConfig.i18n.es || {}, {
   defaultMessage: "Este valor parece ser inválido.",
   type: {
     email:        "Este valor debe ser un correo válido.",

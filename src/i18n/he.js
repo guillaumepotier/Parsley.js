@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.he = $.extend(window.ParsleyConfig.i18n.he || {}, {
+window.ParsleyConfig.i18n.he = jQuery.extend(window.ParsleyConfig.i18n.he || {}, {
   defaultMessage: "נראה כי ערך זה אינו תקף.",
   type: {
     email:        "ערך זה צריך להיות כתובת אימייל.",

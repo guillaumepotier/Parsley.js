@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.sv = $.extend(window.ParsleyConfig.i18n.sv || {}, {
+window.ParsleyConfig.i18n.sv = jQuery.extend(window.ParsleyConfig.i18n.sv || {}, {
   defaultMessage: "Ogiltigt värde.",
   type: {
     email:        "Ange en giltig e-postadress.",

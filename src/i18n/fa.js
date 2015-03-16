@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.fa = $.extend(window.ParsleyConfig.i18n.fa || {}, {
+window.ParsleyConfig.i18n.fa = jQuery.extend(window.ParsleyConfig.i18n.fa || {}, {
   defaultMessage: "این مقدار صحیح نمی باشد",
   type: {
     email:        "این مقدار باید یک ایمیل معتبر باشد",
