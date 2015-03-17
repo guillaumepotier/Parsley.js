@@ -2,6 +2,9 @@
 
 ## master
 
+- Deprecated `data-parsley-trim-value` in favour of new `whitespace` API
+- Added `whitespace` API with two options: `trim` and `squish`
+
 ## 2.1.2
 
 - fix custom triggers after a `reset()` (#926)

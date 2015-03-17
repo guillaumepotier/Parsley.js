@@ -412,8 +412,8 @@ if (false === instance.options.priorityEnabled)
                 <td>A field is by default not validated if it is not required and empty. By adding <code>data-parsley-validate-if-empty</code>, validation will be done even if field is empty. Useful if you need some custom validators that check something particular when a field is empty.</td>
               </tr>
               <tr>
-                <td><code>data-parsley-trim-value</code> <version>#2.0</version></td>
-                <td>Trim field value <strong>only for Parsley validation</strong> (and not inside the input itself, data sent by your form won't be trimmed). Useful if your backend already does so and if trailing spaces could unnecessarily mess with your validation. Use: <code>data-parsley-trim-value="true"</code>.</td>
+                <td><code>data-parsley-whitespace</code> <version>#2.1</version></td>
+                <td>Perform actions on whitespace in value <strong>only for Parsley validation</strong> (and not inside the input itself, data sent by your form won't be edited). Useful if your backend already does so and if extra whitespace could unnecessarily mess with your validation. <br><br>Use: <code>data-parsley-whitespace="trim"</code> to trim leading and trailing whitespace characters.<br>Use: <code>data-parsley-whitespace="squish"</code> to squish multiple sequential whitespace characters into a single whitespace character, and also trim leading and trailing whitespace characters.</td>
               </tr>
               <tr>
                 <td><code>data-parsley-ui-enabled</code> <version>#2.0</version></td>
