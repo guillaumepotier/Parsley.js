@@ -49,9 +49,8 @@ define('features/remote', [
             '<div id="field2"></div>'                                         +
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
-        $('#element').psly()
-          .subscribe('parsley:form:validated', function () { done(); })
-          .asyncValidate();
+        $('#element').on('form:validated.parsley', function () { done(); })
+        $('#element').parsley().asyncValidate();
       });
       it('should have a force option for asyncValidate and asyncIsValid methods', function (done) {
         $('body').append('<input type="email" id="element" />');

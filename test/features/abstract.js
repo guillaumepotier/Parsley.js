@@ -33,7 +33,7 @@ define(function () {
         parsleyForm.validate();
         expect($('#parsley-id-' + $('#field1').psly().__id__ + ' li').length).to.be(1);
 
-        parsleyForm.subscribe('parsley:form:reset', function () {
+        $('#element').on('form:reset.parsley', function () {
           done();
         });
 
@@ -44,7 +44,7 @@ define(function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
         var parsleyField = new Parsley('#element');
 
-        parsleyField.subscribe('parsley:field:destroy', function () {
+        $('#element').on('field:destroy.parsley', function () {
           done();
         });
 
@@ -67,11 +67,11 @@ define(function () {
 
         // Test that a subscribed field event on parent form would be triggered by fields too
         // Here we only have field1 and field2 as valid parsley fields
-        parsleyForm.subscribe('parsley:field:destroy', function () {
+        $('#element').on('field:destroy.parsley', function () {
           fieldEventsCount++;
         });
 
-        parsleyForm.subscribe('parsley:form:destroy', function () {
+        $('#element').on('form:destroy.parsley', function () {
           formEventsCount++;
         });
 

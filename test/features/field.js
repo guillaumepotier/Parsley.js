@@ -235,11 +235,11 @@ define(function () {
         $('#element').attr('data-parsley-validate-if-empty', '');
         expect($('#element').psly().isValid()).to.be.eql(false);
       });
-      it('should allow `this.value` alteration with parsley:field:validate event', function () {
+      it('should allow `this.value` alteration with field:validate.parsley event', function () {
         $('body').append('<input type="email" required id="element" value="foo@bar.baz" />');
         expect($('#element').parsley().validate()).to.be(true);
 
-        $('#element').parsley().subscribe('parsley:field:validate', function (fieldInstance) {
+        $('#element').on('field:validate.parsley', function (evt, fieldInstance) {
           fieldInstance.value = '';
         });
 

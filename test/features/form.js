@@ -101,7 +101,7 @@ define(function () {
           var parsleyForm = new Parsley($('#element'));
 
           // parsley.remote hack because if valid, parsley remote re-send form
-          parsleyForm.subscribe('parsley:form:validate', function (formInstance) {
+          $('#element').on('form:validate.parsley', function (evt, formInstance) {
             if (formInstance.asyncSupport)
               formInstance.submitEvent._originalPreventDefault();
           });
@@ -155,20 +155,20 @@ define(function () {
         });
 
         var callbacks = [];
-        var parsleyInstance = $form.parsley();
         $.each(['validate', 'error', 'success', 'validated', 'submit'], function (i, cb) {
-          parsleyInstance.subscribe('parsley:form:' + cb, function () {
+          $form.on('form:' + cb + '.parsley', function () {
             callbacks.push(cb);
           });
         });
+        $form.parsley();
         $form.submit();
         $form.find('input').val('Hello');
         $form.submit();
         expect(callbacks.join()).to.be('validate,error,validated,validate,success,validated,submit');
       });
-      it('should fire "parsley:form:validate" to give the opportunity for changes before validation occurs', function() {
+      it('should fire "form:validate.parsley" to give the opportunity for changes before validation occurs', function() {
         var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
-        $form.parsley().subscribe('parsley:form:validate', function (psly) {
+        $form.on('form:validate.parsley', function (evt, psly) {
           psly.$element.find('input').remove();
         });
         expect($form.parsley().validate()).to.be(true);
@@ -180,13 +180,11 @@ define(function () {
         $('#element').on('submit', function () {
           // It sould never pass here!
           expect(true).to.be(false);
-        });
-
-        parsleyInstance.subscribe('parsley:form:validated', function () {
+        })
+        .on('form:validated.parsley', function () {
           done();
-        });
-
-        $('#element').submit();
+        })
+        .submit();
       });
 
       it('should fire form:submit.event and be interruptable when validated', function (done) {
