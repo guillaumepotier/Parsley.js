@@ -92,6 +92,10 @@ define('parsley/utils', function () {
       }
     },
 
+    _resetWarnings: function() {
+      pastWarnings = {};
+    },
+
     // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
     objectCreate: Object.create || (function () {
       var Object = function () {};

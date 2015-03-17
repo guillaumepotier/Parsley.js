@@ -61,6 +61,7 @@ require(['config'], function () {
           });
           after(function () {
             window.ParsleyExtend = previousExtend;
+            ParsleyUtils._resetWarnings();
           });
           utils(ParsleyUtils);
           parsleyBase(Parsley);
