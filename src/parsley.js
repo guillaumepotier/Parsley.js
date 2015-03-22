@@ -117,18 +117,17 @@ define([
       }
 
       // Check here if we don't already have a related multiple instance saved
-      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length) {
-        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++) {
-          if ('undefined' !== typeof $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley')) {
-            parsleyMultipleInstance = $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley');
+      var $previouslyRelated = $('[' + this.options.namespace + 'multiple=' + multiple +']');
+      for (var i = 0; i < $previouslyRelated.length; i++) {
+        if ('undefined' !== typeof $($previouslyRelated.get(i)).data('Parsley')) {
+          parsleyMultipleInstance = $($previouslyRelated.get(i)).data('Parsley');
 
-            if (!this.$element.data('ParsleyFieldMultiple')) {
-              parsleyMultipleInstance.addElement(this.$element);
-              this.$element.attr(this.options.namespace + 'id', parsleyMultipleInstance.__id__);
-            }
-
-            break;
+          if (!this.$element.data('ParsleyFieldMultiple')) {
+            parsleyMultipleInstance.addElement(this.$element);
+            this.$element.attr(this.options.namespace + 'id', parsleyMultipleInstance.__id__);
           }
+
+          break;
         }
       }
 
