@@ -742,12 +742,12 @@ window.ParsleyConfig = {
           <p>Here again, like localizations, configuring your custom validators and error messages comes with two flavors:
           <ul>
             <li>By registering them in some globals <strong>before</strong> calling <code>parsley.js</code>:
-<pre><code>&lt;input type="text" data-parsley-multiple="3" />
+<pre><code>&lt;input type="text" data-parsley-multipleof="3" />
 [...]
 &lt;script type="text/javascript">
 window.ParsleyConfig = {
   validators: {
-    multiple: {
+    multipleof: {
       fn: function (value, requirement) {
         return 0 === value % requirement;
       },
@@ -756,10 +756,10 @@ window.ParsleyConfig = {
   },
   i18n: {
     en: {
-      multiple: 'This value should be a multiple of %s'
+      multipleof: 'This value should be a multiple of %s'
     },
     fr: {
-      multiple: 'Cette valeur doit être un multiple de %s'
+      multipleof: 'Cette valeur doit être un multiple de %s'
     }
   }
 };
@@ -768,15 +768,15 @@ window.ParsleyConfig = {
             </li>
             <li>By registering them in <code>ParsleyValidator</code> <strong>after</strong> <code>parsley.js</code> is loaded:
 
-<pre><code>&lt;input type="text" data-parsley-multiple="3" />
+<pre><code>&lt;input type="text" data-parsley-multipleof="3" />
 [...]
 &lt;script type="text/javascript">
 window.ParsleyValidator
-  .addValidator('multiple', function (value, requirement) {
+  .addValidator('multipleof', function (value, requirement) {
     return 0 === value % requirement;
   }, 32)
-  .addMessage('en', 'multiple', 'This value should be a multiple of %s')
-  .addMessage('fr', 'multiple', 'Cette valeur doit être un multiple de %s');
+  .addMessage('en', 'multipleof', 'This value should be a multiple of %s')
+  .addMessage('fr', 'multipleof', 'Cette valeur doit être un multiple de %s');
 &lt;/script>
 </code></pre></li>
           </ul>
