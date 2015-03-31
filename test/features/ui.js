@@ -333,6 +333,33 @@ define(function () {
         window.ParsleyValidator.removeValidator('customValidator');
       });
 
+      it('should show configured error messages for custom validators with compound names', function () {
+        $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" />');
+        window.ParsleyValidator.addValidator('customValidator', function (value, requirement) {
+          return requirement === value;
+        }, 32)
+          .addMessage('en','customValidator','Custom error message.')
+          .addMessage('fr','customValidator','Message d\'erreur personnalisé.');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('Custom error message.');
+        window.ParsleyValidator.removeValidator('customValidator');
+      });
+      it('should show configured error messages for custom validators with compound names in the current locale', function () {
+        $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" />');
+        window.ParsleyValidator.addValidator('customValidator', function (value, requirement) {
+          return requirement === value;
+        }, 32)
+          .addMessage('en','Custom error message.')
+          .addMessage('fr',"Message d'erreur personnalisé.");
+        window.ParsleyValidator.setLocale('fr');
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be("Message d'erreur personnalisé.");
+        window.ParsleyValidator.setLocale('en');
+        window.ParsleyValidator.removeValidator('customValidator');
+      });
+
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();
       });
