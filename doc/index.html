@@ -742,33 +742,24 @@ window.ParsleyConfig = {
           <p>Here again, like localizations, configuring your custom validators and error messages comes with two flavors:
           <ul>
             <li>By registering them in some globals <strong>before</strong> calling <code>parsley.js</code>:
-<pre><code>&lt;input type="text" data-parsley-multipleof="3" />
-&lt;input type="text" data-parsley-my-validator="9" />
+<pre><code>&lt;input type="text" data-parsley-multiple-of="3" />
 [...]
 &lt;script type="text/javascript">
 window.ParsleyConfig = {
   validators: {
-    multipleof: {
+    multipleOf: {
       fn: function (value, requirement) {
         return 0 === value % requirement;
       },
       priority: 32
-    },
-    myValidator: {
-      fn: function(value, requirement) {
-        return value &lt; requirement;
-      },
-      priority: 33
     }
   },
   i18n: {
     en: {
-      multipleof: 'This value should be a multiple of %s',
-      myValidator: 'Value should be less than %s'
+      multipleOf: 'This value should be a multiple of %s'
     },
     fr: {
-      multipleof: 'Cette valeur doit être un multiple de %s',
-      myValidator: 'La valeur doit être inférieure à %s'
+      multipleOf: 'Cette valeur doit être un multiple de %s'
     }
   }
 };
@@ -777,24 +768,15 @@ window.ParsleyConfig = {
             </li>
             <li>By registering them in <code>ParsleyValidator</code> <strong>after</strong> <code>parsley.js</code> is loaded:
 
-<pre><code>&lt;input type="text" data-parsley-multipleof="3" />
-&lt;input type="text" data-parsley-my-validator="9" />
+<pre><code>&lt;input type="text" data-parsley-multiple-of="3" />
 [...]
 &lt;script type="text/javascript">
 window.ParsleyValidator
-  .addValidator('multipleof', function (value, requirement) {
+  .addValidator('multipleOf', function (value, requirement) {
     return 0 === value % requirement;
   }, 32)
-  .addMessage('en', 'multipleof', 'This value should be a multiple of %s')
-  .addMessage('fr', 'multipleof', 'Cette valeur doit être un multiple de %s');
-
-// or with a compound name
-window.ParsleyValidator
-  .addValidator('myValidator', function (value, requirement) {
-    return value &lt; requirement;
-  }, 32)
-  .addMessage('en', 'myValidator', 'Value should be less than %s')
-  .addMessage('fr', 'myValidator', 'La valeur doit être inférieure à %s');
+  .addMessage('en', 'multipleOf', 'This value should be a multiple of %s')
+  .addMessage('fr', 'multipleOf', 'Cette valeur doit être un multiple de %s');
 &lt;/script>
 </code></pre></li>
           </ul>
