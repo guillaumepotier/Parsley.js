@@ -1,8 +1,15 @@
 # Parsley 2.x changelog
 
 ## master
-- Compatible with jQuery.noConflict() (#859)
+
+## 2.1.0-rc5
+
+- Handles checkbox names containing spaces (#881)
+
+## 2.1.0-rc4
+
 - Detects name conflicts between validators and regular options
+- Compatible with jQuery.noConflict() (#859)
 
 ## 2.1.0-rc3
 

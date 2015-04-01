@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0-rc4 - built Mon Mar 16 2015 09:15:36
+* Version 2.1.0-rc5 - built Wed Apr 01 2015 09:59:00
 * MIT Licensed
 *
 */
@@ -94,6 +94,9 @@
         pastWarnings[msg] = true;
         this.warn.apply(this, arguments);
       }
+    },
+    _resetWarnings: function() {
+      pastWarnings = {};
     },
     // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
     objectCreate: Object.create || (function () {
@@ -1972,7 +1975,7 @@ window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {},
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.1.0-rc4
+//     Parsley.js 2.1.0-rc5
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2001,7 +2004,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   Parsley.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.1.0-rc4';
+      this.__version__ = '2.1.0-rc5';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
@@ -2047,16 +2050,15 @@ if ('undefined' !== typeof window.ParsleyValidator)
         });
       }
       // Check here if we don't already have a related multiple instance saved
-      if ($('[' + this.options.namespace + 'multiple=' + multiple +']').length) {
-        for (var i = 0; i < $('[' + this.options.namespace + 'multiple=' + multiple +']').length; i++) {
-          if ('undefined' !== typeof $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley')) {
-            parsleyMultipleInstance = $($('[' + this.options.namespace + 'multiple=' + multiple +']').get(i)).data('Parsley');
-            if (!this.$element.data('ParsleyFieldMultiple')) {
-              parsleyMultipleInstance.addElement(this.$element);
-              this.$element.attr(this.options.namespace + 'id', parsleyMultipleInstance.__id__);
-            }
-            break;
+      var $previouslyRelated = $('[' + this.options.namespace + 'multiple="' + multiple +'"]');
+      for (var i = 0; i < $previouslyRelated.length; i++) {
+        parsleyMultipleInstance = $($previouslyRelated.get(i)).data('Parsley');
+        if ('undefined' !== typeof parsleyMultipleInstance) {
+          if (!this.$element.data('ParsleyFieldMultiple')) {
+            parsleyMultipleInstance.addElement(this.$element);
+            this.$element.attr(this.options.namespace + 'id', parsleyMultipleInstance.__id__);
           }
+          break;
         }
       }
       // Create a secret ParsleyField instance for every multiple field. It would be stored in `data('ParsleyFieldMultiple')`
