@@ -117,7 +117,7 @@ define([
       }
 
       // Check here if we don't already have a related multiple instance saved
-      var $previouslyRelated = $('[' + this.options.namespace + 'multiple=' + multiple +']');
+      var $previouslyRelated = $('[' + this.options.namespace + 'multiple="' + multiple +'"]');
       for (var i = 0; i < $previouslyRelated.length; i++) {
         parsleyMultipleInstance = $($previouslyRelated.get(i)).data('Parsley');
         if ('undefined' !== typeof parsleyMultipleInstance) {

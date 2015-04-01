@@ -7,6 +7,7 @@ define(function () {
             '<input type="checkbox" name="hello[]" id="check1" value="1" />'  +
             '<input type="checkbox" name="{{ hello }}" id="check2" value="2" />'  +
             '<input type="checkbox" name="$hello$" id="check3" value="3" />'  +
+            '<input type="checkbox" name="hello world[ x ]" id="check4" value="4" />'  +
             '<input type="checkbox" value="foo" />' +
           '</form>');
         expectWarning(function() {
