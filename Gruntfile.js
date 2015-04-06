@@ -181,10 +181,11 @@ module.exports = function (grunt) {
   /** Tasks here **/
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['bower:install']);
-  grunt.registerTask('build', ['requirejs', 'replace:dist', 'uglify:min']);
+  grunt.registerTask('build-std', ['requirejs', 'replace:dist', 'uglify:min']);
   grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
   grunt.registerTask('build-annotated-source', ['docco:source', 'replace:annotated']);
-  grunt.registerTask('build-all', ['configure', 'clean:dist', 'build', 'build-remote', 'build-annotated-source', 'sync']);
+  grunt.registerTask('build', ['configure', 'clean:dist', 'build-std', 'build-remote', 'build-annotated-source', 'sync']);
+  grunt.registerTask('build-all', ['build']);
 };
 
 var rdefineEnd = /\}\);[^}\w]*$/;
