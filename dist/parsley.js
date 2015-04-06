@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0-rc5 - built Wed Apr 01 2015 09:59:00
+* Version 2.1.0-rc6 - built Mon Apr 06 2015 11:04:26
 * MIT Licensed
 *
 */
@@ -1781,7 +1781,7 @@ var Validator = ( function ( ) {
           return this.addConstraint('type', 'number', undefined, true);
         }
       // Regular other HTML5 supported types
-      } else if (new RegExp(type, 'i').test('email url range')) {
+      } else if (/^(email|url|range)$/i.test(type)) {
         return this.addConstraint('type', type, undefined, true);
       }
       return this;
@@ -1975,7 +1975,7 @@ window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {},
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.1.0-rc5
+//     Parsley.js 2.1.0-rc6
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2004,7 +2004,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   Parsley.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.1.0-rc5';
+      this.__version__ = '2.1.0-rc6';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
