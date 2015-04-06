@@ -1,4 +1,4 @@
-window.jQuery = $ = require('../../bower_components/jquery/jquery.js');
+window.jQuery = $ = require('../../bower_components/jquery/dist/jquery.js');
 require('../../dist/parsley.js');
 
 // setup mocha

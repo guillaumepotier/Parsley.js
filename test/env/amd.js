@@ -2,7 +2,7 @@ requirejs.config({
     baseUrl: '../../',
 
     paths: {
-      jquery: 'bower_components/jquery/jquery',
+      jquery: 'bower_components/jquery/dist/jquery',
       vendors: 'bower_components',
       modules: 'node_modules'
     },
@@ -16,7 +16,7 @@ requirejs.config({
     },
 
     shim: {
-      'vendors/jquery/jquery': {
+      'vendors/jquery/dist/jquery': {
         exports: '$'
       },
       'modules/mocha/mocha': {

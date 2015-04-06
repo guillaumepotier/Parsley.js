@@ -11854,7 +11854,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
 }));
 
 },{}],3:[function(require,module,exports){
-window.jQuery = $ = require('../../bower_components/jquery/jquery.js');
+window.jQuery = $ = require('../../bower_components/jquery/dist/jquery.js');
 require('../../dist/parsley.js');
 
 // setup mocha
@@ -11898,4 +11898,4 @@ if (window.mochaPhantomJS)
 else
   mocha.run();
 
-},{"../../bower_components/jquery/jquery.js":1,"../../dist/parsley.js":2}]},{},[3]);
+},{"../../bower_components/jquery/dist/jquery.js":1,"../../dist/parsley.js":2}]},{},[3]);

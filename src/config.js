@@ -11,13 +11,13 @@ requirejs.config({
 
     map: {
       '*': {
-        jquery: 'vendors/jquery/jquery',
+        jquery: 'vendors/jquery/dist/jquery',
         validator: 'vendors/validator.js/dist/validator'
       }
     },
 
     shim: {
-      'vendors/jquery/jquery': {
+      'vendors/jquery/dist/jquery': {
         exports: '$'
       },
       'src/parsley': {

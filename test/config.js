@@ -15,7 +15,7 @@ requirejs.config({
     map: {
       '*': {
         'validator': 'vendors/validator.js/dist/validator',
-        'jquery': 'vendors/jquery/jquery',
+        'jquery': 'vendors/jquery/dist/jquery',
         'expect': 'modules/expect.js/index',
         'mocha': 'modules/mocha/mocha',
         'sinon': 'vendors/sinonjs/sinon'
@@ -23,7 +23,7 @@ requirejs.config({
     },
 
     shim: {
-      'vendors/jquery/jquery': {
+      'vendors/jquery/dist/jquery': {
         exports: '$'
       },
       'src/parsley': {

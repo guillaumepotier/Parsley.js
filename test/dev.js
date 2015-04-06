@@ -3,12 +3,12 @@ requirejs.config({
     paths: {
         dist: '../dist',
         vendors: '../bower_components',
-        jquery: '../bower_components/jquery/jquery'
+        jquery: '../bower_components/jquery/dist/jquery'
     },
     map: {
         '*': {
             parsley: 'dist/parsley',
-            jquery: 'vendors/jquery/jquery'
+            jquery: 'vendors/jquery/dist/jquery'
         }
     }
 });
