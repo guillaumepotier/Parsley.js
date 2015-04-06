@@ -244,7 +244,7 @@ define('parsley/field', [
           return this.addConstraint('type', 'number', undefined, true);
         }
       // Regular other HTML5 supported types
-      } else if (new RegExp(type, 'i').test('email url range')) {
+      } else if (/^(email|url|range)$/i.test(type)) {
         return this.addConstraint('type', type, undefined, true);
       }
       return this;

@@ -25,6 +25,16 @@ define(function () {
         expect(parsleyField.constraints[0].name).to.be('type');
         expect(parsleyField.constraints[0].isDomConstraint).to.be(true);
       });
+      it('should ignore unknown types', function () {
+        $('body').append('<input type="" id="element" />');
+        var parsleyField = new Parsley($('#element'));
+        expect(parsleyField.constraints.length).to.be(0);
+      });
+      it('should ignore mistyped types', function () {
+        $('body').append('<input type="    email" id="element" />');
+        var parsleyField = new Parsley($('#element'));
+        expect(parsleyField.constraints.length).to.be(0);
+      });
       it('should have a proper addConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
         var parsleyField = new Parsley($('#element'))
