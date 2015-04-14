@@ -9,9 +9,9 @@ window.ParsleyConfig.i18n.sq = jQuery.extend(window.ParsleyConfig.i18n.sq || {},
     email:        "Duhet te jete nje email i vlefshem.",
     url:          "Duhet te jete nje URL e vlefshme.",
     number:       "Duhet te jete numer.",
-    integer:      "This value should be a valid integer.",
-    digits:       "This value should be digits.",
-    alphanum:     "This value should be alphanumeric."
+    integer:      "Kjo vlere duhet te jete integer.",
+    digits:       "Kjo vlere duhet te permbaje digit.",
+    alphanum:     "Kjo vlere duhet te permbaje vetel alphanumeric."
   },
   notblank:       "Nuk mund te lihet bosh.",
   required:       "Eshte e detyrueshme.",
