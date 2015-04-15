@@ -296,7 +296,7 @@ define('parsley/ui', [
     actualizeTriggers: function (fieldInstance) {
       var $toBind = fieldInstance.$element;
       if (fieldInstance.options.multiple)
-        $toBind = $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]');
+        $toBind = $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]', fieldInstance.parent.$element);
 
       // Remove Parsley events already binded on this field
       $toBind.off('.Parsley');
@@ -334,7 +334,7 @@ define('parsley/ui', [
 
       // Radio and checkboxes fields must bind every field multiple
       if (fieldInstance.options.multiple)
-        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
+        $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]', fieldInstance.parent.$element).each(function () {
           if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
             return $(this).on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
         });
