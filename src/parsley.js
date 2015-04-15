@@ -110,14 +110,14 @@ define([
 
       // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
       if ('undefined' !== typeof name) {
-        $('input[name="' + name + '"]').each(function () {
+        $('input[name="' + name + '"]', this.parent.$element).each(function () {
           if ($(this).is('input[type=radio], input[type=checkbox]'))
             $(this).attr(that.options.namespace + 'multiple', multiple);
         });
       }
 
       // Check here if we don't already have a related multiple instance saved
-      var $previouslyRelated = $('[' + this.options.namespace + 'multiple="' + multiple +'"]');
+      var $previouslyRelated = $('[' + this.options.namespace + 'multiple="' + multiple +'"]', this.parent.$element);
       for (var i = 0; i < $previouslyRelated.length; i++) {
         parsleyMultipleInstance = $($previouslyRelated.get(i)).data('Parsley');
         if ('undefined' !== typeof parsleyMultipleInstance) {
