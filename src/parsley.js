@@ -36,8 +36,8 @@ define([
     var savedparsleyFormInstance = this.$element.data('Parsley');
     if (savedparsleyFormInstance) {
 
-      // If the saved instance has been bound without a ParsleyForm parent and there is one given in this call, add it
-      if ('undefined' !== typeof parsleyFormInstance && !savedparsleyFormInstance.parent) {
+      // If saved instance have been bound without a ParsleyForm parent and there is one given in this call, add it
+      if ('undefined' !== typeof parsleyFormInstance && savedparsleyFormInstance.parent === Parsley) {
         savedparsleyFormInstance.parent = parsleyFormInstance;
         savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
       }
@@ -52,7 +52,7 @@ define([
     if ('undefined' !== typeof parsleyFormInstance && 'ParsleyForm' !== parsleyFormInstance.__class__)
       throw new Error('Parent instance must be a ParsleyForm instance');
 
-    this.parent = parsleyFormInstance;
+    this.parent = parsleyFormInstance || Parsley;
     return this.init(options);
   };
 
@@ -184,6 +184,11 @@ define([
     }
   };
 
+  // Copy `on`, `off` & `trigger` to Parsley:
+  Parsley.on = ParsleyAbstract.prototype.on;
+  Parsley.off = ParsleyAbstract.prototype.off;
+  Parsley.trigger = ParsleyAbstract.prototype.trigger;
+
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
   $.extend(ParsleyField.prototype, ParsleyAbstract.prototype);
@@ -223,16 +228,16 @@ define([
   // Inherit from ParsleyDefault, and copy over any existing values
   window.ParsleyConfig = $.extend(ParsleyUtils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
 
+  // ### Globals
+  window.Parsley = window.psly = Parsley;
+  window.ParsleyUtils = ParsleyUtils;
+  window.ParsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
+
   // ### ParsleyUI
   // UI is a separate class that only listens to some events and then modifies the DOM accordingly
   // Could be overriden by defining a `window.ParsleyConfig.ParsleyUI` appropriate class (with `listen()` method basically)
   window.ParsleyUI = 'function' === typeof window.ParsleyConfig.ParsleyUI ?
     new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
-
-  // ### Globals
-  window.Parsley = window.psly = Parsley;
-  window.ParsleyUtils = ParsleyUtils;
-  window.ParsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`

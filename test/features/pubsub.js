@@ -3,7 +3,7 @@ define(function () {
     describe('PubSub', function () {
       it('listen() without context', function (done) {
         expectWarning(function(){
-          $.listen('foo', function (arg) {
+          $.listen('foo', function (instance, arg) {
             expect(arg).to.be('bar');
             done();
           });
@@ -12,7 +12,7 @@ define(function () {
       });
       it('listen() with context', function (done) {
         var obj = { foo: function (bar) { return 'foo' + bar; } };
-        $.listen('foo', obj, function (arg) {
+        $.listen('foo', obj, function (instance, arg) {
           expect(this.foo(arg)).to.be('foobar');
           done();
         });

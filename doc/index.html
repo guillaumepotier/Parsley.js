@@ -907,8 +907,20 @@ window.ParsleyValidator
         <!-- ****************** Events ****************** -->
         <h1 id="events" class="page-header">Events</h1>
         <h3 id="events-overview">Overview</h3>
-        <p>Parsley triggers jQuery events that allow ParsleyUI to work. Furthermore, it could allow you to do some powerful magic if you listen properly to the right events!</p>
-
+        <p>Parsley triggers events that allows ParsleyUI to work. Further more, it could allow you to do some powerful magic if you listen properly to the right events!</p>
+        <p>For performance reasons, Parsley does not use jQuery events, but the API to listen to events is very similar:
+<pre><code>$('#some-input').parsley().on('field:success', function() {
+  // In here, `this` is the parlsey instance of `#some-input
+});
+</code></pre>
+        </p>
+        <p>Similarly to jQuery events, parsley events will bubble up. For example, if a field is about to be validated, the event <code>'field:validate'</code> will be triggerred first on the parsley field instance, then on the parsley form instance (if the field is bound in a form) and finally on the top level <code>window.Parsley</code>
+<pre><code>window.Parsley.on('field:error', function() {
+  // This global callback will be called for any field that fails validation.
+  console.log('Validation failed for: ', this.$element);
+});
+</code></pre>
+        </p>.
         <h3 id="events-list">Events List</h3>
         <table class="table table-stripped table-bordered">
           <thead>
@@ -921,68 +933,68 @@ window.ParsleyValidator
           </thead>
           <tbody>
             <tr>
-              <td><code>form:init.parlsey</code> <version>#2.1</version></td>
+              <td><code>form:init</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>new Parsley()</code></td>
               <td>Triggered when a Form is bound for the first time.</td>
             </tr>
             <tr>
-              <td><code>form:validate.parsley</code> <version>#2.1</version></td>
+              <td><code>form:validate</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered when a form validation is triggered, <strong>before</strong> its validation.</td>
             </tr>
             <tr>
-              <td><code>form:success.parsley</code> <version>#2.1</version></td>
+              <td><code>form:success</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered when a form validation is triggered, <strong>after</strong> its validation succeeds.</td>
             </tr>
             <tr>
-              <td><code>form:error.parsley</code> <version>#2.1</version></td>
+              <td><code>form:error</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered when a form validation is triggered, <strong>after</strong> its validation fails.</td>
             </tr>
             <tr>
-              <td><code>form:validated.parsley</code> <version>#2.1</version></td>
+              <td><code>form:validated</code> <version>#2.1</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered when a form validation is triggered, <strong>after</strong> its validation finishes (with success or with errors).</td>
             </tr>
             <tr>
-              <td><code>form:submit.parsley</code> <version>#2.2</version></td>
+              <td><code>form:submit</code> <version>#2.2</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>submit()</code></td>
               <td>Triggered when after a form validation succeeds and before the form is actually submitted.<br/>
                 Prevent the default to interrupt submission.</td>
             </tr>
             <tr>
-              <td><code>field:init.parsley</code> <version>#2.1</version></td>
+              <td><code>field:init</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>new Parsley()</code></td>
               <td>Triggered when a Field is bound for the first time.</td>
             </tr>
             <tr>
-              <td><code>field:validate.parsley</code> <version>#2.1</version></td>
+              <td><code>field:validate</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered when a field validation is triggered, <strong>before</strong> its validation.</td>
             </tr>
             <tr>
-              <td><code>field:success.parsley</code> <version>#2.1</version></td>
+              <td><code>field:success</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered when a field validation succeeds.</td>
             </tr>
             <tr>
-              <td><code>field:error.parsley</code> <version>#2.1</version></td>
+              <td><code>field:error</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered when a field validation fails.</td>
             </tr>
             <tr>
-              <td><code>field:validated.parsley</code> <version>#2.1</version></td>
+              <td><code>field:validated</code> <version>#2.1</version></td>
               <td><code>ParsleyField</code></td>
               <td><code>.validate()</code></td>
               <td>Triggered after a field is validated (with success or with errors).</td>

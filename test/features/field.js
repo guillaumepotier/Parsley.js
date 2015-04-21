@@ -207,37 +207,41 @@ define(function () {
       });
       it('should trigger field:validate event', function (done) {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        $('#element').on('field:validate.parsley', function (event, instance) {
+        $('#element').psly()
+        .on('field:validate', function () {
           // we are before validation!
-          expect(instance.validationResult.length).to.be(0);
+          expect(this.validationResult.length).to.be(0);
           done();
-        });
-        $('#element').psly().validate();
+        })
+        .validate();
       });
       it('should trigger field:validated event', function (done) {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        $('#element').on('field:validated.parsley', function (event, instance) {
+        $('#element').psly()
+        .on('field:validated', function () {
           // we are after validation!
-          expect(instance.validationResult.length).to.be(1);
+          expect(this.validationResult.length).to.be(1);
           done();
-        });
-        $('#element').psly().validate();
+        })
+        .validate();
       });
       it('should trigger field:error event', function (done) {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        $('#element').on('field:error.parsley', function (event, instance) {
-          expect(instance.validationResult.length).to.be(1);
+        $('#element').psly()
+        .on('field:error', function () {
+          expect(this.validationResult.length).to.be(1);
           done();
-        });
-        $('#element').psly().validate();
+        })
+        .validate();
       });
-      it('should trigger field:success event', function (done) {
+      it('should trigger parsley:field:success event', function (done) {
         $('body').append('<input type="email" required id="element" value="foo@bar.baz" />');
-        $('#element').on('field:success.parsley', function (event, instance) {
-          expect(instance.validationResult).to.be(true);
+        $('#element').psly()
+        .on('field:success', function () {
+          expect(this.validationResult).to.be(true);
           done();
-        });
-        $('#element').psly().validate();
+        })
+        .validate();
       });
       it('should have validateIfEmpty option', function () {
         $('body').append('<input type="email" data-parsley-rangelength="[5, 10]" id="element" />');
@@ -249,8 +253,8 @@ define(function () {
         $('body').append('<input type="email" required id="element" value="foo@bar.baz" />');
         expect($('#element').parsley().validate()).to.be(true);
 
-        $('#element').on('field:validate.parsley', function (evt, fieldInstance) {
-          fieldInstance.value = '';
+        $('#element').parsley().on('field:validate', function () {
+          this.value = '';
         });
 
         expect($('#element').parsley().validate()).not.to.be(true);
