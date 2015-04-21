@@ -9,6 +9,7 @@ define('parsley/form', [
     this.$element = $(element);
     this.domOptions = domOptions;
     this.options = options;
+    this.parent = window.Parsley;
 
     this.fields = [];
     this.validationResult = null;
@@ -111,11 +112,6 @@ define('parsley/form', [
 
         $(oldFields).not(self.fields).each(function () {
           this._trigger('reset');
-          // If DOM element is detached or removed from the form, also trigger
-          // at the form level:
-          if (!jQuery.contains(self.$element[0], this.$element[0])) {
-            self.$element.trigger('field:reset.parsley', [this]);
-          }
         });
       });
       return this;
@@ -140,9 +136,8 @@ define('parsley/form', [
     // Shortcut to trigger an event
     // Returns true iff event is not interrupted and default not prevented.
     _trigger: function (eventName) {
-      var event = jQuery.Event('form:' + eventName + '.parsley');
-      this.$element.trigger(event, [this]);
-      return !(event.isDefaultPrevented() || event.isImmediatePropagationStopped() || event.isPropagationStopped());
+      eventName = 'form:' + eventName;
+      return this.trigger.apply(this, arguments);
     }
 
   };

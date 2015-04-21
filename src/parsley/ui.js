@@ -8,14 +8,14 @@ define('parsley/ui', [
   ParsleyUI.prototype = {
     listen: function () {
       var that = this;
-      $(document)
-      .on('form:init.parsley',       function (evt, field) { that.setupForm (field); } )
-      .on('field:init.parsley',      function (evt, field) { that.setupField(field); } )
-      .on('field:validated.parsley', function (evt, field) { that.reflow    (field); } )
-      .on('form:validated.parsley',  function (evt, field) { that.focus     (field); } )
-      .on('field:reset.parsley',     function (evt, field) { that.reset     (field); } )
-      .on('form:destroy.parsley',    function (evt, field) { that.destroy   (field); } )
-      .on('field:destroy.parsley',   function (evt, field) { that.destroy   (field); } );
+      window.Parsley
+      .on('form:init',       function () { that.setupForm (this); } )
+      .on('field:init',      function () { that.setupField(this); } )
+      .on('field:validated', function () { that.reflow    (this); } )
+      .on('form:validated',  function () { that.focus     (this); } )
+      .on('field:reset',     function () { that.reset     (this); } )
+      .on('form:destroy',    function () { that.destroy   (this); } )
+      .on('field:destroy',   function () { that.destroy   (this); } );
 
       return this;
     },

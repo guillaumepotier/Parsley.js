@@ -101,9 +101,9 @@ define(function () {
           var parsleyForm = $('#element').parsley();
 
           // parsley.remote hack because if valid, parsley remote re-send form
-          $('#element').on('form:validate.parsley', function (evt, formInstance) {
-            if (formInstance.asyncSupport)
-              formInstance.submitEvent._originalPreventDefault();
+          $('#element').parsley().on('form:validate', function () {
+            if (this.asyncSupport)
+              this.submitEvent._originalPreventDefault();
           });
 
           var event = $.Event();
@@ -156,7 +156,7 @@ define(function () {
 
         var callbacks = [];
         $.each(['validate', 'error', 'success', 'validated', 'submit'], function (i, cb) {
-          $form.on('form:' + cb + '.parsley', function () {
+          $form.parsley().on('form:' + cb, function () {
             callbacks.push(cb);
           });
         });
@@ -168,32 +168,32 @@ define(function () {
       });
       it('should fire "form:validate.parsley" to give the opportunity for changes before validation occurs', function() {
         var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
-        $form.on('form:validate.parsley', function (evt, psly) {
-          psly.$element.find('input').remove();
+        $form.parsley().on('form:validate', function () {
+          this.$element.find('input').remove();
         });
         expect($form.parsley().validate()).to.be(true);
       });
       it('should stop event propagation on form submit', function (done) {
         $('body').append('<form id="element"><input type="text" required/></form>');
-        var parsleyInstance = $('#element').parsley();
-
+        var parsleyInstance = $('#element').parsley()
+        .on('form:validated', function () {
+          done();
+        });
         $('#element').on('submit', function () {
           // It sould never pass here!
           expect(true).to.be(false);
-        })
-        .on('form:validated.parsley', function () {
-          done();
         })
         .submit();
       });
 
       it('should fire form:submit.event and be interruptable when validated', function (done) {
-        $('<form id="element"></form>').on('form:submit.parsley', function(evt) {
-          evt.preventDefault();
-          done();
-        })
+        $('<form id="element"></form>')
         .appendTo('body')
-        .parsley();
+        .parsley()
+        .on('form:submit', function() {
+          done();
+          return false;
+        });
         $('#element').submit();
       });
 
@@ -203,17 +203,17 @@ define(function () {
           step = 'init',
           parsleyForm = $('<form id="element"><input type="text" required></form>')
             .appendTo('body')
-            .on('field:reset.parsley', function(evt, ins) {
+            .parsley()
+            .on('field:reset', function() {
               steps.push('form: ' + step);
-              expect(ins).to.be(parsleyInstance);
+              expect(this).to.be(parsleyInstance);
             })
-            .parsley();
-        parsleyInstance = $('#element input')
-          .on('field:reset.parsley', function(evt, ins) {
+            ;
+        parsleyInstance = $('#element input').parsley()
+          .on('field:reset', function() {
               steps.push('field: ' + step);
-              expect(ins).to.be(parsleyInstance);
-            })
-          .parsley();
+              expect(this).to.be(parsleyInstance);
+            });
 
         parsleyForm.validate();
         parsleyForm.validate();
@@ -237,7 +237,7 @@ define(function () {
         step = 'removed';
         parsleyForm.validate();
         parsleyForm.validate();
-        expect(steps).to.eql(['field: excluded', 'form: excluded', 'field: detached', 'form: detached', 'form: removed']);
+        expect(steps).to.eql(['field: excluded', 'form: excluded', 'field: detached', 'form: detached', 'field: removed', 'form: removed']);
       });
 
       afterEach(function () {

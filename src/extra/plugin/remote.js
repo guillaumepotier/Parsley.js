@@ -264,9 +264,8 @@ window.ParsleyConfig.validators.remote = {
   priority: -1
 };
 
-$(document).on('form:submit.parsley', function (evt, parsleyForm) {
-  if (!evt.isDefaultPrevented())
-    parsleyForm._remoteCache = {};
+window.Parsley.on('form:submit', function () {
+  this._remoteCache = {};
 });
 
 })(jQuery);

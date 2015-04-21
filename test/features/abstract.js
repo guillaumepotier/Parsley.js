@@ -33,18 +33,18 @@ define(function () {
         parsleyForm.validate();
         expect($('#parsley-id-' + $('#field1').psly().__id__ + ' li').length).to.be(1);
 
-        $('#element').on('form:reset.parsley', function () {
+        $('#element').parsley().on('form:reset', function () {
           done();
         });
-
         parsleyForm.reset();
+
         expect($('#parsley-id-' + $('#field1').psly().__id__ + ' li').length).to.be(0);
       });
       it('should use destroy() on field', function (done) {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
         var parsleyField = $('#element').parsley();
 
-        $('#element').on('field:destroy.parsley', function () {
+        $('#element').parsley().on('field:destroy', function () {
           done();
         });
 
@@ -67,11 +67,11 @@ define(function () {
 
         // Test that a subscribed field event on parent form would be triggered by fields too
         // Here we only have field1 and field2 as valid parsley fields
-        $('#element').on('field:destroy.parsley', function () {
+        $('#element').parsley().on('field:destroy', function () {
           fieldEventsCount++;
         });
 
-        $('#element').on('form:destroy.parsley', function () {
+        $('#element').parsley().on('form:destroy', function () {
           formEventsCount++;
         });
 
@@ -86,7 +86,7 @@ define(function () {
         expect(formEventsCount).to.be(1);
 
         // we should never enter here since parsley form instance is destroyed
-        $(document).on('form:validate.parsley', function () {
+        window.Parsley.on('form:validate', function () {
           expect(true).to.be(false);
         });
 
@@ -96,7 +96,7 @@ define(function () {
 
           expect($('#element').data('Parsley')).to.be(undefined);
           expect($('#field1').data('Parsley')).to.be(undefined);
-          $(document).off('form:validate.parsley');
+          window.Parsley.off('form:validate');
           done();
         });
 
