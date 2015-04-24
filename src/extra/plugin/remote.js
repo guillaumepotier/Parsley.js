@@ -198,6 +198,9 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
       type: 'GET'
     }, this.options.remoteOptions || {});
 
+    // Emit an event to allow sending aditional data or modify the options dynamically
+    this.$element.trigger('field:ajaxOptions.parsley', [this, ajaxOptions]);
+
     // Generate store key based on ajax options
     csr = $.param(ajaxOptions);
 

@@ -1103,6 +1103,47 @@ $('[name="q"]').parsley()
           </ul>
         </p>
 
+        <h3 id="remote-events-list">Events List</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-2">Name</th>
+              <th class="col-md-1">Arguments</th>
+              <th class="col-md-1">Fired by</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>field:validate.parsley</code> <version>#2.1</version></td>
+              <td><code>event</code>, <code>ParsleyField</code>, <code>xhrOptions</code></td>
+              <td><code>.asyncIsValid()</code></td>
+              <td>
+                Trigger <strong>after</strong> the raw XmlHttpRequest options are built, <strong>before</strong> the actual call to <strong>$.ajax()</strong>.
+                For further information about available options and setting see <a href="http://api.jquery.com/jquery.ajax/#jQuery-ajax-settings">$.ajax()</a>.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="remote-events-usage">Events Usage</h3>
+        <p>Configuring the listener is really straight forward:
+<pre><code>&lt;input id="q" name="q" type="text" data-parsley-remote data-parsley-remote-validator='mycustom' value="foo" />
+[...]
+&lt;script href="parsley.remote.js">&lt;/script>
+&lt;script href="parsley.js">&lt;/script>
+&lt;script type="text/javascript">
+$("#q").on('field:ajaxOptions.parsley', function (evt, field, xhrOptions) {
+  xhrOptions.url = 'http://new.url';
+  if (!('data' in xhrOptions)) {
+    xhrOptions.data = {};
+  }
+  xhrOptions.data['new-parameter'] = 'new-value';
+});
+&lt;/script>
+</code></pre>
+        </p>
+
         <!-- ****************** Extra ****************** -->
         <h1 id="extras" class="page-header">Parsley Extras</h1>
         <p>
@@ -1300,6 +1341,10 @@ $('[name="q"]').parsley()
               </li>
               <li>
                 <a href="#remote">Parsley Remote</a>
+                <ul class="nav">
+                    <li><a href="#remote-events-list">Events</a></li>
+                    <li><a href="#remote-events-usage">Usage</a></li>
+                </ul>
               </li>
               <li>
                 <a href="#extras">Parsley Extras</a>
