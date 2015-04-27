@@ -66,10 +66,10 @@ require(['config'], function () {
           utils(ParsleyUtils);
           parsleyBase(Parsley);
           pubsub();
-          abstract(Parsley);
-          field(ParsleyField, Parsley);
-          multiple(Parsley);
-          form(ParsleyForm, Parsley);
+          abstract();
+          field(ParsleyField);
+          multiple();
+          form(ParsleyForm);
           validator(ParsleyValidator);
           ui(ParsleyUI);
         });

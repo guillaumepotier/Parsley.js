@@ -1,9 +1,9 @@
 define(function () {
-  return function (Parsley) {
+  return function () {
     describe('ParsleyAbstract', function () {
       it('should provide a actualizeOptions() method', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
-        var parsleyField = new Parsley('#element', { foo: 'bar' });
+        var parsleyField = $('#element').parsley({ foo: 'bar' });
         expect(parsleyField.options.pattern).to.eql('[A-F][0-9]{5}');
         expect(parsleyField.options.required).to.eql('');
 
@@ -15,7 +15,7 @@ define(function () {
       });
       it('should use reset() on field', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
-        var parsleyField = new Parsley('#element');
+        var parsleyField = $('#element').parsley();
         parsleyField.validate();
         expect($('#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
 
@@ -29,7 +29,7 @@ define(function () {
             '<div id="field2"></div>'                     +
             '<textarea id="field2"></textarea>'           +
           '</form>');
-        var parsleyForm = new Parsley($('#element'));
+        var parsleyForm = $('#element').parsley();
         parsleyForm.validate();
         expect($('#parsley-id-' + $('#field1').psly().__id__ + ' li').length).to.be(1);
 
@@ -42,7 +42,7 @@ define(function () {
       });
       it('should use destroy() on field', function (done) {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
-        var parsleyField = new Parsley('#element');
+        var parsleyField = $('#element').parsley();
 
         $('#element').on('field:destroy.parsley', function () {
           done();
@@ -62,7 +62,7 @@ define(function () {
             '<div id="field2"></div>'           +
             '<textarea id="field2"></textarea>' +
           '</form>');
-        var parsleyForm = new Parsley($('#element'));
+        var parsleyForm = $('#element').parsley();
         var fieldEventsCount = 0, formEventsCount = 0;
 
         // Test that a subscribed field event on parent form would be triggered by fields too

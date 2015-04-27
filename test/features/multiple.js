@@ -110,7 +110,7 @@ define(function () {
             '<option value="2">2</option>'  +
             '<option value="3">3</option>'  +
           '</select>');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.__class__).to.be('ParsleyFieldMultiple');
         expect(parsleyField.options.multiple).to.be('foo');
         expect(parsleyField.getValue()).to.be.eql([]);

@@ -1,5 +1,5 @@
 define(function () {
-  return function (ParsleyField, Parsley) {
+  return function (ParsleyField) {
     describe('ParsleyField', function () {
       it('should be a function', function () {
         expect(ParsleyField).to.be.a('function');
@@ -9,7 +9,7 @@ define(function () {
       });
       it('should properly bind DOM constraints', function () {
         $('body').append('<input type="text" id="element" data-parsley-required />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].__class__).to.be('Required');
         expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
@@ -18,7 +18,7 @@ define(function () {
       });
       it('should properly bind HTML DOM supported constraints', function () {
         $('body').append('<input type="email" id="element" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].__class__).to.be('Email');
         expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
@@ -27,17 +27,17 @@ define(function () {
       });
       it('should ignore unknown types', function () {
         $('body').append('<input type="" id="element" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints.length).to.be(0);
       });
       it('should ignore mistyped types', function () {
         $('body').append('<input type="    email" id="element" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints.length).to.be(0);
       });
       it('should have a proper addConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
-        var parsleyField = new Parsley($('#element'))
+        var parsleyField = $('#element').parsley()
           .addConstraint('required', true);
         expect(parsleyField.constraints.length).to.be(1);
         expect(parsleyField.constraints[0].__class__).to.be('Required');
@@ -56,7 +56,7 @@ define(function () {
       });
       it('should have a proper updateConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
-        var parsleyField = new Parsley($('#element'))
+        var parsleyField = $('#element').parsley()
           .addConstraint('required', true);
 
         // same as above test where addConstraint resulted in an updateConstraint
@@ -68,7 +68,7 @@ define(function () {
       });
       it('should have a proper removeConstraint() javascript method', function () {
         $('body').append('<input type="text" id="element" />');
-        var parsleyField = new Parsley($('#element'))
+        var parsleyField = $('#element').parsley()
           .addConstraint('required', true)
           .addConstraint('notblank', true)
           .removeConstraint('required');
@@ -78,7 +78,7 @@ define(function () {
       });
       it('should return true for fields without constraints', function () {
         $('body').append('<input type="text" id="element" value="hola" data-parsley-minlength="5" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         // Start with some validation errors:
         expect(parsleyField.isValid()).to.eql(false);
         // The remove constraint and check result:
@@ -87,7 +87,7 @@ define(function () {
       });
       it('should properly bind HTML5 supported constraints', function () {
         $('body').append('<input type="email" pattern="\\w+" id="element" required min="5" max="100" minlength="1" maxlength="3" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         // 5 validators: type=email, pattern, required, (min+max => range) and (minlength+maxlength => length)
         expect(parsleyField.constraints.length).to.be(5);
         $('#element').removeAttr('min');
@@ -99,27 +99,27 @@ define(function () {
       });
       it('should use integer validation HTML5 `number` type without a step attribute', function () {
         $('body').append('<input type="number" id="element" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints[0].requirements).to.be('integer');
       });
       it('should use integer validation HTML5 `number` type with integer value step', function () {
         $('body').append('<input type="number" id="element" step="3" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints[0].requirements).to.be('integer');
       });
       it('should use number validation for HTML5 `number` with float value step', function () {
         $('body').append('<input type="number" id="element" step="0.3" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints[0].requirements).to.be('number');
       });
       it('should use number validation for HTML5 `number` with step="any"', function () {
         $('body').append('<input type="number" id="element" step="any" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints[0].requirements).to.be('number');
       });
       it('should valid simple validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
-        var parsleyField = new Parsley($('#element'))
+        var parsleyField = $('#element').parsley()
           .addConstraint('required', true);
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('foo');
@@ -127,7 +127,7 @@ define(function () {
       });
       it('should valid more complex `type` validator', function () {
         $('body').append('<input type="text" id="element" value="foo" />');
-        var parsleyField = new Parsley($('#element'))
+        var parsleyField = $('#element').parsley()
           .addConstraint('type', 'email');
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('foo');
@@ -144,7 +144,7 @@ define(function () {
           return false;
         }, 512);
 
-        var parsleyField = new Parsley($('#element'))
+        var parsleyField = $('#element').parsley()
           .addConstraint('ismultiple', 2);
         expect(parsleyField.isValid()).to.eql(true);
         $('#element').val('1');
@@ -169,7 +169,7 @@ define(function () {
           return false;
         }, 512);
 
-        var parsleyField = new Parsley($('#element'))
+        var parsleyField = $('#element').parsley()
           .addConstraint('ismultiple', 4)
           .addConstraint('foobazer', true);
         parsleyField.refreshConstraints();
@@ -186,7 +186,7 @@ define(function () {
       });
       it('should handle constraints priorities on validation', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        var parsleyField = new Parsley($('#element'));
+        var parsleyField = $('#element').parsley();
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(1);
         expect(parsleyField.validationResult[0].assert.name).to.be('required');
@@ -201,7 +201,7 @@ define(function () {
       });
       it('should handle all violations if `priorityEnabled` is set to false', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-        var parsleyField = new Parsley($('#element'), { priorityEnabled: false });
+        var parsleyField = $('#element').parsley({ priorityEnabled: false });
         expect(parsleyField.isValid()).to.be(false);
         expect(parsleyField.validationResult.length).to.be(3);
       });
