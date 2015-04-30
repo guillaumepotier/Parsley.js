@@ -290,7 +290,10 @@ define('parsley/ui', [
       if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
         return $errorsContainer.append(fieldInstance._ui.$errorsWrapper);
 
-      return fieldInstance.options.multiple ? fieldInstance.$element.after(fieldInstance._ui.$errorsWrapper) : fieldInstance.$element.parent().after(fieldInstance._ui.$errorsWrapper);
+      var $from = fieldInstance.$element;
+      if (fieldInstance.options.multiple)
+        $from = $from.parent();
+      return $from.after(fieldInstance._ui.$errorsWrapper);
     },
 
     actualizeTriggers: function (fieldInstance) {
