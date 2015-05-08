@@ -12,8 +12,12 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
   asyncValidators: $.extend({
     'default': {
+      fntype:'xhr',
       fn: function (xhr) {
         return 'resolved' === xhr.state();
+      },
+      asyncmethod: function(value, callbackboolean){
+    	  callbackboolean(true);
       },
       url: false
     },
@@ -35,7 +39,19 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
     return this;
   },
+	  
+  addAsyncMethodValidator: function (name, fn, url, options) {
+    this.asyncValidators[name.toLowerCase()] = {
+      fn: fn,
+      fntype:'method',
+      asyncmethod: fn,
+      url: url || false,
+      options: options || {}
+    };
 
+    return this;
+  },
+  
   asyncValidate: function () {
     if ('ParsleyForm' === this.__class__)
       return this._asyncValidateForm.apply(this, arguments);
@@ -188,47 +204,71 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     // Fill data with current value
     data[this.$element.attr('name') || this.$element.attr('id')] = this.getValue();
 
-    // Merge options passed in from the function with the ones in the attribute
-    this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {} , this.asyncValidators[validator].options);
-
-    // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
-    ajaxOptions = $.extend(true, {}, {
-      url: this.asyncValidators[validator].url || this.options.remote,
-      data: data,
-      type: 'GET'
-    }, this.options.remoteOptions || {});
-
-    // Generate store key based on ajax options
-    csr = $.param(ajaxOptions);
-
-    // Initialise querry cache
-    if ('undefined' === typeof this._remoteCache)
-      this._remoteCache = {};
-
-    // Try to retrieve stored xhr
-    if (!this._remoteCache[csr]) {
-      // Prevent multi burst xhr queries
-      if (this._xhr && 'pending' === this._xhr.state())
-        this._xhr.abort();
-
-      // Make ajax call
-      this._xhr = $.ajax(ajaxOptions);
-
-      // Store remote call result to avoid next calls with exact same parameters
-      this._remoteCache[csr] = this._xhr;
+    if (this.asyncValidators[validator].fntype=='xhr') {
+	    // Merge options passed in from the function with the ones in the attribute
+	    this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {} , this.asyncValidators[validator].options);
+	
+	    // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
+	    ajaxOptions = $.extend(true, {}, {
+	      url: this.asyncValidators[validator].url || this.options.remote,
+	      data: data,
+	      type: 'GET'
+	    }, this.options.remoteOptions || {});
+	
+	    // Generate store key based on ajax options
+	    csr = $.param(ajaxOptions);
+	
+	    // Initialise querry cache
+	    if ('undefined' === typeof this._remoteCache)
+	      this._remoteCache = {};
+	
+	    // Try to retrieve stored xhr
+	    if (!this._remoteCache[csr]) {
+	      // Prevent multi burst xhr queries
+	      if (this._xhr && 'pending' === this._xhr.state())
+	        this._xhr.abort();
+	
+	      // Make ajax call
+	      this._xhr = $.ajax(ajaxOptions);
+	
+	      // Store remote call result to avoid next calls with exact same parameters
+	      this._remoteCache[csr] = this._xhr;
+	    }
+	
+	    this._remoteCache[csr]
+	      .done(function (data, textStatus, xhr) {
+	        that._handleRemoteResult(validator, xhr, deferred);
+	      })
+	      .fail(function (xhr, status, message) {
+	        // If we aborted the query, do not handle nothing for this value
+	        if ('abort' === status)
+	          return;
+	
+	        that._handleRemoteResult(validator, xhr, deferred);
+	      });
     }
+    if (this.asyncValidators[validator].fntype=='method') {
+    	that.$element.addClass('parsley-pending');
+    	this.asyncValidators[validator].asyncmethod(this.getValue(), function(booleanresult) {
+    		that.$element.removeClass('parsley-pending');
+    		// If true, simply resolve and exit
+    	    if (booleanresult) {
+    	      deferred.resolveWith(that);
+    	      return;
+    	    }
 
-    this._remoteCache[csr]
-      .done(function (data, textStatus, xhr) {
-        that._handleRemoteResult(validator, xhr, deferred);
-      })
-      .fail(function (xhr, status, message) {
-        // If we aborted the query, do not handle nothing for this value
-        if ('abort' === status)
-          return;
+    	    // Else, create a proper remote validation Violation to trigger right UI
+    	    this.validationResult = [
+    	      new window.ParsleyValidator.Validator.Violation(
+    	    		  that.constraintsByName.remote,
+    	    		  that.getValue(),
+    	        null
+    	      )
+    	    ];
 
-        that._handleRemoteResult(validator, xhr, deferred);
-      });
+    	    deferred.rejectWith(that);
+    	});
+    }
   },
 
   _handleRemoteResult: function (validator, xhr, deferred) {
