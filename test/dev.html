@@ -2,9 +2,11 @@
 <head>
     <meta charset="utf-8">
     <title>Parsleyjs Developpement Tests</title>
-    <link href="../src/parsley.css" rel="stylesheet">
+<!--     <link href="../src/parsley.css" rel="stylesheet"> -->
     <style type="text/css">
-
+input.parsley-pending {
+  background-color: red;
+}
     </style>
 </head>
 <body>
@@ -55,10 +57,14 @@
         <input type="submit">
     </form> -->
 
-    <form id="parsley" data-parsley-validate>
-        <input type="checkbox" name="check[]" required data-parsley-check="[3, 5]" value="0">
-        <input type="checkbox" name="check[]" value="1">
+    <form id="parsley" data-parsley-validate> 
 
+		<p>
+		<input type="text" name="remotemethod" value="z"
+			data-parsley-error-message="type x please"
+			data-parsley-remote
+			data-parsley-remote-validator='mycustom'>
+		</p>
         <br/>
 
         <div id="add">Add</div>
@@ -83,7 +89,7 @@
     </form> -->
 
     <script src="../bower_components/jquery/dist/jquery.js"></script>
-    <!-- <script src="../src/parsley.remote.js"></script> -->
+<!--     <script src="../src/parsley.remote.js"></script> -->
     <!-- <script src="../src/extra/dateiso.js"></script> -->
     <!-- <script src="../src/i18n/fr.extra.js"></script> -->
     <!-- <script src="../src/i18n/fr.js"></script> -->
@@ -106,6 +112,7 @@
         // };
     </script>
 
+    <script src="../src/extra/plugin/remote.js"></script>
     <script src="../dist/parsley.js"></script>
     <!-- <script src="../bower_components/requirejs/require.js" data-main="./dev"></script></body> -->
     <!-- <script src="../bower_components/requirejs/require.js" data-main="../src/main"></script></body> -->
@@ -124,5 +131,23 @@
         //         $('[type=checkbox]:last').remove();
         //     });
         // });
+        $(document).ready(function () {
+        	var parsley = $('INPUT[name="remotemethod"]').parsley();
+        	parsley.addAsyncMethodValidator('mycustom', function(value, callbackboolean) {
+        		window.ParsleyUI.removeError(parsley, "mycustom");
+	        	window.setTimeout(function() {
+	        			console.log('remote ='+value);
+	        			var res = value=='x';
+	            		if (!res) {
+	            			window.ParsleyUI.addError(parsley, "mycustom", 'custom message'+value);
+	            		}
+	        			callbackboolean(res);
+	        	}, 1000);
+	        });
+// 	        $('INPUT[name="remotemethod"]').parsley().addAsyncValidator('mycustom', function(xhr) {
+// 	        	console.log('remote');
+// 	        	return false;
+// 	        }, 'http://aaa.com/xxx');
+        	});
     </script>
 </html>
