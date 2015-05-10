@@ -225,6 +225,25 @@ define('features/remote', [
         expect(parsleyInstance._remoteCache.dummy).to.be(undefined);
       });
 
+      it('should allow the change of XHR url', function (done) {
+        $('body').append('<input type="text" data-parsley-remote id="element" data-parsley-remote-validator="mycustom" required name="element" value="foobar" />');
+        var form = $('#element'),
+          parsleyInstance = form.parsley(),
+          cb = function (e, field, options) {
+            options.url = 'http://debian.com';
+          };
+        form.on('field:ajaxOptions.parsley', cb);
+
+        sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
+        parsleyInstance.asyncIsValid()
+          .fail(function () {
+            expect($.ajax.calledWithMatch({ url: "http://debian.com" })).to.be(true);
+            $.ajax.restore();
+            form.off('field:ajaxOptions.parsley');
+            done();
+          });
+      });
+
       it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();
