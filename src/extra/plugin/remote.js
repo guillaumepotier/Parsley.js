@@ -22,9 +22,13 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
       url: false
     },
     reverse: {
+      fntype:'xhr',
       fn: function (xhr) {
         // If reverse option is set, a failing ajax request is considered successful
         return 'rejected' === xhr.state();
+      },
+      asyncmethod: function(value, callbackboolean){
+    	  callbackboolean(true);
       },
       url: false
     }
@@ -40,13 +44,13 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     return this;
   },
 	  
-  addAsyncMethodValidator: function (name, fn, url, options) {
+  addAsyncMethodValidator: function (name, fn) {
     this.asyncValidators[name.toLowerCase()] = {
       fn: fn,
       fntype:'method',
       asyncmethod: fn,
-      url: url || false,
-      options: options || {}
+      url: false,
+      options: {}
     };
 
     return this;
@@ -204,7 +208,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     // Fill data with current value
     data[this.$element.attr('name') || this.$element.attr('id')] = this.getValue();
 
-    if (this.asyncValidators[validator].fntype=='xhr') {
+    if (!this.asyncValidators[validator].fntype || this.asyncValidators[validator].fntype=='xhr') {
 	    // Merge options passed in from the function with the ones in the attribute
 	    this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {} , this.asyncValidators[validator].options);
 	
@@ -246,8 +250,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 	
 	        that._handleRemoteResult(validator, xhr, deferred);
 	      });
-    }
-    if (this.asyncValidators[validator].fntype=='method') {
+    } else if ('method'===this.asyncValidators[validator].fntype) {
     	that.$element.addClass('parsley-pending');
     	this.asyncValidators[validator].asyncmethod(this.getValue(), function(booleanresult) {
     		that.$element.removeClass('parsley-pending');
