@@ -14,8 +14,7 @@ define('parsley/abstract', [
     },
 
     _resetOptions: function (initOptions) {
-      var baseOptions = (this.parent && this.parent.options) ? this.parent.options : window.ParsleyConfig;
-      this.domOptions = ParsleyUtils.objectCreate(baseOptions);
+      this.domOptions = ParsleyUtils.objectCreate(this.parent.options);
       this.options = ParsleyUtils.objectCreate(this.domOptions);
       // Shallow copy of ownProperties of initOptions:
       for (var i in initOptions) {

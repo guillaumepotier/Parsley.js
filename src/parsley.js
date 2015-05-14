@@ -32,10 +32,11 @@ define([
 ], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple, ParsleyFactory) {
 
   // Inherit `on`, `off` & `trigger` to Parsley:
-  var Parsley = new ParsleyAbstract();
-  Parsley.actualizeOptions = null; // Remove for now
-
-  Parsley.Factory = ParsleyFactory;
+  var Parsley = $.extend(new ParsleyAbstract(), {
+      actualizeOptions: null,
+      _resetOptions: null,
+      Factory: ParsleyFactory
+    });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
@@ -72,9 +73,10 @@ define([
   if ('undefined' === typeof window.ParsleyExtend)
     window.ParsleyExtend = {};
 
-  // ### ParsleyConfig
+  // ### Parsley config
   // Inherit from ParsleyDefault, and copy over any existing values
-  window.ParsleyConfig = $.extend(ParsleyUtils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
+  Parsley.options = $.extend(ParsleyUtils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
+  window.ParsleyConfig = Parsley.options; // Old way of accessing global options
 
   // ### Globals
   window.Parsley = window.psly = Parsley;
