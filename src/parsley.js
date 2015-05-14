@@ -124,7 +124,6 @@ define([
 
           if (!this.$element.data('ParsleyFieldMultiple')) {
             parsleyMultipleInstance.addElement(this.$element);
-            this.$element.attr(this.options.namespace + 'id', parsleyMultipleInstance.__id__);
           }
 
           break;
