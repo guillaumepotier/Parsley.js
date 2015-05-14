@@ -95,16 +95,6 @@
             Parsley uses a specific DOM API which allows you to configure pretty much everything directly from your DOM, without writing a single javascript configuration line or custom function. Parsley's default DOM API is <code>data-parsley-</code>. That means that if in config you see a <code>foo</code> property, it can be set/modified via DOM with <code>data-parsley-foo="value"</code>.
           </p>
 
-          <div class="bs-callout bs-callout-warning">
-            <h4>More on Parsley DOM API</h4>
-            <ol>
-              <li>For composed property names, Parsley uses camelization, like jQuery <code>$.data()</code> does. That means that <code>data-parsley-composed-property</code> will correspond in code to <code>composedProperty</code>, and vice versa.</li>
-              <li>Every property set in DOM will be stored in <code>this.options</code> for each Parsley instance.</li>
-              <li>You can change the DOM API namespace directly in DOM (inception), by doing <code>data-parsley-namespace="data-my-namespace-"</code> and then your Parsley DOM attributes will look like <code>data-my-namespace-property="value"</code>.</li>
-              <li>Special chars: if you need to reference names with special characters, like <code>id="this:is:a:special:id"</code>, you'll need to use this syntax in the DOM API: <code>data-parsley-errors-container='div[id="this:is:a:special:id"]'</code> otherwise it won't work.</li>
-            </ol>
-          </div>
-
           <h3 id="configuration">Configuration</h3>
           <p>
             You'll see along this documentation and through <a href="examples.html">examples</a> various available configuration options. You can also view <a href="annotated-source/defaults.html" target="_blank">here</a> all of Parsley's default configuration options.
@@ -242,16 +232,70 @@
             </p>
           </div>
 
+          <h3 id="usage-configuration">Configuration</h3>
+          <h4>Data attributes and javascript</h4>
+          <p>
+            The multiple options can be specified using data attributes and javascript:
+          </p>
+<pre><code>&lt;input id="first" data-parsley-maxlength="42" value="hello"/&gt;
+&lt;input id="second" value="world"/&gt;
+[...]
+&lt;script>
+var instance = $('#first').parsley();
+console.log(instance.isValid()); // maxlength is 42, so field is valid
+$('#first').attr('data-parsley-maxlength', 4);
+console.log(instance.isValid()); // No longer valid, as maxlength is 4
+// You can access and override options in javascript too:
+instance.options.maxlength++;
+console.log(instance.isValid()); // Back to being valid, as maxlength is 5
+// Alternatively, the options can be specified the first time a form/field is bound:
+var otherInstance = $('#second').parsley({
+  maxlength: 10
+});
+console.log(otherInstance.options); // Shows that maxlength will be 10 for this field
+</code></pre>
+          <p>
+            As shown in the previous example, Parsley will actualize the options from the data attributes whenever it needs to validate a field.
+          </p>
+          <h4>Option inheritance</h4>
+          <p>
+            Field instances inherit their options from Form instances, and both inherit from the global options. This is a handy way to configure all your form's inputs in a row by passing their config through form.
+          </p>
+<pre><code>&lt;form&gt;
+  &lt;input/&gt;
+&lt;/form&gt;
+[...]
+&lt;script>
+Parsley.options.maxlength = 42;
+var formInstance = $('form').parsley();
+var field = $('input').parsley();
+console.log(field.options.maxlength); // Shows that maxlength is 42
+Parsley.options.maxlength = 30;
+console.log(field.options.maxlength); // Shows that maxlength is automagically 30
+formInstance.options.maxlength++;
+console.log(field.options.maxlength); // Shows that maxlength is automagically 31
+</code></pre>
+          <p>
+            The previous example shows that the inheritance of options is automagic. In case you are wondering, they are linked through <code>prototype</code> to achieve this.
+          </p>
+
+          <h4>Naming</h4>
+          <p>
+            You can change the DOM API namespace directly using the <code>namespace</code> option. Data attributes with compound names are camelcased for javascript, and their values are automatically converted to the appropriate type (boolean, integer, etc.).
+            For example:
+<pre><code>&lt;input data-my-namespace-priority-enabled="false"&gt;
+[...]
+&lt;script>
+var instance = $('input').parsley({namespace: 'my-namespace-'});
+if (false === instance.options.priorityEnabled)
+  console.log("priorityEnabled was set to false");
+</code></pre>
+          </p>
+
           <h3 id="usage-form">Form</h3>
           <p>
             When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;form id="target"></code> element, it will bind the whole form and its various inputs and return a <code>ParsleyForm</code> instance.
           </p>
-          <div class="bs-callout bs-callout-info">
-            <h4>Field options inheritance</h4>
-            <p>
-              All the options you pass through DOM or constructor for a form will be inherited by every <code>ParsleyField</code> input instance that belongs to the form. This is a handy way to configure all your form's inputs in a row by passing their config through the form.
-            </p>
-          </div>
 
           <h4>Options</h4>
           <table class="table table-stripped table-bordered">
@@ -436,22 +480,6 @@
 
           <h4>UI</h4>
           See <a href="#ui-for-field">UI for Field</a> section.
-
-          <h3 id="usage-global-configuration">Global configuration</h3>
-          <p>
-            It is possible to configure Parsley options globally and avoid passing them to each form on your site. To do so, you'll need to define a <code>window.ParsleyConfig = {}</code> object <strong>before</strong> loading the Parsley file.
-          </p>
-          <p>
-            For example, if you want to customize the field errors and use div and spans instead of ul and lis, use this snippet:
-<pre><code>&lt;script&gt;
-window.ParsleyConfig = {
-  errorsWrapper: '&lt;div>&lt;/div>',
-  errorTemplate: '&lt;span>&lt;/span>'
-};
-&lt;/script&gt;
-&lt;script src="parsley.js"&gt;&lt;/script&gt;
-</code></pre>
-          </p>
 
           <!-- ****************** BUILT-IN VALIDATORS ****************** -->
           <h1 id="validators" class="page-header">Built-in validators</h1>
@@ -1283,9 +1311,9 @@ $('[name="q"]').parsley()
                 <a href="#usage">Usage</a>
                 <ul class="nav">
                   <li><a href="#usage-overview">Overview</a></li>
+                  <li><a href="#usage-configuration">Configuration</a></li>
                   <li><a href="#usage-form">Form</a></li>
                   <li><a href="#usage-field">Field</a></li>
-                  <li><a href="#usage-global-configuration">Global configuration</a></li>
                 </ul>
               </li>
               <li>
