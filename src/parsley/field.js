@@ -83,13 +83,12 @@ define('parsley/field', [
         return true;
 
       // If we want to validate field against all constraints, just call Validator and let it do the job
-      if (false === this.options.priorityEnabled)
-        return true === (this.validationResult = this.validateThroughValidator(value, this.constraints, 'Any'));
-
-      // Sort priorities to validate more important first
-      var priorities = this._getConstraintsSortedPriorities();
-
-      // Else, iterate over priorities one by one, and validate related asserts one by one
+      var priorities = ['Any'];
+      if (false !== this.options.priorityEnabled) {
+        // Sort priorities to validate more important first
+        priorities = this._getConstraintsSortedPriorities();
+      }
+      // Iterate over priorities one by one, and validate related asserts one by one
       for (var i = 0; i < priorities.length; i++)
         if (true !== (this.validationResult = this.validateThroughValidator(value, this.constraints, priorities[i])))
           return false;
