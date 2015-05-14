@@ -190,9 +190,13 @@ define(function () {
           '<form id="element">' +
             '<input name="foo" type="hidden" value="0"/>' +
             '<input name="foo" id="check" type="checkbox" value="1"/>' +
+            '<input name="foo" id="check-2" type="checkbox" value="2"/>' +
+          '</form>' +
+          '<form id="element-2">' +
+            '<input name="foo" id="other-check" type="checkbox" value="3"/>' +
           '</form>');
-        $('#element').parsley();
-        expect($('#check').parsley().$elements.length).to.be(1);
+        $('#element, #element-2').parsley();
+        expect($('#check').parsley().$elements.length).to.be(2);
       });
       it('should handle form namespace configuration inheritance and click events while multiple binding through ParsleyForm', function () {
         $('body').append(
@@ -225,7 +229,7 @@ define(function () {
         expect(parsleyInstance.$elements.length).to.be(3);
       });
       afterEach(function () {
-        $('#element, .parsley-errors-list').remove();
+        $('#element, #element-2, .parsley-errors-list').remove();
       });
     });
   };
