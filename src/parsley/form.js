@@ -100,7 +100,7 @@ define('parsley/form', [
 
       this._withoutReactualizingFormOptions(function(){
         this.$element.find(this.options.inputs).each(function () {
-          var fieldInstance = new window.Parsley(this, {}, self);
+          var fieldInstance = new Parsley.Factory(this, {}, self);
 
           // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
           if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))

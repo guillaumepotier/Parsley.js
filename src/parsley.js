@@ -29,7 +29,7 @@ define([
   'i18n/en'
 ], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple) {
   // ### Parsley factory
-  var Parsley = function (element, options, parsleyFormInstance) {
+  var ParsleyFactory = function (element, options, parsleyFormInstance) {
     this.$element = $(element);
 
     // If the element has already been bound, returns its saved Parsley instance
@@ -56,7 +56,7 @@ define([
     return this.init(options);
   };
 
-  Parsley.prototype = {
+  ParsleyFactory.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
       this.__version__ = '@@version';
@@ -183,18 +183,18 @@ define([
       return parsleyInstance;
     }
   };
+  // Inherit `on`, `off` & `trigger` to Parsley:
+  var Parsley = new ParsleyAbstract();
+  Parsley.actualizeOptions = null; // Remove for now
 
-  // Copy `on`, `off` & `trigger` to Parsley:
-  Parsley.on = ParsleyAbstract.prototype.on;
-  Parsley.off = ParsleyAbstract.prototype.off;
-  Parsley.trigger = ParsleyAbstract.prototype.trigger;
+  Parsley.Factory = ParsleyFactory;
 
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
   $.extend(ParsleyField.prototype, ParsleyAbstract.prototype);
   $.extend(ParsleyForm.prototype, ParsleyAbstract.prototype);
   // Inherit actualizeOptions and _resetOptions:
-  $.extend(Parsley.prototype, ParsleyAbstract.prototype);
+  $.extend(ParsleyFactory.prototype, ParsleyAbstract.prototype);
 
   // ### jQuery API
   // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
@@ -216,7 +216,7 @@ define([
       return;
     }
 
-    return new Parsley(this, options);
+    return new ParsleyFactory(this, options);
   };
 
   // ### ParsleyField and ParsleyForm extension
