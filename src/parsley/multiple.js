@@ -72,9 +72,8 @@ define('parsley/multiple', [
       return this.$element.val();
     },
 
-    _init: function (multiple) {
+    _init: function () {
       this.$elements = [this.$element];
-      this.options.multiple = multiple;
 
       return this;
     }
