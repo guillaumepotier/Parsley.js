@@ -33,6 +33,7 @@ define([
 
   // Inherit `on`, `off` & `trigger` to Parsley:
   var Parsley = $.extend(new ParsleyAbstract(), {
+      $element: $(document),
       actualizeOptions: null,
       _resetOptions: null,
       Factory: ParsleyFactory
