@@ -120,7 +120,7 @@ define('parsley/abstract', [
     },
 
     _findRelatedMultiple: function() {
-      return $('[' + this.options.namespace + 'multiple="' + this.options.multiple +'"]');
+      return this.parent.$element.find('[' + this.options.namespace + 'multiple="' + this.options.multiple +'"]');
     }
   };
 
