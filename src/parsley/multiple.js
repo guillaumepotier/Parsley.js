@@ -61,7 +61,7 @@ define('parsley/multiple', [
           values.push($(this).val());
         });
 
-        return values.length ? values : [];
+        return values;
       }
 
       // Select multiple case
