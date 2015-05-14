@@ -22,6 +22,7 @@ define(function () {
             '<textarea id="field2"></textarea>' +
             '<div data-parsley-validate></div>' + // ParsleyForm, not a valid child
             '<input id="field3" disabled />'    + // Disabled, excluded buy custom options below
+            '<input id="field-excluded" data-parsley-excluded="true" />'    + // Disabled, excluded buy custom options below
             '<input type="submit"/>'            + // Excluded field, not valid
           '</form>');
         var parsleyForm = $('#element').parsley({ excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]' });
