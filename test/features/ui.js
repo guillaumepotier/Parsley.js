@@ -230,7 +230,7 @@ define(function () {
             '<div id="field2"></div>'                                         +
             '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
           '</form>');
-        var parsleyForm = new Parsley($('#element'));
+        var parsleyForm = $('#element').parsley();
         expect($('#element').attr('novalidate')).not.to.be(undefined);
       });
       it('should test the no-focus option', function () {
