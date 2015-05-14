@@ -51,13 +51,13 @@ define('parsley/multiple', [
 
       // Radio input case
       if (this.$element.is('input[type=radio]'))
-        return $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').val() || '';
+        return this._findRelatedMultiple().filter(':checked').val() || '';
 
       // checkbox input case
       if (this.$element.is('input[type=checkbox]')) {
         var values = [];
 
-        $('[' + this.options.namespace + 'multiple="' + this.options.multiple + '"]:checked').each(function () {
+        this._findRelatedMultiple().filter(':checked').each(function () {
           values.push($(this).val());
         });
 
