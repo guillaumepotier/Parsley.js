@@ -15,13 +15,14 @@ require(['config'], function () {
     // load then Parsley modules for UT
     require([
       'src/parsley',
+      'parsley/factory',
       'parsley/form',
       'parsley/field',
       'parsley/ui',
       'parsley/utils',
       'parsley/validator',
       'i18n/fr'
-    ], function (Parsley, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
+    ], function (Parsley, ParsleyFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
 
       // Setup console.warn so we insure it is called when we expect it
       beforeEach(function() {
