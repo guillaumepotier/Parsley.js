@@ -99,11 +99,14 @@ define('parsley/form', [
       this.fieldsMappedById = {};
 
       this._withoutReactualizingFormOptions(function(){
-        this.$element.find(this.options.inputs).each(function () {
+        this.$element
+        .find(this.options.inputs)
+        .not(this.options.excluded)
+        .each(function () {
           var fieldInstance = new Parsley.Factory(this, {}, self);
 
           // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
-          if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))
+          if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded))
             if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
               self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
               self.fields.push(fieldInstance);
