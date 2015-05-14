@@ -117,6 +117,10 @@ define('parsley/abstract', [
 
       this.$element.removeData('Parsley');
       this._trigger('destroy');
+    },
+
+    _findRelatedMultiple: function() {
+      return $('[' + this.options.namespace + 'multiple="' + this.options.multiple +'"]');
     }
   };
 
