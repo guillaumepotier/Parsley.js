@@ -11,7 +11,7 @@ window.ParsleyConfig.i18n.no = jQuery.extend(window.ParsleyConfig.i18n.no || {},
     number:       "Verdien må være et gyldig tall.",
     integer:      "Verdien må være et gyldig heltall.",
     digits:       "Verdien må være et siffer",
-    alphanum:     "Verdien må være alfranumerisk"
+    alphanum:     "Verdien må være alfanumerisk"
   },
   notblank:       "Verdien må ikke være blank.",
   required:       "Verdien er obligatorisk.",
