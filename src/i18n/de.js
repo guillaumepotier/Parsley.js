@@ -22,6 +22,9 @@ window.ParsleyConfig.i18n.de = jQuery.extend(window.ParsleyConfig.i18n.de || {},
   minlength:      "Die Eingabe ist zu kurz. Es müssen mindestens %s Zeichen eingegeben werden.",
   maxlength:      "Die Eingabe ist zu lang. Es dürfen höchstens %s Zeichen eingegeben werden.",
   length:         "Die Länge der Eingabe ist ungültig. Es müssen zwischen %s und %s Zeichen eingegeben werden.",
+  mincheck:       "Wählen Sie mindestens %s Angaben aus.",
+  maxcheck:       "Wählen Sie maximal %s Angaben aus.",
+  check:          "Wählen Sie zwischen %s und %s Angaben.",
   equalto:        "Dieses Feld muss dem anderen entsprechen."
 });
 
