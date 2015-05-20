@@ -3,8 +3,7 @@
 var countWords = function (string) {
   return string
       .replace( /(^\s*)|(\s*$)/gi, "" )
-      .replace( /[ ]{2,}/gi, " " )
-      .replace( /\n /, "\n" )
+      .replace( /\s+/gi, " " )
       .split(' ').length;
 };
 
