@@ -108,6 +108,9 @@
       </ul>
 
       <div class="row">
+
+        <!-- ###################### BEGINNING OF EXAMPLE ######################-->
+
         <div class="col-md-4">
           <h2>Simple form example *</h2>
           <small class="pull-left"><a href="../examples.html">&lt;&lt; Back to examples</a></small>
@@ -116,7 +119,7 @@
 
           <div class="bs-callout bs-callout-warning hidden">
             <h4>Oh snap!</h4>
-            <p>This form seems far to be valid :(</p>
+            <p>This form seems to be invalid :(</p>
           </div>
 
           <div class="bs-callout bs-callout-info hidden">
@@ -148,7 +151,7 @@
                 Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" /><br/>
               <p>
 
-              <label for="heard">Heard us by *:</label>
+              <label for="heard">Heard about us via *:</label>
               <select id="heard" required>
                 <option value="">Choose..</option>
                 <option value="press">Press</option>
@@ -158,7 +161,7 @@
               </select>
 
               <label for="message">Message (20 chars min, 100 max) :</label>
-              <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10"></textarea>
+              <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 character comment.." data-parsley-validation-threshold="10"></textarea>
 
               <br/>
               <span class="btn btn-default">validate</span>
@@ -202,7 +205,7 @@
 
 
   &lt;!-- regular select input. Nothing more to add. -->
-  &lt;label for="heard">Heard us by *:&lt;/label>
+  &lt;label for="heard">Heard about us via *:&lt;/label>
   &lt;select id="heard" required>
     &lt;option value="">Choose..&lt;/option>
     &lt;option value="press">Press&lt;/option>
@@ -213,7 +216,7 @@
 
   &lt;!-- this optional textarea have a length validator that would be checked on keyup after 10 first characters, with a custom message only for minlength validator -->
   &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
-  &lt;textarea name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-validation-threshold="10" data-parsley-minlength-message = "Come on! You need to enter at least a 20 caracters long comment..">&lt;/textarea>
+  &lt;textarea name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-validation-threshold="10" data-parsley-minlength-message = "Come on! You need to enter at least a 20 character comment..">&lt;/textarea>
 
   &lt;input type="submit" />
 &lt;/form>

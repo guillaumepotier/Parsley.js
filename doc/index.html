@@ -74,10 +74,10 @@
           <h1 id="overview" class="page-header">Overview</h1>
           <h3 id="frontend-form-validation">Frontend form validation</h3>
           <p>
-            Parsley is a javascript form validation library. It helps you provide your users feedback on their form submission before sending it to your server. It saves you bandwidth, server load and it saves time for your user.
+            Parsley is a javascript form validation library. It helps you provide your users with feedback on their form submission before sending it to your server. It saves you bandwidth, server load and it saves time for your users.
           </p>
           <p>
-            Javascript form validation is not necessary, and if used, it <strong>does not replace a strong backend server validation.</strong>
+            Javascript form validation is not necessary, and if used, it <strong>does not replace strong backend server validation.</strong>
           </p>
           <p>
             That's why Parsley is here: to let you define your general form validation, implement it on the backend side, and simply port it frontend-side, with maximum respect to user experience best practices.
@@ -92,7 +92,7 @@
 
           <h3 id="data-attrs">Data attributes</h3>
           <p>
-            Parsley uses a specific DOM API which allows you to configure pretty much everything directly from your DOM, without writing a single javascript configuration line or custom function. Parsley's default DOM API is <code>data-parsley-</code>. That means that if in config you see a <code>foo</code> property, it could be set/modified via DOM with <code>data-parsley-foo="value"</code>.
+            Parsley uses a specific DOM API which allows you to configure pretty much everything directly from your DOM, without writing a single javascript configuration line or custom function. Parsley's default DOM API is <code>data-parsley-</code>. That means that if in config you see a <code>foo</code> property, it can be set/modified via DOM with <code>data-parsley-foo="value"</code>.
           </p>
 
           <div class="bs-callout bs-callout-warning">
@@ -115,7 +115,7 @@
           <h1 id="installation" class="page-header">Installation</h1>
           <h3 id="installation-basic">Basic installation</h3>
           <p>
-            Parsley relies on <strong><a href="http://jquery.com/" target="_blank">jQuery</a> (>= 1.8)</strong>, and it would need to be included before including Parsley.
+            Parsley relies on <strong><a href="http://jquery.com/" target="_blank">jQuery</a> (>= 1.8)</strong>, and it will need to be included before including Parsley.
           </p>
           <p>
             Then, you can either use <code>parsley.js</code> unminified file or <code>parsley.min.js</code> minified one. These files and other builds (<a href="#remote">Remote</a>, <a href="#extras">Extras</a> ..) are <a href="download.html">available here</a>.
@@ -171,7 +171,7 @@
             To load a different locale and its messages, you have two possibilities:
             <ul>
               <li>
-                Load your needed localization <strong>before</strong> parsley, then select the one you need once Parsley is loaded and if you want to switch from the English default. In this example, we'll load both French and Italian translations, and use French:
+                Load your needed localization <strong>before</strong> Parsley, then select the one you need once Parsley is loaded and if you want to switch from the English default. In this example, we'll load both French and Italian translations, and use French:
 <pre><code>&lt;script src="jquery.js">&lt;/script>
 &lt;script src="i18n/fr.js">&lt;/script>
 &lt;script src="i18n/it.js">&lt;/script>
@@ -182,7 +182,7 @@
 </code></pre>
               </li>
               <li>
-                Load your needed localization <strong>after</strong> parsley. The last loaded file will automatically set the messages locale for ParsleyValidator. In this example, we'll load both French and Italian translations, and use Italian:
+                Load your needed localization <strong>after</strong> Parsley. The last loaded file will automatically set the messages locale for ParsleyValidator. In this example, we'll load both French and Italian translations, and use Italian:
 <pre><code>&lt;script src="jquery.js">&lt;/script>
 &lt;script src="parsley.min.js">&lt;/script>
 &lt;script src="i18n/fr.js">&lt;/script>
@@ -194,7 +194,7 @@
 
           <h3 id="installation-plugins">Plugins</h3>
           <p>
-            Parsley strives to be highly decoupled and modular. It uses events and inheritance, that allows various plugins.
+            Parsley strives to be highly decoupled and modular. It uses events and inheritance, and allows various plugins.
           </p>
           <p>Current available plugins are:
             <ul>
@@ -244,12 +244,12 @@
 
           <h3 id="usage-form">Form</h3>
           <p>
-            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;form id="target"></code> element, it will bind the whole form and its various inputs and return you a <code>ParsleyForm</code> instance.
+            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;form id="target"></code> element, it will bind the whole form and its various inputs and return a <code>ParsleyForm</code> instance.
           </p>
           <div class="bs-callout bs-callout-info">
             <h4>Field options inheritance</h4>
             <p>
-              All the options you pass through DOM or constructor for a form will be inherited by every <code>ParsleyField</code> input instance that belongs to the form. This is a handy way to configure all your form's inputs in a row by passing their config through form.
+              All the options you pass through DOM or constructor for a form will be inherited by every <code>ParsleyField</code> input instance that belongs to the form. This is a handy way to configure all your form's inputs in a row by passing their config through the form.
             </p>
           </div>
 
@@ -303,7 +303,7 @@
               <tr>
                 <td><code>isValid(group, force)</code> <version>#2.0</version></td>
                 <td><code>boolean</code></td>
-                <td>Returns if the Form is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non required fields (<a href="examples/events.html">See example</a>)</td>
+                <td>Returns if the Form is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non-required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
                 <td><code>validate(group, force)</code> <version>#2.0</version></td>
@@ -331,7 +331,7 @@
 
           <h3 id="usage-field">Field</h3>
           <p>
-            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;input id="target"></code> element (or <code>&lt;textarea></code>, <code>&lt;select></code>), it will bind the field and return you a <code>ParsleyField</code> instance. Except for input types radio and checkbox that does not have a <code>name</code> attribute or a <code>data-parsley-multiple</code> attribute, they won't be bound (ignored) and would eventually raise a warning in the console.
+            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;input id="target"></code> element (or <code>&lt;textarea></code>, <code>&lt;select></code>), it will bind the field and return a <code>ParsleyField</code> instance. Except for input types radio and checkbox that don't have a <code>name</code> attribute or a <code>data-parsley-multiple</code> attribute, they won't be bound (ignored) and will eventually raise a warning in the console.
           </p>
 
           <h4>Options</h4>
@@ -385,7 +385,7 @@
           <div class="bs-callout bs-callout-warning">
             <h4>Checkbox, radio and select multiple</h4>
             <p>
-              These fields are a bit different than regular <code>input</code>, <code>textarea</code> or simple <code>select</code>. They need to have either a <code>name</code> or an <code>id</code> attribute to be correctly bound and validated by Parsley. Otherwise, they would be ignored and a warning will be put in the console.
+              These fields are a bit different than regular <code>input</code>, <code>textarea</code> or simple <code>select</code>. They need to have either a <code>name</code> or an <code>id</code> attribute to be correctly bound and validated by Parsley. Otherwise, they will be ignored and a warning will be put in the console.
             </p>
           </div>
 
@@ -406,7 +406,7 @@
                   <code>[]</code> if empty optional field<br/>
                   <code>[Violation [, Violation..]]</code> if fails
                 </td>
-                <td>Returns if the Field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>force</code> is given, it forces validation even on non required fields (<a href="examples/events.html">See example</a>)</td>
+                <td>Returns if the field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>force</code> is given, it forces validation even on non-required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
                 <td><code>validate(force)</code> <version>#2.0</version></td>
@@ -415,7 +415,7 @@
                   <code>[]</code> if empty optional field<br/>
                   <code>[Violation [, Violation..]]</code> if fails
                 </td>
-                <td>Validate Field. <strong>Fires <a href="#events">events</a> and affects UI.</strong> If <code>force</code> is  given, force validate even non required fields (<a href="examples/events.html">See example</a>)</td>
+                <td>Validate Field. <strong>Fires <a href="#events">events</a> and affects UI.</strong> If <code>force</code> is given, force validate even non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
                 <td><code>reset()</code> <version>#2.0</version></td>
@@ -435,7 +435,7 @@
 
           <h3 id="usage-global-configuration">Global configuration</h3>
           <p>
-            It is possible to configure Parsley options globally and avoid passing them to each form on your site. To do so, you'll need to define a <code>window.ParsleyConfig = {}</code> object <strong>before</strong> calling Parsley file.
+            It is possible to configure Parsley options globally and avoid passing them to each form on your site. To do so, you'll need to define a <code>window.ParsleyConfig = {}</code> object <strong>before</strong> loading the Parsley file.
           </p>
           <p>
             For example, if you want to customize the field errors and use div and spans instead of ul and lis, use this snippet:
@@ -453,12 +453,12 @@ window.ParsleyConfig = {
           <h1 id="validators" class="page-header">Built-in validators</h1>
           <h3 id="validators-overview">Overview</h3>
           <p>
-            Parsley 2.x is now based on <a href="http://validatorjs.org">validator.js</a> that ships commonly used validators and simplifies group and priority validation. That way, Parsley mutualize validators with validators.js and define new ones using the <code>Callback()</code> Assert.
+            Parsley 2.x is now based on <a href="http://validatorjs.org">validator.js</a> that ships commonly used validators and simplifies group and priority validation. That way, Parsley can share validators with validator.js and define new ones using the <code>Callback()</code> Assert.
           </p>
 
           <div class="bs-callout bs-callout-info">
             <h4>Use Validator.js in your Parsley projects</h4>
-            <p>Parsley let you use validator.js in <code>window.ParsleyValidator.Validator</code></p>
+            <p>Parsley lets you use validator.js in <code>window.ParsleyValidator.Validator</code></p>
           </div>
 
           <h3 id="validators-list">Validators list</h3>
@@ -496,7 +496,7 @@ window.ParsleyConfig = {
                     </tr>
                   </table>
                 </td>
-                <td>Validate that a required field has been filled with a non blank value. If <code>data-parsley-required="false"</code>, validator is deactivated and field not required.</td>
+                <td>Validates that a required field has been filled with a non blank value. If <code>data-parsley-required="false"</code>, validator is deactivated and the field is not required.</td>
               </tr>
               <tr>
                 <td>
@@ -523,7 +523,7 @@ window.ParsleyConfig = {
                   Number <version>#2.0</version>
                 </td>
                 <td><code>data-parsley-type="number"</code></td>
-                <td>Validates that a value is a valid number.<span class="label label-warning">Warning!</span> HTML5 <code>type="number"</code> is binded with below <code>integer</code> validator.</td>
+                <td>Validates that a value is a valid number.<span class="label label-warning">Warning!</span> HTML5 <code>type="number"</code> is bound with the below <code>integer</code> validator.</td>
               </tr>
               <tr>
                 <td>
@@ -611,7 +611,7 @@ window.ParsleyConfig = {
                       <td></td>
                     </tr>
                   </table></td>
-                <td>Validates that the length of a string is not larger than the given limit.</td>
+                <td>Validates that the length of a string is not longer than the given limit.</td>
               </tr>
               <tr>
                 <td>
@@ -733,15 +733,15 @@ window.ParsleyConfig = {
           </table>
 
           <p>
-            These validators are shipped in <code>parsley.js</code>. Have a look at <a href="#remote">Parsley Remote</a> plugin and <a href="#extras">Parsley Extras</a> for more validators.
+            These validators are shipped in <code>parsley.js</code>. Have a look at the <a href="#remote">Parsley Remote</a> plugin and <a href="#extras">Parsley Extras</a> for more validators.
           </p>
 
           <h3 id="validators-craft">Craft yours!</h3>
           <p>Of course, Parsley built-in validators are commonly used validators, and you'll need some more that fit your specific forms and validations. That's why Parsley lets you easily create your own validators.</p>
           <p>
-          <p>Here again, like localizations, configuring your custom validators and error messages comes with two flavors:
+          <p>Here again, like localizations, configuring your custom validators and error messages comes in two flavors:
           <ul>
-            <li>By registering them in some globals <strong>before</strong> calling <code>parsley.js</code>:
+            <li>By registering them in globals <strong>before</strong> loading <code>parsley.js</code>:
 <pre><code>&lt;input type="text" data-parsley-multipleof="3" />
 [...]
 &lt;script type="text/javascript">
@@ -789,13 +789,13 @@ window.ParsleyValidator
         <p>
         Parsley ships a UI/UX component that is the only one responsible for classes, error messages, focus or trigger events that alter your page. It strives to be the most UX friendly. Here are the main mottos for ParsleyUI:
         <ol>
-          <li><strong>Min char validation</strong>: Parsley by default does not proceed with field validation when less than 3 chars have been input. Do not assault your users with error messages too soon!.</li>
-          <li><strong>One error at the time</strong>: constraints are prioritized in Parsley, and if many of them are not met for a field on validation, only show the most important one.</li>
+          <li><strong>Min char validation</strong>: Parsley by default does not proceed with field validation when less than 3 chars have been input. Do not assault your users with error messages too soon!</li>
+          <li><strong>One error at the time</strong>: constraints are prioritized in Parsley, and if several of them are not met for a field on validation, only show the most important one.</li>
           <li><strong>Quick error removal</strong>: when a field is detected and shown as invalid, further checks are done on each keypress to try to quickly remove error messages once the field is ok.</li>
           <li><strong>Control focusing on error</strong>: on form submission, the first error field is focused to allow the user to easily start fixing errors.</li>
         </ol>
         </p>
-        <p>Naturally, all this is absolutely customizable, you'll see below how to configure your desired UX behavior.</p>
+        <p>Naturally, all of this is absolutely customizable; you'll see below how to configure your desired UX behavior.</p>
 
         <h3 id="ui-classes">Classes and templates</h3>
         <p>Parsley adds its share of classes and elements, to ease nice UI validation result display. By default, it will add <code>parsley-success</code> and <code>parsley-error</code> classes depending on the validation result, <strong>on the input itself for a simple text, textarea and select input, and on <u>the parent</u> for radio / checkboxes inputs.</strong></p>
@@ -841,7 +841,7 @@ window.ParsleyValidator
             <tr>
               <td>Trigger <version>#2.0</version></td>
               <td><code>data-parsley-trigger="change"</code></td>
-              <td>Specify one or many javascript events that will trigger item validation. To set multiple events, separate them by a space <code>data-parsley-trigger="focusin focusout"</code>. <a href="http://api.jquery.com/category/events/" target="_blank">See the various events supported by jQuery.</a></td>
+              <td>Specify one or many javascript events that will trigger item validation. To set multiple events, separate them with a space <code>data-parsley-trigger="focusin focusout"</code>. <a href="http://api.jquery.com/category/events/" target="_blank">See the various events supported by jQuery.</a></td>
             </tr>
             <td>No focus <version>#2.0</version></td>
               <td><code>data-parsley-no-focus</code></td>
@@ -850,7 +850,7 @@ window.ParsleyValidator
             <tr>
               <td>Validation threshold <version>#2.0</version></td>
               <td><code>data-parsley-validation-threshold="10"</code></td>
-              <td>Used with trigger option above, for all <code>key</code>- events, do not validate until field have a certain number of characters. Default is <code>3</code></td>
+              <td>Used with trigger option above, for all <code>key</code>- events, do not validate until the field has a certain number of characters. Default is <code>3</code></td>
             </tr>
             <tr>
               <td>Class handler <version>#2.0</version></td>
@@ -907,7 +907,7 @@ window.ParsleyValidator
         <!-- ****************** Events ****************** -->
         <h1 id="events" class="page-header">Events</h1>
         <h3 id="events-overview">Overview</h3>
-        <p>Parsley triggers jQuery events that allows ParsleyUI to work. Further more, it could allow you to do some powerful magic if you listen properly to the right events!</p>
+        <p>Parsley triggers jQuery events that allow ParsleyUI to work. Furthermore, it could allow you to do some powerful magic if you listen properly to the right events!</p>
 
         <h3 id="events-list">Events List</h3>
         <table class="table table-stripped table-bordered">
@@ -1013,7 +1013,7 @@ window.ParsleyValidator
             <tr>
               <td>Remote validator</td>
               <td><code>data-parsley-remote</code> <version>#2.0</version></td>
-              <td>Define the url that would be called to validate the entered content. eg: <code>data-parsley-remote="http://url.ext"</code></td>
+              <td>Define the url that will be called to validate the entered content. e.g. <code>data-parsley-remote="http://url.ext"</code></td>
             </tr>
             <tr>
               <td>Reverse</td>
@@ -1321,7 +1321,7 @@ $('[name="q"]').parsley()
             <form action="http://parsleyjs.us3.list-manage.com/subscribe/post?u=a39bf787b85f4d1b576367606&amp;id=d7374bb2d8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" data-parsley-validate>
               <label for="mce-EMAIL">Subscribe to Parsley mailing list</label>
               <small>Receive a mail each 2.x new release, and sometimes an email asking for your feedback (twice a year max!)</small>
-              <input type="email" data-parsley-error-message="<strong>What did you expect? That on Parsley own documentation, there won't be a validation here? ;)</strong>" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+              <input type="email" data-parsley-error-message="<strong>What did you expect? That on Parsley's own documentation, there wouldn't be validation here? ;)</strong>" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
                 <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                 <div style="position: absolute; left: -5000px;"><input type="text" name="b_a39bf787b85f4d1b576367606_d7374bb2d8" value=""></div>
               <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
