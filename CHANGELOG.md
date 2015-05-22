@@ -4,6 +4,11 @@
 
 ## 2.1.0-rc5
 
+- Change event API a different way, without using jQuery events. (#899)
+- Fix conflict between different forms on the same page (#888)
+
+## 2.1.0-rc5
+
 - Handles checkbox names containing spaces (#881)
 
 ## 2.1.0-rc4

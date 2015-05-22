@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "2.1.0-rc7",
+  "version": "2.1.0-rc9",
   "ignore": [
     "**/.*",
     "build",
