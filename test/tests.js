@@ -7,6 +7,7 @@ require(['config'], function () {
     'sinon'
   ], function (jquery, _expect, mocha, _sinon) {
     // setup mocha
+    mocha.globals([ 'jQuery*' ])
     mocha.checkLeaks();
     mocha.setup('bdd');
     mocha.reporter('html');
