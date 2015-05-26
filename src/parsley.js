@@ -14,7 +14,7 @@ define([
   // An abstract class shared by `ParsleyField` and `ParsleyForm`
   'parsley/abstract',
   // A proxy between Parsley and [Validator.js](http://validatorjs.org)
-  'parsley/validator',
+  'parsley/validator_registry',
   // `ParsleyUI` static class. Handles all UI and UX
   'parsley/ui',
   // `ParsleyForm` Class. Handles form validation
@@ -29,7 +29,7 @@ define([
   'parsley/pubsub',
   // Default en constraints messages
   'i18n/en'
-], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple, ParsleyFactory) {
+], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidatorRegistry, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple, ParsleyFactory) {
 
   // Inherit `on`, `off` & `trigger` to Parsley:
   var Parsley = $.extend(new ParsleyAbstract(), {
@@ -83,7 +83,7 @@ define([
   // ### Globals
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
-  window.ParsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
+  window.ParsleyValidator = new ParsleyValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
 
   // ### ParsleyUI
   // UI is a separate class that only listens to some events and then modifies the DOM accordingly

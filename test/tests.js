@@ -20,9 +20,9 @@ require(['config'], function () {
       'parsley/field',
       'parsley/ui',
       'parsley/utils',
-      'parsley/validator',
+      'parsley/validator_registry',
       'i18n/fr'
-    ], function (Parsley, ParsleyFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
+    ], function (Parsley, ParsleyFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidatorRegistry) {
 
       // Setup console.warn so we insure it is called when we expect it
       beforeEach(function() {
@@ -51,9 +51,9 @@ require(['config'], function () {
         'features/field',
         'features/multiple',
         'features/form',
-        'features/validator',
+        'features/validator_registry',
         'features/ui'
-      ], function (utils, parsleyBase, pubsub, abstract, field, multiple, form, validator, ui) {
+      ], function (utils, parsleyBase, pubsub, abstract, field, multiple, form, validator_registry, ui) {
         describe('ParsleyStandard', function () {
           // Use a pristine ParsleyExtend for the standard suite:
           var previousExtend;
@@ -72,7 +72,7 @@ require(['config'], function () {
           field(ParsleyField);
           multiple();
           form(ParsleyForm);
-          validator(ParsleyValidator);
+          validator_registry(ParsleyValidatorRegistry);
           ui(ParsleyUI);
         });
 
@@ -106,7 +106,7 @@ require(['config'], function () {
           require([
             'features/extra'
           ], function (extra) {
-            extra(ParsleyValidator);
+            extra(ParsleyValidatorRegistry);
 
             // run mocha
             if (window.mochaPhantomJS)

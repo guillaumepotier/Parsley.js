@@ -1,7 +1,7 @@
 define(function () {
-  return function (ParsleyValidator) {
-    describe('ParsleyValidator', function () {
-      var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators || {}, window.ParsleyConfig.i18n || {});
+  return function (ParsleyValidatorRegistry) {
+    describe('ParsleyValidatorRegistry', function () {
+      var parsleyValidator = new ParsleyValidatorRegistry(window.ParsleyConfig.validators || {}, window.ParsleyConfig.i18n || {});
 
       var expectValidation = function(value, name, requirements) {
         var validator = parsleyValidator.validators[name](requirements);
@@ -9,7 +9,7 @@ define(function () {
       };
 
       it('should be a function', function () {
-        expect(ParsleyValidator).to.be.a('function');
+        expect(ParsleyValidatorRegistry).to.be.a('function');
       });
       it('should bind global config validators if given in constructor', function () {
         $.extend(true, window.ParsleyConfig, {
@@ -18,7 +18,7 @@ define(function () {
             bar: { fn: function () {}, priority: 12 }
           }
         });
-        var validator = new ParsleyValidator(window.ParsleyConfig.validators);
+        var validator = new ParsleyValidatorRegistry(window.ParsleyConfig.validators);
         expect(validator.validators).to.have.key('foo');
         expect(validator.validators).to.have.key('bar');
         expect(parsleyValidator.validators).not.to.have.key('foo');
@@ -202,7 +202,7 @@ define(function () {
         });
 
         expectWarning(function() {
-          var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators);
+          var parsleyValidator = new ParsleyValidatorRegistry(window.ParsleyConfig.validators);
         });
         delete window.ParsleyConfig.validators.excluded;
       });

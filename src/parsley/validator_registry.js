@@ -1,4 +1,4 @@
-define('parsley/validator', [
+define('parsley/validator_registry', [
   'parsley/defaults',
   'validator'
 ], function (ParsleyDefaults, Validator) {
@@ -6,8 +6,8 @@ define('parsley/validator', [
   // This is needed for Browserify usage that requires Validator.js through module.exports
   Validator = 'undefined' !== typeof Validator ? Validator : ('undefined' !== typeof module ? module.exports : null);
 
-  var ParsleyValidator = function (validators, catalog) {
-    this.__class__ = 'ParsleyValidator';
+  var ParsleyValidatorRegistry = function (validators, catalog) {
+    this.__class__ = 'ParsleyValidatorRegistry';
     this.Validator = Validator;
 
     // Default Parsley locale is en
@@ -16,7 +16,7 @@ define('parsley/validator', [
     this.init(validators || {}, catalog || {});
   };
 
-  ParsleyValidator.prototype = {
+  ParsleyValidatorRegistry.prototype = {
     init: function (validators, catalog) {
       this.catalog = catalog;
       // Copy prototype's validators:
@@ -283,5 +283,5 @@ define('parsley/validator', [
     }
   };
 
-  return ParsleyValidator;
+  return ParsleyValidatorRegistry;
 });
