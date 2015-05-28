@@ -15,6 +15,7 @@ require(['config'], function () {
     // load then Parsley modules for UT
     require([
       'src/parsley',
+      'parsley/validator',
       'parsley/factory',
       'parsley/form',
       'parsley/field',
@@ -22,7 +23,7 @@ require(['config'], function () {
       'parsley/utils',
       'parsley/validator_registry',
       'i18n/fr'
-    ], function (Parsley, ParsleyFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidatorRegistry) {
+    ], function (Parsley, ParsleyValidator, ParsleyFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidatorRegistry) {
 
       // Setup console.warn so we insure it is called when we expect it
       beforeEach(function() {
@@ -45,6 +46,7 @@ require(['config'], function () {
       // load full parsley.js + UT
       require([
         'features/utils',
+        'features/validator.js',
         'features/parsley',
         'features/pubsub',
         'features/abstract',
@@ -53,7 +55,7 @@ require(['config'], function () {
         'features/form',
         'features/validator_registry',
         'features/ui'
-      ], function (utils, parsleyBase, pubsub, abstract, field, multiple, form, validator_registry, ui) {
+      ], function (utils, validator, parsleyBase, pubsub, abstract, field, multiple, form, validator_registry, ui) {
         describe('ParsleyStandard', function () {
           // Use a pristine ParsleyExtend for the standard suite:
           var previousExtend;
@@ -66,13 +68,14 @@ require(['config'], function () {
             ParsleyUtils._resetWarnings();
           });
           utils(ParsleyUtils);
+          validator(ParsleyValidator);
           parsleyBase(Parsley.Factory);
           pubsub();
           abstract();
           field(ParsleyField);
           multiple();
           form(ParsleyForm);
-          validator_registry(ParsleyValidatorRegistry);
+          validator_registry(ParsleyValidator, ParsleyValidatorRegistry);
           ui(ParsleyUI);
         });
 
@@ -106,7 +109,7 @@ require(['config'], function () {
           require([
             'features/extra'
           ], function (extra) {
-            extra(ParsleyValidatorRegistry);
+            extra(ParsleyValidator, ParsleyValidatorRegistry);
 
             // run mocha
             if (window.mochaPhantomJS)

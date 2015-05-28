@@ -5,15 +5,16 @@ define('features/extra', [
   'extra/validator/notequalto',
 ], function () {
 
-  return function (ParsleyValidatorRegistry) {
+  return function (ParsleyValidator, ParsleyValidatorRegistry) {
     describe('ParsleyExtras validators', function () {
       it('should have dateiso validator', function () {
         expect(window.ParsleyConfig.validators).to.have.key('dateiso');
-        var parsleyValidator = new ParsleyValidatorRegistry(window.ParsleyConfig.validators);
+        var validatorRegistry = new ParsleyValidatorRegistry(window.ParsleyConfig.validators || {}, window.ParsleyConfig.i18n || {});
 
         var expectValidation = function(value, name, requirements) {
-          var validator = parsleyValidator.validators[name](requirements);
-          return expect(parsleyValidator.validate(value, validator));
+          var validatorSpec = validatorRegistry.validators[name];
+          var validator = new ParsleyValidator(validatorSpec);
+          return expect(validator.parseAndValidate(value, requirements));
         };
 
         expectValidation('',           'dateiso').not.to.be(true);

@@ -241,11 +241,7 @@ window.ParsleyExtend = $.extend(true, window.ParsleyExtend, {
 
     // Else, create a proper remote validation Violation to trigger right UI
     this.validationResult = [
-      new window.ParsleyValidator.Validator.Violation(
-        this.constraintsByName.remote,
-        this.getValue(),
-        null
-      )
+      {assert: this.constraintsByName.remote}
     ];
 
     deferred.rejectWith(this);

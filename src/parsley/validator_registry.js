@@ -1,20 +1,63 @@
 define('parsley/validator_registry', [
-  'parsley/defaults',
-  'validator'
-], function (ParsleyDefaults, Validator) {
-
-  // This is needed for Browserify usage that requires Validator.js through module.exports
-  Validator = 'undefined' !== typeof Validator ? Validator : ('undefined' !== typeof module ? module.exports : null);
+  'parsley/defaults'
+], function (ParsleyDefaults) {
 
   var ParsleyValidatorRegistry = function (validators, catalog) {
     this.__class__ = 'ParsleyValidatorRegistry';
-    this.Validator = Validator;
 
     // Default Parsley locale is en
     this.locale = 'en';
 
     this.init(validators || {}, catalog || {});
   };
+
+  var typeRegexes =  {
+    email: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
+
+    number: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/,
+
+    integer: /^-?\d+$/,
+
+    digits: /^\d+$/,
+
+    alphanum: /^\w+$/i,
+
+    url: new RegExp(
+        "^" +
+          // protocol identifier
+          "(?:(?:https?|ftp)://)?" + // ** mod: make scheme optional
+          // user:pass authentication
+          "(?:\\S+(?::\\S*)?@)?" +
+          "(?:" +
+            // IP address exclusion
+            // private & local networks
+            // "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +   // ** mod: allow local networks
+            // "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +  // ** mod: allow local networks
+            // "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +  // ** mod: allow local networks
+            // IP address dotted notation octets
+            // excludes loopback network 0.0.0.0
+            // excludes reserved space >= 224.0.0.0
+            // excludes network & broacast addresses
+            // (first & last IP address of each class)
+            "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+            "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+            "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+          "|" +
+            // host name
+            "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
+            // domain name
+            "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
+            // TLD identifier
+            "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
+          ")" +
+          // port number
+          "(?::\\d{2,5})?" +
+          // resource path
+          "(?:/\\S*)?" +
+        "$", 'i'
+      )
+  };
+  typeRegexes.range = typeRegexes.number;
 
   ParsleyValidatorRegistry.prototype = {
     init: function (validators, catalog) {
@@ -59,10 +102,6 @@ define('parsley/validator_registry', [
       return this;
     },
 
-    validate: function (value, constraints, priority) {
-      return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
-    },
-
     // Add a new validator
     addValidator: function (name, fn, priority, requirementsTransformer) {
       if (this.validators[name])
@@ -92,11 +131,15 @@ define('parsley/validator_registry', [
     },
 
     _setValidator: function (name, fn, priority, requirementsTransformer) {
-      this.validators[name] = function (requirements) {
-        return $.extend(new Validator.Assert().Callback(fn, requirements), {
-          priority: priority,
-          requirementsTransformer: requirementsTransformer
-        });
+      if ('function' === typeof requirementsTransformer) {
+        var originalFn = fn;
+        fn = function(value, requirements) {
+          originalFn(requirementsTransformer(requirements));
+        }
+      }
+      this.validators[name] = {
+        fn: fn,
+        priority: priority
       };
 
       return this;
@@ -128,157 +171,116 @@ define('parsley/validator_registry', [
     },
 
     // Here is the Parsley default validators list.
-    // This is basically Validatorjs validators, with different API for some of them
-    // and a Parsley priority set
+    // A validator is an object with the following key values:
+    //  - priority: an integer
+    //  - requirement: 'string' (default), 'integer', 'number', 'regexp' or an Array of these
+    //  - validateString, validateMultiple, validateNumber: functions returning `true`, `false` or a promise
+    // Alternatively, a validator can be a function that returns such an object
+    //
     validators: {
-      notblank: function () {
-        return $.extend(new Validator.Assert().NotBlank(), { priority: 2 });
+      notblank: {
+        validateString: function(value) {
+          return /\S/.test(value);
+        },
+        priority: 2
       },
-      required: function () {
-        return $.extend(new Validator.Assert().Required(), { priority: 512 });
+      required: {
+        validateMultiple: function(values) {
+          return values.length > 0;
+        },
+        validateString: function(value) {
+          return /\S/.test(value);
+        },
+        priority: 512
       },
-      type: function (type) {
-        var assert;
-
-        switch (type) {
-          case 'email':
-            assert = new Validator.Assert().Email();
-            break;
-          // range type just ensure we have a number here
-          case 'range':
-          case 'number':
-            assert = new Validator.Assert().Regexp('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
-            break;
-          case 'integer':
-            assert = new Validator.Assert().Regexp('^-?\\d+$');
-            break;
-          case 'digits':
-            assert = new Validator.Assert().Regexp('^\\d+$');
-            break;
-          case 'alphanum':
-            assert = new Validator.Assert().Regexp('^\\w+$', 'i');
-            break;
-          case 'url':
-            // Thanks to https://gist.github.com/dperini/729294
-            // Voted best validator in https://mathiasbynens.be/demo/url-regex
-            // Modified to make scheme optional and allow local IPs
-            assert = new Validator.Assert().Regexp(
-              "^" +
-                // protocol identifier
-                "(?:(?:https?|ftp)://)?" + // ** mod: make scheme optional
-                // user:pass authentication
-                "(?:\\S+(?::\\S*)?@)?" +
-                "(?:" +
-                  // IP address exclusion
-                  // private & local networks
-                  // "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +   // ** mod: allow local networks
-                  // "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +  // ** mod: allow local networks
-                  // "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +  // ** mod: allow local networks
-                  // IP address dotted notation octets
-                  // excludes loopback network 0.0.0.0
-                  // excludes reserved space >= 224.0.0.0
-                  // excludes network & broacast addresses
-                  // (first & last IP address of each class)
-                  "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
-                  "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
-                  "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
-                "|" +
-                  // host name
-                  "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
-                  // domain name
-                  "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
-                  // TLD identifier
-                  "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
-                ")" +
-                // port number
-                "(?::\\d{2,5})?" +
-                // resource path
-                "(?:/\\S*)?" +
-              "$", 'i');
-            break;
-          default:
+      type: {
+        validateString: function(value, type) {
+          var regex = typeRegexes[type];
+          if (!regex)
             throw new Error('validator type `' + type + '` is not supported');
-        }
-
-        return $.extend(assert, { priority: 256 });
+          return regex.test(value);
+        },
+        priority: 256
       },
-      pattern: function (regexp) {
-        var flags = '';
-
-        // Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern
-        if (!!(/^\/.*\/(?:[gimy]*)$/.test(regexp))) {
-          // Replace the regexp literal string with the first match group: ([gimy]*)
-          // If no flag is present, this will be a blank string
-          flags = regexp.replace(/.*\/([gimy]*)$/, '$1');
-          // Again, replace the regexp literal string with the first match group:
-          // everything excluding the opening and closing slashes and the flags
-          regexp = regexp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
-        }
-
-        return $.extend(new Validator.Assert().Regexp(regexp, flags), { priority: 64 });
+      pattern: {
+        validateString: function(value, regexp) {
+          return regexp.test(value);
+        },
+        requirementType: 'regexp',
+        priority: 64
       },
-      minlength: function (value) {
-        return $.extend(new Validator.Assert().Length({ min: value }), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
+      minlength: {
+        validateString: function (value, requirement) {
+          return value.length >= requirement;
+        },
+        requirementType: 'integer',
+        priority: 30
       },
-      maxlength: function (value) {
-        return $.extend(new Validator.Assert().Length({ max: value }), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
+      maxlength: {
+        validateString: function (value, requirement) {
+          return value.length <= requirement;
+        },
+        requirementType: 'integer',
+        priority: 30
       },
-      length: function (array) {
-        return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
+      length: {
+        validateString: function (value, min, max) {
+          return value.length >= min && value.length <= max;
+        },
+        requirementType: ['integer', 'integer'],
+        priority: 30
       },
-      mincheck: function (length) {
-        return this.minlength(length);
+      mincheck: {
+        validateMultiple: function (values, requirement) {
+          return values.length >= requirement;
+        },
+        requirementType: 'integer',
+        priority: 30
       },
-      maxcheck: function (length) {
-        return this.maxlength(length);
+      maxcheck: {
+        validateMultiple: function (values, requirement) {
+          return values.length <= requirement;
+        },
+        requirementType: 'integer',
+        priority: 30
       },
-      check: function (array) {
-        return this.length(array);
+      check: {
+        validateMultiple: function (values, min, max) {
+          return values.length >= min && values.length <= max;
+        },
+        requirementType: ['integer', 'integer'],
+        priority: 30
       },
-      min: function (value) {
-        return $.extend(new Validator.Assert().GreaterThanOrEqual(value), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
+      min: {
+        validateNumber: function (value, requirement) {
+          return value >= requirement;
+        },
+        requirementType: 'number',
+        priority: 30
       },
-      max: function (value) {
-        return $.extend(new Validator.Assert().LessThanOrEqual(value), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
+      max: {
+        validateNumber: function (value, requirement) {
+          return value <= requirement;
+        },
+        requirementType: 'number',
+        priority: 30
       },
-      range: function (array) {
-        return $.extend(new Validator.Assert().Range(array[0], array[1]), {
-          priority: 32,
-          requirementsTransformer: function () {
-            for (var i = 0; i < array.length; i++)
-              array[i] = 'string' === typeof array[i] && !isNaN(array[i]) ? parseInt(array[i], 10) : array[i];
-
-            return array;
-          }
-        });
+      range: {
+        validateNumber: function (value, min, max) {
+          return value >= min && value <= max;
+        },
+        requirementType: ['number', 'number'],
+        priority: 30
       },
-      equalto: function (value) {
-        return $.extend(new Validator.Assert().EqualTo(value), {
-          priority: 256,
-          requirementsTransformer: function () {
-            return $(value).length ? $(value).val() : value;
-          }
-        });
+      equalto: {
+        validateString: function (value, refOrValue) {
+          var $reference = $(refOrValue);
+          if ($reference.length)
+            return value === $reference.val();
+          else
+            return value === refOrValue;
+        },
+        priority: 256
       }
     }
   };

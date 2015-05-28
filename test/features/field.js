@@ -11,8 +11,6 @@ define(function () {
         $('body').append('<input type="text" id="element" data-parsley-required />');
         var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints.length).to.be(1);
-        expect(parsleyField.constraints[0].__class__).to.be('Required');
-        expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
         expect(parsleyField.constraints[0].name).to.be('required');
         expect(parsleyField.constraints[0].isDomConstraint).to.be(true);
       });
@@ -20,8 +18,6 @@ define(function () {
         $('body').append('<input type="email" id="element" />');
         var parsleyField = $('#element').parsley();
         expect(parsleyField.constraints.length).to.be(1);
-        expect(parsleyField.constraints[0].__class__).to.be('Email');
-        expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
         expect(parsleyField.constraints[0].name).to.be('type');
         expect(parsleyField.constraints[0].isDomConstraint).to.be(true);
       });
@@ -40,8 +36,6 @@ define(function () {
         var parsleyField = $('#element').parsley()
           .addConstraint('required', true);
         expect(parsleyField.constraints.length).to.be(1);
-        expect(parsleyField.constraints[0].__class__).to.be('Required');
-        expect(parsleyField.constraints[0].__parentClass__).to.be('Assert');
         expect(parsleyField.constraints[0].name).to.be('required');
         expect(parsleyField.constraints[0].requirements).to.be(true);
         expect(parsleyField.constraints[0].priority).to.be(512);
