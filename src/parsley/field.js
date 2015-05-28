@@ -26,6 +26,8 @@ define('parsley/field', [
     this._bindConstraints();
   };
 
+  var statusMapping = { pending: null, resolved: true, rejected: false };
+
   ParsleyField.prototype = {
     // # Public API
     // Validate field and trigger some events for mainly `ParsleyUI`
@@ -62,38 +64,52 @@ define('parsley/field', [
     },
 
     // Just validate field. Do not trigger any event.
-    // Returns `true` iff all constraints pass, otherwise `false`.
+    // Returns `true` iff all constraints pass, `false` if there are failures,
+    // or `null` if the result can not be determined yet (depends on a promise)
+    // Prefer using `whenValid`.
     isValid: function (force, value) {
+      return statusMapping[this.whenValid(force, value).state()];
+    },
+
+    whenValid: function (force, value) {
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
       this.validationResult = true;
 
       // A field without constraint is valid
       if (!this.hasConstraints())
-        return true;
+        return $.when();
 
       // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
       if ('undefined' === typeof value || null === value)
         value = this.getValue();
 
       if (!this.needsValidation(value) && true !== force)
-        return true;
+        return $.when();
 
       var groupedConstraints = this._getGroupedConstraints();
+      var that = this;
+      var promises = [];
 
-      for (var g = 0; g < groupedConstraints.length; g++) {
-        var failures = [];
-        for (var i = 0; i < groupedConstraints[g].length; i++) {
-          var constraint = groupedConstraints[g][i];
-          if (false === constraint.validator.parseAndValidate(value, constraint.requirements))
-            failures.push({assert: constraint});
-        }
-        if (failures.length) {
-          this.validationResult = failures;
-          return false;
-        }
-      }
-      return true;
+      $.each(groupedConstraints, function(_, constraints) {
+        var promise = $.when.apply($,
+          $.map(constraints, function(constraint) {
+            var result = constraint.validator.parseAndValidate(value, constraint.requirements);
+            if (false === result)
+              result = $.Deferred().reject();
+            return $.when(result).fail(function() {
+              if (true === that.validationResult)
+                that.validationResult = [];
+              that.validationResult.push({assert: constraint});
+            });
+          })
+        );
+
+        promises.push(promise);
+        if (promise.state() === 'rejected')
+          return false; // Interrupt processing
+      });
+      return $.when.apply($, promises);
     },
 
     // @returns Parsley field computed value that could be overrided or configured in DOM
