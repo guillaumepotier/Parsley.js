@@ -96,6 +96,10 @@ define('parsley/utils', function () {
       pastWarnings = {};
     },
 
+    trimString: function(string) {
+      return string.replace(/^\s+|\s+$/g, '');
+    },
+
     // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
     objectCreate: Object.create || (function () {
       var Object = function () {};
