@@ -29,9 +29,8 @@ define('parsley/field', [
   ParsleyField.prototype = {
     // # Public API
     // Validate field and trigger some events for mainly `ParsleyUI`
-    // @returns validationResult:
-    //  - `true` if field valid
-    //  - `[Violation, [Violation...]]` if there were validation errors
+    // @returns a promise that will either succeed (field valid) or fail,
+    // in which case the result is an array of Violation.
     validate: function (force) {
       this.value = this.getValue();
 
@@ -63,9 +62,8 @@ define('parsley/field', [
       return true;
     },
 
-    // Just validate field. Do not trigger any event
-    //  - `false` if there are constraints and at least one of them failed
-    //  - `true` in all other cases
+    // Just validate field. Do not trigger any event.
+    // Returns `true` iff all constraints pass, otherwise `false`.
     isValid: function (force, value) {
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
@@ -82,17 +80,20 @@ define('parsley/field', [
       if (!this.needsValidation(value) && true !== force)
         return true;
 
-      // If we want to validate field against all constraints, just call Validator and let it do the job
-      var priorities = ['Any'];
-      if (false !== this.options.priorityEnabled) {
-        // Sort priorities to validate more important first
-        priorities = this._getConstraintsSortedPriorities();
-      }
-      // Iterate over priorities one by one, and validate related asserts one by one
-      for (var i = 0; i < priorities.length; i++)
-        if (true !== (this.validationResult = this.validateThroughValidator(value, this.constraints, priorities[i])))
-          return false;
+      var groupedConstraints = this._getGroupedConstraints();
 
+      for (var g = 0; g < groupedConstraints.length; g++) {
+        var failures = [];
+        for (var i = 0; i < groupedConstraints[g].length; i++) {
+          var constraint = groupedConstraints[g][i];
+          if (false === constraint.validator.parseAndValidate(value, constraint.requirements))
+            failures.push({assert: constraint});
+        }
+        if (failures.length) {
+          this.validationResult = failures;
+          return false;
+        }
+      }
       return true;
     },
 
@@ -132,7 +133,7 @@ define('parsley/field', [
     */
     addConstraint: function (name, requirements, priority, isDomConstraint) {
 
-      if ('function' === typeof window.ParsleyValidator.validators[name]) {
+      if (window.ParsleyValidator.validators[name]) {
         var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
@@ -182,7 +183,7 @@ define('parsley/field', [
 
       // then re-add Parsley DOM-API constraints
       for (var name in this.options)
-        this.addConstraint(name, this.options[name]);
+        this.addConstraint(name, this.options[name], undefined, true);
 
       // finally, bind special HTML5 constraints
       return this._bindHtml5Constraints();
@@ -279,20 +280,28 @@ define('parsley/field', [
     },
 
     // Internal only.
-    // Sort constraints by priority DESC
-    _getConstraintsSortedPriorities: function () {
-      var priorities = [];
+    // Returns the constraints, grouped by descending priority.
+    // The result is thus an array of arrays of constraints.
+    _getGroupedConstraints: function () {
+      if (false === this.options.priorityEnabled)
+        return [this.constraints];
+
+      var groupedConstraints = [];
+      var index = {};
 
       // Create array unique of priorities
-      for (var i = 0; i < this.constraints.length; i++)
-        if (-1 === priorities.indexOf(this.constraints[i].priority))
-          priorities.push(this.constraints[i].priority);
-
+      for (var i = 0; i < this.constraints.length; i++) {
+        var p = this.constraints[i].priority;
+        if (!index[p])
+          groupedConstraints.push(index[p] = []);
+        index[p].push(this.constraints[i]);
+      }
       // Sort them by priority DESC
-      priorities.sort(function (a, b) { return b - a; });
+      groupedConstraints.sort(function (a, b) { return b[0].priority - a[0].priority; });
 
-      return priorities;
+      return groupedConstraints;
     }
+
   };
 
   return ParsleyField;
