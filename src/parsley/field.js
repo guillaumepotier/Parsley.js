@@ -273,7 +273,7 @@ define('parsley/field', [
         value = value.replace(/\s{2,}/g, ' ');
 
       if (('trim' === this.options.whitespace) || ('squish' === this.options.whitespace) || (true === this.options.trimValue))
-        value = value.replace(/^\s+|\s+$/g, '');
+        value = ParsleyUtils.trimString(value);
 
       return value;
     },
