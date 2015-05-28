@@ -11,11 +11,16 @@ define('features/extra', [
         expect(window.ParsleyConfig.validators).to.have.key('dateiso');
         var parsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators);
 
-        expect(parsleyValidator.validate('', parsleyValidator.validators.dateiso())).not.to.be(true);
-        expect(parsleyValidator.validate('foo', parsleyValidator.validators.dateiso())).not.to.be(true);
-        expect(parsleyValidator.validate('1986-30-01', parsleyValidator.validators.dateiso())).not.to.be(true);
-        expect(parsleyValidator.validate('1986-12-45', parsleyValidator.validators.dateiso())).not.to.be(true);
-        expect(parsleyValidator.validate('1986-12-01', parsleyValidator.validators.dateiso())).to.be(true);
+        var expectValidation = function(value, name, requirements) {
+          var validator = parsleyValidator.validators[name](requirements);
+          return expect(parsleyValidator.validate(value, validator));
+        };
+
+        expectValidation('',           'dateiso').not.to.be(true);
+        expectValidation('foo',        'dateiso').not.to.be(true);
+        expectValidation('1986-30-01', 'dateiso').not.to.be(true);
+        expectValidation('1986-12-45', 'dateiso').not.to.be(true);
+        expectValidation('1986-12-01', 'dateiso').to.be(true);
       });
       it('should have gt validator', function () {
         expect(window.ParsleyValidator.validators).to.have.key('gt');
