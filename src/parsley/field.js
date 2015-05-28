@@ -31,19 +31,31 @@ define('parsley/field', [
   ParsleyField.prototype = {
     // # Public API
     // Validate field and trigger some events for mainly `ParsleyUI`
-    // @returns true or an array of the validators that failed.
+    // @returns `true`, an array of the validators that failed, or
+    // `null` if validation is not finished. Prefer using whenValidate
     validate: function (force) {
+      var promise = this.whenValidate(force);
+      switch (promise.state()) {
+        case 'pending': return null;
+        case 'resolved': return true;
+        case 'rejected': return this.validationResult;
+      };
+    },
+
+    // Validate field and trigger some events for mainly `ParsleyUI`
+    // @returns a promise that succeeds only when all validations do.
+    whenValidate: function (force) {
+      var that = this;
+
       this.value = this.getValue();
 
       // Field Validate event. `this.value` could be altered for custom needs
       this._trigger('validate');
 
-      this._trigger(this.isValid(force, this.value) ? 'success' : 'error');
-
-      // Field validated event. `this.validationResult` could be altered for custom needs too
-      this._trigger('validated');
-
-      return this.validationResult;
+      return this.whenValid(force, this.value)
+      .done(function()   { that._trigger('success'); })
+      .fail(function()   { that._trigger('error'); })
+      .always(function() { that._trigger('validated'); });
     },
 
     hasConstraints: function () {
