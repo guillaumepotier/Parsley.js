@@ -15,6 +15,8 @@ define('parsley/form', [
     this.validationResult = null;
   };
 
+  var statusMapping = { pending: null, resolved: true, rejected: false };
+
   ParsleyForm.prototype = {
     onSubmitValidate: function (event) {
       this.validate(undefined, undefined, event);
@@ -62,23 +64,35 @@ define('parsley/form', [
       return this.validationResult;
     },
 
-    // Iterate over refreshed fields, and stop on first failure
+    // Iterate over refreshed fields, and stop on first failure.
+    // Returns `true` if all fields are valid, `false` if a failure is detected
+    // or `null` if the result depends on an unresolved promise.
+    // Prefer using `whenValid` instead.
     isValid: function (group, force) {
+      return statusMapping[ this.whenValid(group, force).state() ];
+    },
+
+    // Iterate over refreshed fields and validate them.
+    // Returns a promise.
+    // A validation that immediately fails will interrupt the validations.
+    whenValid: function (group, force) {
       this._refreshFields();
 
-      return this._withoutReactualizingFormOptions(function(){
+      var promises = [];
+      this._withoutReactualizingFormOptions(function(){
         for (var i = 0; i < this.fields.length; i++) {
 
           // do not validate a field if not the same as given validation group
           if (group && !this._isFieldInGroup(this.fields[i], group))
             continue;
 
-          if (false === this.fields[i].isValid(force))
+          var promise = this.fields[i].whenValid(force);
+          promises.push(promise);
+          if ('rejected' === promise.state())
             return false;
         }
-
-        return true;
       });
+      return $.when.apply($, promises);
     },
 
     _isFieldInGroup: function (field, group) {
