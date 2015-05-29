@@ -159,12 +159,9 @@ define('parsley/ui', [
       for (var i = 0; i < formInstance.fields.length; i++) {
         var field = formInstance.fields[i];
         if (true !== field.validationResult && field.validationResult.length > 0 && 'undefined' === typeof field.options.noFocus) {
-          if ('first' === formInstance.options.focus) {
-            formInstance._focusedField = field.$element;
-            return formInstance._focusedField.focus();
-          }
-
           formInstance._focusedField = field.$element;
+          if ('first' === formInstance.options.focus)
+            break;
         }
       }
 
