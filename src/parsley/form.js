@@ -30,12 +30,19 @@ define('parsley/form', [
       return this;
     },
 
-    // @returns boolean
+    // Performs validation on fields while triggering events.
+    // @returns `true` if al validations succeeds, `false`
+    // if a failure is immediately detected, or `null`
+    // if dependant on a promise.
+    // Prefer `whenValidate`.
     validate: function (group, force, event) {
+      return statusMapping[ this.whenValidate(group, force, event).state() ];
+    },
+
+    whenValidate: function (group, force, event) {
+      var that = this;
       this.submitEvent = event;
       this.validationResult = true;
-
-      var fieldValidationResult = [];
 
       // fire validate event to eventually modify things before very validation
       this._trigger('validate');
@@ -43,25 +50,17 @@ define('parsley/form', [
       // Refresh form DOM options and form's fields that could have changed
       this._refreshFields();
 
-      this._withoutReactualizingFormOptions(function(){
-        // loop through fields to validate them one by one
-        for (var i = 0; i < this.fields.length; i++) {
-
+      var promises = this._withoutReactualizingFormOptions(function(){
+        return $.map(this.fields, function(field) {
           // do not validate a field if not the same as given validation group
-          if (group && !this._isFieldInGroup(this.fields[i], group))
-            continue;
-
-          fieldValidationResult = this.fields[i].validate(force);
-
-          if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
-            this.validationResult = false;
-        }
+          if (!group || that._isFieldInGroup(field, group))
+            return field.whenValidate(force);
+        });
       });
-
-      this._trigger(this.validationResult ? 'success' : 'error');
-      this._trigger('validated');
-
-      return this.validationResult;
+      return $.when.apply($, promises)
+      .done(  function() { that._trigger('success'); })
+      .fail(  function() { that.validationResult = false; that._trigger('error'); })
+      .always(function() { that._trigger('validated'); });
     },
 
     // Iterate over refreshed fields, and stop on first failure.
@@ -76,21 +75,15 @@ define('parsley/form', [
     // Returns a promise.
     // A validation that immediately fails will interrupt the validations.
     whenValid: function (group, force) {
+      var that = this;
       this._refreshFields();
 
-      var promises = [];
-      this._withoutReactualizingFormOptions(function(){
-        for (var i = 0; i < this.fields.length; i++) {
-
+      var promises = this._withoutReactualizingFormOptions(function(){
+        return $.map(this.fields, function(field) {
           // do not validate a field if not the same as given validation group
-          if (group && !this._isFieldInGroup(this.fields[i], group))
-            continue;
-
-          var promise = this.fields[i].whenValid(force);
-          promises.push(promise);
-          if ('rejected' === promise.state())
-            return false;
-        }
+          if (!group || that._isFieldInGroup(field, group))
+            return field.whenValid(force);
+        });
       });
       return $.when.apply($, promises);
     },
