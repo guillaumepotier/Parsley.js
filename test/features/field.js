@@ -137,7 +137,7 @@ define(function () {
       });
       it('should valid most complex Callback() validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
-        ParsleyValidator.addValidator('ismultiple', function (value, multiple) {
+        window.ParsleyValidator.addValidator('ismultiple', function (value, multiple) {
           if (!isNaN(parseFloat(value)) && isFinite(value))
             return !(Number(value) % multiple);
 
@@ -155,14 +155,14 @@ define(function () {
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('9');
         expect(parsleyField.isValid()).to.be(true);
-        ParsleyValidator.removeValidator('ismultiple');
+        window.ParsleyValidator.removeValidator('ismultiple');
       });
       it('should properly compute constraints on each validation', function () {
         $('body').append('<input type="email" data-parsley-required id="element" />');
-        ParsleyValidator.addValidator('foobazer', function (value) {
+        window.ParsleyValidator.addValidator('foobazer', function (value) {
           return 'foobar' === value;
         }, 2);
-        ParsleyValidator.addValidator('ismultiple', function (value, multiple) {
+        window.ParsleyValidator.addValidator('ismultiple', function (value, multiple) {
           if (!isNaN(parseFloat(value)) && isFinite(value))
             return !(Number(value) % multiple);
 
@@ -181,8 +181,8 @@ define(function () {
           .removeConstraint('ismultiple')
           .refreshConstraints();
         expect(parsleyField.constraints.length).to.be(2);
-        ParsleyValidator.removeValidator('foobazer');
-        ParsleyValidator.removeValidator('ismultiple');
+        window.ParsleyValidator.removeValidator('foobazer');
+        window.ParsleyValidator.removeValidator('ismultiple');
       });
       it('should handle constraints priorities on validation', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
