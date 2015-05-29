@@ -151,10 +151,10 @@ define('parsley/ui', [
     },
 
     focus: function (formInstance) {
-      if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
-        return formInstance._focusedField = null;
-
       formInstance._focusedField = null;
+
+      if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
+        return null;
 
       for (var i = 0; i < formInstance.fields.length; i++) {
         var field = formInstance.fields[i];
