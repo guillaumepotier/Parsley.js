@@ -7,10 +7,10 @@
 (function($){
 
 window.ParsleyExtend = window.ParsleyExtend || {};
-window.ParsleyExtend = $.extend(window.ParsleyExtend, {
+window.ParsleyExtend = $.extend(true, window.ParsleyExtend, {
   asyncSupport: true,
 
-  asyncValidators: $.extend({
+  asyncValidators: {
     'default': {
       fn: function (xhr) {
         return 'resolved' === xhr.state();
@@ -24,7 +24,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
       },
       url: false
     }
-  }, window.ParsleyExtend.asyncValidators),
+  },
 
   addAsyncValidator: function (name, fn, url, options) {
     this.asyncValidators[name.toLowerCase()] = {
