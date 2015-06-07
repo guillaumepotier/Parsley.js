@@ -3,3 +3,4 @@ node_modules/
 bower_components/
 doc/annotated-source/
 npm-debug.log
+test/env/browserify_bundle.js
