@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0-rc9 - built Fri May 22 2015 18:19:01
+* Version 2.1.0-rc10 - built Sun Jun 07 2015 11:39:35
 * MIT Licensed
 *
 */
@@ -1301,17 +1301,17 @@ var Validator = ( function ( ) {
         this.manageStatusClass(fieldInstance);
     },
     focus: function (formInstance) {
-      if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
-        return formInstance._focusedField = null;
       formInstance._focusedField = null;
-      for (var i = 0; i < formInstance.fields.length; i++)
-        if (true !== formInstance.fields[i].validationResult && formInstance.fields[i].validationResult.length > 0 && 'undefined' === typeof formInstance.fields[i].options.noFocus) {
-          if ('first' === formInstance.options.focus) {
-            formInstance._focusedField = formInstance.fields[i].$element;
-            return formInstance._focusedField.focus();
-          }
-          formInstance._focusedField = formInstance.fields[i].$element;
+      if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
+        return null;
+      for (var i = 0; i < formInstance.fields.length; i++) {
+        var field = formInstance.fields[i];
+        if (true !== field.validationResult && field.validationResult.length > 0 && 'undefined' === typeof field.options.noFocus) {
+          formInstance._focusedField = field.$element;
+          if ('first' === formInstance.options.focus)
+            break;
         }
+      }
       if (null === formInstance._focusedField)
         return null;
       return formInstance._focusedField.focus();
@@ -1943,7 +1943,7 @@ var Validator = ( function ( ) {
   ParsleyFactory.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.1.0-rc9';
+      this.__version__ = '2.1.0-rc10';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
@@ -2155,7 +2155,7 @@ window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {},
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.1.0-rc9
+//     Parsley.js 2.1.0-rc10
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
