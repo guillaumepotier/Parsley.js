@@ -36,7 +36,8 @@ define([
       $element: $(document),
       actualizeOptions: null,
       _resetOptions: null,
-      Factory: ParsleyFactory
+      Factory: ParsleyFactory,
+      version: '@@version'
     });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
