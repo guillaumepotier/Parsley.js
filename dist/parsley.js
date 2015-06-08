@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0-rc10 - built Sun Jun 07 2015 11:39:35
+* Version 2.1.0-rc10 - built Mon Jun 08 2015 10:51:18
 * MIT Licensed
 *
 */
@@ -368,7 +368,7 @@ var Validator = ( function ( ) {
   };
   Constraint.prototype = {
     constructor: Constraint,
-    validate: function ( object, group ) {
+    check: function ( object, group ) {
       var result, failures = {};
       // check all constraint nodes.
       for ( var property in this.nodes ) {
@@ -882,7 +882,7 @@ var Validator = ( function ( ) {
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-        
+        "use strict";
         if (this === null) {
             throw new TypeError();
         }
@@ -1663,6 +1663,14 @@ var Validator = ( function ( ) {
     //  - `true` if field valid
     //  - `[Violation, [Violation...]]` if there were validation errors
     validate: function (force) {
+      // A kludge to prevent parsley remote validators returning a wrong result in an race condition when
+      // both change and keyup events are triggered. See following discussion for more information:
+      // https://github.com/guillaumepotier/Parsley.js/issues/916
+      if (Boolean(force).type && force.type === 'keyup' && force.which === 13) {
+        force.preventDefault();
+        force.stopPropagation();
+        return;
+      }
       this.value = this.getValue();
       // Field Validate event. `this.value` could be altered for custom needs
       this._trigger('validate');
@@ -2165,7 +2173,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
       $element: $(document),
       actualizeOptions: null,
       _resetOptions: null,
-      Factory: ParsleyFactory
+      Factory: ParsleyFactory,
+      version: '2.1.0-rc10'
     });
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
