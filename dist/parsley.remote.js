@@ -273,7 +273,7 @@ window.Parsley.on('form:submit', function () {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0-rc10 - built Mon Jun 08 2015 10:51:18
+* Version 2.1.0-rc10 - built Mon Jun 08 2015 17:30:46
 * MIT Licensed
 *
 */
@@ -1938,7 +1938,7 @@ var Validator = ( function ( ) {
       // A kludge to prevent parsley remote validators returning a wrong result in an race condition when
       // both change and keyup events are triggered. See following discussion for more information:
       // https://github.com/guillaumepotier/Parsley.js/issues/916
-      if (Boolean(force).type && force.type === 'keyup' && force.which === 13) {
+      if (Boolean(force) && Boolean(force.type) && force.type === 'keyup' && force.which === 13) {
         force.preventDefault();
         force.stopPropagation();
         return;
