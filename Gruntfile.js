@@ -172,7 +172,7 @@ module.exports = function (grunt) {
 
     concat: {
       remote: {
-        src: ['src/extra/plugin/remote.js', 'dist/parsley.js'],
+        src: ['dist/parsley.js', 'src/extra/plugin/remote.js'],
         dest: 'dist/parsley.remote.js'
       }
     }
