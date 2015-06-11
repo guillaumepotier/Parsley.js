@@ -33,6 +33,15 @@ define('parsley/field', [
     //  - `true` if field valid
     //  - `[Violation, [Violation...]]` if there were validation errors
     validate: function (force) {
+      // A kludge to prevent parsley remote validators returning a wrong result in an race condition when
+      // both change and keyup events are triggered. See following discussion for more information:
+      // https://github.com/guillaumepotier/Parsley.js/issues/916
+      if (Boolean(force) && Boolean(force.type) && force.type === 'keyup' && force.which === 13) {
+        force.preventDefault();
+        force.stopPropagation();
+        return;
+      }
+
       this.value = this.getValue();
 
       // Field Validate event. `this.value` could be altered for custom needs
