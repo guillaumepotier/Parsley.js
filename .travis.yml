@@ -5,8 +5,11 @@ node_js:
 
 before_script:
   - npm install -g bower
-  - npm install -g browserify
+  # - npm install -g browserify
   - bower install
-  - browserify test/env/browserify.js > test/env/browserify_bundle.js
+  # - browserify test/env/browserify.js -o test/env/browserify_bundle.js -r jquery
 
-script: npm run-script test-all
+script:
+  - npm test
+  - npm run-script amd
+  # - npm run-script test-all

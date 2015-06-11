@@ -38,7 +38,9 @@
   },
   "scripts": {
     "test": "mocha-phantomjs test/index.html",
-    "test-all": "mocha-phantomjs test/index.html && mocha-phantomjs test/env/amd.html && mocha-phantomjs test/env/browserify.html"
+    "test-all": "mocha-phantomjs test/index.html && mocha-phantomjs test/env/amd.html && mocha-phantomjs test/env/browserify.html",
+    "test-amd": "mocha-phantomjs test/env/amd.html",
+    "test-browserify": "mocha-phantomjs test/env/browserify.html"
   },
   "spm": {
     "main": "dist/parsley.js",
