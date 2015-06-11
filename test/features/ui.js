@@ -321,7 +321,14 @@ define(function () {
         $('#element').trigger($.Event('change'));
         expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
       });
-
+      it('should re-bind custom triggers after a reset', function () {
+        $('body').append('<input type="text" id="element" required data-parsley-trigger="focusout" />');
+        var parsleyInstance = $('#element').parsley();
+        parsleyInstance.validate();
+        parsleyInstance.reset();
+        $('#element').focus().blur();
+        expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(1);
+      });
       it('should handle custom error message for validators with compound names', function () {
         $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
         window.ParsleyValidator.addValidator('customValidator', function (value, requirement) {

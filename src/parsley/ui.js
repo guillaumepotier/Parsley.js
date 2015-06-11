@@ -353,7 +353,7 @@ define('parsley/ui', [
 
     reset: function (parsleyInstance) {
       // Reset all event listeners
-      parsleyInstance.$element.off('.Parsley');
+      this.actualizeTriggers(parsleyInstance);
       parsleyInstance.$element.off('.ParsleyFailedOnce');
 
       // Nothing to do if UI never initialized for this field
