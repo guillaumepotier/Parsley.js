@@ -273,7 +273,7 @@ window.Parsley.on('form:submit', function () {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0-rc10 - built Sun Jun 07 2015 11:39:35
+* Version 2.1.0 - built Sun Jun 14 2015 16:12:06
 * MIT Licensed
 *
 */
@@ -2215,7 +2215,7 @@ var Validator = ( function ( ) {
   ParsleyFactory.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.1.0-rc10';
+      this.__version__ = '2.1.0';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
@@ -2427,7 +2427,7 @@ window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {},
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.1.0-rc10
+//     Parsley.js 2.1.0
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2437,7 +2437,8 @@ if ('undefined' !== typeof window.ParsleyValidator)
       $element: $(document),
       actualizeOptions: null,
       _resetOptions: null,
-      Factory: ParsleyFactory
+      Factory: ParsleyFactory,
+      version: '2.1.0'
     });
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
