@@ -2,41 +2,36 @@
 
 ## master
 
-## 2.1.0-rc5
+## 2.1.0
 
-- Change event API a different way, without using jQuery events. (#899)
-- Fix conflict between different forms on the same page (#888)
+- Event remodel
+  - New API `on` and `off` to register for events
+  - Global listeners added with `Parsley.on`
+  - Using the new API, event names no longer have their ".parsley" ending
+  - Compatibility with previous API is maintained, but `$.emit`, `$.listen`, etc. are now deprecated  (#899)
 
-## 2.1.0-rc5
+- New features
+  - New event 'form:submit' fired before a form is submitted.
+  - The `value` option can now be a function
+  - Parsley.version is now the best way to get the current version
+  - Additional translations
 
-- Handles checkbox names containing spaces (#881)
+- Changes
+  - Error containers are created only the first time they are needed.
+  - [BC Break] `isValid()` field method now returns just a boolean, `[]` is no
+  more returned when field is optional and empty. `needsValidation()` appears
+  now to indicate if a valid field needed a validation.
 
-## 2.1.0-rc4
-
-- Detects name conflicts between validators and regular options
-- Compatible with jQuery.noConflict() (#859)
-
-## 2.1.0-rc3
-
-- Optimize (#855)
-
-## 2.1.0-rc2
-
-- Support for validators with compound names by restoring ful case sensitivity
-  to error messages. (#805)
-- new event 'form:submit.parsley' fired before a form is submitted.
-- remote cache now cleared after form submission (#813)
-- event 'field:reset.parsley' now fired if a field is no longer validated (because it is excluded, or removed) (#841)
-
-## 2.1.0-rc1
-
-- jQuery events are now used instead of our pubsub code.
-The pubsub functions are now deprecated and will be removed in 3.0.0
-- Error containers are created only the first time they are needed.
-- The `value` option can now be a function
-- [BC Break] `isValid()` field method now returns just a boolean, `[]` is no
-more returned when field is optional and empty. `needsValidation()` appears
-now to indicate if a valid field needed a validation.
+- Bug fixes
+  - Speed optimization (#855)
+  - Eemote cache now cleared after form submission (#813)
+  - Event 'field:reset' now fired if a field is no longer validated (because it is excluded, or removed) (#841)
+  - Support for validators with compound names by restoring full case sensitivity
+    to error messages. (#805)
+  - Fix conflict between different forms on the same page (#888)
+  - Handles checkbox names containing spaces (#881)
+  - Detects name conflicts between validators and regular options
+  - Compatible with jQuery.noConflict() (#859)
 
 ## 2.0.7
 
