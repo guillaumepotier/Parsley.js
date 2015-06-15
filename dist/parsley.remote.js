@@ -273,7 +273,7 @@ window.Parsley.on('form:submit', function () {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0 - built Sun Jun 14 2015 16:12:06
+* Version 2.1.0 - built Mon Jun 15 2015 10:49:39
 * MIT Licensed
 *
 */
@@ -640,7 +640,7 @@ var Validator = ( function ( ) {
   };
   Constraint.prototype = {
     constructor: Constraint,
-    validate: function ( object, group ) {
+    check: function ( object, group ) {
       var result, failures = {};
       // check all constraint nodes.
       for ( var property in this.nodes ) {
@@ -1868,7 +1868,7 @@ var Validator = ( function ( ) {
     // the method actualizeOptions on this form while `fn` is called.
     _withoutReactualizingFormOptions: function (fn) {
       var oldActualizeOptions = this.actualizeOptions;
-      this.actualizeOptions = $.noop;
+      this.actualizeOptions = function() { return this };
       var result = fn.call(this); // Keep the current `this`.
       this.actualizeOptions = oldActualizeOptions;
       return result;

@@ -2,6 +2,10 @@
 
 ## master
 
+## 2.1.1
+
+- Bug fix for reentrant validations
+
 ## 2.1.0
 
 - Event remodel
