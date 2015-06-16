@@ -353,7 +353,7 @@ the method actualizeOptions on this form while <code>fn</code> is called.</p>
             
             <div class="content"><div class='highlight'><pre>    _withoutReactualizingFormOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fn</span>) </span>{
       <span class="hljs-keyword">var</span> oldActualizeOptions = <span class="hljs-keyword">this</span>.actualizeOptions;
-      <span class="hljs-keyword">this</span>.actualizeOptions = $.noop;
+      <span class="hljs-keyword">this</span>.actualizeOptions = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span> };
       <span class="hljs-keyword">var</span> result = fn.call(<span class="hljs-keyword">this</span>); <span class="hljs-comment">// Keep the current `this`.</span>
       <span class="hljs-keyword">this</span>.actualizeOptions = oldActualizeOptions;
       <span class="hljs-keyword">return</span> result;
