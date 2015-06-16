@@ -322,15 +322,41 @@ define(function () {
         expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
       });
 
-      it('should handle custom error message for validators with compound names', function () {
-        $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
-        window.ParsleyValidator.addValidator('customValidator', function (value, requirement) {
-          return requirement === value;
-        }, 32);
-        var parsleyField = $('#element').psly();
-        parsleyField.validate();
-        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('custom-validator error');
-        window.ParsleyValidator.removeValidator('customValidator');
+      describe('Compound Names', function() {
+        beforeEach(function(done) {
+          window.ParsleyValidator.addValidator('customValidator', function (value, requirement) {
+            return requirement === value;
+          }, 32)
+            .addMessage('en','customValidator','Custom error message.')
+            .addMessage('fr','customValidator',"Message d'erreur personnalisé.");
+          done();
+        });
+        afterEach(function(done) {
+          window.ParsleyValidator.removeValidator('customValidator');
+          window.ParsleyValidator.setLocale('en');
+          $('#element').remove();
+          done();
+        });
+        it('should handle custom error message for validators with compound names', function () {
+          $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
+          var parsleyField = $('#element').psly();
+          parsleyField.validate();
+          expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('custom-validator error');
+        });
+
+        it('should show configured error messages for custom validators with compound names', function () {
+          $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" />');
+          var parsleyField = $('#element').psly();
+          parsleyField.validate();
+          expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('Custom error message.');
+        });
+        it('should show configured error messages for custom validators with compound names in the current locale', function () {
+          $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" />');
+          window.ParsleyValidator.setLocale('fr');
+          var parsleyField = $('#element').psly();
+          parsleyField.validate();
+          expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be("Message d'erreur personnalisé.");
+        });
       });
 
       afterEach(function () {

@@ -54,7 +54,7 @@ define('parsley/validator', [
       if ('undefined' === typeof this.catalog[locale])
         this.catalog[locale] = {};
 
-      this.catalog[locale][name.toLowerCase()] = message;
+      this.catalog[locale][name] = message;
 
       return this;
     },
