@@ -141,7 +141,7 @@
                 F: <input type="radio" name="gender" id="genderF" value="F" />
               </p>
 
-              <label for="hobbies">Hobbies (2 minimum):</label>
+              <label for="hobbies">Hobbies (Optional, but 2 minimum):</label>
               <p>
                 Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" /><br/>
                 Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" /><br/>
@@ -193,7 +193,7 @@
 
   &lt;!-- here, field is not required, it won't throw any error if no checkbox
   is checked. But if checked, two at least must be checked -->
-  &lt;label for="hobbies">Hobbies (2 minimum):&lt;/label>
+  &lt;label for="hobbies">Hobbies (Optional, but 2 minimum):&lt;/label>
   &lt;p>
     Skiing &lt;input type="checkbox" name="hobbies" value="ski" data-parsley-mincheck="2" />
     Running &lt;input type="checkbox" name="hobbies" value="run" />

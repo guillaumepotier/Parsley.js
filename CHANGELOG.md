@@ -2,6 +2,11 @@
 
 ## master
 
+## 2.1.2
+
+- fix custom triggers after a `reset()` (#926)
+- fix documentation and generated dist files
+
 ## 2.1.1
 
 - Bug fix for reentrant validations
@@ -12,7 +17,8 @@
   - New API `on` and `off` to register for events
   - Global listeners added with `Parsley.on`
   - Using the new API, event names no longer have their ".parsley" ending
-  - Compatibility with previous API is maintained, but `$.emit`, `$.listen`, etc. are now deprecated  (#899)
+  - Compatibility with previous API is maintained, but `$.emit`, `$.listen`,
+    etc. are now deprecated  (#899)
 
 - New features
   - New event 'form:submit' fired before a form is submitted.
@@ -29,9 +35,10 @@
 - Bug fixes
   - Speed optimization (#855)
   - Eemote cache now cleared after form submission (#813)
-  - Event 'field:reset' now fired if a field is no longer validated (because it is excluded, or removed) (#841)
-  - Support for validators with compound names by restoring full case sensitivity
-    to error messages. (#805)
+  - Event 'field:reset' now fired if a field is no longer validated (because it
+    is excluded, or removed) (#841)
+  - Support for validators with compound names by restoring full case
+    sensitivity to error messages. (#805)
   - Fix conflict between different forms on the same page (#888)
   - Handles checkbox names containing spaces (#881)
   - Detects name conflicts between validators and regular options

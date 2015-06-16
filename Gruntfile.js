@@ -23,7 +23,7 @@ module.exports = function (grunt) {
     sync: {
       all: {
         options: {
-          sync: ['author', 'name', 'version', 'license', 'main', 'keywords'],
+          sync: ['author', 'name', 'license', 'main', 'keywords'],
           from: 'package.json',
           to: 'bower.json'
         }

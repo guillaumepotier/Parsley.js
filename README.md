@@ -6,7 +6,7 @@ JavaScript form validation, without actually writing a single line of JavaScript
 
 ## Version
 
-2.1.0
+2.1.2
 
 ## Doc
 
@@ -29,6 +29,7 @@ Some integrations are
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
 * [OSSCDN by MaxCDN](http://osscdn.com/#/parsleyjs)
+* [Drupal] (https://www.drupal.org/project/parsley)
 
 ## Install dev environment
 
