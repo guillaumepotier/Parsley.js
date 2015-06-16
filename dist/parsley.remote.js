@@ -273,7 +273,7 @@ window.Parsley.on('form:submit', function () {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.0 - built Mon Jun 15 2015 10:49:39
+* Version 2.1.2 - built Tue Jun 16 2015 10:32:01
 * MIT Licensed
 *
 */
@@ -1154,7 +1154,7 @@ var Validator = ( function ( ) {
   // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
   if (!Array.prototype.indexOf)
     Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-        
+        "use strict";
         if (this === null) {
             throw new TypeError();
         }
@@ -1728,7 +1728,7 @@ var Validator = ( function ( ) {
     },
     reset: function (parsleyInstance) {
       // Reset all event listeners
-      parsleyInstance.$element.off('.Parsley');
+      this.actualizeTriggers(parsleyInstance);
       parsleyInstance.$element.off('.ParsleyFailedOnce');
       // Nothing to do if UI never initialized for this field
       if ('undefined' === typeof parsleyInstance._ui)
@@ -2215,7 +2215,7 @@ var Validator = ( function ( ) {
   ParsleyFactory.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.1.0';
+      this.__version__ = '2.1.2';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
@@ -2427,7 +2427,7 @@ window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {},
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.1.0
+//     Parsley.js 2.1.2
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2438,7 +2438,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       actualizeOptions: null,
       _resetOptions: null,
       Factory: ParsleyFactory,
-      version: '2.1.0'
+      version: '2.1.2'
     });
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
