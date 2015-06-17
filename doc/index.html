@@ -486,15 +486,13 @@ if (false === instance.options.priorityEnabled)
           <h1 id="validators" class="page-header">Built-in validators</h1>
           <h3 id="validators-overview">Overview</h3>
           <p>
-            Parsley 2.x is now based on <a href="http://validatorjs.org">validator.js</a> that ships commonly used validators and simplifies group and priority validation. That way, Parsley can share validators with validator.js and define new ones using the <code>Callback()</code> Assert.
+            A <i>validator</i> is a method to determine if a given <i>value</i> (or sometimes sets of values) is acceptable or not, given some <i>requirement</i> parameters.
+          </p>
+          <p>
+            Parsley comes with many builtin validators and provides tools to specify your own.
           </p>
 
-          <div class="bs-callout bs-callout-info">
-            <h4>Use Validator.js in your Parsley projects</h4>
-            <p>Parsley lets you use validator.js in <code>window.ParsleyValidator.Validator</code></p>
-          </div>
-
-          <h3 id="validators-list">Validators list</h3>
+          <h3 id="validators-list">Builtin validators list</h3>
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
@@ -769,51 +767,95 @@ if (false === instance.options.priorityEnabled)
             These validators are shipped in <code>parsley.js</code>. Have a look at the <a href="#remote">Parsley Remote</a> plugin and <a href="#extras">Parsley Extras</a> for more validators.
           </p>
 
-          <h3 id="validators-craft">Craft yours!</h3>
+          <h1 id="custom">Custom Validators</h3>
+          <h3 id="custom-intro">Craft yours</h3>
           <p>Of course, Parsley built-in validators are commonly used validators, and you'll need some more that fit your specific forms and validations. That's why Parsley lets you easily create your own validators.</p>
           <p>
-          <p>Here again, like localizations, configuring your custom validators and error messages comes in two flavors:
-          <ul>
-            <li>By registering them in globals <strong>before</strong> loading <code>parsley.js</code>:
-<pre><code>&lt;input type="text" data-parsley-multipleof="3" />
-[...]
-&lt;script type="text/javascript">
-window.ParsleyConfig = {
-  validators: {
-    multipleof: {
-      fn: function (value, requirement) {
-        return 0 === value % requirement;
-      },
-      priority: 32
-    }
-  },
-  i18n: {
-    en: {
-      multipleof: 'This value should be a multiple of %s'
-    },
-    fr: {
-      multipleof: 'Cette valeur doit être un multiple de %s'
-    }
-  }
-};
-&lt;/script>
-</code></pre>
-            </li>
-            <li>By registering them in <code>ParsleyValidator</code> <strong>after</strong> <code>parsley.js</code> is loaded:
+          <p>The preferred way to register them (after <code>parsley.js</code> is loaded) looks like:
 
 <pre><code>&lt;input type="text" data-parsley-multipleof="3" />
 [...]
 &lt;script type="text/javascript">
-window.ParsleyValidator
-  .addValidator('multipleof', function (value, requirement) {
-    return 0 === value % requirement;
-  }, 32)
+window.Parsley.Validators
+  .addValidator('multipleof', {
+    requirementType: 'integer',
+    validateNumber: function(value, requirement) {
+      return 0 === value % requirement;
+    }
+  )
   .addMessage('en', 'multipleof', 'This value should be a multiple of %s')
   .addMessage('fr', 'multipleof', 'Cette valeur doit être un multiple de %s');
 &lt;/script>
-</code></pre></li>
-          </ul>
+</code></pre>
           </p>
+          <p>The following sections go over the details on how to define a custom validator</p>
+          <h3 id="custom-function">Validating function</h3>
+          <p>There are many ways a validator can specify how to validate data:
+          <table class="table table-stripped table-bordered">
+            <thead>
+              <tr>
+                <th class="col-md-1">Name</th>
+                <th class="col-md-4">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>validateString</code></td>
+                <td>Is passed the input's value as a string.</td>
+              </tr>
+              <tr>
+                <td><code>validateNumber</code></td>
+                <td>Use this instead of <code>validateString</code> when only numeric values are acceptable. Parsley will parse the input's value and pass the number, or reject the value if it's not an acceptable number</td>
+              </tr>
+              <tr>
+                <td><code>validateMultiple</code></td>
+                <td>Is passed an array of values, in the case of checkboxes.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>Your custom validator must specify at least one of these. If it can validate both single inputs and multiple (i.e. checkboxes), then you can specify <i>validateMultiple</i> and one of the other two.</p>
+
+          <p>Validating functions should return either <code>true</code> if the value is valid, or <code>false</code> otherwise. It can instead return a promise that will be resolved if the value is valid, or be rejected otherwise.</p>
+
+          <h3 id="custom-requirement">Requirement parameters</h3>
+
+          <p>You can specify what kind of requirement parameter your custom validator is expecting:
+          <table class="table table-stripped table-bordered">
+            <thead>
+              <tr>
+                <th class="col-md-1"><code>requirementKind</code></th>
+                <th class="col-md-4">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>string</code></td>
+                <td>The most generic kind; requirement passed as is, with no checking.</td>
+              </tr>
+              <tr>
+                <td><code>integer</code></td>
+                <td>For integers only (e.g. used by <code>minlength</code>)</td>
+              </tr>
+              <tr>
+                <td><code>number</code></td>
+                <td>To be used when decimal numbers are acceptable</td>
+              </tr>
+              <tr>
+                <td><code>regexp</code></td>
+                <td>Requirement can be either a full regexp string (e.g. <code>/hel+o/i</code>) or just a simple expression (e.g. <code>hel+o</code>)</td>
+              </tr>
+              <tr>
+                <td><code>boolean</code></td>
+                <td>Any value other than <code>"false"</code> will be considered to <code>true</code>, including the empty string. This is so <code>data-parsley-required</code> and <code>data-parsley-required=true</code> be treated the same way.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>You can also specify an array of these kinds. For example, if a validator has <code>requirementKind: ['integer', 'integer']</code>, then given the requirement string <code>"[1, 2]"</code> it will receive <code>1</code> and <code>2</code> as second and third arguments (the first one being the value(s) to validate).
+          </p>
+
+          <p>For even cases where more complex parameters are needed, you can specify extra parameters; refer to the source and check how the <code>remote</code> validator uses that.</p>
         </div>
 
         <!-- ****************** UI/ UX ****************** -->
@@ -1321,8 +1363,15 @@ $('[name="q"]').parsley()
                 <a href="#validators">Built-in validators</a>
                 <ul class="nav">
                   <li><a href="#validators-overview">Overview</a></li>
-                  <li><a href="#validators-list">Validators list</a></li>
-                  <li><a href="#validators-craft">Craft yours!</a></li>
+                  <li><a href="#validators-list">Built-in validators list</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#custom">Custom validators</a>
+                <ul class="nav">
+                  <li><a href="#custom-intro">Craft yours!</a></li>
+                  <li><a href="#custom-function">Validating functions</a></li>
+                  <li><a href="#custom-requirement">Requirement parameters</a></li>
                 </ul>
               </li>
               <li>
