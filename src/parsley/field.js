@@ -112,11 +112,7 @@ define('parsley/field', [
       if ('undefined' === typeof value || null === value)
         return '';
 
-      // Use `data-parsley-trim-value="true"` to auto trim inputs entry
-      if (true === this.options.trimValue)
-        return value.replace(/^\s+|\s+$/g, '');
-
-      return value;
+      return this._handleWhitespace(value);
     },
 
     // Actualize options that could have change since previous validation
@@ -263,6 +259,23 @@ define('parsley/field', [
     _trigger: function (eventName) {
       eventName = 'field:' + eventName;
       return this.trigger.apply(this, arguments);
+    },
+
+    // Internal only
+    // Handles whitespace in a value
+    // Use `data-parsley-whitespace="squish"` to auto squish input value
+    // Use `data-parsley-whitespace="trim"` to auto trim input value
+    _handleWhitespace: function (value) {
+      if (true === this.options.trimValue)
+        ParsleyUtils.warnOnce('data-parsley-trim-value="true" is deprecated, please use data-parsley-whitespace="trim"');
+
+      if ('squish' === this.options.whitespace)
+        value = value.replace(/\s{2,}/g, ' ');
+
+      if (('trim' === this.options.whitespace) || ('squish' === this.options.whitespace) || (true === this.options.trimValue))
+        value = value.replace(/^\s+|\s+$/g, '');
+
+      return value;
     },
 
     // Internal only.
