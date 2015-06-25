@@ -81,7 +81,7 @@ define('parsley/utils', function () {
     },
 
     warn: function() {
-      if (window.console && window.console.warn)
+      if (window.console && 'function' === typeof window.console.warn)
         window.console.warn.apply(window.console, arguments);
     },
 
