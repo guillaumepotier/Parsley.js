@@ -721,7 +721,7 @@ var Validator = ( function ( ) {
     Length: function ( boundaries ) {
       this.__class__ = 'Length';
       if ( !boundaries.min && !boundaries.max )
-        throw new Error( 'Lenth assert must be instanciated with a { min: x, max: y } object' );
+        throw new Error( 'Length assert must be instanciated with a { min: x, max: y } object' );
       this.min = boundaries.min;
       this.max = boundaries.max;
       this.validate = function ( value ) {
