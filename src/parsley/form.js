@@ -102,6 +102,7 @@ define('parsley/form', [
         this.$element
         .find(this.options.inputs)
         .not(this.options.excluded)
+        .filter(this.options.filter)
         .each(function () {
           var fieldInstance = new Parsley.Factory(this, {}, self);
 
