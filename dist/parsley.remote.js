@@ -273,7 +273,7 @@ window.Parsley.on('form:submit', function () {
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.2 - built Tue Jun 16 2015 10:32:01
+* Version 2.1.2 - built Thu Jul 09 2015 10:19:18
 * MIT Licensed
 *
 */
@@ -361,7 +361,7 @@ window.Parsley.on('form:submit', function () {
         .toLowerCase();
     },
     warn: function() {
-      if (window.console && window.console.warn)
+      if (window.console && 'function' === typeof window.console.warn)
         window.console.warn.apply(window.console, arguments);
     },
     warnOnce: function(msg) {
@@ -403,6 +403,9 @@ window.Parsley.on('form:submit', function () {
     inputs: 'input, textarea, select',
     // Excluded inputs by default
     excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
+    // Filter fields to validate
+    filter: function(idx, elem) {return true;},
+    
     // Stop validating field on highest priority failing constraint
     priorityEnabled: true,
     // ### Field only
@@ -1844,6 +1847,7 @@ var Validator = ( function ( ) {
         this.$element
         .find(this.options.inputs)
         .not(this.options.excluded)
+        .filter(this.options.filter)
         .each(function () {
           var fieldInstance = new Parsley.Factory(this, {}, self);
           // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
@@ -1996,10 +2000,7 @@ var Validator = ( function ( ) {
       // Handle wrong DOM or configurations
       if ('undefined' === typeof value || null === value)
         return '';
-      // Use `data-parsley-trim-value="true"` to auto trim inputs entry
-      if (true === this.options.trimValue)
-        return value.replace(/^\s+|\s+$/g, '');
-      return value;
+      return this._handleWhitespace(value);
     },
     // Actualize options that could have change since previous validation
     // Re-bind accordingly constraints (could be some new, removed or updated)
@@ -2118,6 +2119,19 @@ var Validator = ( function ( ) {
     _trigger: function (eventName) {
       eventName = 'field:' + eventName;
       return this.trigger.apply(this, arguments);
+    },
+    // Internal only
+    // Handles whitespace in a value
+    // Use `data-parsley-whitespace="squish"` to auto squish input value
+    // Use `data-parsley-whitespace="trim"` to auto trim input value
+    _handleWhitespace: function (value) {
+      if (true === this.options.trimValue)
+        ParsleyUtils.warnOnce('data-parsley-trim-value="true" is deprecated, please use data-parsley-whitespace="trim"');
+      if ('squish' === this.options.whitespace)
+        value = value.replace(/\s{2,}/g, ' ');
+      if (('trim' === this.options.whitespace) || ('squish' === this.options.whitespace) || (true === this.options.trimValue))
+        value = value.replace(/^\s+|\s+$/g, '');
+      return value;
     },
     // Internal only.
     // Sort constraints by priority DESC
@@ -2488,4 +2502,5 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();
     });
+	return window.Parsley;
 }));
