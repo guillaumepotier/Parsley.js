@@ -143,7 +143,7 @@
     uiEnabled: true,
     // Key events threshold before validation
     validationThreshold: 3,
-    // Focused field on form validation error. 'fist'|'last'|'none'
+    // Focused field on form validation error. 'first'|'last'|'none'
     focus: 'first',
     // `$.Event()` that will trigger validation. eg: `keyup`, `change`...
     trigger: false,
