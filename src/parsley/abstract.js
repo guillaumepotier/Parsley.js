@@ -4,7 +4,7 @@ define('parsley/abstract', [
   var ParsleyAbstract = function () {};
 
   ParsleyAbstract.prototype = {
-    asyncSupport: false,
+    asyncSupport: true, // Deprecated
 
     actualizeOptions: function () {
       ParsleyUtils.attr(this.$element, this.options.namespace, this.domOptions);
