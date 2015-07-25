@@ -19,15 +19,38 @@ define('parsley/form', [
 
   ParsleyForm.prototype = {
     onSubmitValidate: function (event) {
-      this.validate(undefined, undefined, event);
+      var that = this;
 
-      // prevent form submission if validation fails
-      if ((false === this.validationResult || !this._trigger('submit')) && event instanceof $.Event) {
-        event.stopImmediatePropagation();
-        event.preventDefault();
-      }
+      // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
+      if (true === event.parsley)
+        return;
+
+      // Because some validations might be asynchroneous,
+      // we cancel this submit and will fake it after validation.
+      event.stopImmediatePropagation();
+      event.preventDefault();
+
+      this.whenValidate(undefined, undefined, event)
+      .done(function() { that._submit(); })
+      .always(function() { that._submitSource = null; });
 
       return this;
+    },
+
+    // internal
+    // _submit submits the form, this time without going through the validations.
+    // Care must be taken to "fake" the actual submit button being clicked.
+    _submit: function() {
+      if (false === this._trigger('submit'))
+        return;
+      this.$element.find('.parsley_synthetic_submit_button').remove();
+      if (this._submitSource) {
+        $('<input class=".parsley_synthetic_submit_button" type="hidden">')
+        .attr('name', this._submitSource.name)
+        .attr('value', this._submitSource.value)
+        .appendTo(this.$element);
+      }
+      this.$element.trigger($.extend($.Event('submit'), { parsley: true }));
     },
 
     // Performs validation on fields while triggering events.
