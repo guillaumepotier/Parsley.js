@@ -108,8 +108,12 @@ define('features/remote', [
               });
           });
       });
-      // custom validator needed for this test is registered in `tests.js` before running this suite
+
       it('should handle remote validator option', function (done) {
+        window.Parsley.addAsyncValidator('custom', function(xhr) {
+          return xhr.status === 404;
+        });
+
         $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" data-parsley-remote-validator="custom" required name="element" value="foobar" />');
         var parsleyInstance = $('#element').parsley();
 
