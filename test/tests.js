@@ -79,17 +79,6 @@ require(['config'], function () {
           ui(ParsleyUI);
         });
 
-        // tested by it('should handle remote validator option') in `features/remote`
-        window.ParsleyExtend = {
-          asyncValidators: {
-            custom: {
-              fn: function (xhr) {
-                return xhr.status === 404;
-              }
-            }
-          }
-        };
-
         require([
           'features/remote',
           'features/abstract',
