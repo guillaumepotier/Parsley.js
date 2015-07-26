@@ -29,8 +29,7 @@ define('parsley/field', [
   ParsleyField.prototype = {
     // # Public API
     // Validate field and trigger some events for mainly `ParsleyUI`
-    // @returns a promise that will either succeed (field valid) or fail,
-    // in which case the result is an array of Violation.
+    // @returns true or an array of the validators that failed.
     validate: function (force) {
       this.value = this.getValue();
 
