@@ -114,6 +114,11 @@ define('parsley/abstract', [
       this._trigger('destroy');
     },
 
+    asyncIsValid: function() {
+      ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenIsValid instead");
+      return this.whenValid.apply(this, arguments);
+    },
+
     _findRelatedMultiple: function() {
       return this.parent.$element.find('[' + this.options.namespace + 'multiple="' + this.options.multiple +'"]');
     }
