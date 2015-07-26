@@ -106,7 +106,7 @@ define('parsley/field', [
       $.each(groupedConstraints, function(_, constraints) {
         var promise = $.when.apply($,
           $.map(constraints, function(constraint) {
-            var result = constraint.validator.parseAndValidate(value, constraint.requirements);
+            var result = constraint.validate(value, that);
             if (false === result)
               result = $.Deferred().reject();
             return $.when(result).fail(function() {
