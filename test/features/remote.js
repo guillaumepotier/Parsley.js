@@ -16,72 +16,25 @@ define('features/remote', [
         window.ParsleyConfig = window._remoteParsleyConfig;
         window.ParsleyValidator.init(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
       });
+      beforeEach(function() {
+        delete window.Parsley._remoteCache;
+      });
       it('should have window.ParsleyExtend defined', function () {
         expect(window.ParsleyExtend).not.to.be(undefined);
-      });
-      it('should return a promise object when calling asyncIsValid and asyncValidate on a field', function () {
-        $('body').append('<input type="email" id="element" required data-parsley-remote="http://foo.bar" />');
-        var promise = $('#element').psly().asyncIsValid();
-        expect(promise).to.be.an('object');
-        expect(promise).to.have.key('promise');
-        promise = $('#element').psly().asyncValidate();
-        expect(promise).to.be.an('object');
-        expect(promise).to.have.key('promise');
-      });
-      it('should return a promise object when calling asyncIsValid and asyncValidate on a form', function () {
-        $('body').append(
-          '<form id="element" data-parsley-trigger="change">'                 +
-            '<input id="field1" type="text" data-parsley-required="true" />'  +
-            '<div id="field2"></div>'                                         +
-            '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
-          '</form>');
-        var promise = $('#element').psly().asyncIsValid();
-        expect(promise).to.be.an('object');
-        expect(promise).to.have.key('promise');
-        promise = $('#element').psly().asyncValidate();
-        expect(promise).to.be.an('object');
-        expect(promise).to.have.key('promise');
-      });
-      it('should trigger right events on asyncValidate for form and field', function (done) {
-        $('body').append(
-          '<form id="element" data-parsley-trigger="change">'                 +
-            '<input id="field1" type="text" data-parsley-required="true" />'  +
-            '<div id="field2"></div>'                                         +
-            '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
-          '</form>');
-        $('#element').parsley()
-        .on('form:validated', function () { done(); })
-        .asyncValidate();
-      });
-      it('should have a force option for asyncValidate and asyncIsValid methods', function (done) {
-        $('body').append('<input type="email" id="element" />');
-        var parsleyInstance = $('#element').parsley();
-        parsleyInstance.asyncIsValid()
-          .done(function () {
-            parsleyInstance.asyncValidate()
-              .done(function () {
-                parsleyInstance.asyncIsValid(true)
-                  .fail(function () {
-                    parsleyInstance.asyncValidate(true)
-                      .fail(function () {
-                        done();
-                      });
-                  });
-              });
-          });
       });
       it('should handle properly validation with remote validator', function (done) {
         $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" required name="element" value="foo" />');
         var parsleyInstance = $('#element').parsley();
 
         sinon.stub($, 'ajax').returns($.Deferred().reject({ status: 400, state: function () { return 'rejected' } }, 'error', 'error'));
-        parsleyInstance.asyncIsValid()
+
+        parsleyInstance.whenValid()
           .fail(function () {
             $.ajax.restore();
             sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
 
             $('#element').val('bar');
-            parsleyInstance.asyncIsValid()
+            parsleyInstance.whenValid()
               .done(function () {
                 $.ajax.restore();
                 done();
@@ -93,13 +46,13 @@ define('features/remote', [
         var parsleyInstance = $('#element').parsley();
 
         sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
-        parsleyInstance.asyncIsValid()
+        parsleyInstance.whenValid()
           .fail(function () {
             $.ajax.restore();
             sinon.stub($, 'ajax').returns($.Deferred().reject({ status: 400, state: function () { return 'rejected' } }, 'error', 'error'));
 
             $('#element').val('bux');
-            parsleyInstance.asyncIsValid()
+            parsleyInstance.whenValid()
               .done(function () {
                 $.ajax.restore();
                 done();
@@ -111,7 +64,7 @@ define('features/remote', [
         var parsleyInstance = $('#element').parsley();
 
         sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
-        parsleyInstance.asyncIsValid()
+        parsleyInstance.whenValid()
           .done(function () {
             expect($.ajax.calledWithMatch({ type: "POST" })).to.be(true);
             expect($.ajax.calledWithMatch({ url: "http://foo.bar" })).to.be(true);
@@ -124,8 +77,11 @@ define('features/remote', [
         $('body').append('<input type="text" data-parsley-remote="http://foo.bar" id="element" required name="element" value="foo" />');
         var parsleyInstance = $('#element').parsley();
 
-        sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
-        parsleyInstance.asyncIsValid()
+        var deferred = $.Deferred();
+        var xhr = $.extend(deferred.promise(), {status: 200, stubbed: true});
+        sinon.stub($, 'ajax').returns(xhr);
+        deferred.resolve({}, 'success', xhr);
+        parsleyInstance.whenValid()
           .done(function () {
             expect($.ajax.calledOnce).to.be(true);
             expect($.ajax.calledWithMatch({ data: { "element": "foo" } })).to.be(true);
@@ -133,7 +89,7 @@ define('features/remote', [
             sinon.stub($, 'ajax').returns($.Deferred().reject({ status: 400, state: function () { return 'rejected' } }, 'error', 'error'));
 
             $('#element').val('bar');
-            parsleyInstance.asyncIsValid()
+            parsleyInstance.whenValid()
               .fail(function () {
                 expect($.ajax.calledOnce).to.be(true);
                 expect($.ajax.calledWithMatch({ data: { "element": "bar" } })).to.be(true);
@@ -142,7 +98,7 @@ define('features/remote', [
                 sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
                 $('#element').val('foo');
 
-                parsleyInstance.asyncIsValid()
+                parsleyInstance.whenValid()
                   .done(function () {
                     expect($.ajax.callCount).to.be(0);
                     expect($.ajax.calledOnce).to.be(false);
@@ -158,19 +114,19 @@ define('features/remote', [
         var parsleyInstance = $('#element').parsley();
 
         sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
-        parsleyInstance.asyncIsValid()
+        parsleyInstance.whenValid()
           .fail(function () {
             $.ajax.restore();
             sinon.stub($, 'ajax').returns($.Deferred().reject({ status: 400, state: function () { return 'rejected' } }, 'error', 'error'));
 
             $('#element').val('foobaz');
-            parsleyInstance.asyncIsValid()
+            parsleyInstance.whenValid()
               .fail(function () {
                 $.ajax.restore();
                 sinon.stub($, 'ajax').returns($.Deferred().reject({ status: 404, state: function () { return 'rejected' } }, 'error', 'not found'));
 
                 $('#element').val('fooquux');
-                parsleyInstance.asyncIsValid()
+                parsleyInstance.whenValid()
                   .done(function () {
                     $.ajax.restore();
                     done();
@@ -182,12 +138,12 @@ define('features/remote', [
         $('body').append('<input type="text" data-parsley-remote id="element" data-parsley-remote-validator="mycustom" required name="element" value="foobar" />');
         var parsleyInstance = $('#element').parsley();
 
-        parsleyInstance.addAsyncValidator('mycustom', function (xhr) {
+        window.Parsley.addAsyncValidator('mycustom', function (xhr) {
           return xhr.status === 404;
         }, 'http://foobar.baz');
 
         sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
-        parsleyInstance.asyncIsValid()
+        parsleyInstance.whenValid()
           .fail(function () {
             expect($.ajax.calledWithMatch({ url: "http://foobar.baz" })).to.be(true);
             $.ajax.restore();
@@ -198,12 +154,12 @@ define('features/remote', [
         $('body').append('<input type="text" data-parsley-remote id="element" data-parsley-remote-validator="mycustom" required name="element" value="foobar" />');
         var parsleyInstance = $('#element').parsley();
 
-        parsleyInstance.addAsyncValidator('mycustom', function (xhr) {
+        window.Parsley.addAsyncValidator('mycustom', function (xhr) {
           expect(this.__class__).to.be('ParsleyField');
         }, 'http://foobar.baz');
 
         sinon.stub($, 'ajax').returns($.Deferred().resolve({}, 'success', { status: 200, state: function () { return 'resolved' } }));
-        parsleyInstance.asyncIsValid()
+        parsleyInstance.whenValid()
           .fail(function () {
             expect($.ajax.calledWithMatch({ url: "http://foobar.baz" })).to.be(true);
             $.ajax.restore();
@@ -217,13 +173,13 @@ define('features/remote', [
           .appendTo('body')
           .on('submit', function(evt) { evt.preventDefault(); } )
           .parsley();
-        parsleyInstance._remoteCache = {dummy: 42};
+        window.Parsley._remoteCache = {dummy: 42};
         $('#element').submit();
         $('#element input').val('hello');
         parsleyInstance.validate();
-        expect(parsleyInstance._remoteCache.dummy).to.be(42);
+        expect(window.Parsley._remoteCache.dummy).to.be(42);
         $('#element').submit();
-        expect(parsleyInstance._remoteCache.dummy).to.be(undefined);
+        expect(window.Parsley._remoteCache.dummy).to.be(undefined);
       });
 
       it.skip('should abort successives querries and do not handle their return');
