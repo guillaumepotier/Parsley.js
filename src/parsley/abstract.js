@@ -24,11 +24,6 @@ define('parsley/abstract', [
       this.actualizeOptions();
     },
 
-    // ParsleyValidator validate proxy function . Could be replaced by third party scripts
-    validateThroughValidator: function (value, constraints, priority) {
-      return window.ParsleyValidator.validate(value, constraints, priority);
-    },
-
     _listeners: null,
 
     // Register a callback for the given event name.
