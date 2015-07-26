@@ -79,13 +79,12 @@ define('parsley/validator', [
     },
 
     // Returns `true` iff the given `value` is valid according the given requirements.
-    validate: function(value, requirementArg1, requirementArg2) {
-      if(this.fn) {
-        // TODO: Guess if array
-        // Legacy style validator:
-        if(arguments.length > 2)
-          requirementArg1 = [].slice.call(arguments, 1);
-        return this.fn.call(this, value, requirementArg1);
+    validate: function(value, requirementFirstArg) {
+      if(this.fn) { // Legacy style validator
+
+        if(arguments.length > 3)  // If more args then value, requirement, instance...
+          requirementFirstArg = [].slice.call(arguments, 1, -1);  // Skip first arg (value) and last (instance), combining the rest
+        return this.fn.call(this, value, requirementFirstArg);
       }
 
       if ($.isArray(value)) {
