@@ -22,6 +22,12 @@ define('parsley/validator', [
         throw 'No such reference: "' + string + '"';
       return result;
     },
+    boolean: function(string) {
+      return string !== 'false';
+    },
+    object: function(string) {
+      return ParsleyUtils.deserializeValue(string);
+    },
     regexp: function(regexp) {
       var flags = '';
 
@@ -53,24 +59,30 @@ define('parsley/validator', [
     if (!converter)
       throw 'Unknown requirement specification: "' + requirementType + '"';
     return converter(string);
-  }
+  };
 
+  var convertExtraOptionRequirement = function(requirementSpec, string, extraOptionReader) {
+    var main = null, extra = {};
+    for(var key in requirementSpec) {
+      if (key) {
+        var value = extraOptionReader(key);
+        if('string' === typeof value)
+          value = convertRequirement(requirementSpec[key], value);
+        extra[key] = value;
+      } else {
+        main = convertRequirement(requirementSpec[key], string)
+      }
+    }
+    return [main, extra];
+  };
 
-  // A Validator needs to implement two methods:
-  // `validate(value, requirements...)`, returning `true`, `false`
-  // `parseRequirements(requirementString), returning an array of values
+  // A Validator needs to implement the methods `validate` and `parseRequirements`
 
   var ParsleyValidator = function(spec) {
     $.extend(true, this, spec);
   };
 
   ParsleyValidator.prototype = {
-    parseAndValidate: function(value, requirements) {
-      var args = this.parseRequirements(requirements);
-      args.unshift(value);
-      return this.validate.apply(this, args);
-    },
-
     // Returns `true` iff the given `value` is valid according the given requirements.
     validate: function(value, requirementFirstArg) {
       if(this.fn) { // Legacy style validator
@@ -94,13 +106,13 @@ define('parsley/validator', [
         if (this.validateString) {
           return this.validateString.apply(this, arguments);
         }
-        throw 'Validator ' + this.name + ' only handles multiple values';
+        throw 'Validator `' + this.name + '` only handles multiple values';
       }
     },
 
     // Parses `requirements` into an array of arguments,
     // according to `this.requirementType`
-    parseRequirements: function(requirements) {
+    parseRequirements: function(requirements, extraOptionReader) {
       if ('string' !== typeof requirements) {
         // Assume requirement already parsed
         // but make sure we return an array
@@ -112,6 +124,8 @@ define('parsley/validator', [
         for (var i = 0; i < values.length; i++)
           values[i] = convertRequirement(type[i], values[i]);
         return values;
+      } else if ($.isPlainObject(type)) {
+        return convertExtraOptionRequirement(type, requirements, extraOptionReader)
       } else {
         return [convertRequirement(type, requirements)];
       }
