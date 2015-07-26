@@ -14,7 +14,9 @@ define('features/extra', [
         var expectValidation = function(value, name, requirements) {
           var validatorSpec = validatorRegistry.validators[name];
           var validator = new ParsleyValidator(validatorSpec);
-          return expect(validator.parseAndValidate(value, requirements));
+          var argList = validator.parseRequirements(requirements);
+          argList.unshift(value);
+          return expect(validator.validate.apply(validator, argList));
         };
 
         expectValidation('',           'dateiso').not.to.be(true);
