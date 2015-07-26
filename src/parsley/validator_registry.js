@@ -66,7 +66,7 @@ define('parsley/validator_registry', [
       this.validators = $.extend({}, this.validators);
 
       for (var name in validators)
-        this.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
+        this.addValidator(name, validators[name].fn, validators[name].priority);
 
       window.Parsley.trigger('parsley:validator:init');
     },
@@ -103,22 +103,22 @@ define('parsley/validator_registry', [
     },
 
     // Add a new validator
-    addValidator: function (name, fn, priority, requirementsTransformer) {
+    addValidator: function (name, fn, priority) {
       if (this.validators[name])
         ParsleyUtils.warn('Validator "' + name + '" is already defined.');
       else if (ParsleyDefaults.hasOwnProperty(name)) {
         ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
         return;
       };
-      return this._setValidator(name, fn, priority, requirementsTransformer);
+      return this._setValidator(name, fn, priority);
     },
 
-    updateValidator: function (name, fn, priority, requirementsTransformer) {
+    updateValidator: function (name, fn, priority) {
       if (!this.validators[name]) {
         ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
-        return this.addValidator(name, fn, priority, requirementsTransformer);
+        return this.addValidator(name, fn, priority);
       }
-      return this._setValidator(name, fn, priority, requirementsTransformer);
+      return this._setValidator(name, fn, priority);
     },
 
     removeValidator: function (name) {
@@ -130,13 +130,7 @@ define('parsley/validator_registry', [
       return this;
     },
 
-    _setValidator: function (name, fn, priority, requirementsTransformer) {
-      if ('function' === typeof requirementsTransformer) {
-        var originalFn = fn;
-        fn = function(value, requirements) {
-          originalFn(requirementsTransformer(requirements));
-        }
-      }
+    _setValidator: function (name, fn, priority) {
       this.validators[name] = {
         fn: fn,
         priority: priority

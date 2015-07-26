@@ -179,21 +179,6 @@ define(function () {
         expect(validatorRegistry.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('This value seems to be invalid.');
       });
 
-      if(false)
-      it('should handle parametersTransformer for custom validators', function () {
-        validatorRegistry.addValidator('foo', function (requirements) {
-          return requirements;
-        }, 32, function (requirements) {
-          return { req: requirements };
-        });
-        expect(validatorRegistry.validators.foo().requirementsTransformer).to.be.a('function');
-        validatorRegistry.updateValidator('foo', function (requirements) {
-          return requirements;
-        }, 32);
-        expect(validatorRegistry.validators.foo().requirementsTransformer).to.be(undefined);
-        validatorRegistry.removeValidator('foo');
-        expect(validatorRegistry.validators.foo).to.be(undefined);
-      });
       afterEach(function () {
         $('#element').remove();
       });
