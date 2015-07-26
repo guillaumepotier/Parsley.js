@@ -1,6 +1,7 @@
 define('parsley/validator_registry', [
-  'parsley/defaults'
-], function (ParsleyDefaults) {
+  'parsley/defaults',
+  'parsley/validator'
+], function (ParsleyDefaults, ParsleyValidator) {
 
   var ParsleyValidatorRegistry = function (validators, catalog) {
     this.__class__ = 'ParsleyValidatorRegistry';
@@ -103,22 +104,22 @@ define('parsley/validator_registry', [
     },
 
     // Add a new validator
-    addValidator: function (name, fn, priority) {
+    addValidator: function (name, arg1, arg2) {
       if (this.validators[name])
         ParsleyUtils.warn('Validator "' + name + '" is already defined.');
       else if (ParsleyDefaults.hasOwnProperty(name)) {
         ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
         return;
       };
-      return this._setValidator(name, fn, priority);
+      return this._setValidator.apply(this, arguments);
     },
 
-    updateValidator: function (name, fn, priority) {
+    updateValidator: function (name, arg1, arg2) {
       if (!this.validators[name]) {
         ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
-        return this.addValidator(name, fn, priority);
+        return this.addValidator.apply(this, arguments);
       }
-      return this._setValidator(name, fn, priority);
+      return this._setValidator(this, arguments);
     },
 
     removeValidator: function (name) {
@@ -130,11 +131,18 @@ define('parsley/validator_registry', [
       return this;
     },
 
-    _setValidator: function (name, fn, priority) {
-      this.validators[name] = {
-        fn: fn,
-        priority: priority
+    _setValidator: function (name, validator, priority) {
+      if ('object' !== typeof validator) {
+        // Old style validator, with `fn` and `priority`
+        validator = {
+          fn: validator,
+          priority: priority
+        }
       };
+      if (!validator.validate) {
+        validator = new ParsleyValidator(validator);
+      };
+      this.validators[name] = validator;
 
       return this;
     },
