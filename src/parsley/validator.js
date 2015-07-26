@@ -106,8 +106,6 @@ define('parsley/validator', [
       }
     },
 
-    requirementType: 'string',
-
     // Parses `requirements` into an array of arguments,
     // according to `this.requirementType`
     parseRequirements: function(requirements) {
@@ -125,7 +123,12 @@ define('parsley/validator', [
       } else {
         return [convertRequirement(type, requirements)];
       }
-    }
+    },
+    // Defaults:
+    requirementType: 'string',
+
+    priority: 2
+
   };
 
   return ParsleyValidator;

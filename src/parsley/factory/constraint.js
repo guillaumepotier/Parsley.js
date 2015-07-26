@@ -13,7 +13,7 @@ define('parsley/factory/constraint', [
       validator: validator,
       name: name,
       requirements: requirements,
-      priority: priority || parsleyField.options[name + 'Priority'] || validator.priority || 2,
+      priority: priority || parsleyField.options[name + 'Priority'] || validator.priority,
       isDomConstraint: true === isDomConstraint
     };
   };
