@@ -61,14 +61,7 @@ define('parsley/validator', [
   // `parseRequirements(requirementString), returning an array of values
 
   var ParsleyValidator = function(spec) {
-    $.extend(this, spec);
-    if (spec.parametersTransformer) {
-      ParsleyUtils.warnOnce('parametersTransformer is deprecated. Use requirementType or define parseRequirements instead');
-      this.parseRequirements = function(requirementString) {
-        var result = spec.parametersTransformer(requirementString)
-        return $.isArray(result) ? result : [result];
-      };
-    }
+    $.extend(true, this, spec);
   };
 
   ParsleyValidator.prototype = {
@@ -89,7 +82,7 @@ define('parsley/validator', [
 
       if ($.isArray(value)) {
         if (!this.validateMultiple)
-          throw 'Validator ' + this.name + ' does not handle multiple values';
+          throw 'Validator `' + this.name + '` does not handle multiple values';
         return this.validateMultiple.apply(this, arguments);
       } else {
         if (this.validateNumber) {
