@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.1.2 - built Tue Jun 16 2015 10:32:01
+* Version 2.1.3 - built Wed Jul 29 2015 08:27:00
 * MIT Licensed
 *
 */
@@ -89,7 +89,7 @@
         .toLowerCase();
     },
     warn: function() {
-      if (window.console && window.console.warn)
+      if (window.console && 'function' === typeof window.console.warn)
         window.console.warn.apply(window.console, arguments);
     },
     warnOnce: function(msg) {
@@ -143,7 +143,7 @@
     uiEnabled: true,
     // Key events threshold before validation
     validationThreshold: 3,
-    // Focused field on form validation error. 'fist'|'last'|'none'
+    // Focused field on form validation error. 'first'|'last'|'none'
     focus: 'first',
     // `$.Event()` that will trigger validation. eg: `keyup`, `change`...
     trigger: false,
@@ -721,7 +721,7 @@ var Validator = ( function ( ) {
     Length: function ( boundaries ) {
       this.__class__ = 'Length';
       if ( !boundaries.min && !boundaries.max )
-        throw new Error( 'Length assert must be instanciated with a { min: x, max: y } object' );
+        throw new Error( 'Lenth assert must be instanciated with a { min: x, max: y } object' );
       this.min = boundaries.min;
       this.max = boundaries.max;
       this.validate = function ( value ) {
@@ -1724,10 +1724,7 @@ var Validator = ( function ( ) {
       // Handle wrong DOM or configurations
       if ('undefined' === typeof value || null === value)
         return '';
-      // Use `data-parsley-trim-value="true"` to auto trim inputs entry
-      if (true === this.options.trimValue)
-        return value.replace(/^\s+|\s+$/g, '');
-      return value;
+      return this._handleWhitespace(value);
     },
     // Actualize options that could have change since previous validation
     // Re-bind accordingly constraints (could be some new, removed or updated)
@@ -1847,6 +1844,19 @@ var Validator = ( function ( ) {
       eventName = 'field:' + eventName;
       return this.trigger.apply(this, arguments);
     },
+    // Internal only
+    // Handles whitespace in a value
+    // Use `data-parsley-whitespace="squish"` to auto squish input value
+    // Use `data-parsley-whitespace="trim"` to auto trim input value
+    _handleWhitespace: function (value) {
+      if (true === this.options.trimValue)
+        ParsleyUtils.warnOnce('data-parsley-trim-value="true" is deprecated, please use data-parsley-whitespace="trim"');
+      if ('squish' === this.options.whitespace)
+        value = value.replace(/\s{2,}/g, ' ');
+      if (('trim' === this.options.whitespace) || ('squish' === this.options.whitespace) || (true === this.options.trimValue))
+        value = value.replace(/^\s+|\s+$/g, '');
+      return value;
+    },
     // Internal only.
     // Sort constraints by priority DESC
     _getConstraintsSortedPriorities: function () {
@@ -1943,7 +1953,7 @@ var Validator = ( function ( ) {
   ParsleyFactory.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.1.2';
+      this.__version__ = '2.1.3';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
@@ -2048,7 +2058,7 @@ var Validator = ( function ( ) {
   var
     o = $({}),
     deprecated = function () {
-      ParsleyUtils.warnOnce("Parsley's pubsub module is deprecated; use the corresponding jQuery event method instead");
+      ParsleyUtils.warnOnce("Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley");
     };
   // Returns an event handler that calls `fn` with the arguments it expects
   function adapt(fn, context) {
@@ -2155,7 +2165,7 @@ window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {},
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.1.2
+//     Parsley.js 2.1.3
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -2166,7 +2176,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       actualizeOptions: null,
       _resetOptions: null,
       Factory: ParsleyFactory,
-      version: '2.1.2'
+      version: '2.1.3'
     });
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
@@ -2216,4 +2226,5 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();
     });
+	return window.Parsley;
 }));
