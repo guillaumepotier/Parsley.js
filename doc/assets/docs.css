@@ -1,6 +1,17 @@
 body {
   color: #111111;
-  padding-top: 20px;
+}
+.branding {
+  width: 100%;
+  color: #676E72;;
+  font-size: 1.1em;
+  text-align: center;
+  background-color: #F1BC32;
+  background-color: rgba(241,188,50,.15);
+  padding: 24px;
+}
+.branding a {
+  font-weight: 700;
 }
 @media (min-width: 768px) {
   .nav-justified {
