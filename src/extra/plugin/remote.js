@@ -1,9 +1,3 @@
-// `window.ParsleyExtend`, like `ParsleyAbstract`, is inherited by `ParsleyField` and `ParsleyForm`
-// That way, we could add new methods or redefine some for these both classes. In particular case
-// We are adding async validation methods that returns promises, bind them properly to triggered
-// Events like onkeyup when field is invalid or on form submit. These validation methods adds an
-// Extra `remote` validator which could not be simply added like other `ParsleyExtra` validators
-// Because returns promises instead of booleans.
 (function($){
 
 $.extend(true, window.Parsley, {
