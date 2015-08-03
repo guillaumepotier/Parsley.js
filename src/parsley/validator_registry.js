@@ -104,6 +104,15 @@ define('parsley/validator_registry', [
     },
 
     // Add a new validator
+    //
+    //    addValidator('custom', {
+    //        requirementType: ['integer', 'integer'],
+    //        validateString: function(value, from, to) {},
+    //        priority: 22
+    //    }
+    //
+    // Old API was addValidator(name, function, priority)
+    //
     addValidator: function (name, arg1, arg2) {
       if (this.validators[name])
         ParsleyUtils.warn('Validator "' + name + '" is already defined.');
