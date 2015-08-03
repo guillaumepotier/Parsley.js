@@ -13,7 +13,7 @@ define([
   'parsley/defaults',
   // An abstract class shared by `ParsleyField` and `ParsleyForm`
   'parsley/abstract',
-  // A proxy between Parsley and [Validator.js](http://validatorjs.org)
+  // A registry of all Parsley validators (built-in and custom)
   'parsley/validator_registry',
   // `ParsleyUI` static class. Handles all UI and UX
   'parsley/ui',
