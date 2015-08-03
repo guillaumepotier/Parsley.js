@@ -100,28 +100,34 @@ define('parsley/field', [
         return $.when();
 
       var groupedConstraints = this._getGroupedConstraints();
-      var that = this;
       var promises = [];
-
+      var that = this;
       $.each(groupedConstraints, function(_, constraints) {
+        // Process one group of constraints at a time, we validate the constraints
+        // and combine the promises together.
         var promise = $.when.apply($,
-          $.map(constraints, function(constraint) {
-            var result = constraint.validate(value, that);
-            if (false === result)
-              result = $.Deferred().reject();
-            return $.when(result).fail(function() {
-              if (true === that.validationResult)
-                that.validationResult = [];
-              that.validationResult.push({assert: constraint});
-            });
-          })
+          $.map(constraints, $.proxy(that, '_validateConstraint', value))
         );
-
         promises.push(promise);
         if (promise.state() === 'rejected')
-          return false; // Interrupt processing
+          return false; // Interrupt processing if a group has already failed
       });
       return $.when.apply($, promises);
+    },
+
+    // @returns a promise
+    _validateConstraint: function(value, constraint) {
+      var that = this;
+      var result = constraint.validate(value, this);
+      // Map false to a failed promise
+      if (false === result)
+        result = $.Deferred().reject();
+      // Make sure we return a promise and that we record failures
+      return $.when(result).fail(function() {
+        if (true === that.validationResult)
+          that.validationResult = [];
+        that.validationResult.push({assert: constraint});
+      });
     },
 
     // @returns Parsley field computed value that could be overrided or configured in DOM
