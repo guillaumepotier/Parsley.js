@@ -31,8 +31,8 @@ define('parsley/form', [
       event.preventDefault();
 
       this.whenValidate(undefined, undefined, event)
-      .done(function() { that._submit(); })
-      .always(function() { that._submitSource = null; });
+        .done(function() { that._submit(); })
+        .always(function() { that._submitSource = null; });
 
       return this;
     },
@@ -81,9 +81,9 @@ define('parsley/form', [
         });
       });
       return $.when.apply($, promises)
-      .done(  function() { that._trigger('success'); })
-      .fail(  function() { that.validationResult = false; that._trigger('error'); })
-      .always(function() { that._trigger('validated'); });
+        .done(  function() { that._trigger('success'); })
+        .fail(  function() { that.validationResult = false; that._trigger('error'); })
+        .always(function() { that._trigger('validated'); });
     },
 
     // Iterate over refreshed fields, and stop on first failure.
