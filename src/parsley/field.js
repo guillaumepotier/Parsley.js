@@ -53,9 +53,9 @@ define('parsley/field', [
       this._trigger('validate');
 
       return this.whenValid(force, this.value)
-      .done(function()   { that._trigger('success'); })
-      .fail(function()   { that._trigger('error'); })
-      .always(function() { that._trigger('validated'); });
+        .done(function()   { that._trigger('success'); })
+        .fail(function()   { that._trigger('error'); })
+        .always(function() { that._trigger('validated'); });
     },
 
     hasConstraints: function () {
