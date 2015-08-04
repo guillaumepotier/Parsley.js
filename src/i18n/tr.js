@@ -4,28 +4,28 @@ window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
 window.ParsleyConfig.i18n.tr = jQuery.extend(window.ParsleyConfig.i18n.tr || {}, {
-  defaultMessage: "Bu değer geçerli değil.",
+  defaultMessage: "Girdiğiniz değer geçerli değil.",
   type: {
-    email:        "Geçerli bir e-posta adresi yazınız.",
-    url:          "Geçerli bir bağlantı adresi yazınız.",
-    number:       "Geçerli bir sayı yazınız.",
-    integer:      "Geçerli bir tamsayı yazınız.",
-    digits:       "Geçerli bir rakam yazınız.",
-    alphanum:     "Geçerli bir alfanümerik değer yazınız."
+    email:        "Geçerli bir e-mail adresi yazmanız gerekiyor.",
+    url:          "Geçerli bir bağlantı adresi yazmanız gerekiyor.",
+    number:       "Geçerli bir sayı yazmanız gerekiyor.",
+    integer:      "Geçerli bir tamsayı yazmanız gerekiyor.",
+    digits:       "Geçerli bir rakam yazmanız gerekiyor.",
+    alphanum:     "Geçerli bir alfanümerik değer yazmanız gerekiyor."
   },
-  notblank:       "Bu alan boş bırakılmamalıdır.",
-  required:       "Bu alan gereklidir.",
+  notblank:       "Bu alan boş bırakılamaz.",
+  required:       "Bu alan boş bırakılamaz.",
   pattern:        "Girdiğiniz değer geçerli değil.",
-  min:            "Bu alan %s değerinden büyük ya da eşit olmalıdır.",
-  max:            "Bu alan %s değerinden küçük ya da eşit olmalıdır.",
-  range:          "Bu alan %s ve %s değerleri arasında olmalıdır.",
-  minlength:      "Girdiğiniz değer çok kısa. Bu alan %s değerine eşit ya da fazla olmalıdır.",
-  maxlength:      "Girdiğiniz değer çok uzun. Bu alan %s değerine eşit ya da az olmalıdır.",
-  length:         "Girdiğiniz değerin uzunluğu geçersiz. Bu alanın uzunluğu %s ve %s arasında olmalıdır.",
+  min:            "Bu alan %s değerinden büyük ya da bu değere eşit olmalı.",
+  max:            "Bu alan %s değerinden küçük ya da bu değere eşit olmalı.",
+  range:          "Bu alan %s ve %s değerleri arasında olmalı.",
+  minlength:      "Bu alanın uzunluğu %s karakter veya daha fazla olmalı.",
+  maxlength:      "Bu alanın uzunluğu %s karakter veya daha az olmalı.",
+  length:         "Bu alanın uzunluğu %s ve %s karakter arasında olmalı.",
   mincheck:       "En az %s adet seçim yapmalısınız.",
-  maxcheck:       "En fazla %s ya da daha az seçim yapmalısınız.",
-  check:          "Bu alan için en az %s en fazla %s seçim yapmalısınız.",
-  equalto:        "Bu alanın değeri aynı olmalıdır."
+  maxcheck:       "En fazla %s seçim yapabilirsiniz.",
+  check:          "Bu alan için en az %s, en fazla %s seçim yapmalısınız.",
+  equalto:        "Bu alanın değeri aynı olmalı."
 });
 
 // If file is loaded after Parsley main file, auto-load locale
