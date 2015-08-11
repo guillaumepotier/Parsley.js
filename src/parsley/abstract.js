@@ -70,15 +70,17 @@ define('parsley/abstract', [
       target = target || this;
       var queue = this._listeners && this._listeners[name];
       var result, parentResult;
+
       if (queue) {
         for(var i = queue.length; i--; ) {
           result = queue[i].call(target, target);
-          if (result === false) return result;
+          if (false === result) return result;
         }
       }
-      if (this.parent) {
+
+      if (this.parent)
         return this.parent.trigger(name, target);
-      }
+
       return true;
     },
 
@@ -114,8 +116,9 @@ define('parsley/abstract', [
       this._trigger('destroy');
     },
 
-    asyncIsValid: function() {
+    asyncIsValid: function () {
       ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenIsValid instead");
+
       return this.whenValid.apply(this, arguments);
     },
 

@@ -190,22 +190,22 @@ define('parsley/validator_registry', [
     //
     validators: {
       notblank: {
-        validateString: function(value) {
+        validateString: function (value) {
           return /\S/.test(value);
         },
         priority: 2
       },
       required: {
-        validateMultiple: function(values) {
+        validateMultiple: function (values) {
           return values.length > 0;
         },
-        validateString: function(value) {
+        validateString: function (value) {
           return /\S/.test(value);
         },
         priority: 512
       },
       type: {
-        validateString: function(value, type) {
+        validateString: function (value, type) {
           var regex = typeRegexes[type];
           if (!regex)
             throw new Error('validator type `' + type + '` is not supported');
@@ -214,7 +214,7 @@ define('parsley/validator_registry', [
         priority: 256
       },
       pattern: {
-        validateString: function(value, regexp) {
+        validateString: function (value, regexp) {
           return regexp.test(value);
         },
         requirementType: 'regexp',

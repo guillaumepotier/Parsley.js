@@ -3,6 +3,7 @@ define('parsley/field', [
     'parsley/ui',
     'parsley/utils'
 ], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
+
   var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.generateID();
@@ -25,8 +26,6 @@ define('parsley/field', [
     // Bind constraints
     this._bindConstraints();
   };
-
-  var statusMapping = { pending: null, resolved: true, rejected: false };
 
   ParsleyField.prototype = {
     // # Public API
@@ -80,6 +79,8 @@ define('parsley/field', [
     // or `null` if the result can not be determined yet (depends on a promise)
     // Prefer using `whenValid`.
     isValid: function (force, value) {
+      var statusMapping = { pending: null, resolved: true, rejected: false };
+
       return statusMapping[this.whenValid(force, value).state()];
     },
 
@@ -99,38 +100,48 @@ define('parsley/field', [
       if (!this.needsValidation(value) && true !== force)
         return $.when();
 
-      var groupedConstraints = this._getGroupedConstraints();
-      var promises = [];
-      var that = this;
-      $.each(groupedConstraints, function(_, constraints) {
+      var
+        that = this,
+        promises = [],
+        groupedConstraints = this._getGroupedConstraints();
+
+      $.each(groupedConstraints, function (index, constraints) {
         // Process one group of constraints at a time, we validate the constraints
         // and combine the promises together.
         var promise = $.when.apply($,
           $.map(constraints, $.proxy(that, '_validateConstraint', value))
         );
         promises.push(promise);
+
+        // Interrupt processing if a group has already failed
         if (promise.state() === 'rejected')
-          return false; // Interrupt processing if a group has already failed
+          return false;
       });
+
       return $.when.apply($, promises);
     },
 
-    // @returns a promise
-    _validateConstraint: function(value, constraint) {
-      var that = this;
-      var result = constraint.validate(value, this);
+    // Returns a promise
+    _validateConstraint: function (value, constraint) {
+      var
+        that = this,
+        result = constraint.validate(value, this);
+
       // Map false to a failed promise
       if (false === result)
         result = $.Deferred().reject();
+
       // Make sure we return a promise and that we record failures
-      return $.when(result).fail(function() {
-        if (true === that.validationResult)
-          that.validationResult = [];
-        that.validationResult.push({assert: constraint});
-      });
+      return $.when(result)
+        .fail(function () {
+          if (true === that.validationResult)
+            that.validationResult = [];
+
+          that.validationResult.push({ assert: constraint });
+        });
     },
 
-    // @returns Parsley field computed value that could be overrided or configured in DOM
+    // Returns Parsley field computed value that could be overrided or configured in DOM
     getValue: function () {
       var value;
 
@@ -187,6 +198,7 @@ define('parsley/field', [
           this.constraints.splice(i, 1);
           break;
         }
+
       delete this.constraintsByName[name];
       return this;
     },
@@ -292,6 +304,7 @@ define('parsley/field', [
     // Shortcut to trigger an event
     _trigger: function (eventName) {
       eventName = 'field:' + eventName;
+
       return this.trigger.apply(this, arguments);
     },
 
@@ -329,6 +342,7 @@ define('parsley/field', [
           groupedConstraints.push(index[p] = []);
         index[p].push(this.constraints[i]);
       }
+
       // Sort them by priority DESC
       groupedConstraints.sort(function (a, b) { return b[0].priority - a[0].priority; });
 

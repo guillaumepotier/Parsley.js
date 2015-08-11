@@ -1,4 +1,4 @@
-(function($){
+(function ($) {
 
 $.extend(true, window.Parsley, {
   asyncValidators: {
@@ -50,9 +50,9 @@ window.ParsleyValidator.addValidator('remote', {
 
   validateString: function (value, url, options, instance) {
     var
+      csr,
       data = {},
       ajaxOptions,
-      csr,
       validator = options.validator || (true === options.reverse ? 'reverse' : 'default');
 
     if ('undefined' === typeof window.Parsley.asyncValidators[validator])
@@ -81,10 +81,13 @@ window.ParsleyValidator.addValidator('remote', {
     // Try to retrieve stored xhr
     var xhr = window.Parsley._remoteCache[csr] = window.Parsley._remoteCache[csr] || $.ajax(ajaxOptions);
 
-    var handleXhr = function() {
+    var handleXhr = function () {
       var result = window.Parsley.asyncValidators[validator].fn.call(instance, xhr, url, options);
-      if (!result) // Map falsy results to rejected promise
+
+      // Map falsy results to rejected promise
+      if (!result)
         result = $.Deferred().reject();
+
       return $.when(result);
     };
 

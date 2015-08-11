@@ -96,7 +96,7 @@ define('parsley/utils', function () {
       pastWarnings = {};
     },
 
-    trimString: function(string) {
+    trimString: function (string) {
       return string.replace(/^\s+|\s+$/g, '');
     },
 
@@ -107,12 +107,15 @@ define('parsley/utils', function () {
         if (arguments.length > 1) {
           throw Error('Second argument not supported');
         }
+
         if (typeof prototype != 'object') {
           throw TypeError('Argument must be an object');
         }
+
         Object.prototype = prototype;
         var result = new Object();
         Object.prototype = null;
+
         return result;
       };
     })()
