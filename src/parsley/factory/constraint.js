@@ -1,7 +1,6 @@
 define('parsley/factory/constraint', [
-  'parsley/utils',
-  'parsley/validator',
-], function (ParsleyUtils, ParsleyValidator) {
+  'parsley/validator'
+], function (ParsleyValidator) {
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
     if (!new RegExp('ParsleyField').test(parsleyField.__class__))
       throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
