@@ -5,8 +5,7 @@ define('parsley/factory/constraint', [
     if (!new RegExp('ParsleyField').test(parsleyField.__class__))
       throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
 
-    var validatorSpec = window.ParsleyValidator.validators[name];
-    var validator = new ParsleyValidator(validatorSpec);
+    var validator = new ParsleyValidator(window.ParsleyValidator.validators[name]);
 
     $.extend(this, {
       validator: validator,

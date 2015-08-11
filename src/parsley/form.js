@@ -46,12 +46,12 @@ define('parsley/form', [
         return;
 
       this.$element.find('.parsley_synthetic_submit_button').remove();
-      if (this._submitSource) {
+
+      if (this._submitSource)
         $('<input class=".parsley_synthetic_submit_button" type="hidden">')
           .attr('name', this._submitSource.name)
           .attr('value', this._submitSource.value)
           .appendTo(this.$element);
-      }
 
       this.$element.trigger($.extend($.Event('submit'), { parsley: true }));
     },

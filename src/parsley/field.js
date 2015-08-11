@@ -110,9 +110,8 @@ define('parsley/field', [
       $.each(groupedConstraints, function (index, constraints) {
         // Process one group of constraints at a time, we validate the constraints
         // and combine the promises together.
-        var promise = $.when.apply($,
-          $.map(constraints, $.proxy(that, '_validateConstraint', value))
-        );
+        var promise = $.when.apply($, $.map(constraints, $.proxy(that, '_validateConstraint', value)));
+
         promises.push(promise);
 
         // Interrupt processing if a group has already failed
