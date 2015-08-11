@@ -115,9 +115,9 @@ define('parsley/validator_registry', [
     //
     addValidator: function (name, arg1, arg2) {
       if (this.validators[name])
-        ParsleyUtils.warn('Validator "' + name + '" is already defined.');
+        ParsleyUtils.warn('Validator "%s" is already defined.'.replace('%s', name));
       else if (ParsleyDefaults.hasOwnProperty(name)) {
-        ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
+        ParsleyUtils.warn('"%s" is a restricted keyword and is not a valid validator name.'.replace('%s', name));
         return;
       };
       return this._setValidator.apply(this, arguments);
@@ -125,7 +125,7 @@ define('parsley/validator_registry', [
 
     updateValidator: function (name, arg1, arg2) {
       if (!this.validators[name]) {
-        ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
+        ParsleyUtils.warn('Validator "%s" is not already defined.'.replace('%s', name));
         return this.addValidator.apply(this, arguments);
       }
       return this._setValidator(this, arguments);
@@ -133,7 +133,7 @@ define('parsley/validator_registry', [
 
     removeValidator: function (name) {
       if (!this.validators[name])
-        ParsleyUtils.warn('Validator "' + name + '" is not defined.');
+        ParsleyUtils.warn('Validator "%s" is not defined.'.replace('%s', name));
 
       delete this.validators[name];
 
@@ -208,7 +208,7 @@ define('parsley/validator_registry', [
         validateString: function (value, type) {
           var regex = typeRegexes[type];
           if (!regex)
-            throw new Error('validator type `' + type + '` is not supported');
+            throw new Error('validator type `%s` is not supported'.replace('%s', type));
           return regex.test(value);
         },
         priority: 256
