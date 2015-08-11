@@ -60,11 +60,13 @@ define('parsley/form', [
     // @returns `true` if al validations succeeds, `false`
     // if a failure is immediately detected, or `null`
     // if dependant on a promise.
-    // Prefer `whenValidate`.
+    // Prefer `whenValidate` that handles async validations
     validate: function (group, force, event) {
       return statusMapping[ this.whenValidate(group, force, event).state() ];
     },
 
+    // Validate form.
+    // Returns a javascript promise, use `.done()` for successful validation, `.fail()` otherwise
     whenValidate: function (group, force, event) {
       var that = this;
       this.submitEvent = event;

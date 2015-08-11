@@ -77,13 +77,15 @@ define('parsley/field', [
     // Just validate field. Do not trigger any event.
     // Returns `true` iff all constraints pass, `false` if there are failures,
     // or `null` if the result can not be determined yet (depends on a promise)
-    // Prefer using `whenValid`.
+    // Prefer using `whenValid` that handles async validations
     isValid: function (force, value) {
       var statusMapping = { pending: null, resolved: true, rejected: false };
 
       return statusMapping[this.whenValid(force, value).state()];
     },
 
+    // Just validate field. Do not trigger any event.
+    // Returns a javascript promise, use `.done()` for successful validation, `.fail()` otherwise
     whenValid: function (force, value) {
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();

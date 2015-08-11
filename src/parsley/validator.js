@@ -8,18 +8,21 @@ define('parsley/validator', [
     },
     integer: function (string) {
       if (isNaN(string))
-        throw 'Requirement is not an integer: "' + string + '"';
+        throw 'Requirement is not an integer: "%s"'.replace('%s', string);
+
       return parseInt(string, 10);
     },
     number: function (string) {
       if (isNaN(string))
-        throw 'Requirement is not a number: "' + string + '"';
+        throw 'Requirement is not a number: "%s"'.replace('%s', string);
+
       return parseFloat(string);
     },
     reference: function (string) { // Unused for now
       var result = $(string);
       if (result.length === 0)
-        throw 'No such reference: "' + string + '"';
+        throw 'No such reference: "%s"'.replace('%s', string);
+
       return result;
     },
     boolean: function (string) {
@@ -49,7 +52,8 @@ define('parsley/validator', [
     var m = string.match(/^\s*\[(.*)\]\s*$/);
 
     if (!m)
-      throw 'Requirement is not an array: "' + string + '"';
+      throw 'Requirement is not an array: "%s"'.replace('%s', string);
+
     var values = m[1].split(',').map(ParsleyUtils.trimString);
 
     if (values.length !== length)
@@ -62,7 +66,8 @@ define('parsley/validator', [
     var converter = requirementConverters[requirementType || 'string'];
 
     if (!converter)
-      throw 'Unknown requirement specification: "' + requirementType + '"';
+      throw 'Unknown requirement specification: "%s"'.replace('%s', requirementType);
+
     return converter(string);
   };
 
@@ -103,7 +108,7 @@ define('parsley/validator', [
 
       if ($.isArray(value)) {
         if (!this.validateMultiple)
-          throw 'Validator `' + this.name + '` does not handle multiple values';
+          throw 'Validator `%s` does not handle multiple values'.replace('%s', this.name);
 
         return this.validateMultiple.apply(this, arguments);
       } else {
@@ -119,7 +124,7 @@ define('parsley/validator', [
         if (this.validateString)
           return this.validateString.apply(this, arguments);
 
-        throw 'Validator `' + this.name + '` only handles multiple values';
+        throw 'Validator `%s` only handles multiple values'.replace('%s', this.name);
       }
     },
 
