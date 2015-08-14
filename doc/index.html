@@ -781,10 +781,12 @@ window.Parsley
     requirementType: 'integer',
     validateNumber: function(value, requirement) {
       return 0 === value % requirement;
+    },
+    messages: {
+      en: 'This value should be a multiple of %s',
+      fr: 'Cette valeur doit être un multiple de %s'
     }
-  )
-  .addMessage('en', 'multipleof', 'This value should be a multiple of %s')
-  .addMessage('fr', 'multipleof', 'Cette valeur doit être un multiple de %s');
+  );
 &lt;/script>
 </code></pre>
           </p>
@@ -857,6 +859,10 @@ window.Parsley
 
           <p>For even cases where more complex parameters are needed, you can specify extra parameters; refer to the source and check how the <code>remote</code> validator uses that.</p>
         </div>
+
+          <h3 id="custom-messages">Error messages</h3>
+          <p>You can specify error messages, in as many locales as desired, using the <code>messages</code> option.</p>
+          <p>This is equivalent to calling <code>addMessage</code> for each locale.</p>
 
         <!-- ****************** UI/ UX ****************** -->
         <h1 id="ui" class="page-header">UI/UX</h1>
@@ -1372,6 +1378,7 @@ $('[name="q"]').parsley()
                   <li><a href="#custom-intro">Craft yours!</a></li>
                   <li><a href="#custom-function">Validating functions</a></li>
                   <li><a href="#custom-requirement">Requirement parameters</a></li>
+                  <li><a href="#custom-messages">Error messages</a></li>
                 </ul>
               </li>
               <li>

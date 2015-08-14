@@ -108,7 +108,11 @@ define('parsley/validator_registry', [
     //    addValidator('custom', {
     //        requirementType: ['integer', 'integer'],
     //        validateString: function(value, from, to) {},
-    //        priority: 22
+    //        priority: 22,
+    //        messages: {
+    //          en: "Hey, that's no good",
+    //          fr: "Aye aye, pas bon du tout",
+    //        }
     //    }
     //
     // Old API was addValidator(name, function, priority)
@@ -146,12 +150,15 @@ define('parsley/validator_registry', [
         validator = {
           fn: validator,
           priority: priority
-        }
+        };
       };
       if (!validator.validate) {
         validator = new ParsleyValidator(validator);
       };
       this.validators[name] = validator;
+
+      for (var locale in validator.messages || {})
+        this.addMessage(locale, name, validator.messages[locale]);
 
       return this;
     },

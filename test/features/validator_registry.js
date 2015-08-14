@@ -223,6 +223,23 @@ define(function () {
           window.ParsleyValidator.formatMessage('foo', 'bar');
         });
       });
+
+      it('should provide two ways to add error messages', function () {
+        window.Parsley.addValidator('testmessage', {
+          validateString: $.noop,
+          messages: {
+            en: 'Not good at all',
+            fr: 'Très nul'
+          }
+        });
+        window.Parsley.addMessage('es', 'testmessage', 'Muy malo');
+        expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Not good at all');
+        window.Parsley.setLocale('fr');
+        expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Très nul');
+        window.Parsley.setLocale('es');
+        expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Muy malo');
+        window.Parsley.setLocale('en');
+      });
     });
   };
 });
