@@ -98,4 +98,9 @@ window.Parsley.on('form:submit', function () {
   window.Parsley._remoteCache = {};
 });
 
+window.ParsleyExtend.addAsyncValidator = function () {
+  window.ParsleyUtils.warnOnce('Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `window.Parsley.addAsyncValidator(...)`');
+  return window.Parsley.apply(window.Parsley.addAsyncValidator, arguments);
+};
+
 })(jQuery);
