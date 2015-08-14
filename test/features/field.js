@@ -131,7 +131,7 @@ define(function () {
       });
       it('should valid most complex Callback() validator', function () {
         $('body').append('<input type="text" id="element" value="" />');
-        window.ParsleyValidator.addValidator('ismultiple', function (value, multiple) {
+        window.Parsley.addValidator('ismultiple', function (value, multiple) {
           if (!isNaN(parseFloat(value)) && isFinite(value))
             return !(Number(value) % multiple);
 
@@ -149,14 +149,14 @@ define(function () {
         expect(parsleyField.isValid()).to.be(false);
         $('#element').val('9');
         expect(parsleyField.isValid()).to.be(true);
-        window.ParsleyValidator.removeValidator('ismultiple');
+        window.Parsley.removeValidator('ismultiple');
       });
       it('should properly compute constraints on each validation', function () {
         $('body').append('<input type="email" data-parsley-required id="element" />');
-        window.ParsleyValidator.addValidator('foobazer', function (value) {
+        window.Parsley.addValidator('foobazer', function (value) {
           return 'foobar' === value;
         }, 2);
-        window.ParsleyValidator.addValidator('ismultiple', function (value, multiple) {
+        window.Parsley.addValidator('ismultiple', function (value, multiple) {
           if (!isNaN(parseFloat(value)) && isFinite(value))
             return !(Number(value) % multiple);
 
@@ -175,8 +175,8 @@ define(function () {
           .removeConstraint('ismultiple')
           .refreshConstraints();
         expect(parsleyField.constraints.length).to.be(2);
-        window.ParsleyValidator.removeValidator('foobazer');
-        window.ParsleyValidator.removeValidator('ismultiple');
+        window.Parsley.removeValidator('foobazer');
+        window.Parsley.removeValidator('ismultiple');
       });
       it('should handle constraints priorities on validation', function () {
         $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');

@@ -234,7 +234,7 @@ define(function () {
         .appendTo('body')
         .parsley();
         var deferred;
-        window.ParsleyValidator.addValidator('custom', function() {
+        window.Parsley.addValidator('custom', function() {
           called++;
           deferred = $.Deferred();
           return deferred.promise();
@@ -244,7 +244,7 @@ define(function () {
           evt.preventDefault();
           expect(evt.parsley).to.be(true); // Sanity check
           expect(shouldSubmit).to.be(true);
-          window.ParsleyValidator.removeValidator('custom');
+          window.Parsley.removeValidator('custom');
           done();
         })
         $('#element').submit();

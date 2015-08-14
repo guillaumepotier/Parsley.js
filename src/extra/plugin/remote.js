@@ -40,7 +40,7 @@ $.extend(true, window.Parsley, {
   }
 });
 
-window.ParsleyValidator.addValidator('remote', {
+window.Parsley.addValidator('remote', {
   requirementType: {
     '': 'string',
     'validator': 'string',

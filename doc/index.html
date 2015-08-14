@@ -168,12 +168,12 @@
 &lt;script src="i18n/it.js">&lt;/script>
 &lt;script src="parsley.min.js">&lt;/script>
 &lt;script type="text/javascript">
-  window.ParsleyValidator.setLocale('fr');
+  window.Parsley.setLocale('fr');
 &lt;/script>
 </code></pre>
               </li>
               <li>
-                Load your needed localization <strong>after</strong> Parsley. The last loaded file will automatically set the messages locale for ParsleyValidator. In this example, we'll load both French and Italian translations, and use Italian:
+                Load your needed localization <strong>after</strong> Parsley. The last loaded file will automatically set the messages locale for Parsley. In this example, we'll load both French and Italian translations, and use Italian:
 <pre><code>&lt;script src="jquery.js">&lt;/script>
 &lt;script src="parsley.min.js">&lt;/script>
 &lt;script src="i18n/fr.js">&lt;/script>
@@ -776,7 +776,7 @@ if (false === instance.options.priorityEnabled)
 <pre><code>&lt;input type="text" data-parsley-multipleof="3" />
 [...]
 &lt;script type="text/javascript">
-window.Parsley.Validators
+window.Parsley
   .addValidator('multipleof', {
     requirementType: 'integer',
     validateNumber: function(value, requirement) {

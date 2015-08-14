@@ -26,7 +26,7 @@ define('features/extra', [
         expectValidation('1986-12-01', 'dateiso').to.be(true);
       });
       it('should have gt validator', function () {
-        expect(window.ParsleyValidator.validators).to.have.key('gt');
+        expect(window.Parsley._validatorRegistry.validators).to.have.key('gt');
         var number = 5;
 
         // Check with a selector
@@ -52,7 +52,7 @@ define('features/extra', [
         $('#gt').remove();
       });
       it('should have gte validator', function () {
-        expect(window.ParsleyValidator.validators).to.have.key('gte');
+        expect(window.Parsley._validatorRegistry.validators).to.have.key('gte');
         var number = 5;
 
         // Check with a selector
@@ -78,7 +78,7 @@ define('features/extra', [
         $('#gte').remove();
       });
       it('should have lt validator', function () {
-        expect(window.ParsleyValidator.validators).to.have.key('lt');
+        expect(window.Parsley._validatorRegistry.validators).to.have.key('lt');
         var number = 5;
 
         // Check with a selector
@@ -104,7 +104,7 @@ define('features/extra', [
         $('#lt').remove();
       });
       it('should have lte validator', function () {
-        expect(window.ParsleyValidator.validators).to.have.key('lte');
+        expect(window.Parsley._validatorRegistry.validators).to.have.key('lte');
         var number = 5;
 
         // Check with a selector
@@ -130,7 +130,7 @@ define('features/extra', [
         $('#lte').remove();
       });
       it('should have a minwords validator', function () {
-        expect(window.ParsleyValidator.validators).to.have.key('minwords');
+        expect(window.Parsley._validatorRegistry.validators).to.have.key('minwords');
         $('body').append('<input type="text" id="element" data-parsley-minwords="2" required />');
         expect($('#element').psly().isValid()).to.be(false);
         $('#element').val('foo');
@@ -139,7 +139,7 @@ define('features/extra', [
         expect($('#element').psly().isValid()).to.be(true);
       });
       it('should have a maxwords validator', function () {
-        expect(window.ParsleyValidator.validators).to.have.key('maxwords');
+        expect(window.Parsley._validatorRegistry.validators).to.have.key('maxwords');
         $('body').append('<input type="text" id="element" data-parsley-maxwords="2" required />');
         expect($('#element').psly().isValid()).to.be(false);
         $('#element').val('foo bar');
@@ -148,7 +148,7 @@ define('features/extra', [
         expect($('#element').psly().isValid()).to.be(false);
       });
       it('should have a words validator', function () {
-        expect(window.ParsleyValidator.validators).to.have.key('words');
+        expect(window.Parsley._validatorRegistry.validators).to.have.key('words');
         $('body').append('<input type="text" id="element" data-parsley-words="[2, 4]" required />');
         expect($('#element').psly().isValid()).to.be(false);
         $('#element').val('foo');

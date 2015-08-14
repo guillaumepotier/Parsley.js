@@ -216,6 +216,13 @@ define(function () {
           validatorRegistry.removeValidator('foo');
         });
       });
+
+      it('should provide deprecated access through ParsleyValidator for compatibility', function () {
+        window.Parsley.formatMessage('foo', 'bar');
+        expectWarning(function() {
+          window.ParsleyValidator.formatMessage('foo', 'bar');
+        });
+      });
     });
   };
 });

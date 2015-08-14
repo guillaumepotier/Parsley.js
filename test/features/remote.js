@@ -33,7 +33,7 @@ define('features/remote', [
         // Restore ParsleyExtend from remote
         window.ParsleyExtend = window._remoteParsleyExtend;
         window.ParsleyConfig = window._remoteParsleyConfig;
-        window.ParsleyValidator.init(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
+        window.Parsley._validatorRegistry.init(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
       });
       beforeEach(function() {
         delete window.Parsley._remoteCache;

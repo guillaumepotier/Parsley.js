@@ -166,7 +166,7 @@ define('parsley/field', [
     */
     addConstraint: function (name, requirements, priority, isDomConstraint) {
 
-      if (window.ParsleyValidator.validators[name]) {
+      if (window.Parsley._validatorRegistry.validators[name]) {
         var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
