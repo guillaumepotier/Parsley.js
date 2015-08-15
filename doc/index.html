@@ -346,16 +346,28 @@ if (false === instance.options.priorityEnabled)
             </thead>
             <tbody>
               <tr>
+                <td><code>whenValid(group, force)</code> <version>#2.2</version></td>
+                <td><code>promise</code></td>
+                <td>Returns a promise that will be fulfilled if and only if the Form is valid. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non-required fields (<a href="examples/events.html">See example</a>)</td>
+              </tr>
+              <tr>
                 <td><code>isValid(group, force)</code> <version>#2.0</version></td>
-                <td><code>boolean</code></td>
-                <td>Returns if the Form is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non-required fields (<a href="examples/events.html">See example</a>)</td>
+                <td><code>boolean or null</code></td>
+                <td>Similar to <code>whenValid</code> but returns <code>true</code> if the promise is already fulfilled, <code>false</code> if already rejected, and <code>null</code> if the validation is still pending.</td>
+              </tr>
+              <tr>
+                <td><code>whenValidate(group, force)</code> <version>#2.0</version></td>
+                <td>
+                  <code>promise</code>
+                </td>
+                <td>Validate form. Prevents submission if not valid. <strong>Fires <a href="#events">events</a> and affects UI.</strong>. You can only validate a certain group of fields by specifying optional <code>group</code> string parameter. If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non required fields (<a href="examples/events.html">See example</a>). Same result as <code>whenValid</code>.</td>
               </tr>
               <tr>
                 <td><code>validate(group, force)</code> <version>#2.0</version></td>
                 <td>
-                  <code>boolean</code>
+                  <code>boolean or null</code>
                 </td>
-                <td>Validate form. Prevents submission if not valid. <strong>Fires <a href="#events">events</a> and affects UI.</strong>. You can only validate a certain group of fields by specifying optional <code>group</code> string parameter. If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non required fields (<a href="examples/events.html">See example</a>)</td>
+                <td>Same as <code>whenValidate</code> except it returns <code>true</code> if the promise is already fulfilled, <code>false</code> if already rejected, and <code>null</code> if the validation is still pending.</td>
               </tr>
               <tr>
                 <td><code>reset()</code> <version>#2.0</version></td>
@@ -1139,53 +1151,21 @@ window.Parsley
           </thead>
           <tbody>
             <tr>
-              <td><code>asyncIsValid()</code> <version>#2.0</version></td>
-              <td>Asynchronously get if field or form is valid or not. Returns a jQuery promise.</td>
-            </tr>
-            <tr>
-              <td><code>asyncValidate()</code> <version>#2.0</version></td>
-              <td>Asynchronously validate a field or a form and display UI errors. Returns a jQuery promise.</td>
-            </tr>
-            <tr>
-              <td><code>addAsyncValidator(name, fn)</code> <version>#2.0</version></td>
-              <td>Add a new custom remote validator.</td>
+              <td><code>Parsley.addAsyncValidator(name, fn)</code> <version>#2.0</version></td>
+              <td>Specify custom validator for Ajax results.</td>
             </tr>
           </tbody>
         </table>
 
         <a name="remote-custom"></a>
         <h3>Custom remote validators</h3>
-        <p>Configuring your custom remote validators comes with two solutions:
-          <ul>
-            <li>By registering them in some globals <strong>before</strong> calling <code>parsley.remote.js</code>:
-<pre><code>&lt;input name="q" type="text" data-parsley-remote data-parsley-remote-validator='mycustom' value="foo" />
-[...]
-&lt;script type="text/javascript">
-window.ParsleyExtend = {
-  asyncValidators: {
-    mycustom: {
-      fn: function (xhr) {
-        console.log(this.$element); // jQuery Object[ input[name="q"] ]
-
-        return 404 === xhr.status;
-      },
-      url: 'http://mycustomapiurl.ext'
-    }
-  }
-};
-&lt;/script>
-&lt;script href="parsley.remote.js">&lt;/script>
-&lt;script href="parsley.js">&lt;/script>
-</code></pre>
-            </li>
-            <li>By registering them <strong>after</strong> <code>parsley.remote.js</code> is loaded:
+        <p>If you need some custom processing of Ajax responses, configure your custom remote as follows:
 <pre><code>&lt;input name="q" type="text" data-parsley-remote data-parsley-remote-validator='mycustom' value="foo" />
 [...]
 &lt;script href="parsley.remote.js">&lt;/script>
 &lt;script href="parsley.js">&lt;/script>
 &lt;script type="text/javascript">
-$('[name="q"]').parsley()
-  .addAsyncValidator('mycustom', function (xhr) {
+window.Parsley.addAsyncValidator('mycustom', function (xhr) {
     console.log(this.$element); // jQuery Object[ input[name="q"] ]
 
     return 404 === xhr.status;
