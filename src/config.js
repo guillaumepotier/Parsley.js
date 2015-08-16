@@ -12,7 +12,6 @@ requirejs.config({
     map: {
       '*': {
         jquery: 'vendors/jquery/dist/jquery',
-        validator: 'vendors/validator.js/dist/validator'
       }
     },
 
@@ -27,9 +26,6 @@ requirejs.config({
       'src/parsley.remote': {
         deps: ['jquery'],
         exports: 'ParsleyExtend'
-      },
-      'vendors/validator.js/dist/validator': {
-        exports: 'Validator'
       }
     }
 });

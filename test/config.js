@@ -14,7 +14,6 @@ requirejs.config({
 
     map: {
       '*': {
-        'validator': 'vendors/validator.js/dist/validator',
         'jquery': 'vendors/jquery/dist/jquery',
         'expect': 'modules/expect.js/index',
         'mocha': 'modules/mocha/mocha',
@@ -37,9 +36,6 @@ requirejs.config({
       'modules/mocha/mocha': {
         deps: ['expect', 'sinon'],
         exports: 'mocha'
-      },
-      'vendors/validator.js/dist/validator': {
-        exports: 'Validator'
       }
     }
 });

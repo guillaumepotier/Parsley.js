@@ -46,7 +46,7 @@ require(['config'], function () {
       // load full parsley.js + UT
       require([
         'features/utils',
-        'features/validator.js',
+        'features/validator',
         'features/parsley',
         'features/pubsub',
         'features/abstract',
