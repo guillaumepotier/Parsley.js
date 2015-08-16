@@ -1,286 +1,140 @@
 define('parsley/validator', [
-  'parsley/defaults',
-  'validator'
-], function (ParsleyDefaults, Validator) {
+    'parsley/utils'
+], function (ParsleyUtils) {
 
-  // This is needed for Browserify usage that requires Validator.js through module.exports
-  Validator = 'undefined' !== typeof Validator ? Validator : ('undefined' !== typeof module ? module.exports : null);
+  var requirementConverters = {
+    string: function(string) {
+      return string;
+    },
+    integer: function(string) {
+      if (isNaN(string))
+        throw 'Requirement is not an integer: "' + string + '"';
+      return parseInt(string, 10);
+    },
+    number: function(string) {
+      if (isNaN(string))
+        throw 'Requirement is not a number: "' + string + '"';
+      return parseFloat(string);
+    },
+    reference: function(string) { // Unused for now
+      var result = $(string);
+      if (result.length === 0)
+        throw 'No such reference: "' + string + '"';
+      return result;
+    },
+    boolean: function(string) {
+      return string !== 'false';
+    },
+    object: function(string) {
+      return ParsleyUtils.deserializeValue(string);
+    },
+    regexp: function(regexp) {
+      var flags = '';
 
-  var ParsleyValidator = function (validators, catalog) {
-    this.__class__ = 'ParsleyValidator';
-    this.Validator = Validator;
+      // Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern
+      if (!!(/^\/.*\/(?:[gimy]*)$/.test(regexp))) {
+        // Replace the regexp literal string with the first match group: ([gimy]*)
+        // If no flag is present, this will be a blank string
+        flags = regexp.replace(/.*\/([gimy]*)$/, '$1');
+        // Again, replace the regexp literal string with the first match group:
+        // everything excluding the opening and closing slashes and the flags
+        regexp = regexp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+      }
+      return new RegExp(regexp, flags);
+    }
+  };
 
-    // Default Parsley locale is en
-    this.locale = 'en';
+  var convertArrayRequirement = function(string, length) {
+    var m = string.match(/^\s*\[(.*)\]\s*$/)
+    if (!m)
+      throw 'Requirement is not an array: "' + string + '"';
+    var values = m[1].split(',').map(ParsleyUtils.trimString);
+    if (values.length !== length)
+      throw 'Requirement has ' + values.length + ' values when ' + length + ' are needed';
+    return values;
+  };
 
-    this.init(validators || {}, catalog || {});
+  var convertRequirement = function(requirementType, string) {
+    var converter = requirementConverters[requirementType || 'string'];
+    if (!converter)
+      throw 'Unknown requirement specification: "' + requirementType + '"';
+    return converter(string);
+  };
+
+  var convertExtraOptionRequirement = function(requirementSpec, string, extraOptionReader) {
+    var main = null, extra = {};
+    for(var key in requirementSpec) {
+      if (key) {
+        var value = extraOptionReader(key);
+        if('string' === typeof value)
+          value = convertRequirement(requirementSpec[key], value);
+        extra[key] = value;
+      } else {
+        main = convertRequirement(requirementSpec[key], string)
+      }
+    }
+    return [main, extra];
+  };
+
+  // A Validator needs to implement the methods `validate` and `parseRequirements`
+
+  var ParsleyValidator = function(spec) {
+    $.extend(true, this, spec);
   };
 
   ParsleyValidator.prototype = {
-    init: function (validators, catalog) {
-      this.catalog = catalog;
-      // Copy prototype's validators:
-      this.validators = $.extend({}, this.validators);
+    // Returns `true` iff the given `value` is valid according the given requirements.
+    validate: function(value, requirementFirstArg) {
+      if(this.fn) { // Legacy style validator
 
-      for (var name in validators)
-        this.addValidator(name, validators[name].fn, validators[name].priority, validators[name].requirementsTransformer);
-
-      window.Parsley.trigger('parsley:validator:init');
-    },
-
-    // Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n
-    setLocale: function (locale) {
-      if ('undefined' === typeof this.catalog[locale])
-        throw new Error(locale + ' is not available in the catalog');
-
-      this.locale = locale;
-
-      return this;
-    },
-
-    // Add a new messages catalog for a given locale. Set locale for this catalog if set === `true`
-    addCatalog: function (locale, messages, set) {
-      if ('object' === typeof messages)
-        this.catalog[locale] = messages;
-
-      if (true === set)
-        return this.setLocale(locale);
-
-      return this;
-    },
-
-    // Add a specific message for a given constraint in a given locale
-    addMessage: function (locale, name, message) {
-      if ('undefined' === typeof this.catalog[locale])
-        this.catalog[locale] = {};
-
-      this.catalog[locale][name.toLowerCase()] = message;
-
-      return this;
-    },
-
-    validate: function (value, constraints, priority) {
-      return new this.Validator.Validator().validate.apply(new Validator.Validator(), arguments);
-    },
-
-    // Add a new validator
-    addValidator: function (name, fn, priority, requirementsTransformer) {
-      if (this.validators[name])
-        ParsleyUtils.warn('Validator "' + name + '" is already defined.');
-      else if (ParsleyDefaults.hasOwnProperty(name)) {
-        ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
-        return;
-      };
-      return this._setValidator(name, fn, priority, requirementsTransformer);
-    },
-
-    updateValidator: function (name, fn, priority, requirementsTransformer) {
-      if (!this.validators[name]) {
-        ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
-        return this.addValidator(name, fn, priority, requirementsTransformer);
-      }
-      return this._setValidator(name, fn, priority, requirementsTransformer);
-    },
-
-    removeValidator: function (name) {
-      if (!this.validators[name])
-        ParsleyUtils.warn('Validator "' + name + '" is not defined.');
-
-      delete this.validators[name];
-
-      return this;
-    },
-
-    _setValidator: function (name, fn, priority, requirementsTransformer) {
-      this.validators[name] = function (requirements) {
-        return $.extend(new Validator.Assert().Callback(fn, requirements), {
-          priority: priority,
-          requirementsTransformer: requirementsTransformer
-        });
-      };
-
-      return this;
-    },
-
-    getErrorMessage: function (constraint) {
-      var message;
-
-      // Type constraints are a bit different, we have to match their requirements too to find right error message
-      if ('type' === constraint.name) {
-        var typeMessages = this.catalog[this.locale][constraint.name] || {};
-        message = typeMessages[constraint.requirements];
-      } else
-        message = this.formatMessage(this.catalog[this.locale][constraint.name], constraint.requirements);
-
-      return message || this.catalog[this.locale].defaultMessage || this.catalog.en.defaultMessage;
-    },
-
-    // Kind of light `sprintf()` implementation
-    formatMessage: function (string, parameters) {
-      if ('object' === typeof parameters) {
-        for (var i in parameters)
-          string = this.formatMessage(string, parameters[i]);
-
-        return string;
+        if(arguments.length > 3)  // If more args then value, requirement, instance...
+          requirementFirstArg = [].slice.call(arguments, 1, -1);  // Skip first arg (value) and last (instance), combining the rest
+        return this.fn.call(this, value, requirementFirstArg);
       }
 
-      return 'string' === typeof string ? string.replace(new RegExp('%s', 'i'), parameters) : '';
-    },
-
-    // Here is the Parsley default validators list.
-    // This is basically Validatorjs validators, with different API for some of them
-    // and a Parsley priority set
-    validators: {
-      notblank: function () {
-        return $.extend(new Validator.Assert().NotBlank(), { priority: 2 });
-      },
-      required: function () {
-        return $.extend(new Validator.Assert().Required(), { priority: 512 });
-      },
-      type: function (type) {
-        var assert;
-
-        switch (type) {
-          case 'email':
-            assert = new Validator.Assert().Email();
-            break;
-          // range type just ensure we have a number here
-          case 'range':
-          case 'number':
-            assert = new Validator.Assert().Regexp('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
-            break;
-          case 'integer':
-            assert = new Validator.Assert().Regexp('^-?\\d+$');
-            break;
-          case 'digits':
-            assert = new Validator.Assert().Regexp('^\\d+$');
-            break;
-          case 'alphanum':
-            assert = new Validator.Assert().Regexp('^\\w+$', 'i');
-            break;
-          case 'url':
-            // Thanks to https://gist.github.com/dperini/729294
-            // Voted best validator in https://mathiasbynens.be/demo/url-regex
-            // Modified to make scheme optional and allow local IPs
-            assert = new Validator.Assert().Regexp(
-              "^" +
-                // protocol identifier
-                "(?:(?:https?|ftp)://)?" + // ** mod: make scheme optional
-                // user:pass authentication
-                "(?:\\S+(?::\\S*)?@)?" +
-                "(?:" +
-                  // IP address exclusion
-                  // private & local networks
-                  // "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +   // ** mod: allow local networks
-                  // "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +  // ** mod: allow local networks
-                  // "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +  // ** mod: allow local networks
-                  // IP address dotted notation octets
-                  // excludes loopback network 0.0.0.0
-                  // excludes reserved space >= 224.0.0.0
-                  // excludes network & broacast addresses
-                  // (first & last IP address of each class)
-                  "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
-                  "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
-                  "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
-                "|" +
-                  // host name
-                  "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
-                  // domain name
-                  "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
-                  // TLD identifier
-                  "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
-                ")" +
-                // port number
-                "(?::\\d{2,5})?" +
-                // resource path
-                "(?:/\\S*)?" +
-              "$", 'i');
-            break;
-          default:
-            throw new Error('validator type `' + type + '` is not supported');
+      if ($.isArray(value)) {
+        if (!this.validateMultiple)
+          throw 'Validator `' + this.name + '` does not handle multiple values';
+        return this.validateMultiple.apply(this, arguments);
+      } else {
+        if (this.validateNumber) {
+          if (isNaN(value))
+            return false;
+          value = parseFloat(value);
+          return this.validateNumber.apply(this, arguments);
         }
-
-        return $.extend(assert, { priority: 256 });
-      },
-      pattern: function (regexp) {
-        var flags = '';
-
-        // Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern
-        if (!!(/^\/.*\/(?:[gimy]*)$/.test(regexp))) {
-          // Replace the regexp literal string with the first match group: ([gimy]*)
-          // If no flag is present, this will be a blank string
-          flags = regexp.replace(/.*\/([gimy]*)$/, '$1');
-          // Again, replace the regexp literal string with the first match group:
-          // everything excluding the opening and closing slashes and the flags
-          regexp = regexp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+        if (this.validateString) {
+          return this.validateString.apply(this, arguments);
         }
-
-        return $.extend(new Validator.Assert().Regexp(regexp, flags), { priority: 64 });
-      },
-      minlength: function (value) {
-        return $.extend(new Validator.Assert().Length({ min: value }), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
-      },
-      maxlength: function (value) {
-        return $.extend(new Validator.Assert().Length({ max: value }), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
-      },
-      length: function (array) {
-        return $.extend(new Validator.Assert().Length({ min: array[0], max: array[1] }), { priority: 32 });
-      },
-      mincheck: function (length) {
-        return this.minlength(length);
-      },
-      maxcheck: function (length) {
-        return this.maxlength(length);
-      },
-      check: function (array) {
-        return this.length(array);
-      },
-      min: function (value) {
-        return $.extend(new Validator.Assert().GreaterThanOrEqual(value), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
-      },
-      max: function (value) {
-        return $.extend(new Validator.Assert().LessThanOrEqual(value), {
-          priority: 30,
-          requirementsTransformer: function () {
-            return 'string' === typeof value && !isNaN(value) ? parseInt(value, 10) : value;
-          }
-        });
-      },
-      range: function (array) {
-        return $.extend(new Validator.Assert().Range(array[0], array[1]), {
-          priority: 32,
-          requirementsTransformer: function () {
-            for (var i = 0; i < array.length; i++)
-              array[i] = 'string' === typeof array[i] && !isNaN(array[i]) ? parseInt(array[i], 10) : array[i];
-
-            return array;
-          }
-        });
-      },
-      equalto: function (value) {
-        return $.extend(new Validator.Assert().EqualTo(value), {
-          priority: 256,
-          requirementsTransformer: function () {
-            return $(value).length ? $(value).val() : value;
-          }
-        });
+        throw 'Validator `' + this.name + '` only handles multiple values';
       }
-    }
+    },
+
+    // Parses `requirements` into an array of arguments,
+    // according to `this.requirementType`
+    parseRequirements: function(requirements, extraOptionReader) {
+      if ('string' !== typeof requirements) {
+        // Assume requirement already parsed
+        // but make sure we return an array
+        return $.isArray(requirements) ? requirements : [requirements];
+      }
+      var type = this.requirementType;
+      if ($.isArray(type)) {
+        var values = convertArrayRequirement(requirements, type.length);
+        for (var i = 0; i < values.length; i++)
+          values[i] = convertRequirement(type[i], values[i]);
+        return values;
+      } else if ($.isPlainObject(type)) {
+        return convertExtraOptionRequirement(type, requirements, extraOptionReader)
+      } else {
+        return [convertRequirement(type, requirements)];
+      }
+    },
+    // Defaults:
+    requirementType: 'string',
+
+    priority: 2
+
   };
 
   return ParsleyValidator;

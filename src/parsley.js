@@ -13,8 +13,8 @@ define([
   'parsley/defaults',
   // An abstract class shared by `ParsleyField` and `ParsleyForm`
   'parsley/abstract',
-  // A proxy between Parsley and [Validator.js](http://validatorjs.org)
-  'parsley/validator',
+  // A registry of all Parsley validators (built-in and custom)
+  'parsley/validator_registry',
   // `ParsleyUI` static class. Handles all UI and UX
   'parsley/ui',
   // `ParsleyForm` Class. Handles form validation
@@ -29,7 +29,7 @@ define([
   'parsley/pubsub',
   // Default en constraints messages
   'i18n/en'
-], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidator, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple, ParsleyFactory) {
+], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidatorRegistry, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple, ParsleyFactory) {
 
   // Inherit `on`, `off` & `trigger` to Parsley:
   var Parsley = $.extend(new ParsleyAbstract(), {
@@ -83,7 +83,17 @@ define([
   // ### Globals
   window.Parsley = window.psly = Parsley;
   window.ParsleyUtils = ParsleyUtils;
-  window.ParsleyValidator = new ParsleyValidator(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
+
+  // ### Define methods that forward to the registry, and deprecate all access except through window.Parsley
+  var registry = window.Parsley._validatorRegistry = new ParsleyValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
+  window.ParsleyValidator = {};
+  $.each('setLocale addCatalog addMessage getErrorMessage formatMessage addValidator updateValidator removeValidator'.split(' '), function (i, method) {
+    window.Parsley[method] = $.proxy(registry, method);
+    window.ParsleyValidator[method] = function () {
+      ParsleyUtils.warnOnce('Accessing the method `'+ method +'` through ParsleyValidator is deprecated. Simply call `window.Parsley.' + method + '(...)`');
+      return window.Parsley[method].apply(window.Parsley, arguments);
+    };
+  });
 
   // ### ParsleyUI
   // UI is a separate class that only listens to some events and then modifies the DOM accordingly

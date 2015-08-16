@@ -18,7 +18,6 @@ define(function () {
         var parsleyField = $('#element').parsley();
         parsleyField.validate();
         expect($('#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
-
         parsleyField.reset();
         expect($('#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
       });

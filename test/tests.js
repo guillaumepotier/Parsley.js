@@ -15,14 +15,15 @@ require(['config'], function () {
     // load then Parsley modules for UT
     require([
       'src/parsley',
+      'parsley/validator',
       'parsley/factory',
       'parsley/form',
       'parsley/field',
       'parsley/ui',
       'parsley/utils',
-      'parsley/validator',
+      'parsley/validator_registry',
       'i18n/fr'
-    ], function (Parsley, ParsleyFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidator) {
+    ], function (Parsley, ParsleyValidator, ParsleyFactory, ParsleyForm, ParsleyField, ParsleyUI, ParsleyUtils, ParsleyValidatorRegistry) {
 
       // Setup console.warn so we insure it is called when we expect it
       beforeEach(function() {
@@ -45,15 +46,16 @@ require(['config'], function () {
       // load full parsley.js + UT
       require([
         'features/utils',
+        'features/validator.js',
         'features/parsley',
         'features/pubsub',
         'features/abstract',
         'features/field',
         'features/multiple',
         'features/form',
-        'features/validator',
+        'features/validator_registry',
         'features/ui'
-      ], function (utils, parsleyBase, pubsub, abstract, field, multiple, form, validator, ui) {
+      ], function (utils, validator, parsleyBase, pubsub, abstract, field, multiple, form, validator_registry, ui) {
         describe('ParsleyStandard', function () {
           // Use a pristine ParsleyExtend for the standard suite:
           var previousExtend;
@@ -66,26 +68,16 @@ require(['config'], function () {
             ParsleyUtils._resetWarnings();
           });
           utils(ParsleyUtils);
+          validator(ParsleyValidator);
           parsleyBase(Parsley.Factory);
           pubsub();
           abstract();
           field(ParsleyField);
           multiple();
           form(ParsleyForm);
-          validator(ParsleyValidator);
+          validator_registry(ParsleyValidator, ParsleyValidatorRegistry);
           ui(ParsleyUI);
         });
-
-        // tested by it('should handle remote validator option') in `features/remote`
-        window.ParsleyExtend = {
-          asyncValidators: {
-            custom: {
-              fn: function (xhr) {
-                return xhr.status === 404;
-              }
-            }
-          }
-        };
 
         require([
           'features/remote',
@@ -106,7 +98,7 @@ require(['config'], function () {
           require([
             'features/extra'
           ], function (extra) {
-            extra(ParsleyValidator);
+            extra(ParsleyValidator, ParsleyValidatorRegistry);
 
             // run mocha
             if (window.mochaPhantomJS)

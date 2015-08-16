@@ -331,13 +331,13 @@ define(function () {
       });
       it('should handle custom error message for validators with compound names', function () {
         $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
-        window.ParsleyValidator.addValidator('customValidator', function (value, requirement) {
+        window.Parsley.addValidator('customValidator', function (value, requirement) {
           return requirement === value;
         }, 32);
         var parsleyField = $('#element').psly();
         parsleyField.validate();
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('custom-validator error');
-        window.ParsleyValidator.removeValidator('customValidator');
+        window.Parsley.removeValidator('customValidator');
       });
 
       afterEach(function () {

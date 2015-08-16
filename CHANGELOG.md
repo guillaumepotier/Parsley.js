@@ -2,6 +2,13 @@
 
 ## master
 
+- Major validators refactor:
+  - Compatible with promises from the ground up. Previous API (e.g. `isValid`)
+    remains, but promise-aware API is now recommended (e.g. `whenValid`).
+  - New API to define custom validators (old API is still there but deprecated).
+  - Shorter code, removed dependency on `validators` lib.
+  - The `remote` validator is much smaller now, will probably be merged in the future.
+
 - Deprecated `data-parsley-trim-value` in favour of new `whitespace` API
 - Added `whitespace` API with two options: `trim` and `squish`
 

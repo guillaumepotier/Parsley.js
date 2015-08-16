@@ -4,7 +4,7 @@ define('parsley/abstract', [
   var ParsleyAbstract = function () {};
 
   ParsleyAbstract.prototype = {
-    asyncSupport: false,
+    asyncSupport: true, // Deprecated
 
     actualizeOptions: function () {
       ParsleyUtils.attr(this.$element, this.options.namespace, this.domOptions);
@@ -22,11 +22,6 @@ define('parsley/abstract', [
           this.options[i] = initOptions[i];
       }
       this.actualizeOptions();
-    },
-
-    // ParsleyValidator validate proxy function . Could be replaced by third party scripts
-    validateThroughValidator: function (value, constraints, priority) {
-      return window.ParsleyValidator.validate(value, constraints, priority);
     },
 
     _listeners: null,
@@ -117,6 +112,11 @@ define('parsley/abstract', [
 
       this.$element.removeData('Parsley');
       this._trigger('destroy');
+    },
+
+    asyncIsValid: function() {
+      ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenIsValid instead");
+      return this.whenValid.apply(this, arguments);
     },
 
     _findRelatedMultiple: function() {

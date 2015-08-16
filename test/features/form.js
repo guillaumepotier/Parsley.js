@@ -92,41 +92,27 @@ define(function () {
           // group name on single required field, without value
           expect(parsleyForm.isValid('qux')).to.be(false);
       });
-      it('should handle `onFormSubmit` validation', function () {
+      it('should handle form submission correctly', function (done) {
         $('body').append(
-          '<form id="element" data-parsley-trigger="change">'                 +
-            '<input id="field1" type="text" data-parsley-required="true" />'  +
-            '<div id="field2"></div>'                                         +
-            '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
+          '<form id="element">'                 +
+            '<input id="field1" type="text" name="nick" data-parsley-required="true" />'  +
+            '<div id="field2" name="comment"></div>'                                         +
+            '<input type="submit" name="foo" value="bar" />'  +
+            '<input type="submit" name="foo" value="other" />'  +
           '</form>');
           var parsleyForm = $('#element').parsley();
 
-          // parsley.remote hack because if valid, parsley remote re-send form
-          $('#element').parsley().on('form:validate', function () {
-            if (this.asyncSupport)
-              this.submitEvent._originalPreventDefault();
-          });
-
-          var event = $.Event();
-          // parsley.remote hack
-          event._originalPreventDefault = event.preventDefault;
-          event.preventDefault = sinon.spy();
-          parsleyForm.onSubmitValidate(event);
-          expect(event.preventDefault.called).to.be(true);
+          $('#element input:last').click();
+          // Form should not be submitted at this point
 
           $('#field1').val('foo');
-          $('#field3').val('foo');
-
-          event = $.Event();
-          // parsley.remote hack
-          event._originalPreventDefault = event.preventDefault;
-          event.preventDefault = sinon.spy();
-          parsleyForm.onSubmitValidate(event);
-
-          if (!parsleyForm.asyncSupport)
-            expect(event.preventDefault.called).to.be(false);
-          else
-            expect(event.preventDefault.called).to.be(true);
+          $('#element').on('submit', function(evt) {
+            if(evt.parsley) {
+              evt.preventDefault();
+              done();
+            }
+          });
+          $('#element input:last').click();
       });
       it('should have a force option for validate and isValid methods', function () {
         $('body').append(
@@ -239,6 +225,42 @@ define(function () {
         parsleyForm.validate();
         parsleyForm.validate();
         expect(steps).to.eql(['field: excluded', 'form: excluded', 'field: detached', 'form: detached', 'field: removed', 'form: removed']);
+      });
+
+      it('should handle validators returning promises', function (done) {
+        var called = 0;
+        var shouldSubmit = false;
+        var form = $('<form id="element"><input data-parsley-custom value="x"/></form>')
+        .appendTo('body')
+        .parsley();
+        var deferred;
+        window.Parsley.addValidator('custom', function() {
+          called++;
+          deferred = $.Deferred();
+          return deferred.promise();
+        });
+
+        $('#element').on('submit', function(evt) {
+          evt.preventDefault();
+          expect(evt.parsley).to.be(true); // Sanity check
+          expect(shouldSubmit).to.be(true);
+          window.Parsley.removeValidator('custom');
+          done();
+        })
+        $('#element').submit();
+        expect(called).to.eql(1);
+        deferred.reject();
+
+        var promise = form.whenValidate();
+        expect(called).to.eql(2);
+        expect(promise.state()).to.eql('pending');
+        deferred.reject();
+        expect(promise.state()).to.eql('rejected');
+
+        $('#element').submit();
+        expect(called).to.eql(3);
+        shouldSubmit = true;
+        deferred.resolve();
       });
 
       afterEach(function () {
