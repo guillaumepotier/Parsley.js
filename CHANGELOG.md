@@ -1,6 +1,6 @@
 # Parsley 2.x changelog
 
-## master
+## 2.2.0-rc1
 
 - Major validators refactor:
   - Compatible with promises from the ground up. Previous API (e.g. `isValid`)

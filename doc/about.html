@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,10 +7,7 @@
     <meta name="description" content="Parsley, the ultimate frontend javascript form validation library">
     <meta name="author" content="Guillaume Potier">
 
-    <title>Parsley - Test suite</title>
-
-    <!-- Mochat tests css -->
-    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <title>Parsley - About</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
@@ -24,13 +20,19 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-
-    <style>#element { display: none; }</style>
+    <style>
+      body {
+        color: #111111;
+      }
+      h2 {
+        color: #FF851B;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="container">
 
+    <div class="container">
       <div class="masthead">
         <div class="header">
           <h3 class="text-muted"><a href="../">Parsley</a></h3>
@@ -47,27 +49,46 @@
         </div>
 
         <ul class="nav nav-justified">
-          <li><a href="../index.html">Home</a></li>
+          <li><a href="../">Home</a></li>
           <li><a href="examples.html">Examples</a></li>
           <li><a href="index.html">Documentation</a></li>
           <li><a href="download.html">Download</a></li>
           <li><a href="help.html">Help</a></li>
           <li><a href="annotated-source/parsley.html">Annotated&nbsp;source</a></li>
-          <li class="active"><a href="tests.html">Tests</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="tests.html">Tests</a></li>
+          <li class="active"><a href="about.html">About</a></li>
         </ul>
-
-
-        <div id="info"></div>
-        <div id="mocha"></div>
-
-        <!-- Site footer -->
-        <div class="footer">
-          <p>&copy; <a href="https://twitter.com/guillaumepotier" title="Guillaume Potier on Twitter">Guillaume Potier</a> 2014 - <a href="http://wisembly.com">@Wisembly</a></p>
-        </div>
       </div>
-    <script src="../bower_components/requirejs/require.js" data-main="../test/tests.js"></script>
 
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <h1>About Parsley</h1>
+          <hr></hr>
+
+          <div class="col-md-12">Parsley is an open source, MIT licensed project created by <a href="https://github.com/guillaumepotier" target="_blank">Guillaume Potier</a> and co-maintened by <a href="https://github.com/marcandre" target="_blank">Marc-André</a> now.</div>
+
+
+          <div class="col-md-12">While independant, Parsley is sponsored by <a href="http://wisembly.com" target="_blank">Wisembly</a>. At Wisembly, we love open-source software, see our <a href="https://github.com/Wisembly" target="_blank">other open-source projects here</a> and don't hesitate to give a try to <a href="http://getsolid.io/?utm_source=parsleyjs.org&utm_medium=referral&utm_campaign=parsley#i-love-parsley" target="_blank" style="font-weight:bolder;text-decoration:underline;">Solid</a>, our latest product that will get you more productive during your meetings.</div>
+
+      </div>
+
+      <div class="clearfix"></div>
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p>&copy; <a href="https://twitter.com/guillaumepotier" title="Guillaume Potier on Twitter">Guillaume Potier</a> 2014 - <a href="http://wisembly.com">@Wisembly</a></p>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('.download').on('click', function (event) {
+          _gaq.push(['_trackEvent','download', 'download ' + $(this).data('version'), $(this).data('version')]);
+          _gaq.push(['_trackPageview','/download/' + $(this).data('version')]);
+        });
+      });
+    </script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-37229467-1']);
@@ -79,5 +100,5 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    </body>
+  </body>
 </html>
