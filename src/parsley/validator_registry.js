@@ -113,7 +113,7 @@ define('parsley/validator_registry', [
     //          en: "Hey, that's no good",
     //          fr: "Aye aye, pas bon du tout",
     //        }
-    //    }
+    //    })
     //
     // Old API was addValidator(name, function, priority)
     //
@@ -123,7 +123,7 @@ define('parsley/validator_registry', [
       else if (ParsleyDefaults.hasOwnProperty(name)) {
         ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
         return;
-      };
+      }
       return this._setValidator.apply(this, arguments);
     },
 
@@ -151,10 +151,10 @@ define('parsley/validator_registry', [
           fn: validator,
           priority: priority
         };
-      };
+      }
       if (!validator.validate) {
         validator = new ParsleyValidator(validator);
-      };
+      }
       this.validators[name] = validator;
 
       for (var locale in validator.messages || {})

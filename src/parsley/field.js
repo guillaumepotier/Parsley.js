@@ -39,7 +39,7 @@ define('parsley/field', [
         case 'pending': return null;
         case 'resolved': return true;
         case 'rejected': return this.validationResult;
-      };
+      }
     },
 
     // Validate field and trigger some events for mainly `ParsleyUI`

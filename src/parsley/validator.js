@@ -45,7 +45,7 @@ define('parsley/validator', [
   };
 
   var convertArrayRequirement = function(string, length) {
-    var m = string.match(/^\s*\[(.*)\]\s*$/)
+    var m = string.match(/^\s*\[(.*)\]\s*$/);
     if (!m)
       throw 'Requirement is not an array: "' + string + '"';
     var values = m[1].split(',').map(ParsleyUtils.trimString);
@@ -70,7 +70,7 @@ define('parsley/validator', [
           value = convertRequirement(requirementSpec[key], value);
         extra[key] = value;
       } else {
-        main = convertRequirement(requirementSpec[key], string)
+        main = convertRequirement(requirementSpec[key], string);
       }
     }
     return [main, extra];
@@ -125,7 +125,7 @@ define('parsley/validator', [
           values[i] = convertRequirement(type[i], values[i]);
         return values;
       } else if ($.isPlainObject(type)) {
-        return convertExtraOptionRequirement(type, requirements, extraOptionReader)
+        return convertExtraOptionRequirement(type, requirements, extraOptionReader);
       } else {
         return [convertRequirement(type, requirements)];
       }

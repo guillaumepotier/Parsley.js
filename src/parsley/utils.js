@@ -7,14 +7,14 @@ define('parsley/utils', function () {
     // returns object from dom attributes and values
     attr: function ($element, namespace, obj) {
       var
-        attribute, attributes,
+        i, attribute, attributes,
         regex = new RegExp('^' + namespace, 'i');
 
       if ('undefined' === typeof obj)
         obj = {};
       else {
         // Clear all own properties. This won't affect prototype's values
-        for (var i in obj) {
+        for (i in obj) {
           if (obj.hasOwnProperty(i))
             delete obj[i];
         }
@@ -24,7 +24,7 @@ define('parsley/utils', function () {
         return obj;
 
       attributes = $element[0].attributes;
-      for (var i = attributes.length; i--; ) {
+      for (i = attributes.length; i--; ) {
         attribute = attributes[i];
 
         if (attribute && attribute.specified && regex.test(attribute.name)) {
