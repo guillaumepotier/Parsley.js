@@ -4,14 +4,18 @@ $.extend(true, window.Parsley, {
   asyncValidators: {
     'default': {
       fn: function (xhr) {
-        return 'resolved' === xhr.state();
+        // By default, only status 2xx are deemed successful.
+        // Note: we use status instead of state() because responses with status 200
+        // but invalid messages (e.g. an empty body for content type set to JSON) will
+        // result in state() === 'rejected'.
+        return xhr.status >= 200 && xhr.status < 300;
       },
       url: false
     },
     reverse: {
       fn: function (xhr) {
         // If reverse option is set, a failing ajax request is considered successful
-        return 'rejected' === xhr.state();
+        return xhr.status < 200 || xhr.status >= 300;
       },
       url: false
     }

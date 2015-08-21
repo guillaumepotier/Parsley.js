@@ -2,6 +2,10 @@
 
 ## 2.2.0-rc1
 
+- Remote: use HTTP status code for what is considered valid or not (#956)
+
+## 2.2.0-rc1
+
 - Major validators refactor:
   - Compatible with promises from the ground up. Previous API (e.g. `isValid`)
     remains, but promise-aware API is now recommended (e.g. `whenValid`).
