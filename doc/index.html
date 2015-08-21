@@ -837,7 +837,7 @@ window.Parsley
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
-                <th class="col-md-1"><code>requirementKind</code></th>
+                <th class="col-md-1"><code>requirementType</code></th>
                 <th class="col-md-4">Description</th>
               </tr>
             </thead>
@@ -865,7 +865,7 @@ window.Parsley
             </tbody>
           </table>
 
-          <p>You can also specify an array of these kinds. For example, if a validator has <code>requirementKind: ['integer', 'integer']</code>, then given the requirement string <code>"[1, 2]"</code> it will receive <code>1</code> and <code>2</code> as second and third arguments (the first one being the value(s) to validate).
+          <p>You can also specify an array of these kinds. For example, if a validator has <code>requirementType: ['integer', 'integer']</code>, then given the requirement string <code>"[1, 2]"</code> it will receive <code>1</code> and <code>2</code> as second and third arguments (the first one being the value(s) to validate).
           </p>
 
           <p>For even cases where more complex parameters are needed, you can specify extra parameters; refer to the source and check how the <code>remote</code> validator uses that.</p>
