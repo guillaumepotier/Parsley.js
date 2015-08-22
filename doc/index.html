@@ -837,29 +837,29 @@ window.Parsley
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
-                <th class="col-md-1">requirementType</th>
+                <th class="col-md-1">Value of <code>requirementType</code></th>
                 <th class="col-md-4">Description</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><code>string</code></td>
+                <td><code>'string'</code></td>
                 <td>The most generic kind; requirement passed as is, with no checking.</td>
               </tr>
               <tr>
-                <td><code>integer</code></td>
+                <td><code>'integer'</code></td>
                 <td>For integers only (e.g. used by <code>minlength</code>)</td>
               </tr>
               <tr>
-                <td><code>number</code></td>
+                <td><code>'number'</code></td>
                 <td>To be used when decimal numbers are acceptable</td>
               </tr>
               <tr>
-                <td><code>regexp</code></td>
+                <td><code>'regexp'</code></td>
                 <td>Requirement can be either a full regexp string (e.g. <code>/hel+o/i</code>) or just a simple expression (e.g. <code>hel+o</code>)</td>
               </tr>
               <tr>
-                <td><code>boolean</code></td>
+                <td><code>'boolean'</code></td>
                 <td>Any value other than <code>"false"</code> will be considered to <code>true</code>, including the empty string. This is so <code>data-parsley-required</code> and <code>data-parsley-required=true</code> be treated the same way.</td>
               </tr>
             </tbody>
