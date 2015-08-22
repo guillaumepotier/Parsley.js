@@ -32,7 +32,7 @@ define('parsley/validator', [
       var flags = '';
 
       // Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern
-      if (!!(/^\/.*\/(?:[gimy]*)$/.test(regexp))) {
+      if (/^\/.*\/(?:[gimy]*)$/.test(regexp)) {
         // Replace the regexp literal string with the first match group: ([gimy]*)
         // If no flag is present, this will be a blank string
         flags = regexp.replace(/.*\/([gimy]*)$/, '$1');
