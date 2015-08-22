@@ -240,7 +240,7 @@
 <pre><code>&lt;input id="first" data-parsley-maxlength="42" value="hello"/&gt;
 &lt;input id="second" value="world"/&gt;
 [...]
-&lt;script>
+&lt;script&gt;
 var instance = $('#first').parsley();
 console.log(instance.isValid()); // maxlength is 42, so field is valid
 $('#first').attr('data-parsley-maxlength', 4);
@@ -265,7 +265,7 @@ console.log(otherInstance.options); // Shows that maxlength will be 10 for this 
   &lt;input/&gt;
 &lt;/form&gt;
 [...]
-&lt;script>
+&lt;script&gt;
 Parsley.options.maxlength = 42;
 var formInstance = $('form').parsley();
 var field = $('input').parsley();
@@ -285,7 +285,7 @@ console.log(field.options.maxlength); // Shows that maxlength is automagically 3
             For example:
 <pre><code>&lt;input data-my-namespace-priority-enabled="false"&gt;
 [...]
-&lt;script>
+&lt;script&gt;
 var instance = $('input').parsley({namespace: 'my-namespace-'});
 if (false === instance.options.priorityEnabled)
   console.log("priorityEnabled was set to false");
@@ -294,7 +294,7 @@ if (false === instance.options.priorityEnabled)
 
           <h3 id="usage-form">Form</h3>
           <p>
-            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;form id="target"></code> element, it will bind the whole form and its various inputs and return a <code>ParsleyForm</code> instance.
+            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;form id="target"&gt;</code> element, it will bind the whole form and its various inputs and return a <code>ParsleyForm</code> instance.
           </p>
 
           <h4>Options</h4>
@@ -713,7 +713,7 @@ if (false === instance.options.priorityEnabled)
                       <td><span class="label label-info pull-right">HTML5</span></td>
                     </tr>
                     <tr>
-                      <td><code>data-parsley-range="[6,10]"</code></td>
+                      <td><code>data-parsley-range="[6, 10]"</code></td>
                       <td></td>
                     </tr>
                   </table>
@@ -837,7 +837,7 @@ window.Parsley
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
-                <th class="col-md-1"><code>requirementType</code></th>
+                <th class="col-md-1">requirementType</th>
                 <th class="col-md-4">Description</th>
               </tr>
             </thead>
@@ -1002,7 +1002,7 @@ window.Parsley
         <p>Parsley triggers events that allows ParsleyUI to work. Further more, it could allow you to do some powerful magic if you listen properly to the right events!</p>
         <p>For performance reasons, Parsley does not use jQuery events, but the API to listen to events is very similar:
 <pre><code>$('#some-input').parsley().on('field:success', function() {
-  // In here, `this` is the parlsey instance of `#some-input
+  // In here, `this` is the parlsey instance of #some-input
 });
 </code></pre>
         </p>
@@ -1375,7 +1375,6 @@ window.Parsley.addAsyncValidator('mycustom', function (xhr) {
                 <ul class="nav">
                   <li><a href="#events-overview">Overview</a></li>
                   <li><a href="#events-list">List</a></li>
-                  <li><a href="#events-usage">Usage</a></li>
                 </ul>
               </li>
               <li>
