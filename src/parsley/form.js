@@ -159,7 +159,7 @@ define('parsley/form', [
     // the method actualizeOptions on this form while `fn` is called.
     _withoutReactualizingFormOptions: function (fn) {
       var oldActualizeOptions = this.actualizeOptions;
-      this.actualizeOptions = function() { return this };
+      this.actualizeOptions = function() { return this; };
       var result = fn.call(this); // Keep the current `this`.
       this.actualizeOptions = oldActualizeOptions;
       return result;

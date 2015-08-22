@@ -1,6 +1,6 @@
 # Parsley 2.x changelog
 
-## 2.2.0-rc1
+## 2.2.0-rc2
 
 - Remote: use HTTP status code for what is considered valid or not (#956)
 
