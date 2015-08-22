@@ -347,7 +347,7 @@ if (false === instance.options.priorityEnabled)
               <tr>
                 <td><code>whenValid(group, force)</code> <version>#2.2</version></td>
                 <td><code>promise</code></td>
-                <td>Returns a promise that will be fulfilled if and only if the Form is valid. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non-required fields (<a href="examples/events.html">See example</a>)</td>
+                <td>Returns a jQuery promise that will be fulfilled if and only if the Form is valid. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non-required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
                 <td><code>isValid(group, force)</code> <version>#2.0</version></td>
@@ -832,7 +832,7 @@ window.Parsley
 
           <p>Your custom validator must specify at least one of these. If it can validate both single inputs and multiple (i.e. checkboxes), then you can specify <i>validateMultiple</i> and one of the other two.</p>
 
-          <p>Validating functions should return either <code>true</code> if the value is valid, or <code>false</code> otherwise. It can instead return a promise that will be resolved if the value is valid, or be rejected otherwise.</p>
+          <p>Validating functions should return either <code>true</code> if the value is valid, or <code>false</code> otherwise. It can instead return a jQuery promise that will be resolved if the value is valid, or be rejected otherwise.</p>
 
           <h3 id="custom-requirement">Requirement parameters</h3>
 
