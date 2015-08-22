@@ -3,6 +3,7 @@
 ## 2.2.0-rc2
 
 - Remote: use HTTP status code for what is considered valid or not (#956)
+- pattern validator is now anchored, unless it looks like /pattern/flag (#861)
 
 ## 2.2.0-rc1
 

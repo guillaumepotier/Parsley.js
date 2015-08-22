@@ -121,6 +121,14 @@ define(function () {
         expectValidation('a', 'pattern','/[a-z]+/i').to.be(true);
         expectValidation('A', 'pattern','/[a-z]+/i').to.be(true);
       });
+      it('should have a pattern validator that behaves as the standard when not of the form /pattern/flag', function () {
+        expectValidation('aa', 'pattern', '[a-z]{1,2}').to.be(true);
+        expectValidation('aaa', 'pattern', '[a-z]{1,2}').not.to.be(true);
+        expectValidation('aa',  'pattern', '^[a-z]{2}$').to.be(true);
+      });
+      it('should have a pattern validator that extends the standard for form /pattern/flag', function () {
+        expectValidation('zAz', 'pattern', '/a/i').to.be(true);
+      });
       it('should have a length validator', function () {
         expectValidation('foobar',    'length', [3, 9]).to.be(true);
         expectValidation('foo',       'length', [4, 9]).not.to.be(true);

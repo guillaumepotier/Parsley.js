@@ -737,7 +737,10 @@ if (false === instance.options.priorityEnabled)
                     </tr>
                   </table>
                 </td>
-                <td>Validates that a value matches a specific regular expression (regex).</td>
+                <td>Validates that a value matches a specific regular expression (regex).
+                  <br/>Note that patterns are anchored, i.e. must match the whole string.
+                  <br/>Parsley deviates from the standard for patterns looking like <code>/<i>pattern</i>/<i>{flag}</i></code>; these are interpreted as litteral regexp and are not anchored.
+                </td>
               </tr>
               <tr>
                 <td>

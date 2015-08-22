@@ -1,5 +1,5 @@
 define('parsley/validator', [
-    'parsley/utils'
+  'parsley/utils'
 ], function (ParsleyUtils) {
 
   var requirementConverters = {
@@ -39,6 +39,9 @@ define('parsley/validator', [
         // Again, replace the regexp literal string with the first match group:
         // everything excluding the opening and closing slashes and the flags
         regexp = regexp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+      } else {
+        // Anchor regexp:
+        regexp = '^' + regexp + '$';
       }
       return new RegExp(regexp, flags);
     }
