@@ -100,7 +100,7 @@ define('parsley/validator', [
         if (this.validateNumber) {
           if (isNaN(value))
             return false;
-          value = parseFloat(value);
+          arguments[0] = parseFloat(arguments[0]);
           return this.validateNumber.apply(this, arguments);
         }
         if (this.validateString) {

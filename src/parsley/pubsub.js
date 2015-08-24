@@ -39,7 +39,7 @@ define('parsley/pubsub', [
       callback = arguments[2];
     }
 
-    if ('function' !== typeof arguments[1])
+    if ('function' !== typeof callback)
       throw new Error('Wrong parameters');
 
     window.Parsley.on(eventName(name), adapt(callback, context));
