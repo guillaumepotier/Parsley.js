@@ -169,8 +169,7 @@ define('parsley/form', [
     // Shortcut to trigger an event
     // Returns true iff event is not interrupted and default not prevented.
     _trigger: function (eventName) {
-      eventName = 'form:' + eventName;
-      return this.trigger.apply(this, arguments);
+      return this.trigger('form:' + eventName);
     }
 
   };

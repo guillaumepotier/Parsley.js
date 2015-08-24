@@ -291,8 +291,7 @@ define('parsley/field', [
     // Internal only.
     // Shortcut to trigger an event
     _trigger: function (eventName) {
-      eventName = 'field:' + eventName;
-      return this.trigger.apply(this, arguments);
+      return this.trigger('field:' + eventName);
     },
 
     // Internal only
