@@ -3,6 +3,7 @@ module.exports = function (grunt) {
   /** LOAD Tasks **/
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-bower-cli');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
@@ -116,6 +117,12 @@ module.exports = function (grunt) {
             flatten: true,
             src: 'dist/parsley.js',
             dest: 'dist/'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: 'dist/i18n/*.js',
+            dest: 'dist/i18n/'
           }
         ]
       }
@@ -175,13 +182,33 @@ module.exports = function (grunt) {
         src: ['dist/parsley.js', 'src/extra/plugin/remote.js'],
         dest: 'dist/parsley.remote.js'
       }
+    },
+
+    copy: {
+      i18n: {
+        expand: true,
+        cwd: "src/i18n/",
+        src: "*.js",
+        dest: "dist/i18n/",
+        options: {
+          process: function (content) {
+            // wrap the i18n source files in the UMD wrapper
+            // for environments that load jQuery as a UMD dependency
+            return [
+              grunt.file.read("src/wrap/prepend.js"),
+              content,
+              '}));'
+            ].join('\n');
+          }
+        }
+      }
     }
   });
 
   /** Tasks here **/
   grunt.registerTask('default', []);
   grunt.registerTask('configure', ['bower:install']);
-  grunt.registerTask('build-std', ['requirejs', 'replace:dist', 'uglify:min']);
+  grunt.registerTask('build-std', ['requirejs', 'copy:i18n', 'replace:dist', 'uglify:min']);
   grunt.registerTask('build-remote', ['concat:remote', 'uglify:remote']);
   grunt.registerTask('build-annotated-source', ['docco:source', 'replace:annotated']);
   grunt.registerTask('build', ['configure', 'clean:dist', 'build-std', 'build-remote', 'build-annotated-source', 'sync']);

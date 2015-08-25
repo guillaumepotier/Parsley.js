@@ -34,7 +34,8 @@
     "grunt-docco": "~0.3.2",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-npm2bower-sync": "~0.3.0"
+    "grunt-npm2bower-sync": "~0.3.0",
+    "grunt-contrib-copy": "^0.8.1"
   },
   "scripts": {
     "test": "mocha-phantomjs test/index.html",
