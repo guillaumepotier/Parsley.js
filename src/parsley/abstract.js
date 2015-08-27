@@ -66,18 +66,18 @@ define('parsley/abstract', [
     // Trigger an event of the given name.
     // A return value of `false` interrupts the callback chain.
     // Returns false if execution was interrupted.
-    trigger: function (name, target) {
+    trigger: function (name, target, extraArg) {
       target = target || this;
       var queue = this._listeners && this._listeners[name];
       var result, parentResult;
       if (queue) {
         for(var i = queue.length; i--; ) {
-          result = queue[i].call(target, target);
+          result = queue[i].call(target, target, extraArg);
           if (result === false) return result;
         }
       }
       if (this.parent) {
-        return this.parent.trigger(name, target);
+        return this.parent.trigger(name, target, extraArg);
       }
       return true;
     },
