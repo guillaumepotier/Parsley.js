@@ -1143,7 +1143,27 @@ window.Parsley
           </tbody>
         </table>
 
-        <h3>Methods</h3>
+        <h3 id="remote-events">Events</h3>
+        <table class="table table-stripped table-bordered">
+          <thead>
+            <tr>
+              <th class="col-md-2">Name</th>
+              <th class="col-md-1">Instance</th>
+              <th class="col-md-1">Fired by</th>
+              <th class="col-md-4">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>field:ajaxoptions</code> <version>#2.2</version></td>
+              <td><code>ParsleyField</code></td>
+              <td><code>whenIsValid</code> &amp; al.</td>
+              <td>Triggered just before an ajax request is sent, so one can tweak the options passed to <code>$.ajax</code>. Options are passed as a second parameter.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="remote-methods">Methods</h3>
         <table class="table table-stripped table-bordered">
           <thead>
             <tr>

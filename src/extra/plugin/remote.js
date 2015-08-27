@@ -76,6 +76,8 @@ window.Parsley.addValidator('remote', {
     }, remoteOptions);
 
     // Generate store key based on ajax options
+    instance.trigger('field:ajaxoptions', instance, ajaxOptions);
+
     csr = $.param(ajaxOptions);
 
     // Initialise querry cache
