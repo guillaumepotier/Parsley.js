@@ -1120,7 +1120,9 @@ window.Parsley
             <tr>
               <td>Remote validator</td>
               <td><code>data-parsley-remote</code> <version>#2.0</version></td>
-              <td>Define the url that will be called to validate the entered content. e.g. <code>data-parsley-remote="http://url.ext"</code></td>
+              <td>Define the url that will be called to validate the entered content. e.g. <code>data-parsley-remote="http://url.ext"</code>.
+                <br/>If the url contains the string <code>"{value}"</code>, the value will replace it in the URL (typical of RESTful APIs),
+                otherwise the value will be passed as a data parameter, with the key being the input's name or ID.</td>
             </tr>
             <tr>
               <td>Reverse</td>

@@ -62,15 +62,21 @@ window.Parsley.addValidator('remote', {
     if ('undefined' === typeof window.Parsley.asyncValidators[validator])
       throw new Error('Calling an undefined async validator: `' + validator + '`');
 
-    // Fill data with current value
-    data[instance.$element.attr('name') || instance.$element.attr('id')] = value;
+    url = window.Parsley.asyncValidators[validator].url || url;
+
+    // Fill current value
+    if (url.indexOf('{value}') > -1) {
+      url = url.replace('{value}', encodeURIComponent(value));
+    } else {
+      data[instance.$element.attr('name') || instance.$element.attr('id')] = value;
+    }
 
     // Merge options passed in from the function with the ones in the attribute
     var remoteOptions = $.extend(true, options.options || {} , window.Parsley.asyncValidators[validator].options);
 
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
-      url: window.Parsley.asyncValidators[validator].url || url,
+      url: url,
       data: data,
       type: 'GET'
     }, remoteOptions);

@@ -201,6 +201,21 @@ define('features/remote', [
           });
       });
 
+      it('should allow RESTful URLs', function (done) {
+        var parsleyInstance =
+          $('<input id="element" data-parsley-remote="http://parsleyjs.org/thisisrest/{value}" name="element" value="foo bar"/>')
+          .appendTo('body')
+          .parsley();
+
+        stubAjax(200);
+        parsleyInstance.whenValid()
+          .done(function () {
+            expect($.ajax.calledWithMatch({ url: "http://parsleyjs.org/thisisrest/foo%20bar" })).to.be(true);
+            expect($.ajax.calledWithMatch({ data: {element: 'foo bar'} })).to.be(false);
+            done();
+          });
+      });
+
       it.skip('should abort successives querries and do not handle their return');
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();
