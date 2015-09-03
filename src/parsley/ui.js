@@ -1,6 +1,5 @@
-define('parsley/ui', [
-  'parsley/utils'
-], function (ParsleyUtils) {
+import ParsleyUtils from 'parsley/utils';
+
   var ParsleyUI = function (options) {
     this.__class__ = 'ParsleyUI';
   };
@@ -406,5 +405,4 @@ define('parsley/ui', [
     }
   };
 
-  return ParsleyUI;
-});
+export default ParsleyUI;

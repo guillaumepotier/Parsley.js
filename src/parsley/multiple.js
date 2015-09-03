@@ -1,5 +1,3 @@
-define('parsley/multiple', [
-], function () {
   var ParsleyMultiple = function () {
     this.__class__ = 'ParsleyFieldMultiple';
   };
@@ -79,5 +77,4 @@ define('parsley/multiple', [
     }
   };
 
-  return ParsleyMultiple;
-});
+export default ParsleyMultiple;

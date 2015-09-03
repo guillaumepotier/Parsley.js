@@ -1,10 +1,9 @@
-define([
-  'parsley/utils',
-  'parsley/abstract',
-  'parsley/form',
-  'parsley/field',
-  'parsley/multiple'
-], function (ParsleyUtils, ParsleyAbstract, ParsleyForm, ParsleyField, ParsleyMultiple) {
+import ParsleyUtils from 'parsley/utils';
+import ParsleyAbstract from 'parsley/abstract';
+import ParsleyForm from 'parsley/form';
+import ParsleyField from 'parsley/field';
+import ParsleyMultiple from 'parsley/multiple';
+
   var ParsleyFactory = function (element, options, parsleyFormInstance) {
     this.$element = $(element);
 
@@ -160,5 +159,4 @@ define([
     }
   };
 
-  return ParsleyFactory;
-});
+export default ParsleyFactory;

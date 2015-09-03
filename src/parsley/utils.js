@@ -1,4 +1,3 @@
-define('parsley/utils', function () {
   var globalID = 1,
     pastWarnings = {};
 
@@ -118,5 +117,4 @@ define('parsley/utils', function () {
     })()
   };
 
-  return ParsleyUtils;
-});
+export default ParsleyUtils;

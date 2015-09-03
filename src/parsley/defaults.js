@@ -3,7 +3,6 @@
 // eg: `inputs` can be set in DOM using `data-parsley-inputs="input, textarea"`
 // eg: `data-parsley-stop-on-first-failing-constraint="false"`
 
-define('parsley/defaults', function () {
   var ParsleyDefaults = {
     // ### General
 
@@ -61,5 +60,4 @@ define('parsley/defaults', function () {
     errorTemplate: '<li></li>'
   };
 
-  return ParsleyDefaults;
-});
+export default ParsleyDefaults;

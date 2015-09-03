@@ -1,8 +1,7 @@
-define('parsley/pubsub', [
-  'parsley/field',
-  'parsley/form',
-  'parsley/utils'
-], function (ParsleyField, ParsleyForm, ParsleyUtils) {
+import ParsleyField from 'parsley/field';
+import ParsleyForm from 'parsley/form';
+import ParsleyUtils from 'parsley/utils';
+
   var
     o = $({}),
     deprecated = function () {
@@ -93,4 +92,4 @@ define('parsley/pubsub', [
     instance.trigger.apply(instance, args);
   };
 
-});
+export default {};

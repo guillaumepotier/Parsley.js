@@ -3,33 +3,18 @@
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
 
-define([
-
-  // ### Requirements
-
-  // Handy third party functions
-  'parsley/utils',
-  // Parsley default configuration
-  'parsley/defaults',
-  // An abstract class shared by `ParsleyField` and `ParsleyForm`
-  'parsley/abstract',
-  // A registry of all Parsley validators (built-in and custom)
-  'parsley/validator_registry',
-  // `ParsleyUI` static class. Handles all UI and UX
-  'parsley/ui',
-  // `ParsleyForm` Class. Handles form validation
-  'parsley/form',
-  // `ParsleyField` Class. Handles field validation
-  'parsley/field',
-  // `Multiple` Class. Extend `ParsleyField` to generate `ParsleyFieldMultiple`
-  'parsley/multiple',
-  // Factory to create Parsley instances (Form, Field or FieldMultiple)
-  'parsley/factory',
-  // Tiny Parsley Pub / Sub mechanism, used for `ParsleyUI` and Listeners
-  'parsley/pubsub',
-  // Default en constraints messages
-  'i18n/en'
-], function (ParsleyUtils, ParsleyDefaults, ParsleyAbstract, ParsleyValidatorRegistry, ParsleyUI, ParsleyForm, ParsleyField, ParsleyMultiple, ParsleyFactory) {
+import $ from 'jQuery';
+import ParsleyUtils from 'parsley/utils';
+import ParsleyDefaults from 'parsley/defaults';
+import ParsleyAbstract from 'parsley/abstract';
+import ParsleyValidatorRegistry from 'parsley/validator_registry';
+import ParsleyUI from 'parsley/ui';
+import ParsleyForm from 'parsley/form';
+import ParsleyField from 'parsley/field';
+import ParsleyMultiple from 'parsley/multiple';
+import ParsleyFactory from 'parsley/factory';
+import PubSub from 'parsley/pubsub';
+  // import i18nEN from 'i18n/en';
 
   var vernums = $.fn.jquery.split('.');
   if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
@@ -108,12 +93,12 @@ define([
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
-  if (false !== window.ParsleyConfig.autoBind)
+  if (false !== window.ParsleyConfig.autoBind) {
     $(function () {
       // Works only on `data-parsley-validate`.
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();
     });
+  }
 
-  return Parsley;
-});
+export default Parsley;

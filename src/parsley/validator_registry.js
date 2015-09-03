@@ -1,7 +1,5 @@
-define('parsley/validator_registry', [
-  'parsley/defaults',
-  'parsley/validator'
-], function (ParsleyDefaults, ParsleyValidator) {
+import ParsleyDefaults from 'parsley/defaults';
+import ParsleyValidator from 'parsley/validator';
 
   var ParsleyValidatorRegistry = function (validators, catalog) {
     this.__class__ = 'ParsleyValidatorRegistry';
@@ -303,5 +301,4 @@ define('parsley/validator_registry', [
     }
   };
 
-  return ParsleyValidatorRegistry;
-});
+export default ParsleyValidatorRegistry;

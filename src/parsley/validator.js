@@ -1,6 +1,4 @@
-define('parsley/validator', [
-  'parsley/utils'
-], function (ParsleyUtils) {
+import ParsleyUtils from 'parsley/utils';
 
   var requirementConverters = {
     string: function(string) {
@@ -140,5 +138,4 @@ define('parsley/validator', [
 
   };
 
-  return ParsleyValidator;
-});
+export default ParsleyValidator;

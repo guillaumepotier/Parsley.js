@@ -2,14 +2,21 @@ language: node_js
 
 node_js:
   - 0.10
+  - 0.12
 
-before_script:
-  - npm install -g bower
-  # - npm install -g browserify
-  - bower install
-  # - browserify test/env/browserify.js -o test/env/browserify_bundle.js -r jquery
+sudo: false
+
+# before_script:
+#   - npm install -g bower
+#   # - npm install -g browserify
+#   - bower install
+#   # - browserify test/env/browserify.js -o test/env/browserify_bundle.js -r jquery
 
 script:
   - npm test
   - npm run-script amd
   # - npm run-script test-all
+
+after_success:
+  - npm install -g codeclimate-test-reporter
+  - codeclimate-test-reporter < coverage/lcov.info

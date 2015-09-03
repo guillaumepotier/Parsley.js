@@ -1,6 +1,5 @@
-define('parsley/abstract', [
-  'parsley/utils'
-], function (ParsleyUtils) {
+import ParsleyUtils from 'parsley/utils';
+
   var ParsleyAbstract = function () {};
 
   ParsleyAbstract.prototype = {
@@ -124,5 +123,4 @@ define('parsley/abstract', [
     }
   };
 
-  return ParsleyAbstract;
-});
+export default ParsleyAbstract;

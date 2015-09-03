@@ -1,7 +1,7 @@
-define('parsley/factory/constraint', [
-  'parsley/utils',
-  'parsley/validator',
-], function (ParsleyUtils, ParsleyValidator) {
+import ParsleyUtils from 'parsley/utils';
+import ParsleyValidator from 'parsley/validator';
+
+
   var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
     if (!new RegExp('ParsleyField').test(parsleyField.__class__))
       throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
@@ -39,5 +39,6 @@ define('parsley/factory/constraint', [
       });
     }
   };
-  return ConstraintFactory;
-});
+
+export default ConstraintFactory;
+

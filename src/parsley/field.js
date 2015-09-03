@@ -1,8 +1,7 @@
-define('parsley/field', [
-    'parsley/factory/constraint',
-    'parsley/ui',
-    'parsley/utils'
-], function (ConstraintFactory, ParsleyUI, ParsleyUtils) {
+import ConstraintFactory from 'parsley/factory/constraint';
+import ParsleyUI from 'parsley/ui';
+import ParsleyUtils from 'parsley/utils';
+
   var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
     this.__class__ = 'ParsleyField';
     this.__id__ = ParsleyUtils.generateID();
@@ -348,5 +347,4 @@ define('parsley/field', [
 
   };
 
-  return ParsleyField;
-});
+export default ParsleyField;
