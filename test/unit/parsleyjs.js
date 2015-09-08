@@ -1,4 +1,4 @@
-import parsley from '../../src/parsleyjs';
+import parsley from '../../src/parsley';
 
 describe('parsley', () => {
   describe('Greet function', () => {
