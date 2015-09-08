@@ -1,5 +1,5 @@
-import ParsleyAbstract from 'parsley/abstract';
-import ParsleyUtils from 'parsley/utils';
+import ParsleyAbstract from './abstract';
+import ParsleyUtils from './utils';
 
 var ParsleyForm = function (element, domOptions, options) {
   this.__class__ = 'ParsleyForm';

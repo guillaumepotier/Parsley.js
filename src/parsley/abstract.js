@@ -1,4 +1,4 @@
-import ParsleyUtils from 'parsley/utils';
+import ParsleyUtils from './utils';
 
 var ParsleyAbstract = function () {};
 

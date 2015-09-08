@@ -1,8 +1,8 @@
-import ParsleyUtils from 'parsley/utils';
-import ParsleyAbstract from 'parsley/abstract';
-import ParsleyForm from 'parsley/form';
-import ParsleyField from 'parsley/field';
-import ParsleyMultiple from 'parsley/multiple';
+import ParsleyUtils from './utils';
+import ParsleyAbstract from './abstract';
+import ParsleyForm from './form';
+import ParsleyField from './field';
+import ParsleyMultiple from './multiple';
 
 var ParsleyFactory = function (element, options, parsleyFormInstance) {
   this.$element = $(element);

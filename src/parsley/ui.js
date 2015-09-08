@@ -1,4 +1,4 @@
-import ParsleyUtils from 'parsley/utils';
+import ParsleyUtils from './utils';
 
 var ParsleyUI = function (options) {
   this.__class__ = 'ParsleyUI';

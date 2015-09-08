@@ -1,6 +1,6 @@
-import ParsleyField from 'parsley/field';
-import ParsleyForm from 'parsley/form';
-import ParsleyUtils from 'parsley/utils';
+import ParsleyField from './field';
+import ParsleyForm from './form';
+import ParsleyUtils from './utils';
 
 var
   o = $({}),

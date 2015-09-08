@@ -1,6 +1,6 @@
-import ConstraintFactory from 'parsley/factory/constraint';
-import ParsleyUI from 'parsley/ui';
-import ParsleyUtils from 'parsley/utils';
+import ConstraintFactory from './factory/constraint';
+import ParsleyUI from './ui';
+import ParsleyUtils from './utils';
 
 var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
   this.__class__ = 'ParsleyField';

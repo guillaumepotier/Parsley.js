@@ -1,5 +1,5 @@
-import ParsleyDefaults from 'parsley/defaults';
-import ParsleyValidator from 'parsley/validator';
+import ParsleyDefaults from './defaults';
+import ParsleyValidator from './validator';
 
 var ParsleyValidatorRegistry = function (validators, catalog) {
   this.__class__ = 'ParsleyValidatorRegistry';

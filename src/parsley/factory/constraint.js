@@ -1,5 +1,5 @@
-import ParsleyUtils from 'parsley/utils';
-import ParsleyValidator from 'parsley/validator';
+import ParsleyUtils from '../utils';
+import ParsleyValidator from '../validator';
 
 
 var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {

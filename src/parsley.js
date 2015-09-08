@@ -4,17 +4,18 @@
 //     Parsley may be freely distributed under the MIT license.
 
 import $ from 'jQuery';
-import ParsleyUtils from 'parsley/utils';
-import ParsleyDefaults from 'parsley/defaults';
-import ParsleyAbstract from 'parsley/abstract';
-import ParsleyValidatorRegistry from 'parsley/validator_registry';
-import ParsleyUI from 'parsley/ui';
-import ParsleyForm from 'parsley/form';
-import ParsleyField from 'parsley/field';
-import ParsleyMultiple from 'parsley/multiple';
-import ParsleyFactory from 'parsley/factory';
-import PubSub from 'parsley/pubsub';
-// import i18nEN from 'i18n/en';
+import ParsleyUtils from './parsley/utils';
+import ParsleyDefaults from './parsley/defaults';
+import ParsleyAbstract from './parsley/abstract';
+import ParsleyValidatorRegistry from './parsley/validator_registry';
+import ParsleyUI from './parsley/ui';
+import ParsleyForm from './parsley/form';
+import ParsleyField from './parsley/field';
+import ParsleyMultiple from './parsley/multiple';
+import ParsleyFactory from './parsley/factory';
+import PubSub from './parsley/pubsub';
+import en from './i18n/en';
+// import i18nEN from './i18n/en';
 
 var vernums = $.fn.jquery.split('.');
 if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
