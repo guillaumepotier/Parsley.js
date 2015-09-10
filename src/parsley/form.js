@@ -18,12 +18,27 @@ define('parsley/form', [
   var statusMapping = { pending: null, resolved: true, rejected: false };
 
   ParsleyForm.prototype = {
+    onClickSetButton: function (event) {
+      var $button = $(event.target || event.srcElement);
+      $(event.target.form).data('parsleyButton', $button);
+    },
+
     onSubmitValidate: function (event) {
       var that = this;
 
       // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
       if (true === event.parsley)
         return;
+
+      // Don't validate if the submit was triggered by a button with formnovalidate.
+      var $button;
+      if (!($button = this.$element.data('clicked-button'))) {
+        $button = this.$element.find(this.options.submitButtons).first();
+      }
+      this.$element.data('parsleyButton', null);
+      if (typeof $button.attr('formnovalidate') !== 'undefined') {
+        return;
+      }
 
       // Because some validations might be asynchroneous,
       // we cancel this submit and will fake it after validation.

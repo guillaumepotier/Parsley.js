@@ -153,6 +153,22 @@ define(function () {
         $form.submit();
         expect(callbacks.join()).to.be('validate,error,validated,validate,success,validated,submit');
       });
+      it('should not validate when triggered by a button with formnovalidate', function () {
+        var $form = $('<form id="element"><input type="string" required /><input type="submit" formnovalidate /<form>').appendTo($('body'));
+        $form.on('submit', function (e) {
+          e.preventDefault();
+        });
+
+        var callbacks = [];
+        $.each(['validate', 'error', 'success', 'validated', 'submit'], function (i, cb) {
+          $form.parsley().on('form:' + cb, function () {
+            callbacks.push(cb);
+          });
+        });
+        $form.parsley();
+        $form.find('input[type=submit]').click();
+        expect(callbacks.join()).to.be('');
+      });
       it('should fire "form:validate.parsley" to give the opportunity for changes before validation occurs', function() {
         var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
         $form.parsley().on('form:validate', function () {
