@@ -209,6 +209,7 @@ define('parsley/ui', [
 
     setupForm: function (formInstance) {
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
+      formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', $.proxy(formInstance.onSubmitButton, formInstance));
 
       // UI could be disabled
       if (false === formInstance.options.uiEnabled)

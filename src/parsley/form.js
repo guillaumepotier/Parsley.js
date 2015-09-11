@@ -30,13 +30,19 @@ define('parsley/form', [
       event.stopImmediatePropagation();
       event.preventDefault();
 
+      // If we didn't come here through a submit button, use the first one in the form
+      this._$submitSource = this._$submitSource || this.$element.find('input[type="submit"], button[type="submit"]').first();
+
       this.whenValidate(undefined, undefined, event)
         .done(function() { that._submit(); })
-        .always(function() { that._submitSource = null; });
+        .always(function() { that._$submitSource = null; });
 
       return this;
     },
 
+    onSubmitButton: function(event) {
+      this._$submitSource = $(event.target);
+    },
     // internal
     // _submit submits the form, this time without going through the validations.
     // Care must be taken to "fake" the actual submit button being clicked.
@@ -44,12 +50,14 @@ define('parsley/form', [
       if (false === this._trigger('submit'))
         return;
       this.$element.find('.parsley_synthetic_submit_button').remove();
-      if (this._submitSource) {
-        $('<input class=".parsley_synthetic_submit_button" type="hidden">')
-        .attr('name', this._submitSource.name)
-        .attr('value', this._submitSource.value)
+      // Add submit button's data
+      if (this._$submitSource) {
+        $('<input class="parsley_synthetic_submit_button" type="hidden">')
+        .attr('name', this._$submitSource.attr('name'))
+        .attr('value', this._$submitSource.attr('value'))
         .appendTo(this.$element);
       }
+      //
       this.$element.trigger($.extend($.Event('submit'), { parsley: true }));
     },
 

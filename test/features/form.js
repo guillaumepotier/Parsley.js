@@ -92,7 +92,7 @@ define(function () {
           // group name on single required field, without value
           expect(parsleyForm.isValid('qux')).to.be(false);
       });
-      it('should handle form submission correctly', function (done) {
+      it('should handle form submission correctly', function () {
         $('body').append(
           '<form id="element">'                 +
             '<input id="field1" type="text" name="nick" data-parsley-required="true" />'  +
@@ -106,13 +106,15 @@ define(function () {
           // Form should not be submitted at this point
 
           $('#field1').val('foo');
+          var values = [];
           $('#element').on('submit', function(evt) {
-            if(evt.parsley) {
-              evt.preventDefault();
-              done();
-            }
+            expect(evt.parsley).to.be(true);
+            values.push($('form input[type!=submit][name="foo"]').val());
+            evt.preventDefault();
           });
           $('#element input:last').click();
+          $('#element').submit(); // Similar to pressing 'enter'
+          expect(values).to.eql(['other', 'bar']);
       });
       it('should have a force option for validate and isValid methods', function () {
         $('body').append(
