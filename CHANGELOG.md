@@ -2,6 +2,8 @@
 
 ## 2.2.0-rc2
 
+- Submit buttons: data now included in the submitted form (#826) and
+  attribute 'formnovalidate' is supported (#972)
 - Remote: use HTTP status code for what is considered valid or not (#956)
 - Remote: allow RESTful urls where "{value}" is replaced by the value to validate
 - Remote: add field:ajaxoptions to allow customizing of the ajax parameters (#894)
