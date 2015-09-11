@@ -25,13 +25,18 @@ define('parsley/form', [
       if (true === event.parsley)
         return;
 
+      // If we didn't come here through a submit button, use the first one in the form
+      this._$submitSource = this._$submitSource || this.$element.find('input[type="submit"], button[type="submit"]').first();
+
+      if ('undefined' !== typeof this._$submitSource.attr('formnovalidate')) {
+        this._$submitSource = null;
+        return;
+      }
+
       // Because some validations might be asynchroneous,
       // we cancel this submit and will fake it after validation.
       event.stopImmediatePropagation();
       event.preventDefault();
-
-      // If we didn't come here through a submit button, use the first one in the form
-      this._$submitSource = this._$submitSource || this.$element.find('input[type="submit"], button[type="submit"]').first();
 
       this.whenValidate(undefined, undefined, event)
         .done(function() { that._submit(); })

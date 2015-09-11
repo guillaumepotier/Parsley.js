@@ -116,6 +116,23 @@ define(function () {
           $('#element').submit(); // Similar to pressing 'enter'
           expect(values).to.eql(['other', 'bar']);
       });
+      it('should not validate when triggered by a button with formnovalidate', function () {
+        var $form = $('<form id="element"><input type="string" required /><input type="submit" formnovalidate /><form>').appendTo($('body'));
+        $form.on('submit', function (e) {
+          e.preventDefault();
+        });
+
+        var callbacks = [];
+        $.each(['validate', 'error', 'success', 'validated', 'submit'], function (i, cb) {
+          $form.parsley().on('form:' + cb, function () {
+            callbacks.push(cb);
+          });
+        });
+        $form.parsley();
+        $form.find('input[type=submit]').click();
+        expect(callbacks.join()).to.be('');
+      });
+
       it('should have a force option for validate and isValid methods', function () {
         $('body').append(
           '<form id="element">'                                   +
