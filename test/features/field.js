@@ -253,12 +253,14 @@ define(function () {
 
         expect($('#element').parsley().validate()).not.to.be(true);
       });
-      it('should have a force option for validate and isValid methods', function () {
+      it('should have an optional force option for validate and isValid methods', function () {
         $('body').append('<input type="email" id="element" />');
         expect($('#element').parsley().isValid()).to.be.eql(true);
         expect($('#element').parsley().validate()).to.be.eql(true);
         expect($('#element').parsley().isValid(true)).to.be(false);
         expect($('#element').parsley().validate(true).length).to.be(1);
+        expect($('#element').parsley().isValid('not an email')).to.be(false);
+        expect($('#element').parsley().isValid('foo@example.com')).to.be(true);
       });
       it('should allow passing a specific value to `isValid` method', function () {
         expect($('<input type="email" value="">').parsley().isValid(false)).to.be(true);
