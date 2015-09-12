@@ -28,7 +28,7 @@ define('parsley/form', [
       // If we didn't come here through a submit button, use the first one in the form
       this._$submitSource = this._$submitSource || this.$element.find('input[type="submit"], button[type="submit"]').first();
 
-      if ('undefined' !== typeof this._$submitSource.attr('formnovalidate')) {
+      if (this._$submitSource.is('[formnovalidate]')) {
         this._$submitSource = null;
         return;
       }
