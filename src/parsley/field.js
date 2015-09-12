@@ -97,7 +97,7 @@ define('parsley/field', [
         return $.when();
 
       // Make `force` argument optional
-      if (false !== force && true !== force && 'undefined' === typeof value) {
+      if ('boolean' !== typeof force && 'undefined' === typeof value) {
         value = force;
         force = false;
       }
