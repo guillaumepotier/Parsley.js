@@ -93,10 +93,19 @@ define('parsley/form', [
             return field.whenValidate(force);
         });
       });
+
+      var promiseBasedOnValidationResult = function() {
+        var r = $.Deferred();
+        if (false === that.validationResult)
+          r.reject();
+        return r.resolve().promise();
+      };
+
       return $.when.apply($, promises)
         .done(  function() { that._trigger('success'); })
         .fail(  function() { that.validationResult = false; that._trigger('error'); })
-        .always(function() { that._trigger('validated'); });
+        .always(function() { that._trigger('validated'); })
+        .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
     },
 
     // Iterate over refreshed fields, and stop on first failure.

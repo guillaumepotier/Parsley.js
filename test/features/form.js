@@ -192,6 +192,27 @@ define(function () {
         .submit();
       });
 
+      it('should have the validationResult be changeable', function () {
+        var submitted = false;
+        $('<form id="element"></form>')
+        .appendTo('body')
+        .parsley()
+        .on('form:success', function(form) {
+          form.validationResult = false;
+        })
+        .on('form:error', function(form) {
+          form.validationResult = true;
+        })
+        .on('form:submit', function(form) {
+          submitted = true;
+          return false;
+        });
+        $('#element').submit();
+        expect(submitted).to.be(false);
+        $('#element').append('<input required>').submit();
+        expect(submitted).to.be(true);
+      });
+
       it('should fire form:submit.event and be interruptable when validated', function (done) {
         $('<form id="element"></form>')
         .appendTo('body')
