@@ -1187,7 +1187,6 @@ window.Parsley
 <pre><code>&lt;input name="q" type="text" data-parsley-remote data-parsley-remote-validator='mycustom' value="foo" />
 [...]
 &lt;script href="parsley.remote.js">&lt;/script>
-&lt;script href="parsley.js">&lt;/script>
 &lt;script type="text/javascript">
 window.Parsley.addAsyncValidator('mycustom', function (xhr) {
     console.log(this.$element); // jQuery Object[ input[name="q"] ]
