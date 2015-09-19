@@ -57,7 +57,8 @@ define('parsley/ui', [
       var messages = [];
 
       for (var i = 0; i < fieldInstance.validationResult.length; i++)
-        messages.push(this._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
+        messages.push(fieldInstance.validationResult[i].errorMessage ||
+         this._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
 
       return messages;
     },
@@ -104,10 +105,10 @@ define('parsley/ui', [
         this.removeError(fieldInstance, diff.removed[i].assert.name, true);
 
       for (i = 0; i < diff.added.length; i++)
-        this.addError(fieldInstance, diff.added[i].assert.name, undefined, diff.added[i].assert, true);
+        this.addError(fieldInstance, diff.added[i].assert.name, diff.added[i].errorMessage, diff.added[i].assert, true);
 
       for (i = 0; i < diff.kept.length; i++)
-        this.updateError(fieldInstance, diff.kept[i].assert.name, undefined, diff.kept[i].assert, true);
+        this.updateError(fieldInstance, diff.kept[i].assert.name, diff.kept[i].errorMessage, diff.kept[i].assert, true);
     },
 
     // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')

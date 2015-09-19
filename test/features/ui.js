@@ -339,6 +339,16 @@ define(function () {
         expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('custom-validator error');
         window.Parsley.removeValidator('customValidator');
       });
+      it('should handle custom error messages returned from custom validators', function () {
+        $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
+        window.Parsley.addValidator('customValidator', function (value, requirement) {
+          return $.Deferred().reject("Hey, this ain't good at all").promise();
+        }, 32);
+        var parsleyField = $('#element').psly();
+        parsleyField.validate();
+        expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be("Hey, this ain't good at all");
+        window.Parsley.removeValidator('customValidator');
+      });
 
       afterEach(function () {
         $('#element, .parsley-errors-list').remove();

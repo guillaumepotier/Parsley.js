@@ -132,10 +132,13 @@ define('parsley/field', [
       if (false === result)
         result = $.Deferred().reject();
       // Make sure we return a promise and that we record failures
-      return $.when(result).fail(function() {
+      return $.when(result).fail(function(errorMessage) {
         if (true === that.validationResult)
           that.validationResult = [];
-        that.validationResult.push({assert: constraint});
+        that.validationResult.push({
+          assert: constraint,
+          errorMessage: 'string' === typeof errorMessage && errorMessage
+        });
       });
     },
 

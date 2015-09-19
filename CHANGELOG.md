@@ -2,6 +2,8 @@
 
 ## 2.2.0-rc2
 
+- A custom validator may specify an error message by simply passing it as first argument
+  when rejecting the promise. (#560)
 - Submit buttons: data now included in the submitted form (#826) and
   attribute 'formnovalidate' is supported (#972)
 - Remote: use HTTP status code for what is considered valid or not (#956)
