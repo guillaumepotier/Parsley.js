@@ -1,5 +1,6 @@
-define(function () {
-  return function (ParsleyUtils) {
+import $ from 'jquery';
+import ParsleyUtils from '../../src/parsley/utils';
+
     describe('ParsleyUtils', function () {
       it('should have a proper deserializeValue() function', function () {
         expect(ParsleyUtils.deserializeValue('true')).to.be(true);
@@ -65,8 +66,5 @@ define(function () {
         expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'required')).to.be(false);
         expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'required-message')).to.be(true);
         expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'validate')).to.be(true);
-        expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'vaLidate')).to.be(true);
       });
     });
-  }
-});
