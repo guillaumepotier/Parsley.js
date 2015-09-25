@@ -63,6 +63,7 @@
     "isparta": "^3.0.3",
     "mocha": "^2.1.0",
     "run-sequence": "^1.0.2",
+    "simple-jsdom": "0.0.2",
     "sinon": "^1.12.2",
     "sinon-chai": "^2.7.0",
     "vinyl-buffer": "^1.0.0",
