@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import ConstraintFactory from './factory/constraint';
 import ParsleyUI from './ui';
 import ParsleyUtils from './utils';

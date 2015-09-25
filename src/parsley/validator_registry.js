@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import ParsleyDefaults from './defaults';
 import ParsleyValidator from './validator';
 

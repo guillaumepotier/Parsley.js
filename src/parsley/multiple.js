@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 var ParsleyMultiple = function () {
   this.__class__ = 'ParsleyFieldMultiple';
 };

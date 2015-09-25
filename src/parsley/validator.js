@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import ParsleyUtils from './utils';
 
 var requirementConverters = {

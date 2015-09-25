@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 var globalID = 1,
   pastWarnings = {};
 
