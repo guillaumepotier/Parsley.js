@@ -3,7 +3,7 @@
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
 
-import $ from 'jQuery';
+import $ from 'jquery';
 import ParsleyUtils from './parsley/utils';
 import ParsleyDefaults from './parsley/defaults';
 import ParsleyAbstract from './parsley/abstract';

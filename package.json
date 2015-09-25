@@ -33,6 +33,9 @@
     "url": "https://github.com/guillaumepotier/Parsley.js/issues"
   },
   "homepage": "https://github.com/guillaumepotier/Parsley.js",
+  "dependencies": {
+    "jquery": ">=1.8.0"
+  },
   "devDependencies": {
     "babel-core": "^5.2.17",
     "babel-eslint": "^4.0.5",
@@ -42,7 +45,7 @@
     "del": "^1.1.1",
     "esperanto": "^0.7.4",
     "glob": "^5.0.14",
-    "gulp": "^3.8.10",
+    "gulp": "^3.9.0",
     "gulp-babel": "^5.0.0",
     "gulp-eslint": "^1.0.0",
     "gulp-file": "^0.2.0",
