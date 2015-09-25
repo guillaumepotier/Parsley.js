@@ -1,6 +1,5 @@
-global.chai = require('chai');
+global.expect = require('expect.js');
 global.sinon = require('sinon');
-global.chai.use(require('sinon-chai'));
 
 require('babel-core/register');
 require('./setup')();

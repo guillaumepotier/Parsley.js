@@ -41,7 +41,7 @@
     "babel-eslint": "^4.0.5",
     "babelify": "^6.0.0",
     "browserify": "^11.0.1",
-    "chai": "^3.2.0",
+    "expect.js": "*",
     "del": "^1.1.1",
     "esperanto": "^0.7.4",
     "glob": "^5.0.14",
@@ -65,7 +65,6 @@
     "run-sequence": "^1.0.2",
     "simple-jsdom": "0.0.2",
     "sinon": "^1.12.2",
-    "sinon-chai": "^2.7.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^3.3.1"
