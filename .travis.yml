@@ -13,8 +13,7 @@ sudo: false
 #   # - browserify test/env/browserify.js -o test/env/browserify_bundle.js -r jquery
 
 script:
-  - npm test
-  - npm run-script amd
+  - gulp
   # - npm run-script test-all
 
 after_success:
