@@ -10,4 +10,6 @@ module.exports = function() {
     delete global.spy;
     this.sandbox.restore();
   });
+
+  require('./expect_warning')();
 };

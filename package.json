@@ -75,7 +75,8 @@
     "mochaGlobals": [
       "stub",
       "spy",
-      "expect"
+      "expect",
+      "expectWarning"
     ]
   },
   "spm": {
