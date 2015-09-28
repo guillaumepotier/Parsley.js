@@ -155,7 +155,7 @@ define('parsley/form', [
         .find(this.options.inputs)
         .not(this.options.excluded)
         .each(function () {
-          var fieldInstance = new Parsley.Factory(this, {}, self);
+          var fieldInstance = new window.Parsley.Factory(this, {}, self);
 
           // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
           if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded))
