@@ -1,5 +1,7 @@
-define(function () {
-  return function (ParsleyField) {
+import $ from 'jquery';
+import ParsleyField from '../../src/parsley/field';
+import Parsley from '../../src/parsley';
+
     describe('ParsleyField', function () {
       it('should be a function', function () {
         expect(ParsleyField).to.be.a('function');
@@ -321,5 +323,3 @@ define(function () {
         $('#element, .parsley-errors-list').remove();
       });
     });
-  };
-});
