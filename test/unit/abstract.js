@@ -1,5 +1,6 @@
-define(function () {
-  return function () {
+import $ from 'jquery';
+import Parsley from '../../src/parsley';
+
     describe('ParsleyAbstract', function () {
       it('should provide a actualizeOptions() method', function () {
         $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
@@ -85,7 +86,7 @@ define(function () {
         expect(formEventsCount).to.be(1);
 
         // we should never enter here since parsley form instance is destroyed
-        window.Parsley.on('form:validate', function () {
+        Parsley.on('form:validate', function () {
           expect(true).to.be(false);
         });
 
@@ -95,7 +96,7 @@ define(function () {
 
           expect($('#element').data('Parsley')).to.be(undefined);
           expect($('#field1').data('Parsley')).to.be(undefined);
-          window.Parsley.off('form:validate');
+          Parsley.off('form:validate');
           done();
         });
 
@@ -105,5 +106,3 @@ define(function () {
         $('#element, .parsley-errors-list').remove();
       });
     });
-  };
-});
