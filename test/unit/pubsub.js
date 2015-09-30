@@ -1,5 +1,6 @@
-define(function () {
-  return function () {
+import $ from 'jquery';
+import Parsley from '../../src/parsley';
+
     describe('PubSub', function () {
       it('listen() without context', function (done) {
         expectWarning(function(){
@@ -81,5 +82,3 @@ define(function () {
         $.unsubscribeAll('foo');
       });
     });
-  };
-});
