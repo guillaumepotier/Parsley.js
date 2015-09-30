@@ -1,5 +1,7 @@
-define(function () {
-  return function (ParsleyUI) {
+import $ from 'jquery';
+import ParsleyUI from '../../src/parsley/ui';
+import Parsley from '../../src/parsley';
+
     describe('ParsleyUI', function () {
       it('should be a function', function () {
         expect(ParsleyUI).to.be.a('function');
@@ -326,7 +328,7 @@ define(function () {
         var parsleyInstance = $('#element').parsley();
         parsleyInstance.validate();
         parsleyInstance.reset();
-        $('#element').focus().blur();
+        $('#element').trigger('focusout');
         expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(1);
       });
       it('should handle custom error message for validators with compound names', function () {
@@ -354,5 +356,3 @@ define(function () {
         $('#element, .parsley-errors-list').remove();
       });
     });
-  };
-});
