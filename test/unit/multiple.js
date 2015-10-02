@@ -1,5 +1,6 @@
-define(function () {
-  return function (Parsley) {
+import $ from 'jquery';
+import Parsley from '../../src/parsley';
+
     describe('ParsleyMultiple', function () {
       it('should not throw errors with multiple items with weird automated generated names', function () {
         $('body').append(
@@ -208,7 +209,7 @@ define(function () {
         var parsleyInstance = $('#element').parsley({ namespace: 'foo-bar-' });
         parsleyInstance.validate();
         expect($('ul.parsley-errors-list li').length).to.be(1);
-        $('#radio2').trigger('click');
+        $('#radio2').trigger('click').trigger('change');
         expect($('ul.parsley-errors-list li').length).to.be(0);
       });
       it('should handle dynamic multiple items removal', function () {
@@ -232,5 +233,3 @@ define(function () {
         $('#element, #element-2, .parsley-errors-list').remove();
       });
     });
-  };
-});
