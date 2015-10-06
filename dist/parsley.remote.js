@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.2.0-rc1 - built Sun Aug 16 2015 14:04:07
+* Version 2.2.0-rc2 - built Tue Oct 06 2015 10:20:13
 * MIT Licensed
 *
 */
@@ -28,13 +28,13 @@
     // returns object from dom attributes and values
     attr: function ($element, namespace, obj) {
       var
-        attribute, attributes,
+        i, attribute, attributes,
         regex = new RegExp('^' + namespace, 'i');
       if ('undefined' === typeof obj)
         obj = {};
       else {
         // Clear all own properties. This won't affect prototype's values
-        for (var i in obj) {
+        for (i in obj) {
           if (obj.hasOwnProperty(i))
             delete obj[i];
         }
@@ -42,7 +42,7 @@
       if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
         return obj;
       attributes = $element[0].attributes;
-      for (var i = attributes.length; i--; ) {
+      for (i = attributes.length; i--; ) {
         attribute = attributes[i];
         if (attribute && attribute.specified && regex.test(attribute.name)) {
           obj[this.camelize(attribute.name.slice(namespace.length))] = this.deserializeValue(attribute.value);
@@ -221,18 +221,18 @@
     // Trigger an event of the given name.
     // A return value of `false` interrupts the callback chain.
     // Returns false if execution was interrupted.
-    trigger: function (name, target) {
+    trigger: function (name, target, extraArg) {
       target = target || this;
       var queue = this._listeners && this._listeners[name];
       var result, parentResult;
       if (queue) {
         for(var i = queue.length; i--; ) {
-          result = queue[i].call(target, target);
+          result = queue[i].call(target, target, extraArg);
           if (result === false) return result;
         }
       }
       if (this.parent) {
-        return this.parent.trigger(name, target);
+        return this.parent.trigger(name, target, extraArg);
       }
       return true;
     },
@@ -299,19 +299,22 @@
     regexp: function(regexp) {
       var flags = '';
       // Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern
-      if (!!(/^\/.*\/(?:[gimy]*)$/.test(regexp))) {
+      if (/^\/.*\/(?:[gimy]*)$/.test(regexp)) {
         // Replace the regexp literal string with the first match group: ([gimy]*)
         // If no flag is present, this will be a blank string
         flags = regexp.replace(/.*\/([gimy]*)$/, '$1');
         // Again, replace the regexp literal string with the first match group:
         // everything excluding the opening and closing slashes and the flags
         regexp = regexp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+      } else {
+        // Anchor regexp:
+        regexp = '^' + regexp + '$';
       }
       return new RegExp(regexp, flags);
     }
   };
   var convertArrayRequirement = function(string, length) {
-    var m = string.match(/^\s*\[(.*)\]\s*$/)
+    var m = string.match(/^\s*\[(.*)\]\s*$/);
     if (!m)
       throw 'Requirement is not an array: "' + string + '"';
     var values = m[1].split(',').map(ParsleyUtils.trimString);
@@ -334,7 +337,7 @@
           value = convertRequirement(requirementSpec[key], value);
         extra[key] = value;
       } else {
-        main = convertRequirement(requirementSpec[key], string)
+        main = convertRequirement(requirementSpec[key], string);
       }
     }
     return [main, extra];
@@ -359,7 +362,7 @@
         if (this.validateNumber) {
           if (isNaN(value))
             return false;
-          value = parseFloat(value);
+          arguments[0] = parseFloat(arguments[0]);
           return this.validateNumber.apply(this, arguments);
         }
         if (this.validateString) {
@@ -383,7 +386,7 @@
           values[i] = convertRequirement(type[i], values[i]);
         return values;
       } else if ($.isPlainObject(type)) {
-        return convertExtraOptionRequirement(type, requirements, extraOptionReader)
+        return convertExtraOptionRequirement(type, requirements, extraOptionReader);
       } else {
         return [convertRequirement(type, requirements)];
       }
@@ -469,7 +472,7 @@
     addMessage: function (locale, name, message) {
       if ('undefined' === typeof this.catalog[locale])
         this.catalog[locale] = {};
-      this.catalog[locale][name.toLowerCase()] = message;
+      this.catalog[locale][name] = message;
       return this;
     },
     // Add a new validator
@@ -482,7 +485,7 @@
     //          en: "Hey, that's no good",
     //          fr: "Aye aye, pas bon du tout",
     //        }
-    //    }
+    //    })
     //
     // Old API was addValidator(name, function, priority)
     //
@@ -492,7 +495,7 @@
       else if (ParsleyDefaults.hasOwnProperty(name)) {
         ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
         return;
-      };
+      }
       return this._setValidator.apply(this, arguments);
     },
     updateValidator: function (name, arg1, arg2) {
@@ -515,10 +518,10 @@
           fn: validator,
           priority: priority
         };
-      };
+      }
       if (!validator.validate) {
         validator = new ParsleyValidator(validator);
-      };
+      }
       this.validators[name] = validator;
       for (var locale in validator.messages || {})
         this.addMessage(locale, name, validator.messages[locale]);
@@ -701,7 +704,8 @@
         return [];
       var messages = [];
       for (var i = 0; i < fieldInstance.validationResult.length; i++)
-        messages.push(this._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
+        messages.push(fieldInstance.validationResult[i].errorMessage ||
+         this._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
       return messages;
     },
     manageStatusClass: function (fieldInstance) {
@@ -739,9 +743,9 @@
       for (var i = 0; i < diff.removed.length; i++)
         this.removeError(fieldInstance, diff.removed[i].assert.name, true);
       for (i = 0; i < diff.added.length; i++)
-        this.addError(fieldInstance, diff.added[i].assert.name, undefined, diff.added[i].assert, true);
+        this.addError(fieldInstance, diff.added[i].assert.name, diff.added[i].errorMessage, diff.added[i].assert, true);
       for (i = 0; i < diff.kept.length; i++)
-        this.updateError(fieldInstance, diff.kept[i].assert.name, undefined, diff.kept[i].assert, true);
+        this.updateError(fieldInstance, diff.kept[i].assert.name, diff.kept[i].errorMessage, diff.kept[i].assert, true);
     },
     // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
     // but a little bit complex for above internal usage, with forced undefined parameter...
@@ -823,6 +827,7 @@
     },
     setupForm: function (formInstance) {
       formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
+      formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', $.proxy(formInstance.onSubmitButton, formInstance));
       // UI could be disabled
       if (false === formInstance.options.uiEnabled)
         return;
@@ -991,14 +996,23 @@
       // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
       if (true === event.parsley)
         return;
+      // If we didn't come here through a submit button, use the first one in the form
+      this._$submitSource = this._$submitSource || this.$element.find('input[type="submit"], button[type="submit"]').first();
+      if (this._$submitSource.is('[formnovalidate]')) {
+        this._$submitSource = null;
+        return;
+      }
       // Because some validations might be asynchroneous,
       // we cancel this submit and will fake it after validation.
       event.stopImmediatePropagation();
       event.preventDefault();
       this.whenValidate(undefined, undefined, event)
         .done(function() { that._submit(); })
-        .always(function() { that._submitSource = null; });
+        .always(function() { that._$submitSource = null; });
       return this;
+    },
+    onSubmitButton: function(event) {
+      this._$submitSource = $(event.target);
     },
     // internal
     // _submit submits the form, this time without going through the validations.
@@ -1007,12 +1021,14 @@
       if (false === this._trigger('submit'))
         return;
       this.$element.find('.parsley_synthetic_submit_button').remove();
-      if (this._submitSource) {
-        $('<input class=".parsley_synthetic_submit_button" type="hidden">')
-        .attr('name', this._submitSource.name)
-        .attr('value', this._submitSource.value)
+      // Add submit button's data
+      if (this._$submitSource) {
+        $('<input class="parsley_synthetic_submit_button" type="hidden">')
+        .attr('name', this._$submitSource.attr('name'))
+        .attr('value', this._$submitSource.attr('value'))
         .appendTo(this.$element);
       }
+      //
       this.$element.trigger($.extend($.Event('submit'), { parsley: true }));
     },
     // Performs validation on fields while triggering events.
@@ -1038,10 +1054,17 @@
             return field.whenValidate(force);
         });
       });
+      var promiseBasedOnValidationResult = function() {
+        var r = $.Deferred();
+        if (false === that.validationResult)
+          r.reject();
+        return r.resolve().promise();
+      };
       return $.when.apply($, promises)
         .done(  function() { that._trigger('success'); })
         .fail(  function() { that.validationResult = false; that._trigger('error'); })
-        .always(function() { that._trigger('validated'); });
+        .always(function() { that._trigger('validated'); })
+        .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
     },
     // Iterate over refreshed fields, and stop on first failure.
     // Returns `true` if all fields are valid, `false` if a failure is detected
@@ -1083,7 +1106,7 @@
         .find(this.options.inputs)
         .not(this.options.excluded)
         .each(function () {
-          var fieldInstance = new Parsley.Factory(this, {}, self);
+          var fieldInstance = new window.Parsley.Factory(this, {}, self);
           // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
           if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded))
             if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
@@ -1106,7 +1129,7 @@
     // the method actualizeOptions on this form while `fn` is called.
     _withoutReactualizingFormOptions: function (fn) {
       var oldActualizeOptions = this.actualizeOptions;
-      this.actualizeOptions = function() { return this };
+      this.actualizeOptions = function() { return this; };
       var result = fn.call(this); // Keep the current `this`.
       this.actualizeOptions = oldActualizeOptions;
       return result;
@@ -1115,8 +1138,7 @@
     // Shortcut to trigger an event
     // Returns true iff event is not interrupted and default not prevented.
     _trigger: function (eventName) {
-      eventName = 'form:' + eventName;
-      return this.trigger.apply(this, arguments);
+      return this.trigger('form:' + eventName);
     }
   };
 
@@ -1182,7 +1204,7 @@
         case 'pending': return null;
         case 'resolved': return true;
         case 'rejected': return this.validationResult;
-      };
+      }
     },
     // Validate field and trigger some events for mainly `ParsleyUI`
     // @returns a promise that succeeds only when all validations do.
@@ -1212,10 +1234,14 @@
     // Just validate field. Do not trigger any event.
     // Returns `true` iff all constraints pass, `false` if there are failures,
     // or `null` if the result can not be determined yet (depends on a promise)
-    // Prefer using `whenValid`.
+    // See also `whenValid`.
     isValid: function (force, value) {
       return statusMapping[this.whenValid(force, value).state()];
     },
+    // Just validate field. Do not trigger any event.
+    // @returns a promise that succeeds only when all validations do.
+    // The argument `force` is optional, defaults to `false`.
+    // The argument `value` is optional. If given, it will be validated instead of the value of the input.
     whenValid: function (force, value) {
       // Recompute options and rebind constraints to have latest changes
       this.refreshConstraints();
@@ -1223,6 +1249,11 @@
       // A field without constraint is valid
       if (!this.hasConstraints())
         return $.when();
+      // Make `force` argument optional
+      if ('boolean' !== typeof force && 'undefined' === typeof value) {
+        value = force;
+        force = false;
+      }
       // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
       if ('undefined' === typeof value || null === value)
         value = this.getValue();
@@ -1251,10 +1282,13 @@
       if (false === result)
         result = $.Deferred().reject();
       // Make sure we return a promise and that we record failures
-      return $.when(result).fail(function() {
+      return $.when(result).fail(function(errorMessage) {
         if (true === that.validationResult)
           that.validationResult = [];
-        that.validationResult.push({assert: constraint});
+        that.validationResult.push({
+          assert: constraint,
+          errorMessage: 'string' === typeof errorMessage && errorMessage
+        });
       });
     },
     // @returns Parsley field computed value that could be overrided or configured in DOM
@@ -1387,8 +1421,7 @@
     // Internal only.
     // Shortcut to trigger an event
     _trigger: function (eventName) {
-      eventName = 'field:' + eventName;
-      return this.trigger.apply(this, arguments);
+      return this.trigger('field:' + eventName);
     },
     // Internal only
     // Handles whitespace in a value
@@ -1506,7 +1539,7 @@
   ParsleyFactory.prototype = {
     init: function (options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.2.0-rc1';
+      this.__version__ = '2.2.0-rc2';
       this.__id__ = ParsleyUtils.generateID();
       // Pre-compute options
       this._resetOptions(options);
@@ -1640,7 +1673,7 @@
       context = arguments[1];
       callback = arguments[2];
     }
-    if ('function' !== typeof arguments[1])
+    if ('function' !== typeof callback)
       throw new Error('Wrong parameters');
     window.Parsley.on(eventName(name), adapt(callback, context));
   };
@@ -1718,18 +1751,22 @@ window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {},
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.2.0-rc1
+//     Parsley.js 2.2.0-rc2
 //     http://parsleyjs.org
 //     (c) 2012-2015 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
 
+  var vernums = $.fn.jquery.split('.');
+  if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
+    throw "The loaded version of jQuery is too old. Please upgrade to 1.8.x or better."
+  }
   // Inherit `on`, `off` & `trigger` to Parsley:
   var Parsley = $.extend(new ParsleyAbstract(), {
       $element: $(document),
       actualizeOptions: null,
       _resetOptions: null,
       Factory: ParsleyFactory,
-      version: '2.2.0-rc1'
+      version: '2.2.0-rc2'
     });
   // Supplement ParsleyField and Form with ParsleyAbstract
   // This way, the constructors will have access to those methods
@@ -1788,7 +1825,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       if ($('[data-parsley-validate]').length)
         $('[data-parsley-validate]').parsley();
     });
-	return window.Parsley;
+  return window.Parsley;
 }));
 
 (function($){
@@ -1797,21 +1834,25 @@ $.extend(true, window.Parsley, {
   asyncValidators: {
     'default': {
       fn: function (xhr) {
-        return 'resolved' === xhr.state();
+        // By default, only status 2xx are deemed successful.
+        // Note: we use status instead of state() because responses with status 200
+        // but invalid messages (e.g. an empty body for content type set to JSON) will
+        // result in state() === 'rejected'.
+        return xhr.status >= 200 && xhr.status < 300;
       },
       url: false
     },
     reverse: {
       fn: function (xhr) {
         // If reverse option is set, a failing ajax request is considered successful
-        return 'rejected' === xhr.state();
+        return xhr.status < 200 || xhr.status >= 300;
       },
       url: false
     }
   },
 
   addAsyncValidator: function (name, fn, url, options) {
-    window.Parsley.asyncValidators[name.toLowerCase()] = {
+    window.Parsley.asyncValidators[name] = {
       fn: fn,
       url: url || false,
       options: options || {}
@@ -1851,20 +1892,28 @@ window.Parsley.addValidator('remote', {
     if ('undefined' === typeof window.Parsley.asyncValidators[validator])
       throw new Error('Calling an undefined async validator: `' + validator + '`');
 
-    // Fill data with current value
-    data[instance.$element.attr('name') || instance.$element.attr('id')] = value;
+    url = window.Parsley.asyncValidators[validator].url || url;
+
+    // Fill current value
+    if (url.indexOf('{value}') > -1) {
+      url = url.replace('{value}', encodeURIComponent(value));
+    } else {
+      data[instance.$element.attr('name') || instance.$element.attr('id')] = value;
+    }
 
     // Merge options passed in from the function with the ones in the attribute
     var remoteOptions = $.extend(true, options.options || {} , window.Parsley.asyncValidators[validator].options);
 
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
-      url: window.Parsley.asyncValidators[validator].url || url,
+      url: url,
       data: data,
       type: 'GET'
     }, remoteOptions);
 
     // Generate store key based on ajax options
+    instance.trigger('field:ajaxoptions', instance, ajaxOptions);
+
     csr = $.param(ajaxOptions);
 
     // Initialise querry cache

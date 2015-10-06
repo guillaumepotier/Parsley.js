@@ -1,0 +1,37 @@
+/*!
+* Parsleyjs
+* Guillaume Potier - <guillaume@wisembly.com>
+* Version 2.2.0-rc2 - built Tue Oct 06 2015 10:20:13
+* MIT Licensed
+*
+*/
+!(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module depending on jQuery.
+    define(['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    // Node/CommonJS
+    module.exports = factory(require('jquery'));
+  } else {
+    // Register plugin with global jQuery object.
+    factory(jQuery);
+  }
+}(function ($) {
+  // small hack for requirejs if jquery is loaded through map and not path
+  // see http://requirejs.org/docs/jquery.html
+  if ('undefined' === typeof $ && 'undefined' !== typeof window.jQuery)
+    $ = window.jQuery;
+window.ParsleyConfig = window.ParsleyConfig || {};
+window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+window.ParsleyConfig.i18n.ro = jQuery.extend(window.ParsleyConfig.i18n.ro || {}, {
+  dateiso:   "Trebuie să fie o dată corectă (YYYY-MM-DD).",
+  minwords:  "Textul e prea scurt. Trebuie să aibă cel puțin %s cuvinte.",
+  maxwords:  "Textul e prea lung. Trebuie să aibă cel mult %s cuvinte.",
+  words:     "Textul trebuie să aibă cel puțin %s și cel mult %s caractere.",
+  gt:        "Valoarea ar trebui să fie mai mare.",
+  gte:       "Valoarea ar trebui să fie mai mare sau egală.",
+  lt:        "Valoarea ar trebui să fie mai mică.",
+  lte:       "Valoarea ar trebui să fie mai mică sau egală.",
+  notequalto:"Valoarea ar trebui să fie diferită."
+});
+}));
