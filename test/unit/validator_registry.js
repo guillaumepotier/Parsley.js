@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import ParsleyValidator from '../../src/parsley/validator';
 import ParsleyValidatorRegistry from '../../src/parsley/validator_registry';
+import Parsley from '../../src/parsley';
 import fr from '../../src/i18n/fr';
 
     describe('ParsleyValidatorRegistry', function () {
@@ -22,18 +23,18 @@ import fr from '../../src/i18n/fr';
         expect(ParsleyValidatorRegistry).to.be.a('function');
       });
       it('should bind global config validators if given in constructor', function () {
-        $.extend(true, window.ParsleyConfig, {
+        $.extend(true, Parsley.options, {
           validators: {
             foo: { fn: function () {}, priority: 42 },
             bar: { fn: function () {}, priority: 12 }
           }
         });
-        var validator = new ParsleyValidatorRegistry(window.ParsleyConfig.validators);
+        var validator = new ParsleyValidatorRegistry(Parsley.options.validators);
         expect(validator.validators).to.have.key('foo');
         expect(validator.validators).to.have.key('bar');
         expect(validatorRegistry.validators).not.to.have.key('foo');
-        delete window.ParsleyConfig.validators.foo;
-        delete window.ParsleyConfig.validators.bar;
+        delete Parsley.options.validators.foo;
+        delete Parsley.options.validators.bar;
       });
       it('should have a required validator', function () {
         expectValidation('', 'required').not.to.be(true);
@@ -199,16 +200,16 @@ import fr from '../../src/i18n/fr';
       });
 
       it('should warn if a custom validator has a reserved name', function () {
-        $.extend(true, window.ParsleyConfig, {
+        $.extend(true, Parsley.options, {
           validators: {
             excluded: { fn: function () {}, priority: 42 },
           }
         });
 
         expectWarning(function() {
-          var validatorRegistry = new ParsleyValidatorRegistry(window.ParsleyConfig.validators);
+          var validatorRegistry = new ParsleyValidatorRegistry(Parsley.options.validators);
         });
-        delete window.ParsleyConfig.validators.excluded;
+        delete Parsley.options.validators.excluded;
       });
 
       it('should warn when adding an already defined validator', function () {
@@ -240,19 +241,19 @@ import fr from '../../src/i18n/fr';
       });
 
       it('should provide two ways to add error messages', function () {
-        window.Parsley.addValidator('testMessage', {
+        window.Parsley.addValidator('testmessage', {
           validateString: $.noop,
           messages: {
             en: 'Not good at all',
             fr: 'Très nul'
           }
         });
-        window.Parsley.addMessage('es', 'testMessage', 'Muy malo');
-        expect(window.Parsley.getErrorMessage({name: 'testMessage'})).to.eql('Not good at all');
+        window.Parsley.addMessage('es', 'testmessage', 'Muy malo');
+        expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Not good at all');
         window.Parsley.setLocale('fr');
-        expect(window.Parsley.getErrorMessage({name: 'testMessage'})).to.eql('Très nul');
+        expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Très nul');
         window.Parsley.setLocale('es');
-        expect(window.Parsley.getErrorMessage({name: 'testMessage'})).to.eql('Muy malo');
+        expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Muy malo');
         window.Parsley.setLocale('en');
       });
     });
