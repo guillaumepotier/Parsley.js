@@ -1,7 +1,10 @@
-define(function () {
-  return function (ParsleyValidator, ParsleyValidatorRegistry) {
+import $ from 'jquery';
+import ParsleyValidator from '../../src/parsley/validator';
+import ParsleyValidatorRegistry from '../../src/parsley/validator_registry';
+import fr from '../../src/i18n/fr';
+
     describe('ParsleyValidatorRegistry', function () {
-      var validatorRegistry = new ParsleyValidatorRegistry(window.ParsleyConfig.validators || {}, window.ParsleyConfig.i18n || {});
+      var validatorRegistry = Parsley._validatorRegistry;
 
       var expectValidation = function(value, name, requirements) {
         var validatorSpec = validatorRegistry.validators[name];
@@ -10,6 +13,10 @@ define(function () {
         argList.unshift(value);
         return expect(validator.validate.apply(validator, argList));
       };
+
+      afterEach(function () {
+        window.Parsley.setLocale('en');
+      });
 
       it('should be a function', function () {
         expect(ParsleyValidatorRegistry).to.be.a('function');
@@ -249,5 +256,3 @@ define(function () {
         window.Parsley.setLocale('en');
       });
     });
-  };
-});
