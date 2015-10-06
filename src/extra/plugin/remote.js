@@ -22,7 +22,7 @@ $.extend(true, window.Parsley, {
   },
 
   addAsyncValidator: function (name, fn, url, options) {
-    window.Parsley.asyncValidators[name.toLowerCase()] = {
+    window.Parsley.asyncValidators[name] = {
       fn: fn,
       url: url || false,
       options: options || {}

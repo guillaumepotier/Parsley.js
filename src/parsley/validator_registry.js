@@ -98,7 +98,7 @@ define('parsley/validator_registry', [
       if ('undefined' === typeof this.catalog[locale])
         this.catalog[locale] = {};
 
-      this.catalog[locale][name.toLowerCase()] = message;
+      this.catalog[locale][name] = message;
 
       return this;
     },
