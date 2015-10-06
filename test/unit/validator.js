@@ -1,9 +1,9 @@
-define(function () {
-  return function (Validator) {
+import ParsleyValidator from '../../src/parsley/validator';
+
     describe('Validator', function () {
       var testParsing = function(type, input, output, extraOptions) {
         it('parses '+type+' requirements', function () {
-          var c = new Validator({requirementType: type});
+          var c = new ParsleyValidator({requirementType: type});
           expect(c.parseRequirements(input, extraOptions)).to.eql(output);
         });
       }
@@ -21,5 +21,3 @@ define(function () {
         function(value) { return value.toUpperCase(); }
       );
     });
-  };
-});
