@@ -78,7 +78,7 @@ window.ParsleyUtils = ParsleyUtils;
 // ### Define methods that forward to the registry, and deprecate all access except through window.Parsley
 var registry = window.Parsley._validatorRegistry = new ParsleyValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
 window.ParsleyValidator = {};
-$.each('setLocale addCatalog addMessage getErrorMessage formatMessage addValidator updateValidator removeValidator'.split(' '), function (i, method) {
+$.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator'.split(' '), function (i, method) {
   window.Parsley[method] = $.proxy(registry, method);
   window.ParsleyValidator[method] = function () {
     ParsleyUtils.warnOnce('Accessing the method `'+ method +'` through ParsleyValidator is deprecated. Simply call `window.Parsley.' + method + '(...)`');
