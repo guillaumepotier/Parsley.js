@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.el = jQuery.extend(window.ParsleyConfig.i18n.el || {}, {
+window.ParsleyConfig.i18n.el = $.extend(window.ParsleyConfig.i18n.el || {}, {
   defaultMessage: "Η τιμή φαίνεται να είναι μη έγκυρη.",
   type: {
     email:        "Η τιμή πρέπει να είναι ένα έγκυρο email.",

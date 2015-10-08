@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.tr = jQuery.extend(window.ParsleyConfig.i18n.tr || {}, {
+window.ParsleyConfig.i18n.tr = $.extend(window.ParsleyConfig.i18n.tr || {}, {
   defaultMessage: "Girdiğiniz değer geçerli değil.",
   type: {
     email:        "Geçerli bir e-mail adresi yazmanız gerekiyor.",

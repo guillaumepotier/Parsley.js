@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.sq = jQuery.extend(window.ParsleyConfig.i18n.sq || {}, {
+window.ParsleyConfig.i18n.sq = $.extend(window.ParsleyConfig.i18n.sq || {}, {
   defaultMessage: "Kjo vlere eshte e pasakte.",
   type: {
     email:        "Duhet te jete nje email i vlefshem.",
