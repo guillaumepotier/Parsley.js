@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.ro = jQuery.extend(window.ParsleyConfig.i18n.ro || {}, {
+window.ParsleyConfig.i18n.ro = $.extend(window.ParsleyConfig.i18n.ro || {}, {
   defaultMessage: "Acest câmp nu este completat corect.",
   type: {
     email:        "Trebuie să scrii un email valid.",

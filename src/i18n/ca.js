@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.ca = jQuery.extend(window.ParsleyConfig.i18n.ca || {}, {
+window.ParsleyConfig.i18n.ca = $.extend(window.ParsleyConfig.i18n.ca || {}, {
   defaultMessage: "Aquest valor sembla ser invàlid.",
   type: {
     email:        "Aquest valor ha de ser una adreça de correu electrònic vàlida.",

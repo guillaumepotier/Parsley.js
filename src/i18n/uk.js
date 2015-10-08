@@ -8,7 +8,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.uk = jQuery.extend(window.ParsleyConfig.i18n.uk || {}, {
+window.ParsleyConfig.i18n.uk = $.extend(window.ParsleyConfig.i18n.uk || {}, {
   defaultMessage: "Некоректне значення.",
   type: {
     email:        "Введіть адресу електронної пошти.",

@@ -3,7 +3,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
 window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
 
 // Define then the messages
-window.ParsleyConfig.i18n.no = jQuery.extend(window.ParsleyConfig.i18n.no || {}, {
+window.ParsleyConfig.i18n.no = $.extend(window.ParsleyConfig.i18n.no || {}, {
   defaultMessage: "Verdien er ugyldig.",
   type: {
     email:        "Verdien må være en gyldig e-post.",
