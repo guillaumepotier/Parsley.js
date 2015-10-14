@@ -104,7 +104,7 @@ function getBundler() {
   // Our browserify bundle is made up of our unit tests, which
   // should individually load up pieces of our application.
   // We also include the browserify setup file.
-  var testFiles = glob.sync('./test/unit/**/*');
+  var testFiles = glob.sync('./test/unit/**/*.js');
   var allFiles = ['./test/setup/browserify.js'].concat(testFiles);
 
   // Create our bundler, passing in the arguments required for watchify
