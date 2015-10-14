@@ -4,19 +4,19 @@ import Parsley from '../../../src/parsley';
 
 import dateiso from '../../../src/extra/validator/dateiso';
 
-    describe('extra/validator/dateiso', function () {
+describe('extra/validator/dateiso', function () {
 
-      it('should have dateiso validator', function () {
-        var expectValidation = function(value, name, requirements) {
-          var field = $('<input>').parsley()
-          field.options[name] = requirements;
-          return expect(field.isValid(true, value));
-        };
+  it('should have dateiso validator', function () {
+    var expectValidation = function(value, name, requirements) {
+      var field = $('<input>').parsley()
+      field.options[name] = requirements;
+      return expect(field.isValid(true, value));
+    };
 
-        expectValidation('',           'dateiso').not.to.be(true);
-        expectValidation('foo',        'dateiso').not.to.be(true);
-        expectValidation('1986-30-01', 'dateiso').not.to.be(true);
-        expectValidation('1986-12-45', 'dateiso').not.to.be(true);
-        expectValidation('1986-12-01', 'dateiso').to.be(true);
-      });
-    });
+    expectValidation('',           'dateiso').not.to.be(true);
+    expectValidation('foo',        'dateiso').not.to.be(true);
+    expectValidation('1986-30-01', 'dateiso').not.to.be(true);
+    expectValidation('1986-12-45', 'dateiso').not.to.be(true);
+    expectValidation('1986-12-01', 'dateiso').to.be(true);
+  });
+});
