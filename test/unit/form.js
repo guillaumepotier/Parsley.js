@@ -1,5 +1,7 @@
-define(function () {
-  return function (ParsleyForm) {
+import $ from 'jquery';
+import ParsleyForm from '../../src/parsley/form';
+import Parsley from '../../src/parsley';
+
     describe('ParsleyForm', function () {
       it('should be a function', function () {
         expect(ParsleyForm).to.be.a('function');
@@ -173,7 +175,7 @@ define(function () {
         expect(callbacks.join()).to.be('validate,error,validated,validate,success,validated,submit');
       });
       it('should fire "form:validate.parsley" to give the opportunity for changes before validation occurs', function() {
-        var $form = $('<form><input type="string" required /><form>').appendTo($('body'));
+        var $form = $('<form id="element"><input type="string" required /><form>').appendTo($('body'));
         $form.parsley().on('form:validate', function () {
           this.$element.find('input').remove();
         });
@@ -307,5 +309,3 @@ define(function () {
         $('#element').remove();
       });
     });
-  };
-});
