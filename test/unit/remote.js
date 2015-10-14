@@ -1,14 +1,7 @@
-define('features/remote', [
-  'extra/plugin/remote',
-], function (ParsleyExtend) {
+import $ from 'jquery';
 
-  // Preserve ParsleyExtend in order to load it only when needed by this suite and do not alter other tests run before
-  window._remoteParsleyExtend = window.ParsleyExtend;
-  window._remoteParsleyConfig = window.ParsleyConfig;
-  window.ParsleyExtend = window.ParsleyExtend || {};
-  window.ParsleyConfig = window.ParsleyConfig || {};
+import Parsley from '../../src/parsley';
 
-  return function () {
     describe('ParsleyRemote', function () {
       var stubbed = false;
       var stubAjax = function(status) {
@@ -29,12 +22,7 @@ define('features/remote', [
       }
 
       afterEach(restoreAjax);
-      before(function () {
-        // Restore ParsleyExtend from remote
-        window.ParsleyExtend = window._remoteParsleyExtend;
-        window.ParsleyConfig = window._remoteParsleyConfig;
-        window.Parsley._validatorRegistry.init(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
-      });
+
       beforeEach(function() {
         delete window.Parsley._remoteCache;
       });
@@ -221,6 +209,3 @@ define('features/remote', [
         $('#element, .parsley-errors-list').remove();
       });
     });
-
-  };
-});

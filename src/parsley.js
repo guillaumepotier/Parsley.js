@@ -6,6 +6,7 @@
 import $ from 'jquery';
 import Parsley from './parsley/main';
 import PubSub from './parsley/pubsub';
+import remote from './parsley/remote';
 import en from './i18n/en';
 
 export default Parsley;

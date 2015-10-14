@@ -1,6 +1,8 @@
-(function($){
+import $ from 'jquery';
 
-$.extend(true, window.Parsley, {
+import Parsley from './main';
+
+$.extend(true, Parsley, {
   asyncValidators: {
     'default': {
       fn: function (xhr) {
@@ -22,7 +24,7 @@ $.extend(true, window.Parsley, {
   },
 
   addAsyncValidator: function (name, fn, url, options) {
-    window.Parsley.asyncValidators[name] = {
+    Parsley.asyncValidators[name] = {
       fn: fn,
       url: url || false,
       options: options || {}
@@ -44,7 +46,7 @@ $.extend(true, window.Parsley, {
   }
 });
 
-window.Parsley.addValidator('remote', {
+Parsley.addValidator('remote', {
   requirementType: {
     '': 'string',
     'validator': 'string',
@@ -59,10 +61,10 @@ window.Parsley.addValidator('remote', {
       csr,
       validator = options.validator || (true === options.reverse ? 'reverse' : 'default');
 
-    if ('undefined' === typeof window.Parsley.asyncValidators[validator])
+    if ('undefined' === typeof Parsley.asyncValidators[validator])
       throw new Error('Calling an undefined async validator: `' + validator + '`');
 
-    url = window.Parsley.asyncValidators[validator].url || url;
+    url = Parsley.asyncValidators[validator].url || url;
 
     // Fill current value
     if (url.indexOf('{value}') > -1) {
@@ -72,7 +74,7 @@ window.Parsley.addValidator('remote', {
     }
 
     // Merge options passed in from the function with the ones in the attribute
-    var remoteOptions = $.extend(true, options.options || {} , window.Parsley.asyncValidators[validator].options);
+    var remoteOptions = $.extend(true, options.options || {} , Parsley.asyncValidators[validator].options);
 
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
@@ -87,14 +89,14 @@ window.Parsley.addValidator('remote', {
     csr = $.param(ajaxOptions);
 
     // Initialise querry cache
-    if ('undefined' === typeof window.Parsley._remoteCache)
-      window.Parsley._remoteCache = {};
+    if ('undefined' === typeof Parsley._remoteCache)
+      Parsley._remoteCache = {};
 
     // Try to retrieve stored xhr
-    var xhr = window.Parsley._remoteCache[csr] = window.Parsley._remoteCache[csr] || $.ajax(ajaxOptions);
+    var xhr = Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions);
 
     var handleXhr = function() {
-      var result = window.Parsley.asyncValidators[validator].fn.call(instance, xhr, url, options);
+      var result = Parsley.asyncValidators[validator].fn.call(instance, xhr, url, options);
       if (!result) // Map falsy results to rejected promise
         result = $.Deferred().reject();
       return $.when(result);
@@ -106,13 +108,11 @@ window.Parsley.addValidator('remote', {
   priority: -1
 });
 
-window.Parsley.on('form:submit', function () {
-  window.Parsley._remoteCache = {};
+Parsley.on('form:submit', function () {
+  Parsley._remoteCache = {};
 });
 
 window.ParsleyExtend.addAsyncValidator = function () {
-  window.ParsleyUtils.warnOnce('Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `window.Parsley.addAsyncValidator(...)`');
-  return window.Parsley.apply(window.Parsley.addAsyncValidator, arguments);
+  ParsleyUtils.warnOnce('Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`');
+  return Parsley.apply(Parsley.addAsyncValidator, arguments);
 };
-
-})(jQuery);
