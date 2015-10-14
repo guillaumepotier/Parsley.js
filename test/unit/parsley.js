@@ -1,5 +1,7 @@
-define(function () {
-  return function (ParsleyFactory) {
+import $ from 'jquery';
+import Parsley from '../../src/parsley';
+var ParsleyFactory = Parsley.Factory;
+
     describe('ParsleyFactory', function () {
       it('should be a function', function () {
         expect(ParsleyFactory).to.be.a('function');
@@ -86,8 +88,8 @@ define(function () {
         expect(parsleyInstance.options.baz).to.be('baz');
         expect(parsleyInstance.options.bar).to.be('baz');
         expect(parsleyInstance.options.qux).to.be('bux');
-        delete ParsleyConfig.bar;
-        delete ParsleyConfig.baz;
+        delete window.ParsleyConfig.bar;
+        delete window.ParsleyConfig.baz;
       });
       it('should have a jquery plugin API', function () {
         $('body').append('<input type="text" id="element" data-parsley-namespace="baz-"></div>');
@@ -112,5 +114,3 @@ define(function () {
         $('#element').remove();
       });
     });
-  };
-});
