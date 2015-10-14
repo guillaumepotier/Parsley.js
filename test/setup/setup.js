@@ -12,4 +12,5 @@ module.exports = function() {
   });
 
   require('./expect_warning')();
+  require('./dom_leak_check');
 };
