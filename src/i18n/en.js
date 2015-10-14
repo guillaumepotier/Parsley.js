@@ -1,11 +1,7 @@
-import $ from 'jquery';
+// This is bundled with the Parsley library
+import Parsley from '../parsley/main';
 
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
-
-// Define then the messages
-window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
+Parsley.addMessages('en', {
   defaultMessage: "This value seems to be invalid.",
   type: {
     email:        "This value should be a valid email.",
@@ -30,6 +26,4 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
   equalto:        "This value should be the same."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
+Parsley.setLocale('en');

@@ -8,7 +8,6 @@ import ParsleyForm from './form';
 import ParsleyField from './field';
 import ParsleyMultiple from './multiple';
 import ParsleyFactory from './factory';
-import en from '../i18n/en';
 
 var vernums = $.fn.jquery.split('.');
 if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
