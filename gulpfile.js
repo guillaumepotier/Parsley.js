@@ -14,6 +14,8 @@ const esperanto = require('esperanto');
 const browserify = require('browserify');
 const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
+const fs = require('fs');
+const moment = require('moment');
 
 // Gather the library data from `package.json`
 const manifest = require('./package.json');
@@ -70,7 +72,10 @@ gulp.task('build', ['lint-src', 'clean'], function(done) {
       name: config.mainVarName
     });
 
+    var head = fs.readFileSync('src/header.js', 'utf8');
+
     $.file(exportFileName + '.js', res.code, { src: true })
+      .pipe($.header(head, {pkg: manifest, now: moment()}))
       .pipe($.plumber())
       .pipe($.sourcemaps.init({ loadMaps: true }))
       .pipe($.babel())
