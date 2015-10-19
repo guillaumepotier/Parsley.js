@@ -1,21 +1,10 @@
 language: node_js
-
 node_js:
-  - 0.10
-  - 0.12
-
+  - "0.10"
+  - "0.12"
+  - "io.js"
 sudo: false
-
-# before_script:
-#   - npm install -g bower
-#   # - npm install -g browserify
-#   - bower install
-#   # - browserify test/env/browserify.js -o test/env/browserify_bundle.js -r jquery
-
-script:
-  - gulp
-  # - npm run-script test-all
-
+script: "gulp coverage"
 after_success:
   - npm install -g codeclimate-test-reporter
   - codeclimate-test-reporter < coverage/lcov.info
