@@ -68,7 +68,7 @@ describe('PubSub', () => {
     $.listen('foo', () => { done(); });
     $.listenTo($('#element').psly(), 'foo', () => { expect(true).to.be(false); });
     $.unsubscribeTo($('#element').psly(), 'foo');
-    $.emit('foo', $('#element').psly())
+    $.emit('foo', $('#element').psly());
   });
   it('unsubscribe()', () => {
     var fn = () => { expect(true).to.be(false); };

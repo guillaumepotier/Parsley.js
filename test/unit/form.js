@@ -27,7 +27,7 @@ describe('ParsleyForm', () => {
         '<input id="field-excluded" data-parsley-excluded="true" />'    + // Disabled, excluded buy custom options below
         '<input type="submit"/>'            + // Excluded field, not valid
       '</form>');
-    var parsleyForm = $('#element').parsley({ excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]' });
+    var parsleyForm = $('#element').parsley({excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]'});
     expect(parsleyForm.fields.length).to.be(2);
   });
   it('should properly bind options for form and children fields', () => {
@@ -227,10 +227,10 @@ describe('ParsleyForm', () => {
   });
 
   it('should fire field:reset event if fields are removed or excluded', () => {
-    var parsleyInstance,
-      steps = [],
-      step = 'init',
-      parsleyForm = $('<form id="element"><input type="text" required></form>')
+    var parsleyInstance;
+    var steps = [];
+    var step = 'init';
+    var parsleyForm = $('<form id="element"><input type="text" required></form>')
         .appendTo('body')
         .parsley()
         .on('field:reset', function () {
@@ -288,7 +288,7 @@ describe('ParsleyForm', () => {
       expect(shouldSubmit).to.be(true);
       window.Parsley.removeValidator('custom');
       done();
-    })
+    });
     $('#element').submit();
     expect(called).to.eql(1);
     deferred.reject();

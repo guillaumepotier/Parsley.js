@@ -197,7 +197,7 @@ describe('ParsleyField', () => {
   });
   it('should handle all violations if `priorityEnabled` is set to false', () => {
     $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
-    var parsleyField = $('#element').parsley({ priorityEnabled: false });
+    var parsleyField = $('#element').parsley({priorityEnabled: false});
     expect(parsleyField.isValid()).to.be(false);
     expect(parsleyField.validationResult.length).to.be(3);
   });
@@ -269,7 +269,7 @@ describe('ParsleyField', () => {
     expect($('<input type="email" value="foo">').parsley().isValid()).to.be(false);
     expect($('<input type="email" value="foo">').parsley().isValid(false, '')).to.be(true);
     expect($('<input type="email" value="">').parsley().isValid(true)).to.be(false);
-    expect($('<input type="email" value="foo">').parsley().isValid(true, "")).to.be(false);
+    expect($('<input type="email" value="foo">').parsley().isValid(true, '')).to.be(false);
   });
   it('should have a whitespace="squish" option', () => {
     $('body').append('<input type="text" id="element" value=" foo    bar " />');

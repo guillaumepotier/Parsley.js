@@ -62,28 +62,28 @@ describe('ParsleyFactory', () => {
     expect(new ParsleyFactory($('#element')).options.namespace).to.be('data-parsley-');
 
     // global JS config
-    $('#element').parsley().destroy()
+    $('#element').parsley().destroy();
     window.ParsleyConfig.namespace = 'data-foo-';
     expect(new ParsleyFactory($('#element')).options.namespace).to.be('data-foo-');
 
     // option on the go
-    $('#element').parsley().destroy()
+    $('#element').parsley().destroy();
     expect(new ParsleyFactory($('#element'), {
       namespace: "data-bar-"
     }).options.namespace).to.be('data-bar-');
 
     // data- DOM-API
-    $('#element').parsley().destroy()
+    $('#element').parsley().destroy();
     $('#element').attr('data-parsley-namespace', 'data-baz-');
     expect(new ParsleyFactory($('#element'), {
-      namespace: "data-bar-"
+      namespace: 'data-bar-'
     }).options.namespace).to.be('data-bar-');
     delete window.ParsleyConfig.namespace;
   });
   it('should handle proper options management', () => {
     $('body').append('<form id="element" data-parsley-foo="bar" data-parsley-baz="baz"></form>');
-    window.ParsleyConfig = $.extend(window.ParsleyConfig, {bar: "baz", baz:"qux"});
-    var parsleyInstance = new ParsleyFactory($('#element'), { qux: "bux" });
+    window.ParsleyConfig = $.extend(window.ParsleyConfig, {bar: 'baz', baz: 'qux'});
+    var parsleyInstance = new ParsleyFactory($('#element'), {qux: 'bux'});
     expect(parsleyInstance.options.foo).to.be('bar');
     expect(parsleyInstance.options.baz).to.be('baz');
     expect(parsleyInstance.options.bar).to.be('baz');
@@ -93,7 +93,7 @@ describe('ParsleyFactory', () => {
   });
   it('should have a jquery plugin API', () => {
     $('body').append('<input type="text" id="element" data-parsley-namespace="baz-"></div>');
-    var parsleyInstance = $('#element').parsley({ foo: 'bar' });
+    var parsleyInstance = $('#element').parsley({foo: 'bar'});
     expect(parsleyInstance.__class__).to.be('ParsleyField');
     expect(parsleyInstance.options.namespace).to.be('baz-');
     expect(parsleyInstance.options.foo).to.be('bar');
@@ -104,7 +104,7 @@ describe('ParsleyFactory', () => {
     });
   });
   it('should have a jquery API that binds multiple selectors', () => {
-    $('body').append('<div id="element">'+
+    $('body').append('<div id="element">' +
       '<input type="text" id="foo" required />' +
       '<input type="text" id="bar" required />' +
     '</div>');

@@ -36,7 +36,7 @@ describe('ParsleyMultiple', () => {
         '<input type="checkbox" name="check" id="check3" value="3" />'  +
         '<input type="checkbox" value="foo" />' +
       '</form>');
-    expectWarning(() =>{
+    expectWarning(() => {
       $('#element').parsley();
     });
     expect($('#check1').attr('data-parsley-multiple')).to.be('check');

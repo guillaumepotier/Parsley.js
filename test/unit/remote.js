@@ -7,19 +7,20 @@ describe('ParsleyRemote', () => {
   var stubAjax = status => {
     restoreAjax();
     var deferred = $.Deferred();
-    var xhr = $.extend(deferred.promise(), { status: status });
-    if(status === 200)
+    var xhr = $.extend(deferred.promise(), {status: status});
+    if(status === 200) {
       deferred.resolve({}, 'success', 'xhr');
-    else
+    } else {
       deferred.reject(xhr, 'error', 'error');
+    }
     sinon.stub($, 'ajax').returns(xhr);
     stubbed = true;
-  }
+  };
   var restoreAjax = () => {
     if (stubbed)
       $.ajax.restore();
     stubbed = false;
-  }
+  };
 
   afterEach(restoreAjax);
 
@@ -65,9 +66,9 @@ describe('ParsleyRemote', () => {
     stubAjax(200);
     parsleyInstance.whenValid()
       .done(() => {
-        expect($.ajax.calledWithMatch({ type: "POST" })).to.be(true);
-        expect($.ajax.calledWithMatch({ url: "http://foo.bar" })).to.be(true);
-        expect($.ajax.calledWithMatch({ data: { "foo": "bar", "element": "baz" } })).to.be(true);
+        expect($.ajax.calledWithMatch({type: 'POST'})).to.be(true);
+        expect($.ajax.calledWithMatch({url: 'http://foo.bar'})).to.be(true);
+        expect($.ajax.calledWithMatch({data: {foo: 'bar', element: 'baz'}})).to.be(true);
         done();
       });
   });
@@ -79,14 +80,14 @@ describe('ParsleyRemote', () => {
     parsleyInstance.whenValid()
       .done(() => {
         expect($.ajax.calledOnce).to.be(true);
-        expect($.ajax.calledWithMatch({ data: { "element": "foo" } })).to.be(true);
+        expect($.ajax.calledWithMatch({data: {element: 'foo'}})).to.be(true);
         stubAjax(400);
 
         $('#element').val('bar');
         parsleyInstance.whenValid()
           .fail(() => {
             expect($.ajax.calledOnce).to.be(true);
-            expect($.ajax.calledWithMatch({ data: { "element": "bar" } })).to.be(true);
+            expect($.ajax.calledWithMatch({data: {element: 'bar'}})).to.be(true);
 
             stubAjax(200);
             $('#element').val('foo');
@@ -136,7 +137,7 @@ describe('ParsleyRemote', () => {
     stubAjax(200);
     parsleyInstance.whenValid()
       .fail(() => {
-        expect($.ajax.calledWithMatch({ url: "http://foobar.baz" })).to.be(true);
+        expect($.ajax.calledWithMatch({url: 'http://foobar.baz'})).to.be(true);
         done();
       });
   });
@@ -151,7 +152,7 @@ describe('ParsleyRemote', () => {
     stubAjax(200);
     parsleyInstance.whenValid()
       .fail(() => {
-        expect($.ajax.calledWithMatch({ url: "http://foobar.baz" })).to.be(true);
+        expect($.ajax.calledWithMatch({url: 'http://foobar.baz'})).to.be(true);
         done();
       });
   });
@@ -183,8 +184,8 @@ describe('ParsleyRemote', () => {
     stubAjax(200);
     parsleyInstance.whenValid()
       .done(() => {
-        expect($.ajax.calledWithMatch({ url: "http://parsleyjs.org/test/foobar" })).to.be(true);
-        expect($.ajax.calledWithMatch({ data: {element: 'foobar'} })).to.be(true);
+        expect($.ajax.calledWithMatch({url: 'http://parsleyjs.org/test/foobar'})).to.be(true);
+        expect($.ajax.calledWithMatch({data: {element: 'foobar'}})).to.be(true);
         done();
       });
   });
@@ -198,8 +199,8 @@ describe('ParsleyRemote', () => {
     stubAjax(200);
     parsleyInstance.whenValid()
       .done(() => {
-        expect($.ajax.calledWithMatch({ url: "http://parsleyjs.org/thisisrest/foo%20bar" })).to.be(true);
-        expect($.ajax.calledWithMatch({ data: {element: 'foo bar'} })).to.be(false);
+        expect($.ajax.calledWithMatch({url: 'http://parsleyjs.org/thisisrest/foo%20bar'})).to.be(true);
+        expect($.ajax.calledWithMatch({data: {element: 'foo bar'}})).to.be(false);
         done();
       });
   });

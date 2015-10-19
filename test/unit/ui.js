@@ -186,7 +186,7 @@ describe('ParsleyUI', () => {
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
   });
   it('should auto bind error trigger on select field error (select)', () => {
-    $('body').append('<select id="element" required>'+
+    $('body').append('<select id="element" required>' +
       '<option value="">Choose</option>' +
       '<option value="foo">foo</option>' +
       '<option value="bar">bar</option>' +
@@ -343,12 +343,12 @@ describe('ParsleyUI', () => {
   });
   it('should handle custom error messages returned from custom validators', () => {
     $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
-    window.Parsley.addValidator('customValidator', function (value, requirement) {
+    window.Parsley.addValidator('customValidator', (value, requirement) => {
       return $.Deferred().reject("Hey, this ain't good at all").promise();
     }, 32);
     var parsleyField = $('#element').psly();
     parsleyField.validate();
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be("Hey, this ain't good at all");
+    expect($(`ul#parsley-id-${parsleyField.__id__} li`).text()).to.be("Hey, this ain't good at all");
     window.Parsley.removeValidator('customValidator');
   });
 

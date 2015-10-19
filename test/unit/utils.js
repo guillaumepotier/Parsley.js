@@ -45,8 +45,8 @@ describe('ParsleyUtils', () => {
           foo: "bar"
         }
       ]
-    }],
-    attr = ParsleyUtils.attr(element, 'data-parsley-');
+    }];
+    var attr = ParsleyUtils.attr(element, 'data-parsley-');
 
     expect(attr).to.eql({'foo': 'bar', 'bar': [0, 42]});
   });

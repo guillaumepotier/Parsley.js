@@ -4,7 +4,7 @@ import Parsley from '../../src/parsley';
 describe('ParsleyAbstract', () => {
   it('should provide a actualizeOptions() method', () => {
     $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
-    var parsleyField = $('#element').parsley({ foo: 'bar' });
+    var parsleyField = $('#element').parsley({foo: 'bar'});
     expect(parsleyField.options.pattern).to.eql('[A-F][0-9]{5}');
     expect(parsleyField.options.required).to.eql('');
 
@@ -63,7 +63,8 @@ describe('ParsleyAbstract', () => {
         '<textarea id="field2"></textarea>' +
       '</form>');
     var parsleyForm = $('#element').parsley();
-    var fieldEventsCount = 0, formEventsCount = 0;
+    var fieldEventsCount = 0;
+    var formEventsCount = 0;
 
     // Test that a subscribed field event on parent form would be triggered by fields too
     // Here we only have field1 and field2 as valid parsley fields
