@@ -52,12 +52,12 @@ describe('ParsleyForm', () => {
         '<div id="field2"></div>'                                         +
         '<textarea id="field3" data-parsley-notblank="true"></textarea>'  +
       '</form>');
-      var parsleyForm = $('#element').parsley();
-      parsleyForm.validate();
-      expect(parsleyForm.validationResult).to.be(false);
-      $('#field1').val('foo');
-      $('#field3').val('foo');
-      expect(parsleyForm.validate()).to.be(true);
+    var parsleyForm = $('#element').parsley();
+    parsleyForm.validate();
+    expect(parsleyForm.validationResult).to.be(false);
+    $('#field1').val('foo');
+    $('#field3').val('foo');
+    expect(parsleyForm.validate()).to.be(true);
   });
   it('should handle group validation', () => {
     $('body').append(
@@ -66,12 +66,12 @@ describe('ParsleyForm', () => {
         '<div id="field2"></div>'                                                                  +
         '<textarea id="field3" data-parsley-group="bar" data-parsley-required="true"></textarea>'  +
       '</form>');
-      var parsleyForm = $('#element').parsley();
-      expect(parsleyForm.isValid()).to.be(false);
-      $('#field1').val('value');
-      expect(parsleyForm.isValid()).to.be(false);
-      expect(parsleyForm.isValid('foo')).to.be(true);
-      expect(parsleyForm.isValid('bar')).to.be(false);
+    var parsleyForm = $('#element').parsley();
+    expect(parsleyForm.isValid()).to.be(false);
+    $('#field1').val('value');
+    expect(parsleyForm.isValid()).to.be(false);
+    expect(parsleyForm.isValid('foo')).to.be(true);
+    expect(parsleyForm.isValid('bar')).to.be(false);
   });
   it('should handle group validation with controls with multiple group names', () => {
     $('body').append(
@@ -80,19 +80,19 @@ describe('ParsleyForm', () => {
         '<input id="field2" type="text" data-parsley-group=\'["bar", "baz"]\' data-parsley-required="true" />'  +
         '<textarea id="field3" data-parsley-group=\'["baz", "qux"]\' data-parsley-required="true"></textarea>'  +
       '</form>');
-      var parsleyForm = $('#element').parsley();
-      expect(parsleyForm.isValid()).to.be(false);
-      $('#field1').val('value');
-      $('#field2').val('value');
-      expect(parsleyForm.isValid()).to.be(false);
-      // group name only on one required field, with value
-      expect(parsleyForm.isValid('foo')).to.be(true);
-      // group name on multiple required fields, all with values
-      expect(parsleyForm.isValid('bar')).to.be(true);
-      // group name on multiple required fields, one missing a value
-      expect(parsleyForm.isValid('baz')).to.be(false);
-      // group name on single required field, without value
-      expect(parsleyForm.isValid('qux')).to.be(false);
+    var parsleyForm = $('#element').parsley();
+    expect(parsleyForm.isValid()).to.be(false);
+    $('#field1').val('value');
+    $('#field2').val('value');
+    expect(parsleyForm.isValid()).to.be(false);
+    // group name only on one required field, with value
+    expect(parsleyForm.isValid('foo')).to.be(true);
+    // group name on multiple required fields, all with values
+    expect(parsleyForm.isValid('bar')).to.be(true);
+    // group name on multiple required fields, one missing a value
+    expect(parsleyForm.isValid('baz')).to.be(false);
+    // group name on single required field, without value
+    expect(parsleyForm.isValid('qux')).to.be(false);
   });
   it('should handle form submission correctly', () => {
     $('body').append(
@@ -102,21 +102,21 @@ describe('ParsleyForm', () => {
         '<input type="submit" name="foo" value="bar" />'  +
         '<input type="submit" name="foo" value="other" />'  +
       '</form>');
-      var parsleyForm = $('#element').parsley();
+    var parsleyForm = $('#element').parsley();
 
-      $('#element input:last').click();
-      // Form should not be submitted at this point
+    $('#element input:last').click();
+    // Form should not be submitted at this point
 
-      $('#field1').val('foo');
-      var values = [];
-      $('#element').on('submit', evt => {
-        expect(evt.parsley).to.be(true);
-        values.push($('form input[type!=submit][name="foo"]').val());
-        evt.preventDefault();
-      });
-      $('#element input:last').click();
-      $('#element').submit(); // Similar to pressing 'enter'
-      expect(values).to.eql(['other', 'bar']);
+    $('#field1').val('foo');
+    var values = [];
+    $('#element').on('submit', evt => {
+      expect(evt.parsley).to.be(true);
+      values.push($('form input[type!=submit][name="foo"]').val());
+      evt.preventDefault();
+    });
+    $('#element input:last').click();
+    $('#element').submit(); // Similar to pressing 'enter'
+    expect(values).to.eql(['other', 'bar']);
   });
   it('should not validate when triggered by a button with formnovalidate', () => {
     var $form = $('<form id="element"><input type="string" required /><input type="submit" formnovalidate /><form>').appendTo($('body'));
