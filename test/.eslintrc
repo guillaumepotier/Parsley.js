@@ -1,8 +1,8 @@
 {
   "parser": "babel-eslint",
   "rules": {
-    "strict": 0,
-    "quotes": [2, "single"],
+    "quotes": 0,
+    "indent": 0,
     "no-unused-expressions": 0
   },
   "env": {
