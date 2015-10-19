@@ -4,8 +4,8 @@ import Parsley from '../../../src/parsley';
 
 import comparison from '../../../src/extra/validator/comparison';
 
-describe('extra/validator/comparison', function () {
-  it('should have gt validator', function () {
+describe('extra/validator/comparison', () => {
+  it('should have gt validator', () => {
     var number = 5;
 
     // Check with a selector
@@ -30,7 +30,7 @@ describe('extra/validator/comparison', function () {
 
     $('#gt').remove();
   });
-  it('should have gte validator', function () {
+  it('should have gte validator', () => {
     var number = 5;
 
     // Check with a selector
@@ -55,7 +55,7 @@ describe('extra/validator/comparison', function () {
 
     $('#gte').remove();
   });
-  it('should have lt validator', function () {
+  it('should have lt validator', () => {
     var number = 5;
 
     // Check with a selector
@@ -80,7 +80,7 @@ describe('extra/validator/comparison', function () {
 
     $('#lt').remove();
   });
-  it('should have lte validator', function () {
+  it('should have lte validator', () => {
     var number = 5;
 
     // Check with a selector
@@ -105,7 +105,7 @@ describe('extra/validator/comparison', function () {
 
     $('#lte').remove();
   });
-  afterEach(function () {
+  afterEach(() => {
     $('#element, .fixture, .parsley-errors-list').remove();
   });
 });

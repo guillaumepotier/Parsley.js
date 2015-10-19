@@ -2,16 +2,16 @@ import $ from 'jquery';
 
 import Parsley from '../../../src/parsley';
 
-describe('extra/plugin/bind', function () {
+describe('extra/plugin/bind', () => {
   // Hack to load and undo the loading of the plugin:
-  before(function () {
+  before(() => {
     require('../../../src/extra/plugin/bind');
   });
-  after(function () {
+  after(() => {
     window.ParsleyExtend = {}; // Undo the plugin...
   });
 
-  it('should have a bind.js plugin allowing to give pure json validation config to parsley constructor', function () {
+  it('should have a bind.js plugin allowing to give pure json validation config to parsley constructor', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="text" name="name" />' +
@@ -40,7 +40,7 @@ describe('extra/plugin/bind', function () {
     expect($('#sexe').parsley().constraints[0].name).to.be('required');
   });
 
-  afterEach(function () {
+  afterEach(() => {
     $('#element, .fixture, .parsley-errors-list').remove();
   });
 });

@@ -2,11 +2,11 @@ import $ from 'jquery';
 import ParsleyForm from '../../src/parsley/form';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyForm', function () {
-  it('should be a function', function () {
+describe('ParsleyForm', () => {
+  it('should be a function', () => {
     expect(ParsleyForm).to.be.a('function');
   });
-  it('should bind parsleyFields children', function () {
+  it('should bind parsleyFields children', () => {
     $('body').append(
       '<form id="element">'                 +
         '<input id="field1" type="text"/>'  +
@@ -16,7 +16,7 @@ describe('ParsleyForm', function () {
     var parsleyForm = $('#element').parsley();
     expect(parsleyForm.fields.length).to.be(2);
   });
-  it('should bind parsleyFields children, and not excluded ones', function () {
+  it('should bind parsleyFields children, and not excluded ones', () => {
     $('body').append(
       '<form id="element">'                 +
         '<input id="field1" type="text"/>'  +
@@ -30,7 +30,7 @@ describe('ParsleyForm', function () {
     var parsleyForm = $('#element').parsley({ excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]' });
     expect(parsleyForm.fields.length).to.be(2);
   });
-  it('should properly bind options for form and children fields', function () {
+  it('should properly bind options for form and children fields', () => {
     $('body').append(
       '<form id="element" data-parsley-trigger="change">'                 +
         '<input id="field1" type="text" data-parsley-required="true" />'  +
@@ -45,7 +45,7 @@ describe('ParsleyForm', function () {
     expect($('#field3').parsley().options.notblank).to.eql(true);
     expect($('#field3').parsley().options.required).to.be(undefined);
   });
-  it('should properly store validation state after `validate()`', function () {
+  it('should properly store validation state after `validate()`', () => {
     $('body').append(
       '<form id="element" data-parsley-trigger="change">'                 +
         '<input id="field1" type="text" data-parsley-required="true" />'  +
@@ -59,7 +59,7 @@ describe('ParsleyForm', function () {
       $('#field3').val('foo');
       expect(parsleyForm.validate()).to.be(true);
   });
-  it('should handle group validation', function () {
+  it('should handle group validation', () => {
     $('body').append(
       '<form id="element">'                                                                        +
         '<input id="field1" type="text" data-parsley-group="foo" data-parsley-required="true" />'  +
@@ -73,7 +73,7 @@ describe('ParsleyForm', function () {
       expect(parsleyForm.isValid('foo')).to.be(true);
       expect(parsleyForm.isValid('bar')).to.be(false);
   });
-  it('should handle group validation with controls with multiple group names', function () {
+  it('should handle group validation with controls with multiple group names', () => {
     $('body').append(
       '<form id="element">'                                                                        +
         '<input id="field1" type="text" data-parsley-group=\'["foo", "bar"]\' data-parsley-required="true" />'  +
@@ -94,7 +94,7 @@ describe('ParsleyForm', function () {
       // group name on single required field, without value
       expect(parsleyForm.isValid('qux')).to.be(false);
   });
-  it('should handle form submission correctly', function () {
+  it('should handle form submission correctly', () => {
     $('body').append(
       '<form id="element">'                 +
         '<input id="field1" type="text" name="nick" data-parsley-required="true" />'  +
@@ -109,7 +109,7 @@ describe('ParsleyForm', function () {
 
       $('#field1').val('foo');
       var values = [];
-      $('#element').on('submit', function(evt) {
+      $('#element').on('submit', evt => {
         expect(evt.parsley).to.be(true);
         values.push($('form input[type!=submit][name="foo"]').val());
         evt.preventDefault();
@@ -118,15 +118,15 @@ describe('ParsleyForm', function () {
       $('#element').submit(); // Similar to pressing 'enter'
       expect(values).to.eql(['other', 'bar']);
   });
-  it('should not validate when triggered by a button with formnovalidate', function () {
+  it('should not validate when triggered by a button with formnovalidate', () => {
     var $form = $('<form id="element"><input type="string" required /><input type="submit" formnovalidate /><form>').appendTo($('body'));
-    $form.on('submit', function (e) {
+    $form.on('submit', e => {
       e.preventDefault();
     });
 
     var callbacks = [];
-    $.each(['validate', 'error', 'success', 'validated', 'submit'], function (i, cb) {
-      $form.parsley().on('form:' + cb, function () {
+    $.each(['validate', 'error', 'success', 'validated', 'submit'], (i, cb) => {
+      $form.parsley().on('form:' + cb, () => {
         callbacks.push(cb);
       });
     });
@@ -135,7 +135,7 @@ describe('ParsleyForm', function () {
     expect(callbacks.join()).to.be('');
   });
 
-  it('should have a force option for validate and isValid methods', function () {
+  it('should have a force option for validate and isValid methods', () => {
     $('body').append(
       '<form id="element">'                                   +
         '<input id="field1" type="email" />'                  +
@@ -146,7 +146,7 @@ describe('ParsleyForm', function () {
     expect($('#element').parsley().validate()).to.be(true);
     expect($('#element').parsley().validate(undefined, true)).to.be(false);
   });
-  it('should properly bind dynamically added fields', function () {
+  it('should properly bind dynamically added fields', () => {
     $('body').append('<form id="element" data-parsley-trigger="change"></form>');
     $('#element').append('<input type="email" id="email" required />');
     var fieldInstance = $('#email').psly();
@@ -156,15 +156,15 @@ describe('ParsleyForm', function () {
     expect(formInstance.fields[0].$element.attr('id')).to.be('email');
     expect(fieldInstance.parent.__class__).to.be('ParsleyForm');
   });
-  it('should fire the right callbacks in the right order', function () {
+  it('should fire the right callbacks in the right order', () => {
     var $form = $('<form id="element"><input type="string" required /><form>').appendTo($('body'));
-    $form.on('submit', function (e) {
+    $form.on('submit', e => {
       e.preventDefault();
     });
 
     var callbacks = [];
-    $.each(['validate', 'error', 'success', 'validated', 'submit'], function (i, cb) {
-      $form.parsley().on('form:' + cb, function () {
+    $.each(['validate', 'error', 'success', 'validated', 'submit'], (i, cb) => {
+      $form.parsley().on('form:' + cb, () => {
         callbacks.push(cb);
       });
     });
@@ -174,38 +174,38 @@ describe('ParsleyForm', function () {
     $form.submit();
     expect(callbacks.join()).to.be('validate,error,validated,validate,success,validated,submit');
   });
-  it('should fire "form:validate.parsley" to give the opportunity for changes before validation occurs', function() {
+  it('should fire "form:validate.parsley" to give the opportunity for changes before validation occurs', () => {
     var $form = $('<form id="element"><input type="string" required /><form>').appendTo($('body'));
     $form.parsley().on('form:validate', function () {
       this.$element.find('input').remove();
     });
     expect($form.parsley().validate()).to.be(true);
   });
-  it('should stop event propagation on form submit', function (done) {
+  it('should stop event propagation on form submit', done => {
     $('body').append('<form id="element"><input type="text" required/></form>');
     var parsleyInstance = $('#element').parsley()
-    .on('form:validated', function () {
+    .on('form:validated', () => {
       done();
     });
-    $('#element').on('submit', function () {
+    $('#element').on('submit', () => {
       // It sould never pass here!
       expect(true).to.be(false);
     })
     .submit();
   });
 
-  it('should have the validationResult be changeable', function () {
+  it('should have the validationResult be changeable', () => {
     var submitted = false;
     $('<form id="element"></form>')
     .appendTo('body')
     .parsley()
-    .on('form:success', function(form) {
+    .on('form:success', form => {
       form.validationResult = false;
     })
-    .on('form:error', function(form) {
+    .on('form:error', form => {
       form.validationResult = true;
     })
-    .on('form:submit', function(form) {
+    .on('form:submit', form => {
       submitted = true;
       return false;
     });
@@ -215,31 +215,31 @@ describe('ParsleyForm', function () {
     expect(submitted).to.be(true);
   });
 
-  it('should fire form:submit.event and be interruptable when validated', function (done) {
+  it('should fire form:submit.event and be interruptable when validated', done => {
     $('<form id="element"></form>')
     .appendTo('body')
     .parsley()
-    .on('form:submit', function() {
+    .on('form:submit', () => {
       done();
       return false;
     });
     $('#element').submit();
   });
 
-  it('should fire field:reset event if fields are removed or excluded', function () {
+  it('should fire field:reset event if fields are removed or excluded', () => {
     var parsleyInstance,
       steps = [],
       step = 'init',
       parsleyForm = $('<form id="element"><input type="text" required></form>')
         .appendTo('body')
         .parsley()
-        .on('field:reset', function() {
+        .on('field:reset', function () {
           steps.push('form: ' + step);
           expect(this).to.be(parsleyInstance);
         })
         ;
     parsleyInstance = $('#element input').parsley()
-      .on('field:reset', function() {
+      .on('field:reset', function () {
           steps.push('field: ' + step);
           expect(this).to.be(parsleyInstance);
         });
@@ -269,20 +269,20 @@ describe('ParsleyForm', function () {
     expect(steps).to.eql(['field: excluded', 'form: excluded', 'field: detached', 'form: detached', 'field: removed', 'form: removed']);
   });
 
-  it('should handle validators returning promises', function (done) {
+  it('should handle validators returning promises', done => {
     var called = 0;
     var shouldSubmit = false;
     var form = $('<form id="element"><input data-parsley-custom value="x"/></form>')
     .appendTo('body')
     .parsley();
     var deferred;
-    window.Parsley.addValidator('custom', function() {
+    window.Parsley.addValidator('custom', () => {
       called++;
       deferred = $.Deferred();
       return deferred.promise();
     });
 
-    $('#element').on('submit', function(evt) {
+    $('#element').on('submit', evt => {
       evt.preventDefault();
       expect(evt.parsley).to.be(true); // Sanity check
       expect(shouldSubmit).to.be(true);
@@ -305,7 +305,7 @@ describe('ParsleyForm', function () {
     deferred.resolve();
   });
 
-  afterEach(function () {
+  afterEach(() => {
     $('#element').remove();
   });
 });

@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyMultiple', function () {
-  it('should not throw errors with multiple items with weird automated generated names', function () {
+describe('ParsleyMultiple', () => {
+  it('should not throw errors with multiple items with weird automated generated names', () => {
     $('body').append(
       '<form id="element">' +
         '<input type="checkbox" name="hello[]" id="check1" value="1" />'  +
@@ -11,11 +11,11 @@ describe('ParsleyMultiple', function () {
         '<input type="checkbox" name="hello world[ x ]" id="check4" value="4" />'  +
         '<input type="checkbox" value="foo" />' +
       '</form>');
-    expectWarning(function() {
+    expectWarning(() => {
       $('#element').parsley();
     });
   });
-  it('should return same ParsleyMultiple instance for each field in same multiple group, and it should count as one field in form', function () {
+  it('should return same ParsleyMultiple instance for each field in same multiple group, and it should count as one field in form', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check" id="check1" value="1" />'  +
@@ -28,7 +28,7 @@ describe('ParsleyMultiple', function () {
     expect(parsleyMultipleInstance.$elements.length).to.be(3);
     expect($('#element').parsley().fields.length).to.be(1);
   });
-  it('should auto add a data-parsley-multiple attribute to each correctly binded multiple input', function () {
+  it('should auto add a data-parsley-multiple attribute to each correctly binded multiple input', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check" id="check1" value="1" />'  +
@@ -36,7 +36,7 @@ describe('ParsleyMultiple', function () {
         '<input type="checkbox" name="check" id="check3" value="3" />'  +
         '<input type="checkbox" value="foo" />' +
       '</form>');
-    expectWarning(function(){
+    expectWarning(() =>{
       $('#element').parsley();
     });
     expect($('#check1').attr('data-parsley-multiple')).to.be('check');
@@ -44,7 +44,7 @@ describe('ParsleyMultiple', function () {
     expect($('#check3').attr('data-parsley-multiple')).to.be('check');
     expect($('#check4').eq(3).attr('data-parsley-multiple')).to.be(undefined);
   });
-  it('should have a specific `getValue` method (checkbox)', function () {
+  it('should have a specific `getValue` method (checkbox)', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check[]" id="check1" value="1" />'  +
@@ -53,7 +53,7 @@ describe('ParsleyMultiple', function () {
     expect($('#check1').parsley().getValue()).to.be.eql([]);
     expect($('#check2').attr('checked', 'checked').parsley().getValue()).to.be.eql(['2']);
   });
-  it('should have a specific `getValue` method (radio)', function () {
+  it('should have a specific `getValue` method (radio)', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="radio" name="radio" id="radio1" value="3" />'  +
@@ -62,7 +62,7 @@ describe('ParsleyMultiple', function () {
     expect($('#radio1').parsley().getValue()).to.be.eql('');
     expect($('#radio2').attr('checked', 'checked').parsley().getValue()).to.be.eql('4');
   });
-  it('should handle required constraint (checkbox)', function () {
+  it('should handle required constraint (checkbox)', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check[]" id="check1" value="1" />'  +
@@ -72,7 +72,7 @@ describe('ParsleyMultiple', function () {
     $('#check2').attr('checked', 'checked');
     expect($('#element').parsley().isValid()).to.be(true);
   });
-  it('should handle required constraint (radio)', function () {
+  it('should handle required constraint (radio)', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="radio" name="radio" id="radio1" value="3" required />'  +
@@ -82,7 +82,7 @@ describe('ParsleyMultiple', function () {
     $('#radio1').attr('checked', 'checked');
     expect($('#element').parsley().isValid()).to.be(true);
   });
-  it('should handle check constraint', function () {
+  it('should handle check constraint', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check[]" id="check1" value="1" data-parsley-check="[1, 2]" />'  +
@@ -104,7 +104,7 @@ describe('ParsleyMultiple', function () {
     $('#check3').attr('checked', 'checked');
     expect($('#element').parsley().isValid()).to.be(false);
   });
-  it('should support select multiple', function () {
+  it('should support select multiple', () => {
     $('body').append(
       '<select multiple name="foo" id="element" required data-parsley-mincheck="2">' +
         '<option value="1">1</option>'  +
@@ -123,7 +123,7 @@ describe('ParsleyMultiple', function () {
     expect(parsleyField.getValue()).to.be.eql(['1', '2']);
     expect(parsleyField.isValid()).to.be(true);
   });
-  it('should support select with default without a value', function () {
+  it('should support select with default without a value', () => {
     $('body').append(
       '<select id="element" required>'    +
         '<option selected="selected" value>default</option>'  +
@@ -131,10 +131,10 @@ describe('ParsleyMultiple', function () {
       '</select>');
     expect($('#element').parsley().isValid()).to.be(false);
   });
-  it('should not bind radio or checkboxes without a name or and id or a multiple option', function () {
+  it('should not bind radio or checkboxes without a name or and id or a multiple option', () => {
     $('body').append('<input type="radio" value="foo" />');
     var parsleyInstance =
-      expectWarning(function() {
+      expectWarning(() => {
         return $('input[type=radio]').psly();
       });
     expect(parsleyInstance.__class__).to.be('Parsley');
@@ -152,12 +152,12 @@ describe('ParsleyMultiple', function () {
     expect(parsleyInstance.__class__).to.be('ParsleyFieldMultiple');
     expect(parsleyInstance.options.multiple).to.be('elementfoo');
   });
-  it('should bind select multiple input without a name or a multiple option', function () {
+  it('should bind select multiple input without a name or a multiple option', () => {
     $('body').append('<select multiple id="element"></select>');
     expect($('#element').parsley().__class__).to.be('ParsleyFieldMultiple');
     expect($('#element').attr('data-parsley-multiple')).to.be('element');
   });
-  it('should remove errors on change, whatever field is changed', function () {
+  it('should remove errors on change, whatever field is changed', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check[]" id="check1" value="1" required data-parsley-mincheck="1" />'  +
@@ -173,7 +173,7 @@ describe('ParsleyMultiple', function () {
     $('#check2').trigger($.Event('change'));
     expect(parsleyInstance.validationResult).to.be.eql(true);
   });
-  it('should add errors on change if trigger enabled, whatever field is changed', function () {
+  it('should add errors on change if trigger enabled, whatever field is changed', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check[]" id="check1" value="1" required data-parsley-mincheck="2" data-parsley-trigger="change" />'  +
@@ -186,7 +186,7 @@ describe('ParsleyMultiple', function () {
     $('#check3').trigger($.Event('change'));
     expect(parsleyInstance.validationResult.length).to.be(1);
   });
-  it('should bind only valid multiple siblings sharing the same name', function () {
+  it('should bind only valid multiple siblings sharing the same name', () => {
     $('body').append(
       '<form id="element">' +
         '<input name="foo" type="hidden" value="0"/>' +
@@ -199,7 +199,7 @@ describe('ParsleyMultiple', function () {
     $('#element, #element-2').parsley();
     expect($('#check').parsley().$elements.length).to.be(2);
   });
-  it('should handle form namespace configuration inheritance and click events while multiple binding through ParsleyForm', function () {
+  it('should handle form namespace configuration inheritance and click events while multiple binding through ParsleyForm', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="radio" name="radio" id="radio1" value="3" foo-bar-required />'  +
@@ -212,7 +212,7 @@ describe('ParsleyMultiple', function () {
     $('#radio2').trigger('click').trigger('change');
     expect($('ul.parsley-errors-list li').length).to.be(0);
   });
-  it('should handle dynamic multiple items removal', function () {
+  it('should handle dynamic multiple items removal', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check[]" id="check1" value="1" data-parsley-check="[1, 2]" />'  +
@@ -229,7 +229,7 @@ describe('ParsleyMultiple', function () {
     $('#element').parsley().validate();
     expect(parsleyInstance.$elements.length).to.be(3);
   });
-  afterEach(function () {
+  afterEach(() => {
     $('#element, #element-2, .parsley-errors-list').remove();
   });
 });

@@ -4,9 +4,9 @@ import Parsley from '../../../src/parsley';
 
 import dateiso from '../../../src/extra/validator/dateiso';
 
-describe('extra/validator/dateiso', function () {
+describe('extra/validator/dateiso', () => {
 
-  it('should have dateiso validator', function () {
+  it('should have dateiso validator', () => {
     var expectValidation = function(value, name, requirements) {
       var field = $('<input>').parsley()
       field.options[name] = requirements;

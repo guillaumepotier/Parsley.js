@@ -2,15 +2,15 @@ import $ from 'jquery';
 import ParsleyUI from '../../src/parsley/ui';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyUI', function () {
-  it('should be a function', function () {
+describe('ParsleyUI', () => {
+  it('should be a function', () => {
     expect(ParsleyUI).to.be.a('function');
   });
-  it('should have a listen() method', function () {
+  it('should have a listen() method', () => {
     var UI = new ParsleyUI();
     expect(UI.listen).not.to.be(undefined);
   });
-  it('should create proper errors container when needed', function () {
+  it('should create proper errors container when needed', () => {
     $('body').append('<input type="text" id="element" data-parsley-required />');
     var parsleyField = $('#element').psly();
     expect($('#element').attr('data-parsley-id')).to.be(parsleyField.__id__);
@@ -19,7 +19,7 @@ describe('ParsleyUI', function () {
     expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(1);
     expect($('ul#parsley-id-' + parsleyField.__id__).hasClass('parsley-errors-list')).to.be(true);
   });
-  it('should handle errors-container option', function () {
+  it('should handle errors-container option', () => {
     $('body').append(
       '<form id="element">'                                                                      +
         '<input id="field1" type="text" required data-parsley-errors-container="#container" />'  +
@@ -31,18 +31,18 @@ describe('ParsleyUI', function () {
     $('#element').psly().destroy();
     $('#field1').removeAttr('data-parsley-errors-container');
     $('#element').psly({
-      errorsContainer: function () { return $('#container2'); }
+      errorsContainer: () => { return $('#container2'); }
     }).validate();
     expect($('#container2 .parsley-errors-list').length).to.be(1);
   });
-  it('should handle wrong errors-container option', function () {
+  it('should handle wrong errors-container option', () => {
     $('body').append('<input type="text" id="element" data-parsley-errors-container="#donotexist" required/>');
     var parsley = $('#element').psly();
-    expectWarning(function() {
+    expectWarning(() => {
       parsley.validate();
     });
   });
-  it('should add proper parsley class on success or failure (type=text)', function () {
+  it('should add proper parsley class on success or failure (type=text)', () => {
     $('body').append('<input type="text" id="element" required />');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -52,21 +52,21 @@ describe('ParsleyUI', function () {
     expect($('#element').hasClass('parsley-success')).to.be(true);
     expect($('#element').hasClass('parsley-error')).to.be(false);
   });
-  it('should not add success class on a field without constraints', function () {
+  it('should not add success class on a field without constraints', () => {
     $('body').append('<input type="text" id="element" />');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
     expect($('#element').hasClass('parsley-error')).to.be(false);
     expect($('#element').hasClass('parsley-success')).to.be(false);
   });
-  it('should not add success class on an empty optional field', function () {
+  it('should not add success class on an empty optional field', () => {
     $('body').append('<input type="number" id="element" />');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
     expect($('#element').hasClass('parsley-error')).to.be(false);
     expect($('#element').hasClass('parsley-success')).to.be(false);
   });
-  it('should add proper parsley class on success or failure (type=radio)', function () {
+  it('should add proper parsley class on success or failure (type=radio)', () => {
     $('body').append('<input type="radio" id="element" required />');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -76,7 +76,7 @@ describe('ParsleyUI', function () {
     expect($('#element').parent().hasClass('parsley-success')).to.be(true);
     expect($('#element').parent().hasClass('parsley-error')).to.be(false);
   });
-  it('should add proper parsley class on success or failure (input=checkbox)', function () {
+  it('should add proper parsley class on success or failure (input=checkbox)', () => {
     $('body').append('<input type="checkbox" id="element" required />');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -86,7 +86,7 @@ describe('ParsleyUI', function () {
     expect($('#element').parent().hasClass('parsley-success')).to.be(true);
     expect($('#element').parent().hasClass('parsley-error')).to.be(false);
   });
-  it('should add proper parsley class on success or failure (select multiple)', function () {
+  it('should add proper parsley class on success or failure (select multiple)', () => {
     $('body').append('<select multiple id="element" required><option value="foo">foo</option></select>');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -97,7 +97,7 @@ describe('ParsleyUI', function () {
     expect($('#element').hasClass('parsley-success')).to.be(true);
     expect($('#element').hasClass('parsley-error')).to.be(false);
   });
-  it('should handle class-handler option', function () {
+  it('should handle class-handler option', () => {
     $('body').append(
       '<form id="element">'                                                                 +
         '<input id="field1" type="email" data-parsley-class-handler="#field2" required />'  +
@@ -109,11 +109,11 @@ describe('ParsleyUI', function () {
     $('#element').psly().destroy();
     $('#field1').removeAttr('data-parsley-class-handler');
     $('#element').psly({
-      classHandler: function () { return $('#field3'); }
+      classHandler: () => { return $('#field3'); }
     }).validate();
     expect($('#field3').hasClass('parsley-error')).to.be(true);
   });
-  it('should show higher priority error message by default', function () {
+  it('should show higher priority error message by default', () => {
     $('body').append('<input type="email" id="element" required />');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -125,7 +125,7 @@ describe('ParsleyUI', function () {
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
   });
-  it('should show all errors message if priority enabled set to false', function () {
+  it('should show all errors message if priority enabled set to false', () => {
     $('body').append('<input type="email" id="element" required data-parsley-priority-enabled="false"/>');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -137,7 +137,7 @@ describe('ParsleyUI', function () {
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
   });
-  it('should show custom error message by validator', function () {
+  it('should show custom error message by validator', () => {
     $('body').append('<input type="email" id="element" required data-parsley-required-message="foo" data-parsley-type-message="bar"/>');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -145,13 +145,13 @@ describe('ParsleyUI', function () {
     $('#element').val('foo').psly().validate();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('bar');
   });
-  it('should show custom error message with variabilized parameters', function () {
+  it('should show custom error message with variabilized parameters', () => {
     $('body').append('<input type="text" id="element" value="bar" data-parsley-minlength="7" data-parsley-minlength-message="foo %s bar"/>');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('foo 7 bar');
   });
-  it('should show custom error message for whole field', function () {
+  it('should show custom error message for whole field', () => {
     $('body').append('<input type="email" id="element" required data-parsley-error-message="baz"/>');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
@@ -161,21 +161,21 @@ describe('ParsleyUI', function () {
     $('#element').val('foo@bar.baz').psly().validate();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
   });
-  it('should display no error message if diabled', function () {
+  it('should display no error message if diabled', () => {
     $('body').append('<input type="email" id="element" required data-parsley-errors-messages-disabled />');
     var parsleyField = $('#element').psly();
     parsleyField.validate();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
     expect($('#element').hasClass('parsley-error')).to.be(true);
   });
-  it('should handle simple triggers (change, focus...)', function () {
+  it('should handle simple triggers (change, focus...)', () => {
     $('body').append('<input type="email" id="element" required data-parsley-trigger="change" />');
     var parsleyField = $('#element').psly();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
     $('#element').trigger($.Event('change'));
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
   });
-  it('should auto bind error trigger on select field error (input=text)', function () {
+  it('should auto bind error trigger on select field error (input=text)', () => {
     $('body').append('<input type="email" id="element" required />');
     var parsleyField = $('#element').psly();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
@@ -185,7 +185,7 @@ describe('ParsleyUI', function () {
     $('#element').val('foo').trigger($.Event('keyup'));
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
   });
-  it('should auto bind error trigger on select field error (select)', function () {
+  it('should auto bind error trigger on select field error (select)', () => {
     $('body').append('<select id="element" required>'+
       '<option value="">Choose</option>' +
       '<option value="foo">foo</option>' +
@@ -200,7 +200,7 @@ describe('ParsleyUI', function () {
     $('#element').trigger($.Event('change'));
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(false);
   });
-  it('should handle complex triggers (keyup, keypress...)', function () {
+  it('should handle complex triggers (keyup, keypress...)', () => {
     $('body').append('<input type="email" id="element" required data-parsley-trigger="keyup" />');
     var parsleyField = $('#element').psly();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
@@ -209,7 +209,7 @@ describe('ParsleyUI', function () {
     $('#element').val('foob').trigger($.Event('keyup'));
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
   });
-  it('should handle trigger keyup threshold validation', function () {
+  it('should handle trigger keyup threshold validation', () => {
     $('body').append('<input type="email" id="element" data-parsley-validation-threshold="2" required data-parsley-trigger="keyup" />');
     var parsleyField = $('#element').psly();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
@@ -218,14 +218,14 @@ describe('ParsleyUI', function () {
     $('#element').val('foo').trigger($.Event('keyup'));
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
   });
-  it('should handle UI disabling', function () {
+  it('should handle UI disabling', () => {
     $('body').append('<input type="email" id="element" data-parsley-ui-enabled="false" required data-parsley-trigger="keyup" />');
     var parsleyField = $('#element').psly();
     expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(0);
     parsleyField.validate();
     expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(0);
   });
-  it('should add novalidate on form elem', function () {
+  it('should add novalidate on form elem', () => {
     $('body').append(
       '<form id="element" data-parsley-trigger="change">'                 +
         '<input id="field1" type="text" data-parsley-required="true" />'  +
@@ -235,7 +235,7 @@ describe('ParsleyUI', function () {
     var parsleyForm = $('#element').parsley();
     expect($('#element').attr('novalidate')).not.to.be(undefined);
   });
-  it('should test the no-focus option', function () {
+  it('should test the no-focus option', () => {
     $('body').append(
       '<form id="element" data-parsley-focus="first">'                                          +
         '<input id="field1" type="text" data-parsley-required="true" data-parsley-no-focus />'  +
@@ -256,7 +256,7 @@ describe('ParsleyUI', function () {
     $('#element').psly().validate();
     expect($('#element').parsley()._focusedField.attr('id')).to.be('field2');
   });
-  it('should test the manual add / update / remove error', function () {
+  it('should test the manual add / update / remove error', () => {
     $('body').append('<input type="text" id="element" />');
     var parsleyField = $('#element').parsley();
     parsleyField.validate();
@@ -273,7 +273,7 @@ describe('ParsleyUI', function () {
     expect($('#element').hasClass('parsley-error')).to.be(false);
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
   });
-  it('should have a getErrorsMessage() method', function () {
+  it('should have a getErrorsMessage() method', () => {
     $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');
     var parsleyInstance = $('#element').parsley();
     parsleyInstance.validate();
@@ -285,20 +285,20 @@ describe('ParsleyUI', function () {
     expect(window.ParsleyUI.getErrorsMessages(parsleyInstance).length).to.be(2);
     expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value is too short. It should have 5 characters or more.');
   });
-  it('should not have errors ul created for excluded fields', function () {
+  it('should not have errors ul created for excluded fields', () => {
     $('body').append('<div id="hidden"><input type="hidden" id="element" value="foo" data-parsley-minlength="5" /></div>');
     var parsleyInstance = $('#element').parsley();
     expect($('#hidden ul').length).to.be(0);
     $('#hidden').remove();
   });
-  it('should remove filled class from errors container when reseting', function () {
+  it('should remove filled class from errors container when reseting', () => {
     $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');
     var parsleyInstance = $('#element').parsley();
     parsleyInstance.validate();
     parsleyInstance.reset();
     expect($('ul#parsley-id-' + parsleyInstance.__id__).hasClass('filled')).to.be(false);
   });
-  it('should re-bind error triggers after a reset (input=text)', function () {
+  it('should re-bind error triggers after a reset (input=text)', () => {
     $('body').append('<input type="text" id="element" required />');
     var parsleyInstance = $('#element').parsley();
     parsleyInstance.validate();
@@ -308,7 +308,7 @@ describe('ParsleyUI', function () {
     $('#element').val('foo').trigger($.Event('keyup'));
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
   });
-  it('should re-bind error triggers after a reset (select)', function () {
+  it('should re-bind error triggers after a reset (select)', () => {
     $('body').append('<select id="element" required>'+
       '<option value="">Choose</option>' +
       '<option value="foo">foo</option>' +
@@ -323,7 +323,7 @@ describe('ParsleyUI', function () {
     $('#element').trigger($.Event('change'));
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
   });
-  it('should re-bind custom triggers after a reset', function () {
+  it('should re-bind custom triggers after a reset', () => {
     $('body').append('<input type="text" id="element" required data-parsley-trigger="focusout" />');
     var parsleyInstance = $('#element').parsley();
     parsleyInstance.validate();
@@ -331,9 +331,9 @@ describe('ParsleyUI', function () {
     $('#element').trigger('focusout');
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(1);
   });
-  it('should handle custom error message for validators with compound names', function () {
+  it('should handle custom error message for validators with compound names', () => {
     $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
-    window.Parsley.addValidator('customValidator', function (value, requirement) {
+    window.Parsley.addValidator('customValidator', (value, requirement) => {
       return requirement === value;
     }, 32);
     var parsleyField = $('#element').psly();
@@ -341,7 +341,7 @@ describe('ParsleyUI', function () {
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').text()).to.be('custom-validator error');
     window.Parsley.removeValidator('customValidator');
   });
-  it('should handle custom error messages returned from custom validators', function () {
+  it('should handle custom error messages returned from custom validators', () => {
     $('body').append('<input type="text" value="1" id="element" data-parsley-custom-validator="2" data-parsley-custom-validator-message="custom-validator error"/>');
     window.Parsley.addValidator('customValidator', function (value, requirement) {
       return $.Deferred().reject("Hey, this ain't good at all").promise();
@@ -352,7 +352,7 @@ describe('ParsleyUI', function () {
     window.Parsley.removeValidator('customValidator');
   });
 
-  afterEach(function () {
+  afterEach(() => {
     $('#element, .parsley-errors-list').remove();
   });
 });

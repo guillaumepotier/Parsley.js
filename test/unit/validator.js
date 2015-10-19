@@ -1,8 +1,8 @@
 import ParsleyValidator from '../../src/parsley/validator';
 
-describe('Validator', function () {
+describe('Validator', () => {
   var testParsing = function(type, input, output, extraOptions) {
-    it('parses '+type+' requirements', function () {
+    it('parses '+type+' requirements', () => {
       var c = new ParsleyValidator({requirementType: type});
       expect(c.parseRequirements(input, extraOptions)).to.eql(output);
     });
@@ -18,6 +18,6 @@ describe('Validator', function () {
       'bar': 'string'
     }, '4.2',
     [4.2, {foo: 'FOO', bar: 'BAR'}],
-    function(value) { return value.toUpperCase(); }
+    value => { return value.toUpperCase(); }
   );
 });
