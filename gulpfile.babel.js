@@ -96,6 +96,13 @@ function build(done) {
   .catch(done);
 }
 
+function copyI18n(done) {
+  gulp.src(['src/i18n/*.js'])
+    .pipe($.replace("import Parsley from 'parsley';", "// Load this after Parsley"))  // Quick hack
+    .pipe(gulp.dest('dist/i18n/'))
+    .on('end', done);
+}
+
 function _runBrowserifyBundle(bundler) {
   return bundler.bundle()
     .on('error', err => {
@@ -194,7 +201,12 @@ gulp.task('lint-src', lintSrc);
 gulp.task('lint-test', lintTest);
 
 // Build two versions of the library
-gulp.task('build', ['lint-src', 'clean'], build);
+gulp.task('build-src', ['lint-src', 'clean', 'build-i18n'], build);
+
+// Build the i18n translations
+gulp.task('build-i18n', ['clean'], copyI18n);
+
+gulp.task('build', ['build-src', 'build-i18n']);
 
 // Lint and run our tests
 gulp.task('test', ['lint-src', 'lint-test'], test);
