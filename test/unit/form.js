@@ -239,7 +239,7 @@ describe('ParsleyForm', () => {
         })
         ;
     parsleyInstance = $('#element input').parsley()
-      .on('field:reset', function () {
+        .on('field:reset', function () {
           steps.push('field: ' + step);
           expect(this).to.be(parsleyInstance);
         });
