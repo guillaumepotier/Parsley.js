@@ -182,9 +182,8 @@ ParsleyUI.prototype = {
   },
 
   _diff: function (newResult, oldResult, deep) {
-    var
-      added = [],
-      kept = [];
+    var added = [];
+    var kept = [];
 
     for (var i = 0; i < newResult.length; i++) {
       var found = false;
@@ -220,7 +219,7 @@ ParsleyUI.prototype = {
   },
 
   setupField: function (fieldInstance) {
-    var _ui = { active: false };
+    var _ui = {active: false};
 
     // UI could be disabled
     if (false === fieldInstance.options.uiEnabled)
@@ -284,8 +283,7 @@ ParsleyUI.prototype = {
         return $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
       else
         ParsleyUtils.warn('The errors container `' + fieldInstance.options.errorsContainer + '` does not exist in DOM');
-    }
-    else if ('function' === typeof fieldInstance.options.errorsContainer)
+    } else if ('function' === typeof fieldInstance.options.errorsContainer)
       $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
 
     if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)

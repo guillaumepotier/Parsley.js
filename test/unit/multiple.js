@@ -206,7 +206,7 @@ describe('ParsleyMultiple', () => {
         '<input type="radio" name="radio" id="radio2" value="4" />'  +
       '</form>');
     // set specific namespace here for form
-    var parsleyInstance = $('#element').parsley({ namespace: 'foo-bar-' });
+    var parsleyInstance = $('#element').parsley({namespace: 'foo-bar-'});
     parsleyInstance.validate();
     expect($('ul.parsley-errors-list li').length).to.be(1);
     $('#radio2').trigger('click').trigger('change');

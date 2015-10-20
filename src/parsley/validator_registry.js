@@ -104,9 +104,9 @@ ParsleyValidatorRegistry.prototype = {
   },
 
   // Add messages for a given locale
-  addMessages: function (locale, name_message_object) {
-    for (var name in name_message_object)
-      this.addMessage(locale, name, name_message_object[name]);
+  addMessages: function (locale, nameMessageObject) {
+    for (var name in nameMessageObject)
+      this.addMessage(locale, name, nameMessageObject[name]);
 
     return this;
   },

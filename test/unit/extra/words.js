@@ -5,7 +5,7 @@ import Parsley from '../../../src/parsley';
 import words from '../../../src/extra/validator/words';
 
 describe('extra/validator/words', () => {
- it('should have a minwords validator', () => {
+  it('should have a minwords validator', () => {
     $('body').append('<input type="text" id="element" data-parsley-minwords="2" required />');
     expect($('#element').psly().isValid()).to.be(false);
     $('#element').val('foo');

@@ -11,7 +11,7 @@ import ParsleyFactory from './factory';
 
 var vernums = $.fn.jquery.split('.');
 if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
-  throw "The loaded version of jQuery is too old. Please upgrade to 1.8.x or better."
+  throw "The loaded version of jQuery is too old. Please upgrade to 1.8.x or better.";
 }
 
 // Inherit `on`, `off` & `trigger` to Parsley:
@@ -73,7 +73,7 @@ window.ParsleyValidator = {};
 $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator'.split(' '), function (i, method) {
   window.Parsley[method] = $.proxy(registry, method);
   window.ParsleyValidator[method] = function () {
-    ParsleyUtils.warnOnce('Accessing the method `'+ method +'` through ParsleyValidator is deprecated. Simply call `window.Parsley.' + method + '(...)`');
+    ParsleyUtils.warnOnce(`Accessing the method '${method}' through ParsleyValidator is deprecated. Simply call 'window.Parsley.${method}(...)'`);
     return window.Parsley[method].apply(window.Parsley, arguments);
   };
 });

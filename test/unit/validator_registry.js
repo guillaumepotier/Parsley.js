@@ -25,8 +25,8 @@ describe('ParsleyValidatorRegistry', () => {
   it('should bind global config validators if given in constructor', () => {
     $.extend(true, Parsley.options, {
       validators: {
-        foo: { fn: () => {}, priority: 42 },
-        bar: { fn: () => {}, priority: 12 }
+        foo: {fn: () => {}, priority: 42},
+        bar: {fn: () => {}, priority: 12}
       }
     });
     var validator = new ParsleyValidatorRegistry(Parsley.options.validators);
@@ -180,19 +180,19 @@ describe('ParsleyValidatorRegistry', () => {
     $('#equalto').remove();
   });
   it('should handle proper error message for validators', () => {
-    expect(validatorRegistry.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('This value length is invalid. It should be between 3 and 6 characters long.');
-    expect(validatorRegistry.getErrorMessage({ name: 'notexisting' })).to.be('This value seems to be invalid.');
+    expect(validatorRegistry.getErrorMessage({name: 'length', requirements: [3, 6]})).to.be('This value length is invalid. It should be between 3 and 6 characters long.');
+    expect(validatorRegistry.getErrorMessage({name: 'notexisting'})).to.be('This value seems to be invalid.');
   });
   it('should handle proper error message for validators in various languages', () => {
     validatorRegistry.setLocale('fr');
-    expect(validatorRegistry.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('Cette valeur doit contenir entre 3 et 6 caractères.');
-    expect(validatorRegistry.getErrorMessage({ name: 'notexisting' })).to.be('Cette valeur semble non valide.');
+    expect(validatorRegistry.getErrorMessage({name: 'length', requirements: [3, 6]})).to.be('Cette valeur doit contenir entre 3 et 6 caractères.');
+    expect(validatorRegistry.getErrorMessage({name: 'notexisting'})).to.be('Cette valeur semble non valide.');
   });
 
   it('should not break for an incomplete language', () => {
     validatorRegistry.addCatalog('klingon', {}, true);
-    expect(validatorRegistry.getErrorMessage({ name: 'type', requirements: 'email' })).to.be('This value seems to be invalid.');
-    expect(validatorRegistry.getErrorMessage({ name: 'length', requirements: [3, 6] })).to.be('This value seems to be invalid.');
+    expect(validatorRegistry.getErrorMessage({name: 'type', requirements: 'email'})).to.be('This value seems to be invalid.');
+    expect(validatorRegistry.getErrorMessage({name: 'length', requirements: [3, 6]})).to.be('This value seems to be invalid.');
   });
 
   afterEach(() => {
@@ -202,7 +202,7 @@ describe('ParsleyValidatorRegistry', () => {
   it('should warn if a custom validator has a reserved name', () => {
     $.extend(true, Parsley.options, {
       validators: {
-        excluded: { fn: () => {}, priority: 42 },
+        excluded: {fn: () => {}, priority: 42},
       }
     });
 

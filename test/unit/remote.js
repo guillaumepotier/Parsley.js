@@ -8,7 +8,7 @@ describe('ParsleyRemote', () => {
     restoreAjax();
     var deferred = $.Deferred();
     var xhr = $.extend(deferred.promise(), {status: status});
-    if(status === 200) {
+    if (status === 200) {
       deferred.resolve({}, 'success', 'xhr');
     } else {
       deferred.reject(xhr, 'error', 'error');
@@ -42,7 +42,7 @@ describe('ParsleyRemote', () => {
 
         $('#element').val('bar');
         parsleyInstance.whenValid()
-          .done(() => { done() });
+          .done(() => { done(); });
       });
   });
   it('should handle remote reverse option', done => {
@@ -56,7 +56,7 @@ describe('ParsleyRemote', () => {
 
         $('#element').val('bux');
         parsleyInstance.whenValid()
-          .done(() => { done() });
+          .done(() => { done(); });
       });
   });
   it('should handle remote options', done => {
@@ -122,7 +122,7 @@ describe('ParsleyRemote', () => {
 
             $('#element').val('fooquux');
             parsleyInstance.whenValid()
-              .done(() => { done() });
+              .done(() => { done(); });
           });
       });
   });
@@ -161,7 +161,7 @@ describe('ParsleyRemote', () => {
     var parsleyInstance =
       $('<form id="element"><input type="text" required></form>')
       .appendTo('body')
-      .on('submit', evt => { evt.preventDefault(); } )
+      .on('submit', evt => { evt.preventDefault(); })
       .parsley();
     window.Parsley._remoteCache = {dummy: 42};
     $('#element').submit();

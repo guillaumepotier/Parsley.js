@@ -56,11 +56,10 @@ ParsleyFactory.prototype = {
   // Multiples fields are a real nightmare :(
   // Maybe some refactoring would be appreciated here...
   handleMultiple: function () {
-    var
-      that = this,
-      name,
-      multiple,
-      parsleyMultipleInstance;
+    var that = this;
+    var name;
+    var multiple;
+    var parsleyMultipleInstance;
 
     // Handle multiple name
     if (this.options.multiple)
@@ -150,7 +149,7 @@ ParsleyFactory.prototype = {
       return parsleyInstance;
     }
 
-     // Store the freshly bound instance in a DOM element for later access using jQuery `data()`
+    // Store the freshly bound instance in a DOM element for later access using jQuery `data()`
     this.$element.data('Parsley', parsleyInstance);
 
     // Tell the world we have a new ParsleyForm or ParsleyField instance!

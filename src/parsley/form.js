@@ -15,7 +15,7 @@ var ParsleyForm = function (element, domOptions, options) {
   this.validationResult = null;
 };
 
-var statusMapping = { pending: null, resolved: true, rejected: false };
+var statusMapping = {pending: null, resolved: true, rejected: false};
 
 ParsleyForm.prototype = {
   onSubmitValidate: function (event) {
@@ -39,8 +39,8 @@ ParsleyForm.prototype = {
     event.preventDefault();
 
     this.whenValidate(undefined, undefined, event)
-      .done(function() { that._submit(); })
-      .always(function() { that._$submitSource = null; });
+      .done(function () { that._submit(); })
+      .always(function () { that._$submitSource = null; });
 
     return this;
   },
@@ -51,7 +51,7 @@ ParsleyForm.prototype = {
   // internal
   // _submit submits the form, this time without going through the validations.
   // Care must be taken to "fake" the actual submit button being clicked.
-  _submit: function() {
+  _submit: function () {
     if (false === this._trigger('submit'))
       return;
     this.$element.find('.parsley_synthetic_submit_button').remove();
@@ -63,7 +63,7 @@ ParsleyForm.prototype = {
       .appendTo(this.$element);
     }
     //
-    this.$element.trigger($.extend($.Event('submit'), { parsley: true }));
+    this.$element.trigger($.extend($.Event('submit'), {parsley: true}));
   },
 
   // Performs validation on fields while triggering events.
@@ -86,7 +86,7 @@ ParsleyForm.prototype = {
     // Refresh form DOM options and form's fields that could have changed
     this._refreshFields();
 
-    var promises = this._withoutReactualizingFormOptions(function(){
+    var promises = this._withoutReactualizingFormOptions(function () {
       return $.map(this.fields, function(field) {
         // do not validate a field if not the same as given validation group
         if (!group || that._isFieldInGroup(field, group))
@@ -94,7 +94,7 @@ ParsleyForm.prototype = {
       });
     });
 
-    var promiseBasedOnValidationResult = function() {
+    var promiseBasedOnValidationResult = function () {
       var r = $.Deferred();
       if (false === that.validationResult)
         r.reject();
@@ -102,9 +102,9 @@ ParsleyForm.prototype = {
     };
 
     return $.when.apply($, promises)
-      .done(  function() { that._trigger('success'); })
-      .fail(  function() { that.validationResult = false; that._trigger('error'); })
-      .always(function() { that._trigger('validated'); })
+      .done(  function () { that._trigger('success'); })
+      .fail(  function () { that.validationResult = false; that._trigger('error'); })
+      .always(function () { that._trigger('validated'); })
       .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
   },
 
@@ -123,7 +123,7 @@ ParsleyForm.prototype = {
     var that = this;
     this._refreshFields();
 
-    var promises = this._withoutReactualizingFormOptions(function(){
+    var promises = this._withoutReactualizingFormOptions(function () {
       return $.map(this.fields, function(field) {
         // do not validate a field if not the same as given validation group
         if (!group || that._isFieldInGroup(field, group))
@@ -134,7 +134,7 @@ ParsleyForm.prototype = {
   },
 
   _isFieldInGroup: function (field, group) {
-    if($.isArray(field.options.group))
+    if ($.isArray(field.options.group))
       return -1 !== $.inArray(group, field.options.group);
     return field.options.group === group;
   },
@@ -144,13 +144,13 @@ ParsleyForm.prototype = {
   },
 
   _bindFields: function () {
-    var self = this,
-      oldFields = this.fields;
+    var self = this;
+    var oldFields = this.fields;
 
     this.fields = [];
     this.fieldsMappedById = {};
 
-    this._withoutReactualizingFormOptions(function(){
+    this._withoutReactualizingFormOptions(function () {
       this.$element
       .find(this.options.inputs)
       .not(this.options.excluded)
@@ -181,7 +181,7 @@ ParsleyForm.prototype = {
   // the method actualizeOptions on this form while `fn` is called.
   _withoutReactualizingFormOptions: function (fn) {
     var oldActualizeOptions = this.actualizeOptions;
-    this.actualizeOptions = function() { return this; };
+    this.actualizeOptions = function () { return this; };
     var result = fn.call(this); // Keep the current `this`.
     this.actualizeOptions = oldActualizeOptions;
     return result;

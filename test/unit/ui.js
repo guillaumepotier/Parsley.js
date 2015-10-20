@@ -309,7 +309,7 @@ describe('ParsleyUI', () => {
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
   });
   it('should re-bind error triggers after a reset (select)', () => {
-    $('body').append('<select id="element" required>'+
+    $('body').append('<select id="element" required>' +
       '<option value="">Choose</option>' +
       '<option value="foo">foo</option>' +
       '<option value="bar">bar</option>' +

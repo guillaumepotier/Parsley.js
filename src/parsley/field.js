@@ -26,7 +26,7 @@ var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
   this._bindConstraints();
 };
 
-var statusMapping = { pending: null, resolved: true, rejected: false };
+var statusMapping = {pending: null, resolved: true, rejected: false};
 
 ParsleyField.prototype = {
   // # Public API
@@ -53,9 +53,9 @@ ParsleyField.prototype = {
     this._trigger('validate');
 
     return this.whenValid(force, this.value)
-      .done(function()   { that._trigger('success'); })
-      .fail(function()   { that._trigger('error'); })
-      .always(function() { that._trigger('validated'); });
+      .done(function ()   { that._trigger('success'); })
+      .fail(function ()   { that._trigger('error'); })
+      .always(function () { that._trigger('validated'); });
   },
 
   hasConstraints: function () {
@@ -170,7 +170,6 @@ ParsleyField.prototype = {
   /**
   * Add a new constraint to a field
   *
-  * @method addConstraint
   * @param {String}   name
   * @param {Mixed}    requirements      optional
   * @param {Number}   priority          optional
@@ -214,7 +213,8 @@ ParsleyField.prototype = {
   // Internal only.
   // Bind constraints from config + options + DOM
   _bindConstraints: function () {
-    var constraints = [], constraintsByName = {};
+    var constraints = [];
+    var constraintsByName = {};
 
     // clean all existing DOM constraints to only keep javascript user constraints
     for (var i = 0; i < this.constraints.length; i++)

@@ -1,15 +1,16 @@
 import $ from 'jquery';
 
-var globalID = 1,
-  pastWarnings = {};
+var globalID = 1;
+var pastWarnings = {};
 
 var ParsleyUtils = {
   // Parsley DOM-API
   // returns object from dom attributes and values
   attr: function ($element, namespace, obj) {
-    var
-      i, attribute, attributes,
-      regex = new RegExp('^' + namespace, 'i');
+    var i;
+    var attribute;
+    var attributes;
+    var regex = new RegExp('^' + namespace, 'i');
 
     if ('undefined' === typeof obj)
       obj = {};
@@ -81,7 +82,7 @@ var ParsleyUtils = {
       .toLowerCase();
   },
 
-  warn: function() {
+  warn: function () {
     if (window.console && 'function' === typeof window.console.warn)
       window.console.warn.apply(window.console, arguments);
   },
@@ -93,7 +94,7 @@ var ParsleyUtils = {
     }
   },
 
-  _resetWarnings: function() {
+  _resetWarnings: function () {
     pastWarnings = {};
   },
 

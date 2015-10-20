@@ -55,11 +55,10 @@ Parsley.addValidator('remote', {
   },
 
   validateString: function (value, url, options, instance) {
-    var
-      data = {},
-      ajaxOptions,
-      csr,
-      validator = options.validator || (true === options.reverse ? 'reverse' : 'default');
+    var data = {};
+    var ajaxOptions;
+    var csr;
+    var validator = options.validator || (true === options.reverse ? 'reverse' : 'default');
 
     if ('undefined' === typeof Parsley.asyncValidators[validator])
       throw new Error('Calling an undefined async validator: `' + validator + '`');
@@ -95,7 +94,7 @@ Parsley.addValidator('remote', {
     // Try to retrieve stored xhr
     var xhr = Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions);
 
-    var handleXhr = function() {
+    var handleXhr = function () {
       var result = Parsley.asyncValidators[validator].fn.call(instance, xhr, url, options);
       if (!result) // Map falsy results to rejected promise
         result = $.Deferred().reject();

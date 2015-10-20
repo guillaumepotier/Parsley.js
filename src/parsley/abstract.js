@@ -50,7 +50,7 @@ ParsleyAbstract.prototype = {
       if (!fn) {
         delete this._listeners[name];
       } else {
-        for(var i = queue.length; i--; )
+        for (var i = queue.length; i--; )
           if (queue[i] === fn)
             queue.splice(i, 1);
       }
@@ -69,9 +69,10 @@ ParsleyAbstract.prototype = {
   trigger: function (name, target, extraArg) {
     target = target || this;
     var queue = this._listeners && this._listeners[name];
-    var result, parentResult;
+    var result;
+    var parentResult;
     if (queue) {
-      for(var i = queue.length; i--; ) {
+      for (var i = queue.length; i--; ) {
         result = queue[i].call(target, target, extraArg);
         if (result === false) return result;
       }
@@ -114,13 +115,13 @@ ParsleyAbstract.prototype = {
     this._trigger('destroy');
   },
 
-  asyncIsValid: function() {
+  asyncIsValid: function () {
     ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenIsValid instead");
     return this.whenValid.apply(this, arguments);
   },
 
-  _findRelatedMultiple: function() {
-    return this.parent.$element.find('[' + this.options.namespace + 'multiple="' + this.options.multiple +'"]');
+  _findRelatedMultiple: function () {
+    return this.parent.$element.find(`[${this.options.namespace}multiple="${this.options.multiple}"]`);
   }
 };
 

@@ -8,7 +8,7 @@ describe('extra/validator/dateiso', () => {
 
   it('should have dateiso validator', () => {
     var expectValidation = function(value, name, requirements) {
-      var field = $('<input>').parsley()
+      var field = $('<input>').parsley();
       field.options[name] = requirements;
       return expect(field.isValid(true, value));
     };

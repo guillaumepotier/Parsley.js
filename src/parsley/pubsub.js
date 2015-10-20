@@ -3,11 +3,10 @@ import ParsleyField from './field';
 import ParsleyForm from './form';
 import ParsleyUtils from './utils';
 
-var
-  o = $({}),
-  deprecated = function () {
-    ParsleyUtils.warnOnce("Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley");
-  };
+var o = $({});
+var deprecated = function () {
+  ParsleyUtils.warnOnce("Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley");
+};
 
 // Returns an event handler that calls `fn` with the arguments it expects
 function adapt(fn, context) {
@@ -73,7 +72,7 @@ $.unsubscribeTo = function (instance, name) {
 $.unsubscribeAll = function (name) {
   deprecated();
   window.Parsley.off(eventName(name));
-  $('form,input,textarea,select').each(function() {
+  $('form,input,textarea,select').each(function () {
     var instance = $(this).data('Parsley');
     if (instance) {
       instance.off(eventName(name));

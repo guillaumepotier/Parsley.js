@@ -69,7 +69,7 @@ describe('ParsleyFactory', () => {
     // option on the go
     $('#element').parsley().destroy();
     expect(new ParsleyFactory($('#element'), {
-      namespace: "data-bar-"
+      namespace: 'data-bar-'
     }).options.namespace).to.be('data-bar-');
 
     // data- DOM-API
