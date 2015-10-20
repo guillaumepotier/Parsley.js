@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.el = jQuery.extend(window.ParsleyConfig.i18n.el || {}, {
+Parsley.addMessages('el', {
   defaultMessage: "Η τιμή φαίνεται να είναι μη έγκυρη.",
   type: {
     email:        "Η τιμή πρέπει να είναι ένα έγκυρο email.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.el = jQuery.extend(window.ParsleyConfig.i18n.el || {},
   equalto:        "Η τιμή πρέπει να είναι η ίδια."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('el', window.ParsleyConfig.i18n.el, true);
+Parsley.setLocale('el');

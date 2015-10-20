@@ -1,7 +1,7 @@
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-window.ParsleyConfig.i18n.ms_MY = jQuery.extend(window.ParsleyConfig.i18n.ms_MY || {}, {
+Parsley.addMessages('ms', {
   dateiso:  "Nilai hendaklah berbentuk tarikh yang sah (YYYY-MM-DD).",
   minwords: "Ayat terlalu pendek. Ianya perlu sekurang-kurangnya %s patah perkataan.",
   maxwords: "Ayat terlalu panjang. Ianya tidak boleh melebihi %s patah perkataan.",

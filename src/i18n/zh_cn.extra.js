@@ -1,6 +1,6 @@
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-window.ParsleyConfig.i18n.zh_cn = jQuery.extend(window.ParsleyConfig.i18n.zh_cn || {}, {
+Parsley.addMessages('zh-cn', {
   dateiso: "请输入正确格式的日期 (YYYY-MM-DD)."
 });

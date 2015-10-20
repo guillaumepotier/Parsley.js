@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.ms_MY = jQuery.extend(window.ParsleyConfig.i18n.ms_MY || {}, {
+Parsley.addMessages('ms', {
   defaultMessage: "Nilai tidak sah.",
   type: {
     email:        "Nilai mestilah dalam format emel yang sah.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.ms_MY = jQuery.extend(window.ParsleyConfig.i18n.ms_MY 
   equalto:        "Nilai dimasukkan hendaklah sama."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('ms_MY', window.ParsleyConfig.i18n.ms_MY, true);
+Parsley.setLocale('ms');

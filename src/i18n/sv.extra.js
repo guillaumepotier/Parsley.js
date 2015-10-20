@@ -1,6 +1,6 @@
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-window.ParsleyConfig.i18n.sv = jQuery.extend(window.ParsleyConfig.i18n.sv || {}, {
+Parsley.addMessages('sv', {
   dateiso: "Ange ett giltigt datum (ÅÅÅÅ-MM-DD)."
 });

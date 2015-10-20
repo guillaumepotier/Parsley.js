@@ -1,7 +1,7 @@
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-window.ParsleyConfig.i18n.cs = jQuery.extend(window.ParsleyConfig.i18n.cs || {}, {
+Parsley.addMessages('cs', {
   dateiso:  "Tato položka musí být datum ve formátu RRRR-MM-DD.",
   minwords: "Tato položka musí mít délku nejméně %s slov.",
   maxwords: "Tato položka musí mít délku nejvíce %s slov.",

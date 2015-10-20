@@ -1,6 +1,6 @@
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-window.ParsleyConfig.i18n.id = jQuery.extend(window.ParsleyConfig.i18n.id || {}, {
+Parsley.addMessages('id', {
   dateiso: "Harus tanggal yang valid (YYYY-MM-DD)."
 });

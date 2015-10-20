@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.th = jQuery.extend(window.ParsleyConfig.i18n.th || {}, {
+Parsley.addMessages('th', {
   defaultMessage: "ค่านี้ดูเหมือนว่าจะไม่ถูกต้อง",
   type: {
     email:        "ค่านี้ควรจะเป็นอีเมลที่ถูกต้อง",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.th = jQuery.extend(window.ParsleyConfig.i18n.th || {},
   equalto:        "ค่านี้ควรจะเหมือนกัน"
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('th', window.ParsleyConfig.i18n.th, true);
+Parsley.setLocale('th');

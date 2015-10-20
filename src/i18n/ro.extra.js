@@ -1,7 +1,7 @@
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-window.ParsleyConfig.i18n.ro = jQuery.extend(window.ParsleyConfig.i18n.ro || {}, {
+Parsley.addMessages('ro', {
   dateiso:   "Trebuie să fie o dată corectă (YYYY-MM-DD).",
   minwords:  "Textul e prea scurt. Trebuie să aibă cel puțin %s cuvinte.",
   maxwords:  "Textul e prea lung. Trebuie să aibă cel mult %s cuvinte.",

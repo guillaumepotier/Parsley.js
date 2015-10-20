@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.sq = jQuery.extend(window.ParsleyConfig.i18n.sq || {}, {
+Parsley.addMessages('sq', {
   defaultMessage: "Kjo vlere eshte e pasakte.",
   type: {
     email:        "Duhet te jete nje email i vlefshem.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.sq = jQuery.extend(window.ParsleyConfig.i18n.sq || {},
   equalto:        "Kjo vlere duhet te jete e njejte."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('sq', window.ParsleyConfig.i18n.sq, true);
+Parsley.setLocale('sq');

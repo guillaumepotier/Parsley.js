@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.ro = jQuery.extend(window.ParsleyConfig.i18n.ro || {}, {
+Parsley.addMessages('ro', {
   defaultMessage: "Acest câmp nu este completat corect.",
   type: {
     email:        "Trebuie să scrii un email valid.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.ro = jQuery.extend(window.ParsleyConfig.i18n.ro || {},
   equalto:        "Trebuie să fie la fel."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('ro', window.ParsleyConfig.i18n.ro, true);
+Parsley.setLocale('ro');

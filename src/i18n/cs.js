@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.cs = jQuery.extend(window.ParsleyConfig.i18n.cs || {}, {
+Parsley.addMessages('cs', {
   defaultMessage: "Tato položka je neplatná.",
   type: {
     email:        "Tato položka musí být e-mailová adresa.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.cs = jQuery.extend(window.ParsleyConfig.i18n.cs || {},
   equalto:        "Tato položka musí být stejná."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('cs', window.ParsleyConfig.i18n.cs, true);
+Parsley.setLocale('cs');

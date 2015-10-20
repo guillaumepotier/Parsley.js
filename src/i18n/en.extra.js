@@ -1,7 +1,7 @@
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-window.ParsleyConfig.i18n.en = jQuery.extend(window.ParsleyConfig.i18n.en || {}, {
+Parsley.addMessages('en', {
   dateiso:  "This value should be a valid date (YYYY-MM-DD).",
   minwords: "This value is too short. It should have %s words or more.",
   maxwords: "This value is too long. It should have %s words or fewer.",

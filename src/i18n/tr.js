@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.tr = jQuery.extend(window.ParsleyConfig.i18n.tr || {}, {
+Parsley.addMessages('tr', {
   defaultMessage: "Girdiğiniz değer geçerli değil.",
   type: {
     email:        "Geçerli bir e-mail adresi yazmanız gerekiyor.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.tr = jQuery.extend(window.ParsleyConfig.i18n.tr || {},
   equalto:        "Bu alanın değeri aynı olmalı."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('tr', window.ParsleyConfig.i18n.tr, true);
+Parsley.setLocale('tr');

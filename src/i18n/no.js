@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.no = jQuery.extend(window.ParsleyConfig.i18n.no || {}, {
+Parsley.addMessages('no', {
   defaultMessage: "Verdien er ugyldig.",
   type: {
     email:        "Verdien må være en gyldig e-post.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.no = jQuery.extend(window.ParsleyConfig.i18n.no || {},
   equalto:        "Verdien må være lik."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('no', window.ParsleyConfig.i18n.no, true);
+Parsley.setLocale('no');

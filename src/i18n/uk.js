@@ -1,14 +1,7 @@
-// Parsley localization for Ukrainian language
-// Alexander Shepetko
-// https://github.com/ashep
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
-
-// Define then the messages
-window.ParsleyConfig.i18n.uk = jQuery.extend(window.ParsleyConfig.i18n.uk || {}, {
+Parsley.addMessages('uk', {
   defaultMessage: "Некоректне значення.",
   type: {
     email:        "Введіть адресу електронної пошти.",
@@ -33,6 +26,4 @@ window.ParsleyConfig.i18n.uk = jQuery.extend(window.ParsleyConfig.i18n.uk || {},
   equalto:        "Це значення повинно збігатися."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('uk', window.ParsleyConfig.i18n.uk, true);
+Parsley.setLocale('uk');

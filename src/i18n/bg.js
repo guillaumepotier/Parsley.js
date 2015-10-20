@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.bg = jQuery.extend(window.ParsleyConfig.i18n.bg || {}, {
+Parsley.addMessages('bg', {
   defaultMessage: "Невалидна стойност.",
   type: {
     email:        "Невалиден имейл адрес.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.bg = jQuery.extend(window.ParsleyConfig.i18n.bg || {},
   equalto:        "Стойността трябва да съвпада."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('bg', window.ParsleyConfig.i18n.bg, true);
+Parsley.setLocale('bg');

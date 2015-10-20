@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.fi = jQuery.extend(window.ParsleyConfig.i18n.fi || {}, {
+Parsley.addMessages('fi', {
   defaultMessage: "Sy&ouml;tetty arvo on virheellinen.",
   type: {
     email:        "S&auml;hk&ouml;postiosoite on virheellinen.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.fi = jQuery.extend(window.ParsleyConfig.i18n.fi || {},
   equalto:        "Salasanat eiv&auml;t t&auml;sm&auml;&auml;."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('fi', window.ParsleyConfig.i18n.fi, true);
+Parsley.setLocale('fi');

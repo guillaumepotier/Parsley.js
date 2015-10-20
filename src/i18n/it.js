@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.it = jQuery.extend(window.ParsleyConfig.i18n.it || {}, {
+Parsley.addMessages('it', {
   defaultMessage: "Questo valore sembra essere non valido.",
   type: {
     email:        "Questo valore deve essere un indirizzo email valido.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.it = jQuery.extend(window.ParsleyConfig.i18n.it || {},
   equalto:        "Questo valore deve essere identico."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('it', window.ParsleyConfig.i18n.it, true);
+Parsley.setLocale('it');

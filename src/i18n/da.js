@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.da = jQuery.extend(window.ParsleyConfig.i18n.da || {}, {
+Parsley.addMessages('da', {
   defaultMessage: "Indtast venligst en korrekt værdi.",
   type: {
     email:        "Indtast venligst en korrekt emailadresse.",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.da = jQuery.extend(window.ParsleyConfig.i18n.da || {},
   equalto:        "De to felter er ikke ens."
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('da', window.ParsleyConfig.i18n.da, true);
+Parsley.setLocale('da');

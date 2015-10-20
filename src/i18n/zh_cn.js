@@ -1,9 +1,7 @@
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
-// Define then the messages
-window.ParsleyConfig.i18n.zh_cn = jQuery.extend(window.ParsleyConfig.i18n.zh_cn || {}, {
+Parsley.addMessages('zh-cn', {
   defaultMessage: "不正确的值",
   type: {
     email:        "请输入一个有效的电子邮箱地址",
@@ -28,6 +26,4 @@ window.ParsleyConfig.i18n.zh_cn = jQuery.extend(window.ParsleyConfig.i18n.zh_cn 
   equalto:        "输入值不同"
 });
 
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('zh_cn', window.ParsleyConfig.i18n.zh_cn, true);
+Parsley.setLocale('zh-cn');
