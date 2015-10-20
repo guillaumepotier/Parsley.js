@@ -6,7 +6,7 @@ import jQuery from 'jquery'; // Remove this line in ES3
 
 (function ($) {
 
-  window.ParsleyConfig = $.extend(true, window.ParsleyConfig, { autoBind: false });
+  window.ParsleyConfig = $.extend(true, window.ParsleyConfig, {autoBind: false});
   window.ParsleyExtend = window.ParsleyExtend || {};
 
   window.ParsleyExtend = $.extend(window.ParsleyExtend, {
