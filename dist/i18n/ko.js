@@ -1,31 +1,7 @@
-/*!
-* Parsleyjs
-* Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.2.0-rc2 - built Tue Oct 06 2015 10:20:13
-* MIT Licensed
-*
-*/
-!(function (factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module depending on jQuery.
-    define(['jquery'], factory);
-  } else if (typeof exports === 'object') {
-    // Node/CommonJS
-    module.exports = factory(require('jquery'));
-  } else {
-    // Register plugin with global jQuery object.
-    factory(jQuery);
-  }
-}(function ($) {
-  // small hack for requirejs if jquery is loaded through map and not path
-  // see http://requirejs.org/docs/jquery.html
-  if ('undefined' === typeof $ && 'undefined' !== typeof window.jQuery)
-    $ = window.jQuery;
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
-// Define then the messages
-window.ParsleyConfig.i18n.ko = jQuery.extend(window.ParsleyConfig.i18n.ko || {}, {
+// Validation errors messages for Parsley
+// Load this after Parsley
+
+Parsley.addMessages('ko', {
   defaultMessage: "입력하신 내용이 올바르지 않습니다.",
   type: {
     email:        "입력하신 이메일이 유효하지 않습니다.",
@@ -49,7 +25,5 @@ window.ParsleyConfig.i18n.ko = jQuery.extend(window.ParsleyConfig.i18n.ko || {},
   check:          "선택하신 내용이 %s보다 크거나 %s보다 작아야 합니다.",
   equalto:        "같은 값을 입력하여 주십시오."
 });
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('ko', window.ParsleyConfig.i18n.ko, true);
-}));
+
+Parsley.setLocale('ko');

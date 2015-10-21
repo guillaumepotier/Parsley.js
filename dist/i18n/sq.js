@@ -1,31 +1,7 @@
-/*!
-* Parsleyjs
-* Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.2.0-rc2 - built Tue Oct 06 2015 10:20:13
-* MIT Licensed
-*
-*/
-!(function (factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module depending on jQuery.
-    define(['jquery'], factory);
-  } else if (typeof exports === 'object') {
-    // Node/CommonJS
-    module.exports = factory(require('jquery'));
-  } else {
-    // Register plugin with global jQuery object.
-    factory(jQuery);
-  }
-}(function ($) {
-  // small hack for requirejs if jquery is loaded through map and not path
-  // see http://requirejs.org/docs/jquery.html
-  if ('undefined' === typeof $ && 'undefined' !== typeof window.jQuery)
-    $ = window.jQuery;
-// ParsleyConfig definition if not already set
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.i18n = window.ParsleyConfig.i18n || {};
-// Define then the messages
-window.ParsleyConfig.i18n.sq = jQuery.extend(window.ParsleyConfig.i18n.sq || {}, {
+// Validation errors messages for Parsley
+// Load this after Parsley
+
+Parsley.addMessages('sq', {
   defaultMessage: "Kjo vlere eshte e pasakte.",
   type: {
     email:        "Duhet te jete nje email i vlefshem.",
@@ -49,7 +25,5 @@ window.ParsleyConfig.i18n.sq = jQuery.extend(window.ParsleyConfig.i18n.sq || {},
   check:          "Ju mund te zgjidhni midis %s dhe %s vlerash.",
   equalto:        "Kjo vlere duhet te jete e njejte."
 });
-// If file is loaded after Parsley main file, auto-load locale
-if ('undefined' !== typeof window.ParsleyValidator)
-  window.ParsleyValidator.addCatalog('sq', window.ParsleyConfig.i18n.sq, true);
-}));
+
+Parsley.setLocale('sq');
