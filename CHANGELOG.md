@@ -1,5 +1,11 @@
 # Parsley 2.x changelog
 
+## 2.2.0-rc3
+
+- Merged both versions (remote and basic) of Parsley.
+  There is now a single version that is remote & promise aware.
+- Converted src/ and test/ to ECMAScript 6.
+
 ## 2.2.0-rc2
 
 - A custom validator may specify an error message by simply passing it as first argument

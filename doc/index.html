@@ -108,7 +108,7 @@
             Parsley relies on <strong><a href="http://jquery.com/" target="_blank">jQuery</a> (>= 1.8)</strong>, and it will need to be included before including Parsley.
           </p>
           <p>
-            Then, you can either use <code>parsley.js</code> unminified file or <code>parsley.min.js</code> minified one. These files and other builds (<a href="#remote">Remote</a>, <a href="#extras">Extras</a> ..) are <a href="download.html">available here</a>.
+            Then, you can either use <code>parsley.js</code> unminified file or <code>parsley.min.js</code> minified one. These files and and <a href="#extras">extras</a> are <a href="download.html">available here</a>.
           </p>
           <p>
             Finally, add <code>data-parsley-validate</code> to each <code>&lt;form></code> you want to be validated.
@@ -186,12 +186,7 @@
           <p>
             Parsley strives to be highly decoupled and modular. It uses events and inheritance, and allows various plugins.
           </p>
-          <p>Current available plugins are:
-            <ul>
-              <li><a href="#remote">Parsley Remote</a>: provides an ajax validator and asynchronous validation</li>
-              <li><a href="#extras">Parsley Extras</a>: provides some extras and useful validators</li>
-            </ul>
-          </p>
+          <p>Current available plugins are in <a href="#extras">Extras</a> for additional validators.</p>
 
           <!-- ****************** USAGE ****************** -->
           <h1 id="usage" class="page-header">Usage</h1>
@@ -778,7 +773,7 @@ if (false === instance.options.priorityEnabled)
           </table>
 
           <p>
-            These validators are shipped in <code>parsley.js</code>. Have a look at the <a href="#remote">Parsley Remote</a> plugin and <a href="#extras">Parsley Extras</a> for more validators.
+            These validators are shipped in <code>parsley.js</code>. Have a look at <a href="#extras">Parsley Extras</a> for more validators.
           </p>
 
           <h1 id="custom">Custom Validators</h3>
@@ -1102,11 +1097,7 @@ window.Parsley
         <!-- ****************** Remote ****************** -->
         <h1 id="remote" class="page-header">Parsley Remote</h1>
         <p>
-          <a href="annotated-source/parsley.remote.html" target="_blank">Parsley remote</a> is a handy plugin that adds a <strong>unique ajax asynchronous validator</strong>.
-        </p>
-
-        <p>
-          To use this plugin, load <code>parsley.remote.js</code> <strong>instead</strong> of <code>parsley.js</code>.
+          Parsley <a href="annotated-source/parsley.remote.html" target="_blank">remote</a> is an easy to use <strong>ajax asynchronous validator</strong>.
         </p>
 
         <h3>Options</h3>
