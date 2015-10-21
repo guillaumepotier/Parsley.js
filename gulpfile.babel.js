@@ -156,7 +156,7 @@ function test() {
 
 function coverage(done) {
   _registerBabel();
-  gulp.src(['src/**/*.js'])
+  gulp.src([exportFileName + '.js'])
     .pipe($.istanbul({ instrumenter: isparta.Instrumenter }))
     .pipe($.istanbul.hookRequire())
     .on('finish', () => {
