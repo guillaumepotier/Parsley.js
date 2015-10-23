@@ -75,8 +75,11 @@ define(function () {
         expect($('#element').parsley().isValid()).to.be(true);
       });
       it('should have a type="number" validator', function () {
+        expectValidation('-',         'type', 'number').not.to.be(true);
         expectValidation('foo',       'type', 'number').not.to.be(true);
         expectValidation('1',         'type', 'number').to.be(true);
+        expectValidation('0.5',       'type', 'number').to.be(true);
+        expectValidation('.5',       'type', 'number').to.be(true);
         expectValidation('1.5',       'type', 'number').to.be(true);
         expectValidation('-1.5',      'type', 'number').to.be(true);
         expectValidation('1,500.642', 'type', 'number').to.be(true);
