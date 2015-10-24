@@ -13,7 +13,9 @@ var vernums = $.fn.jquery.split('.');
 if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
   throw "The loaded version of jQuery is too old. Please upgrade to 1.8.x or better.";
 }
-
+if (!vernums.forEach) {
+  ParsleyUtils.warn('Parsley requires ES5 to run properly. Please include https://github.com/es-shims/es5-shim');
+}
 // Inherit `on`, `off` & `trigger` to Parsley:
 var Parsley = $.extend(new ParsleyAbstract(), {
     $element: $(document),

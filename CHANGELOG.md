@@ -5,6 +5,7 @@
 - Merged both versions (remote and basic) of Parsley.
   There is now a single version that is remote & promise aware.
 - Converted src/ and test/ to ECMAScript 6.
+  Requires es5-shim if you need compatibility with IE8.
 
 ## 2.2.0-rc2
 
