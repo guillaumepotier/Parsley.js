@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>validator_registry.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+            
+              
+              <a class="source" href="parsley.html">
+                parsley.js
+              </a>
+            
+              
+              <a class="source" href="abstract.html">
+                abstract.js
+              </a>
+            
+              
+              <a class="source" href="defaults.html">
+                defaults.js
+              </a>
+            
+              
+              <a class="source" href="factory.html">
+                factory.js
+              </a>
+            
+              
+              <a class="source" href="field.html">
+                field.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
+              <a class="source" href="pubsub.html">
+                pubsub.js
+              </a>
+            
+              
+              <a class="source" href="remote.html">
+                remote.js
+              </a>
+            
+              
+              <a class="source" href="ui.html">
+                ui.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+              
+              <a class="source" href="validator_registry.html">
+                validator_registry.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>validator_registry.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> ParsleyDefaults <span class="hljs-keyword">from</span> <span class="hljs-string">'./defaults'</span>;
+<span class="hljs-keyword">import</span> ParsleyValidator <span class="hljs-keyword">from</span> <span class="hljs-string">'./validator'</span>;
+
+<span class="hljs-keyword">var</span> ParsleyValidatorRegistry = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">validators, catalog</span>) </span>{
+  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyValidatorRegistry'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Default Parsley locale is en</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">this</span>.locale = <span class="hljs-string">'en'</span>;
+
+  <span class="hljs-keyword">this</span>.init(validators || {}, catalog || {});
+};
+
+<span class="hljs-keyword">var</span> typeRegexes =  {
+  email: <span class="hljs-regexp">/^((([a-z]|\d|[!#\$%&amp;'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&amp;'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i</span>,
+
+  number: <span class="hljs-regexp">/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/</span>,
+
+  integer: <span class="hljs-regexp">/^-?\d+$/</span>,
+
+  digits: <span class="hljs-regexp">/^\d+$/</span>,
+
+  alphanum: <span class="hljs-regexp">/^\w+$/i</span>,
+
+  url: <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(
+      <span class="hljs-string">"^"</span> +</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>protocol identifier</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"(?:(?:https?|ftp)://)?"</span> + <span class="hljs-comment">// ** mod: make scheme optional</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>user:pass authentication</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"(?:\\S+(?::\\S*)?@)?"</span> +
+        <span class="hljs-string">"(?:"</span> +</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>IP address exclusion
+private &amp; local networks
+“(?!(?:10|127)(?:\.\d{1,3}){3})” +   // <strong> mod: allow local networks
+“(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})” +  // </strong> mod: allow local networks
+“(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})” +  // ** mod: allow local networks
+IP address dotted notation octets
+excludes loopback network 0.0.0.0
+excludes reserved space &gt;= 224.0.0.0
+excludes network &amp; broacast addresses
+(first &amp; last IP address of each class)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-string">"(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])"</span> +
+          <span class="hljs-string">"(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}"</span> +
+          <span class="hljs-string">"(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))"</span> +
+        <span class="hljs-string">"|"</span> +</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>host name</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-string">"(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)"</span> +</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>domain name</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-string">"(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*"</span> +</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>TLD identifier</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-string">"(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))"</span> +
+        <span class="hljs-string">")"</span> +</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>port number</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"(?::\\d{2,5})?"</span> +</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>resource path</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"(?:/\\S*)?"</span> +
+      <span class="hljs-string">"$"</span>, <span class="hljs-string">'i'</span>
+    )
+};
+typeRegexes.range = typeRegexes.number;
+
+ParsleyValidatorRegistry.prototype = {
+  init: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">validators, catalog</span>) </span>{
+    <span class="hljs-keyword">this</span>.catalog = catalog;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Copy prototype’s validators:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.validators = $.extend({}, <span class="hljs-keyword">this</span>.validators);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> validators)
+      <span class="hljs-keyword">this</span>.addValidator(name, validators[name].fn, validators[name].priority);
+
+    <span class="hljs-built_in">window</span>.Parsley.trigger(<span class="hljs-string">'parsley:validator:init'</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Set new messages locale if we have dictionary loaded in ParsleyConfig.i18n</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  setLocale: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">locale</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.catalog[locale])
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(locale + <span class="hljs-string">' is not available in the catalog'</span>);
+
+    <span class="hljs-keyword">this</span>.locale = locale;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Add a new messages catalog for a given locale. Set locale for this catalog if set === <code>true</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addCatalog: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">locale, messages, set</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> === <span class="hljs-keyword">typeof</span> messages)
+      <span class="hljs-keyword">this</span>.catalog[locale] = messages;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === set)
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setLocale(locale);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Add a specific message for a given constraint in a given locale</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">locale, name, message</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.catalog[locale])
+      <span class="hljs-keyword">this</span>.catalog[locale] = {};
+
+    <span class="hljs-keyword">this</span>.catalog[locale][name] = message;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Add messages for a given locale</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">locale, nameMessageObject</span>) </span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> nameMessageObject)
+      <span class="hljs-keyword">this</span>.addMessage(locale, name, nameMessageObject[name]);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Add a new validator</p>
+<p>   addValidator(‘custom’, {
+       requirementType: [‘integer’, ‘integer’],
+       validateString: function(value, from, to) {},
+       priority: 22,
+       messages: {
+         en: “Hey, that’s no good”,
+         fr: “Aye aye, pas bon du tout”,
+       }
+   })</p>
+<p>Old API was addValidator(name, function, priority)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, arg1, arg2</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.validators[name])
+      ParsleyUtils.warn(<span class="hljs-string">'Validator "'</span> + name + <span class="hljs-string">'" is already defined.'</span>);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ParsleyDefaults.hasOwnProperty(name)) {
+      ParsleyUtils.warn(<span class="hljs-string">'"'</span> + name + <span class="hljs-string">'" is a restricted keyword and is not a valid validator name.'</span>);
+      <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._setValidator.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+  },
+
+  updateValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, arg1, arg2</span>) </span>{
+    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.validators[name]) {
+      ParsleyUtils.warn(<span class="hljs-string">'Validator "'</span> + name + <span class="hljs-string">'" is not already defined.'</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addValidator.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._setValidator(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+  },
+
+  removeValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
+    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.validators[name])
+      ParsleyUtils.warn(<span class="hljs-string">'Validator "'</span> + name + <span class="hljs-string">'" is not defined.'</span>);
+
+    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.validators[name];
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },
+
+  _setValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, validator, priority</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> !== <span class="hljs-keyword">typeof</span> validator) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Old style validator, with <code>fn</code> and <code>priority</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      validator = {
+        fn: validator,
+        priority: priority
+      };
+    }
+    <span class="hljs-keyword">if</span> (!validator.validate) {
+      validator = <span class="hljs-keyword">new</span> ParsleyValidator(validator);
+    }
+    <span class="hljs-keyword">this</span>.validators[name] = validator;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> locale <span class="hljs-keyword">in</span> validator.messages || {})
+      <span class="hljs-keyword">this</span>.addMessage(locale, name, validator.messages[locale]);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },
+
+  getErrorMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">constraint</span>) </span>{
+    <span class="hljs-keyword">var</span> message;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Type constraints are a bit different, we have to match their requirements too to find right error message</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'type'</span> === constraint.name) {
+      <span class="hljs-keyword">var</span> typeMessages = <span class="hljs-keyword">this</span>.catalog[<span class="hljs-keyword">this</span>.locale][constraint.name] || {};
+      message = typeMessages[constraint.requirements];
+    } <span class="hljs-keyword">else</span>
+      message = <span class="hljs-keyword">this</span>.formatMessage(<span class="hljs-keyword">this</span>.catalog[<span class="hljs-keyword">this</span>.locale][constraint.name], constraint.requirements);
+
+    <span class="hljs-keyword">return</span> message || <span class="hljs-keyword">this</span>.catalog[<span class="hljs-keyword">this</span>.locale].defaultMessage || <span class="hljs-keyword">this</span>.catalog.en.defaultMessage;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Kind of light <code>sprintf()</code> implementation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  formatMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">string, parameters</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> === <span class="hljs-keyword">typeof</span> parameters) {
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> parameters)
+        string = <span class="hljs-keyword">this</span>.formatMessage(string, parameters[i]);
+
+      <span class="hljs-keyword">return</span> string;
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> string ? string.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'%s'</span>, <span class="hljs-string">'i'</span>), parameters) : <span class="hljs-string">''</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Here is the Parsley default validators list.
+A validator is an object with the following key values:</p>
+<ul>
+<li>priority: an integer</li>
+<li>requirement: ‘string’ (default), ‘integer’, ‘number’, ‘regexp’ or an Array of these</li>
+<li>validateString, validateMultiple, validateNumber: functions returning <code>true</code>, <code>false</code> or a promise
+Alternatively, a validator can be a function that returns such an object</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  validators: {
+    notblank: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-regexp">/\S/</span>.test(value);
+      },
+      priority: <span class="hljs-number">2</span>
+    },
+    required: {
+      validateMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">values</span>) </span>{
+        <span class="hljs-keyword">return</span> values.length &gt; <span class="hljs-number">0</span>;
+      },
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-regexp">/\S/</span>.test(value);
+      },
+      priority: <span class="hljs-number">512</span>
+    },
+    type: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, type</span>) </span>{
+        <span class="hljs-keyword">var</span> regex = typeRegexes[type];
+        <span class="hljs-keyword">if</span> (!regex)
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'validator type `'</span> + type + <span class="hljs-string">'` is not supported'</span>);
+        <span class="hljs-keyword">return</span> regex.test(value);
+      },
+      priority: <span class="hljs-number">256</span>
+    },
+    pattern: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, regexp</span>) </span>{
+        <span class="hljs-keyword">return</span> regexp.test(value);
+      },
+      requirementType: <span class="hljs-string">'regexp'</span>,
+      priority: <span class="hljs-number">64</span>
+    },
+    minlength: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, requirement</span>) </span>{
+        <span class="hljs-keyword">return</span> value.length &gt;= requirement;
+      },
+      requirementType: <span class="hljs-string">'integer'</span>,
+      priority: <span class="hljs-number">30</span>
+    },
+    maxlength: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, requirement</span>) </span>{
+        <span class="hljs-keyword">return</span> value.length &lt;= requirement;
+      },
+      requirementType: <span class="hljs-string">'integer'</span>,
+      priority: <span class="hljs-number">30</span>
+    },
+    length: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, min, max</span>) </span>{
+        <span class="hljs-keyword">return</span> value.length &gt;= min &amp;&amp; value.length &lt;= max;
+      },
+      requirementType: [<span class="hljs-string">'integer'</span>, <span class="hljs-string">'integer'</span>],
+      priority: <span class="hljs-number">30</span>
+    },
+    mincheck: {
+      validateMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">values, requirement</span>) </span>{
+        <span class="hljs-keyword">return</span> values.length &gt;= requirement;
+      },
+      requirementType: <span class="hljs-string">'integer'</span>,
+      priority: <span class="hljs-number">30</span>
+    },
+    maxcheck: {
+      validateMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">values, requirement</span>) </span>{
+        <span class="hljs-keyword">return</span> values.length &lt;= requirement;
+      },
+      requirementType: <span class="hljs-string">'integer'</span>,
+      priority: <span class="hljs-number">30</span>
+    },
+    check: {
+      validateMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">values, min, max</span>) </span>{
+        <span class="hljs-keyword">return</span> values.length &gt;= min &amp;&amp; values.length &lt;= max;
+      },
+      requirementType: [<span class="hljs-string">'integer'</span>, <span class="hljs-string">'integer'</span>],
+      priority: <span class="hljs-number">30</span>
+    },
+    min: {
+      validateNumber: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, requirement</span>) </span>{
+        <span class="hljs-keyword">return</span> value &gt;= requirement;
+      },
+      requirementType: <span class="hljs-string">'number'</span>,
+      priority: <span class="hljs-number">30</span>
+    },
+    max: {
+      validateNumber: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, requirement</span>) </span>{
+        <span class="hljs-keyword">return</span> value &lt;= requirement;
+      },
+      requirementType: <span class="hljs-string">'number'</span>,
+      priority: <span class="hljs-number">30</span>
+    },
+    range: {
+      validateNumber: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, min, max</span>) </span>{
+        <span class="hljs-keyword">return</span> value &gt;= min &amp;&amp; value &lt;= max;
+      },
+      requirementType: [<span class="hljs-string">'number'</span>, <span class="hljs-string">'number'</span>],
+      priority: <span class="hljs-number">30</span>
+    },
+    equalto: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, refOrValue</span>) </span>{
+        <span class="hljs-keyword">var</span> $reference = $(refOrValue);
+        <span class="hljs-keyword">if</span> ($reference.length)
+          <span class="hljs-keyword">return</span> value === $reference.val();
+        <span class="hljs-keyword">else</span>
+          <span class="hljs-keyword">return</span> value === refOrValue;
+      },
+      priority: <span class="hljs-number">256</span>
+    }
+  }
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyValidatorRegistry;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+</html>

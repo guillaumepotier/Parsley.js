@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>ui.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+            
+              
+              <a class="source" href="parsley.html">
+                parsley.js
+              </a>
+            
+              
+              <a class="source" href="abstract.html">
+                abstract.js
+              </a>
+            
+              
+              <a class="source" href="defaults.html">
+                defaults.js
+              </a>
+            
+              
+              <a class="source" href="factory.html">
+                factory.js
+              </a>
+            
+              
+              <a class="source" href="field.html">
+                field.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
+              <a class="source" href="pubsub.html">
+                pubsub.js
+              </a>
+            
+              
+              <a class="source" href="remote.html">
+                remote.js
+              </a>
+            
+              
+              <a class="source" href="ui.html">
+                ui.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+              
+              <a class="source" href="validator_registry.html">
+                validator_registry.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>ui.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+
+<span class="hljs-keyword">var</span> ParsleyUI = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyUI'</span>;
+};
+
+ParsleyUI.prototype = {
+  listen: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+    <span class="hljs-built_in">window</span>.Parsley
+    .on(<span class="hljs-string">'form:init'</span>,       <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.setupForm (<span class="hljs-keyword">this</span>); } )
+    .on(<span class="hljs-string">'field:init'</span>,      <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.setupField(<span class="hljs-keyword">this</span>); } )
+    .on(<span class="hljs-string">'field:validated'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.reflow    (<span class="hljs-keyword">this</span>); } )
+    .on(<span class="hljs-string">'form:validated'</span>,  <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.focus     (<span class="hljs-keyword">this</span>); } )
+    .on(<span class="hljs-string">'field:reset'</span>,     <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.reset     (<span class="hljs-keyword">this</span>); } )
+    .on(<span class="hljs-string">'form:destroy'</span>,    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.destroy   (<span class="hljs-keyword">this</span>); } )
+    .on(<span class="hljs-string">'field:destroy'</span>,   <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.destroy   (<span class="hljs-keyword">this</span>); } );
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },
+
+  reflow: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>If this field has not an active UI (case for multiples) don’t bother doing something</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> fieldInstance._ui || <span class="hljs-literal">false</span> === fieldInstance._ui.active)
+      <span class="hljs-keyword">return</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Diff between two validation results</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> diff = <span class="hljs-keyword">this</span>._diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Then store current validation result for next reflow</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Field have been validated at least once if here. Useful for binded key events…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fieldInstance._ui.validatedOnce = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Handle valid / invalid / none field class</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.manageStatusClass(fieldInstance);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Add, remove, updated errors messages</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.manageErrorsMessages(fieldInstance, diff);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Triggers impl</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.actualizeTriggers(fieldInstance);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ((diff.kept.length || diff.added.length) &amp;&amp; <span class="hljs-literal">true</span> !== fieldInstance._ui.failedOnce)
+      <span class="hljs-keyword">this</span>.manageFailingFieldTrigger(fieldInstance);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Returns an array of field’s error message(s)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  getErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>No error message, field is valid</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === fieldInstance.validationResult)
+      <span class="hljs-keyword">return</span> [];
+
+    <span class="hljs-keyword">var</span> messages = [];
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; fieldInstance.validationResult.length; i++)
+      messages.push(fieldInstance.validationResult[i].errorMessage ||
+       <span class="hljs-keyword">this</span>._getErrorMessage(fieldInstance, fieldInstance.validationResult[i].assert));
+
+    <span class="hljs-keyword">return</span> messages;
+  },
+
+  manageStatusClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    <span class="hljs-keyword">if</span> (fieldInstance.hasConstraints() &amp;&amp; fieldInstance.needsValidation() &amp;&amp; <span class="hljs-literal">true</span> === fieldInstance.validationResult)
+      <span class="hljs-keyword">this</span>._successClass(fieldInstance);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fieldInstance.validationResult.length &gt; <span class="hljs-number">0</span>)
+      <span class="hljs-keyword">this</span>._errorClass(fieldInstance);
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-keyword">this</span>._resetClass(fieldInstance);
+  },
+
+  manageErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance, diff</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsMessagesDisabled)
+      <span class="hljs-keyword">return</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Case where we have errorMessage option that configure an unique field error message, regardless failing validators</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> fieldInstance.options.errorMessage) {
+      <span class="hljs-keyword">if</span> ((diff.added.length || diff.kept.length)) {
+        <span class="hljs-keyword">this</span>._insertErrorWrapper(fieldInstance);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> === fieldInstance._ui.$errorsWrapper.find(<span class="hljs-string">'.parsley-custom-error-message'</span>).length)
+          fieldInstance._ui.$errorsWrapper
+            .append(
+              $(fieldInstance.options.errorTemplate)
+              .addClass(<span class="hljs-string">'parsley-custom-error-message'</span>)
+            );
+
+        <span class="hljs-keyword">return</span> fieldInstance._ui.$errorsWrapper
+          .addClass(<span class="hljs-string">'filled'</span>)
+          .find(<span class="hljs-string">'.parsley-custom-error-message'</span>)
+          .html(fieldInstance.options.errorMessage);
+      }
+
+      <span class="hljs-keyword">return</span> fieldInstance._ui.$errorsWrapper
+        .removeClass(<span class="hljs-string">'filled'</span>)
+        .find(<span class="hljs-string">'.parsley-custom-error-message'</span>)
+        .remove();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Show, hide, update failing constraints messages</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; diff.removed.length; i++)
+      <span class="hljs-keyword">this</span>.removeError(fieldInstance, diff.removed[i].assert.name, <span class="hljs-literal">true</span>);
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; diff.added.length; i++)
+      <span class="hljs-keyword">this</span>.addError(fieldInstance, diff.added[i].assert.name, diff.added[i].errorMessage, diff.added[i].assert, <span class="hljs-literal">true</span>);
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; diff.kept.length; i++)
+      <span class="hljs-keyword">this</span>.updateError(fieldInstance, diff.kept[i].assert.name, diff.kept[i].errorMessage, diff.kept[i].assert, <span class="hljs-literal">true</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>TODO: strange API here, intuitive for manual usage with addError(pslyInstance, ‘foo’, ‘bar’)
+but a little bit complex for above internal usage, with forced undefined parameter…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance, name, message, assert, doNotUpdateClass</span>) </span>{
+    <span class="hljs-keyword">this</span>._insertErrorWrapper(fieldInstance);
+    fieldInstance._ui.$errorsWrapper
+      .addClass(<span class="hljs-string">'filled'</span>)
+      .append(
+        $(fieldInstance.options.errorTemplate)
+        .addClass(<span class="hljs-string">'parsley-'</span> + name)
+        .html(message || <span class="hljs-keyword">this</span>._getErrorMessage(fieldInstance, assert))
+      );
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== doNotUpdateClass)
+      <span class="hljs-keyword">this</span>._errorClass(fieldInstance);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Same as above</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  updateError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance, name, message, assert, doNotUpdateClass</span>) </span>{
+    fieldInstance._ui.$errorsWrapper
+      .addClass(<span class="hljs-string">'filled'</span>)
+      .find(<span class="hljs-string">'.parsley-'</span> + name)
+      .html(message || <span class="hljs-keyword">this</span>._getErrorMessage(fieldInstance, assert));
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== doNotUpdateClass)
+      <span class="hljs-keyword">this</span>._errorClass(fieldInstance);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Same as above twice</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance, name, doNotUpdateClass</span>) </span>{
+    fieldInstance._ui.$errorsWrapper
+      .removeClass(<span class="hljs-string">'filled'</span>)
+      .find(<span class="hljs-string">'.parsley-'</span> + name)
+      .remove();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>edge case possible here: remove a standard Parsley error that is still failing in fieldInstance.validationResult
+but highly improbable cuz’ manually removing a well Parsley handled error makes no sense.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== doNotUpdateClass)
+      <span class="hljs-keyword">this</span>.manageStatusClass(fieldInstance);
+  },
+
+  focus: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">formInstance</span>) </span>{
+    formInstance._focusedField = <span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === formInstance.validationResult || <span class="hljs-string">'none'</span> === formInstance.options.focus)
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; formInstance.fields.length; i++) {
+      <span class="hljs-keyword">var</span> field = formInstance.fields[i];
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== field.validationResult &amp;&amp; field.validationResult.length &gt; <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> field.options.noFocus) {
+        formInstance._focusedField = field.$element;
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">'first'</span> === formInstance.options.focus)
+          <span class="hljs-keyword">break</span>;
+      }
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> === formInstance._focusedField)
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">return</span> formInstance._focusedField.focus();
+  },
+
+  _getErrorMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance, constraint</span>) </span>{
+    <span class="hljs-keyword">var</span> customConstraintErrorMessage = constraint.name + <span class="hljs-string">'Message'</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> fieldInstance.options[customConstraintErrorMessage])
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.Parsley.formatMessage(fieldInstance.options[customConstraintErrorMessage], constraint.requirements);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.Parsley.getErrorMessage(constraint);
+  },
+
+  _diff: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">newResult, oldResult, deep</span>) </span>{
+    <span class="hljs-keyword">var</span> added = [];
+    <span class="hljs-keyword">var</span> kept = [];
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; newResult.length; i++) {
+      <span class="hljs-keyword">var</span> found = <span class="hljs-literal">false</span>;
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; oldResult.length; j++)
+        <span class="hljs-keyword">if</span> (newResult[i].assert.name === oldResult[j].assert.name) {
+          found = <span class="hljs-literal">true</span>;
+          <span class="hljs-keyword">break</span>;
+        }
+
+      <span class="hljs-keyword">if</span> (found)
+        kept.push(newResult[i]);
+      <span class="hljs-keyword">else</span>
+        added.push(newResult[i]);
+    }
+
+    <span class="hljs-keyword">return</span> {
+      kept: kept,
+      added: added,
+      removed: !deep ? <span class="hljs-keyword">this</span>._diff(oldResult, newResult, <span class="hljs-literal">true</span>).added : []
+    };
+  },
+
+  setupForm: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">formInstance</span>) </span>{
+    formInstance.$element.on(<span class="hljs-string">'submit.Parsley'</span>, <span class="hljs-literal">false</span>, $.proxy(formInstance.onSubmitValidate, formInstance));
+    formInstance.$element.on(<span class="hljs-string">'click.Parsley'</span>, <span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>, $.proxy(formInstance.onSubmitButton, formInstance));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>UI could be disabled</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === formInstance.options.uiEnabled)
+      <span class="hljs-keyword">return</span>;
+
+    formInstance.$element.attr(<span class="hljs-string">'novalidate'</span>, <span class="hljs-string">''</span>);
+  },
+
+  setupField: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    <span class="hljs-keyword">var</span> _ui = {active: <span class="hljs-literal">false</span>};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>UI could be disabled</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === fieldInstance.options.uiEnabled)
+      <span class="hljs-keyword">return</span>;
+
+    _ui.active = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Give field its Parsley id in DOM</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fieldInstance.$element.attr(fieldInstance.options.namespace + <span class="hljs-string">'id'</span>, fieldInstance.__id__);
+
+    <span class="hljs-comment">/** Generate important UI elements and store them in fieldInstance **/</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>$errorClassHandler is the $element that woul have parsley-error and parsley-success classes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _ui.$errorClassHandler = <span class="hljs-keyword">this</span>._manageClassHandler(fieldInstance);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>$errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _ui.errorsWrapperId = <span class="hljs-string">'parsley-id-'</span> + (fieldInstance.options.multiple ? <span class="hljs-string">'multiple-'</span> + fieldInstance.options.multiple : fieldInstance.__id__);
+    _ui.$errorsWrapper = $(fieldInstance.options.errorsWrapper).attr(<span class="hljs-string">'id'</span>, _ui.errorsWrapperId);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _ui.lastValidationResult = [];
+    _ui.validatedOnce = <span class="hljs-literal">false</span>;
+    _ui.validationInformationVisible = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Store it in fieldInstance for later</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fieldInstance._ui = _ui;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Bind triggers first time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.actualizeTriggers(fieldInstance);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Determine which element will have <code>parsley-error</code> and <code>parsley-success</code> classes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _manageClassHandler: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>An element selector could be passed through DOM with <code>data-parsley-class-handler=#foo</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.classHandler &amp;&amp; $(fieldInstance.options.classHandler).length)
+      <span class="hljs-keyword">return</span> $(fieldInstance.options.classHandler);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Class handled could also be determined by function given in Parsley options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $handler = fieldInstance.options.classHandler(fieldInstance);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>If this function returned a valid existing DOM element, go for it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $handler &amp;&amp; $handler.length)
+      <span class="hljs-keyword">return</span> $handler;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Otherwise, if simple element (input, texatrea, select…) it will perfectly host the classes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!fieldInstance.options.multiple || fieldInstance.$element.is(<span class="hljs-string">'select'</span>))
+      <span class="hljs-keyword">return</span> fieldInstance.$element;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>But if multiple element (radio, checkbox), that would be their parent</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> fieldInstance.$element.parent();
+  },
+
+  _insertErrorWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    <span class="hljs-keyword">var</span> $errorsContainer;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Nothing to do if already inserted</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> !== fieldInstance._ui.$errorsWrapper.parent().length)
+      <span class="hljs-keyword">return</span> fieldInstance._ui.$errorsWrapper.parent();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer) {
+      <span class="hljs-keyword">if</span> ($(fieldInstance.options.errorsContainer).length)
+        <span class="hljs-keyword">return</span> $(fieldInstance.options.errorsContainer).append(fieldInstance._ui.$errorsWrapper);
+      <span class="hljs-keyword">else</span>
+        ParsleyUtils.warn(<span class="hljs-string">'The errors container `'</span> + fieldInstance.options.errorsContainer + <span class="hljs-string">'` does not exist in DOM'</span>);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.options.errorsContainer)
+      $errorsContainer = fieldInstance.options.errorsContainer(fieldInstance);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $errorsContainer &amp;&amp; $errorsContainer.length)
+      <span class="hljs-keyword">return</span> $errorsContainer.append(fieldInstance._ui.$errorsWrapper);
+
+    <span class="hljs-keyword">var</span> $from = fieldInstance.$element;
+    <span class="hljs-keyword">if</span> (fieldInstance.options.multiple)
+      $from = $from.parent();
+    <span class="hljs-keyword">return</span> $from.after(fieldInstance._ui.$errorsWrapper);
+  },
+
+  actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    <span class="hljs-keyword">var</span> $toBind = fieldInstance.$element;
+    <span class="hljs-keyword">if</span> (fieldInstance.options.multiple)
+      $toBind = $(<span class="hljs-string">'['</span> + fieldInstance.options.namespace + <span class="hljs-string">'multiple="'</span> + fieldInstance.options.multiple + <span class="hljs-string">'"]'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Remove Parsley events already binded on this field</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $toBind.off(<span class="hljs-string">'.Parsley'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>If no trigger is set, all good</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === fieldInstance.options.trigger)
+      <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">var</span> triggers = fieldInstance.options.trigger.replace(<span class="hljs-regexp">/^\s+/g</span> , <span class="hljs-string">''</span>).replace(<span class="hljs-regexp">/\s+$/g</span> , <span class="hljs-string">''</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">''</span> === triggers)
+      <span class="hljs-keyword">return</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $toBind.on(
+      triggers.split(<span class="hljs-string">' '</span>).join(<span class="hljs-string">'.Parsley '</span>) + <span class="hljs-string">'.Parsley'</span>,
+      $.proxy(<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.eventValidate ? fieldInstance.eventValidate : <span class="hljs-keyword">this</span>.eventValidate, fieldInstance));
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Called through $.proxy with fieldInstance. <code>this</code> context is ParsleyField</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>For keyup, keypress, keydown… events that could be a little bit obstrusive
+do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
+about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'key'</span>).test(event.type))
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._ui.validationInformationVisible &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
+        <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">this</span>._ui.validatedOnce = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.validate();
+  },
+
+  manageFailingFieldTrigger: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    fieldInstance._ui.failedOnce = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Radio and checkboxes fields must bind every field multiple</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (fieldInstance.options.multiple)
+      $(<span class="hljs-string">'['</span> + fieldInstance.options.namespace + <span class="hljs-string">'multiple="'</span> + fieldInstance.options.multiple + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'change'</span>, <span class="hljs-string">'i'</span>).test($(<span class="hljs-keyword">this</span>).parsley().options.trigger || <span class="hljs-string">''</span>))
+          <span class="hljs-keyword">return</span> $(<span class="hljs-keyword">this</span>).on(<span class="hljs-string">'change.ParsleyFailedOnce'</span>, <span class="hljs-literal">false</span>, $.proxy(fieldInstance.validate, fieldInstance));
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Select case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (fieldInstance.$element.is(<span class="hljs-string">'select'</span>))
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'change'</span>, <span class="hljs-string">'i'</span>).test(fieldInstance.options.trigger || <span class="hljs-string">''</span>))
+        <span class="hljs-keyword">return</span> fieldInstance.$element.on(<span class="hljs-string">'change.ParsleyFailedOnce'</span>, <span class="hljs-literal">false</span>, $.proxy(fieldInstance.validate, fieldInstance));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>All other inputs fields</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'keyup'</span>, <span class="hljs-string">'i'</span>).test(fieldInstance.options.trigger || <span class="hljs-string">''</span>))
+      <span class="hljs-keyword">return</span> fieldInstance.$element.on(<span class="hljs-string">'keyup.ParsleyFailedOnce'</span>, <span class="hljs-literal">false</span>, $.proxy(fieldInstance.validate, fieldInstance));
+  },
+
+  reset: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parsleyInstance</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Reset all event listeners</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.actualizeTriggers(parsleyInstance);
+    parsleyInstance.$element.off(<span class="hljs-string">'.ParsleyFailedOnce'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Nothing to do if UI never initialized for this field</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> parsleyInstance._ui)
+      <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === parsleyInstance.__class__)
+      <span class="hljs-keyword">return</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Reset all errors’ li</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    parsleyInstance._ui.$errorsWrapper
+      .removeClass(<span class="hljs-string">'filled'</span>)
+      .children()
+      .remove();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>Reset validation class</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._resetClass(parsleyInstance);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Reset validation flags and last validation result</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    parsleyInstance._ui.validatedOnce = <span class="hljs-literal">false</span>;
+    parsleyInstance._ui.lastValidationResult = [];
+    parsleyInstance._ui.validationInformationVisible = <span class="hljs-literal">false</span>;
+    parsleyInstance._ui.failedOnce = <span class="hljs-literal">false</span>;
+  },
+
+  destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parsleyInstance</span>) </span>{
+    <span class="hljs-keyword">this</span>.reset(parsleyInstance);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> === parsleyInstance.__class__)
+      <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyInstance._ui)
+      parsleyInstance._ui.$errorsWrapper.remove();
+
+    <span class="hljs-keyword">delete</span> parsleyInstance._ui;
+  },
+
+  _successClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    fieldInstance._ui.validationInformationVisible = <span class="hljs-literal">true</span>;
+    fieldInstance._ui.$errorClassHandler.removeClass(fieldInstance.options.errorClass).addClass(fieldInstance.options.successClass);
+  },
+  _errorClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    fieldInstance._ui.validationInformationVisible = <span class="hljs-literal">true</span>;
+    fieldInstance._ui.$errorClassHandler.removeClass(fieldInstance.options.successClass).addClass(fieldInstance.options.errorClass);
+  },
+  _resetClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    fieldInstance._ui.$errorClassHandler.removeClass(fieldInstance.options.successClass).removeClass(fieldInstance.options.errorClass);
+  }
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyUI;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+</html>

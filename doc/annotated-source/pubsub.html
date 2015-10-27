@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>pubsub.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+            
+              
+              <a class="source" href="parsley.html">
+                parsley.js
+              </a>
+            
+              
+              <a class="source" href="abstract.html">
+                abstract.js
+              </a>
+            
+              
+              <a class="source" href="defaults.html">
+                defaults.js
+              </a>
+            
+              
+              <a class="source" href="factory.html">
+                factory.js
+              </a>
+            
+              
+              <a class="source" href="field.html">
+                field.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
+              <a class="source" href="pubsub.html">
+                pubsub.js
+              </a>
+            
+              
+              <a class="source" href="remote.html">
+                remote.js
+              </a>
+            
+              
+              <a class="source" href="ui.html">
+                ui.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+              
+              <a class="source" href="validator_registry.html">
+                validator_registry.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>pubsub.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+<span class="hljs-keyword">import</span> ParsleyField <span class="hljs-keyword">from</span> <span class="hljs-string">'./field'</span>;
+<span class="hljs-keyword">import</span> ParsleyForm <span class="hljs-keyword">from</span> <span class="hljs-string">'./form'</span>;
+<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+
+<span class="hljs-keyword">var</span> o = $({});
+<span class="hljs-keyword">var</span> deprecated = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  ParsleyUtils.warnOnce(<span class="hljs-string">"Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley"</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Returns an event handler that calls <code>fn</code> with the arguments it expects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">adapt</span>(<span class="hljs-params">fn, context</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Store to allow unbinding</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (!fn.parsleyAdaptedCallback) {
+    fn.parsleyAdaptedCallback = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">0</span>);
+      args.unshift(<span class="hljs-keyword">this</span>);
+      fn.apply(context || o, args);
+    };
+  }
+  <span class="hljs-keyword">return</span> fn.parsleyAdaptedCallback;
+}
+
+<span class="hljs-keyword">var</span> eventPrefix = <span class="hljs-string">'parsley:'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Converts ‘parsley:form:validate’ into ‘form:validate’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">eventName</span>(<span class="hljs-params">name</span>) </span>{
+  <span class="hljs-keyword">if</span> (name.lastIndexOf(eventPrefix, <span class="hljs-number">0</span>) === <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">return</span> name.substr(eventPrefix.length);
+  <span class="hljs-keyword">return</span> name;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>$.listen is deprecated. Use Parsley.on instead.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$.listen = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, callback</span>) </span>{
+  <span class="hljs-keyword">var</span> context;
+  deprecated();
+  <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>] &amp;&amp; <span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">arguments</span>[<span class="hljs-number">2</span>]) {
+    context = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>];
+    callback = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">2</span>];
+  }
+
+  <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> !== <span class="hljs-keyword">typeof</span> callback)
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Wrong parameters'</span>);
+
+  <span class="hljs-built_in">window</span>.Parsley.on(eventName(name), adapt(callback, context));
+};
+
+$.listenTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, fn</span>) </span>{
+  deprecated();
+  <span class="hljs-keyword">if</span> (!(instance <span class="hljs-keyword">instanceof</span> ParsleyField) &amp;&amp; !(instance <span class="hljs-keyword">instanceof</span> ParsleyForm))
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Must give Parsley instance'</span>);
+
+  <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> !== <span class="hljs-keyword">typeof</span> name || <span class="hljs-string">'function'</span> !== <span class="hljs-keyword">typeof</span> fn)
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Wrong parameters'</span>);
+
+  instance.on(eventName(name), adapt(fn));
+};
+
+$.unsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, fn</span>) </span>{
+  deprecated();
+  <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> !== <span class="hljs-keyword">typeof</span> name || <span class="hljs-string">'function'</span> !== <span class="hljs-keyword">typeof</span> fn)
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Wrong arguments'</span>);
+  <span class="hljs-built_in">window</span>.Parsley.off(eventName(name), fn.parsleyAdaptedCallback);
+};
+
+$.unsubscribeTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name</span>) </span>{
+  deprecated();
+  <span class="hljs-keyword">if</span> (!(instance <span class="hljs-keyword">instanceof</span> ParsleyField) &amp;&amp; !(instance <span class="hljs-keyword">instanceof</span> ParsleyForm))
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Must give Parsley instance'</span>);
+  instance.off(eventName(name));
+};
+
+$.unsubscribeAll = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
+  deprecated();
+  <span class="hljs-built_in">window</span>.Parsley.off(eventName(name));
+  $(<span class="hljs-string">'form,input,textarea,select'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> instance = $(<span class="hljs-keyword">this</span>).data(<span class="hljs-string">'Parsley'</span>);
+    <span class="hljs-keyword">if</span> (instance) {
+      instance.off(eventName(name));
+    }
+  });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>$.emit is deprecated. Use jQuery events instead.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$.emit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, instance</span>) </span>{
+  deprecated();
+  <span class="hljs-keyword">var</span> instanceGiven = (instance <span class="hljs-keyword">instanceof</span> ParsleyField) || (instance <span class="hljs-keyword">instanceof</span> ParsleyForm);
+  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, instanceGiven ? <span class="hljs-number">2</span> : <span class="hljs-number">1</span>);
+  args.unshift(eventName(name));
+  <span class="hljs-keyword">if</span> (!instanceGiven) {
+    instance = <span class="hljs-built_in">window</span>.Parsley;
+  }
+  instance.trigger.apply(instance, args);
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+</html>

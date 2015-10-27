@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>form.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+            
+              
+              <a class="source" href="parsley.html">
+                parsley.js
+              </a>
+            
+              
+              <a class="source" href="abstract.html">
+                abstract.js
+              </a>
+            
+              
+              <a class="source" href="defaults.html">
+                defaults.js
+              </a>
+            
+              
+              <a class="source" href="factory.html">
+                factory.js
+              </a>
+            
+              
+              <a class="source" href="field.html">
+                field.js
+              </a>
+            
+              
+              <a class="source" href="form.html">
+                form.js
+              </a>
+            
+              
+              <a class="source" href="main.html">
+                main.js
+              </a>
+            
+              
+              <a class="source" href="multiple.html">
+                multiple.js
+              </a>
+            
+              
+              <a class="source" href="pubsub.html">
+                pubsub.js
+              </a>
+            
+              
+              <a class="source" href="remote.html">
+                remote.js
+              </a>
+            
+              
+              <a class="source" href="ui.html">
+                ui.js
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.js
+              </a>
+            
+              
+              <a class="source" href="validator.html">
+                validator.js
+              </a>
+            
+              
+              <a class="source" href="validator_registry.html">
+                validator_registry.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>form.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+<span class="hljs-keyword">import</span> ParsleyAbstract <span class="hljs-keyword">from</span> <span class="hljs-string">'./abstract'</span>;
+<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+
+<span class="hljs-keyword">var</span> ParsleyForm = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, domOptions, options</span>) </span>{
+  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyForm'</span>;
+  <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();
+
+  <span class="hljs-keyword">this</span>.$element = $(element);
+  <span class="hljs-keyword">this</span>.domOptions = domOptions;
+  <span class="hljs-keyword">this</span>.options = options;
+  <span class="hljs-keyword">this</span>.parent = <span class="hljs-built_in">window</span>.Parsley;
+
+  <span class="hljs-keyword">this</span>.fields = [];
+  <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">null</span>;
+};
+
+<span class="hljs-keyword">var</span> statusMapping = {pending: <span class="hljs-literal">null</span>, resolved: <span class="hljs-literal">true</span>, rejected: <span class="hljs-literal">false</span>};
+
+ParsleyForm.prototype = {
+  onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === event.parsley)
+      <span class="hljs-keyword">return</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>If we didn’t come here through a submit button, use the first one in the form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>).first();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._$submitSource.is(<span class="hljs-string">'[formnovalidate]'</span>)) {
+      <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">return</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Because some validations might be asynchroneous,
+we cancel this submit and will fake it after validation.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    event.stopImmediatePropagation();
+    event.preventDefault();
+
+    <span class="hljs-keyword">this</span>.whenValidate(<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, event)
+      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._submit(); })
+      .always(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._$submitSource = <span class="hljs-literal">null</span>; });
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },
+
+  onSubmitButton: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
+    <span class="hljs-keyword">this</span>._$submitSource = $(event.target);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>internal
+_submit submits the form, this time without going through the validations.
+Care must be taken to “fake” the actual submit button being clicked.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _submit: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'submit'</span>))
+      <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley_synthetic_submit_button'</span>).remove();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Add submit button’s data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._$submitSource) {
+      $(<span class="hljs-string">'&lt;input class="parsley_synthetic_submit_button" type="hidden"&gt;'</span>)
+      .attr(<span class="hljs-string">'name'</span>, <span class="hljs-keyword">this</span>._$submitSource.attr(<span class="hljs-string">'name'</span>))
+      .attr(<span class="hljs-string">'value'</span>, <span class="hljs-keyword">this</span>._$submitSource.attr(<span class="hljs-string">'value'</span>))
+      .appendTo(<span class="hljs-keyword">this</span>.$element);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$element.trigger($.extend($.Event(<span class="hljs-string">'submit'</span>), {parsley: <span class="hljs-literal">true</span>}));
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Performs validation on fields while triggering events.
+@returns <code>true</code> if al validations succeeds, <code>false</code>
+if a failure is immediately detected, or <code>null</code>
+if dependant on a promise.
+Prefer <code>whenValidate</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  validate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force, event</span>) </span>{
+    <span class="hljs-keyword">return</span> statusMapping[ <span class="hljs-keyword">this</span>.whenValidate(group, force, event).state() ];
+  },
+
+  whenValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force, event</span>) </span>{
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">this</span>.submitEvent = event;
+    <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>fire validate event to eventually modify things before very validation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validate'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Refresh form DOM options and form’s fields that could have changed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._refreshFields();
+
+    <span class="hljs-keyword">var</span> promises = <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">field</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>do not validate a field if not the same as given validation group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!group || that._isFieldInGroup(field, group))
+          <span class="hljs-keyword">return</span> field.whenValidate(force);
+      });
+    });
+
+    <span class="hljs-keyword">var</span> promiseBasedOnValidationResult = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> r = $.Deferred();
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === that.validationResult)
+        r.reject();
+      <span class="hljs-keyword">return</span> r.resolve().promise();
+    };
+
+    <span class="hljs-keyword">return</span> $.when.apply($, promises)
+      .done(  <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._trigger(<span class="hljs-string">'success'</span>); })
+      .fail(  <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.validationResult = <span class="hljs-literal">false</span>; that._trigger(<span class="hljs-string">'error'</span>); })
+      .always(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._trigger(<span class="hljs-string">'validated'</span>); })
+      .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Iterate over refreshed fields, and stop on first failure.
+Returns <code>true</code> if all fields are valid, <code>false</code> if a failure is detected
+or <code>null</code> if the result depends on an unresolved promise.
+Prefer using <code>whenValid</code> instead.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  isValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{
+    <span class="hljs-keyword">return</span> statusMapping[ <span class="hljs-keyword">this</span>.whenValid(group, force).state() ];
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Iterate over refreshed fields and validate them.
+Returns a promise.
+A validation that immediately fails will interrupt the validations.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  whenValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">this</span>._refreshFields();
+
+    <span class="hljs-keyword">var</span> promises = <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">field</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>do not validate a field if not the same as given validation group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!group || that._isFieldInGroup(field, group))
+          <span class="hljs-keyword">return</span> field.whenValid(force);
+      });
+    });
+    <span class="hljs-keyword">return</span> $.when.apply($, promises);
+  },
+
+  _isFieldInGroup: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">field, group</span>) </span>{
+    <span class="hljs-keyword">if</span> ($.isArray(field.options.group))
+      <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span> !== $.inArray(group, field.options.group);
+    <span class="hljs-keyword">return</span> field.options.group === group;
+  },
+
+  _refreshFields: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.actualizeOptions()._bindFields();
+  },
+
+  _bindFields: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">var</span> oldFields = <span class="hljs-keyword">this</span>.fields;
+
+    <span class="hljs-keyword">this</span>.fields = [];
+    <span class="hljs-keyword">this</span>.fieldsMappedById = {};
+
+    <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">this</span>.$element
+      .find(<span class="hljs-keyword">this</span>.options.inputs)
+      .not(<span class="hljs-keyword">this</span>.options.excluded)
+      .each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> <span class="hljs-built_in">window</span>.Parsley.Factory(<span class="hljs-keyword">this</span>, {}, self);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Only add valid and not excluded <code>ParsleyField</code> and <code>ParsleyFieldMultiple</code> children</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ((<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__ || <span class="hljs-string">'ParsleyFieldMultiple'</span> === fieldInstance.__class__) &amp;&amp; (<span class="hljs-literal">true</span> !== fieldInstance.options.excluded))
+          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> self.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__]) {
+            self.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__] = fieldInstance;
+            self.fields.push(fieldInstance);
+          }
+      });
+
+      $(oldFields).not(self.fields).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'reset'</span>);
+      });
+    });
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Internal only.
+Looping on a form’s fields to do validation or similar
+will trigger reactualizing options on all of them, which
+in turn will reactualize the form’s options.
+To avoid calling actualizeOptions so many times on the form
+for nothing, _withoutReactualizingFormOptions temporarily disables
+the method actualizeOptions on this form while <code>fn</code> is called.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _withoutReactualizingFormOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fn</span>) </span>{
+    <span class="hljs-keyword">var</span> oldActualizeOptions = <span class="hljs-keyword">this</span>.actualizeOptions;
+    <span class="hljs-keyword">this</span>.actualizeOptions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; };
+    <span class="hljs-keyword">var</span> result = fn.call(<span class="hljs-keyword">this</span>); <span class="hljs-comment">// Keep the current `this`.</span>
+    <span class="hljs-keyword">this</span>.actualizeOptions = oldActualizeOptions;
+    <span class="hljs-keyword">return</span> result;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Internal only.
+Shortcut to trigger an event
+Returns true iff event is not interrupted and default not prevented.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _trigger: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">eventName</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">'form:'</span> + eventName);
+  }
+
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyForm;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+</html>
