@@ -13,6 +13,7 @@ import runSequence  from 'run-sequence';
 import source  from 'vinyl-source-stream';
 import fs  from 'fs';
 import moment  from 'moment';
+import docco  from 'docco';
 
 import manifest  from './package.json';
 
@@ -94,6 +95,24 @@ function build(done) {
       .on('end', done);
   })
   .catch(done);
+}
+
+function buildDoc(done) {
+  var dest = 'doc/annotated-source/';
+  var sources = glob.sync('src/parsley/*.js');
+  del.sync([dest + '*']);
+  docco.document({
+    layout: 'parallel',
+    output: dest,
+    args: sources
+  }, function() {
+      gulp.src(dest + '*.html', { base: "./" })
+      .pipe($.replace('<div id="jump_page">', '<div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>'))
+      .pipe($.replace('</body>', '<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>'))
+      .pipe($.replace('@@version', manifest.version))
+      .pipe(gulp.dest('.'))
+      .on('end', done);
+  });
 }
 
 function copyI18n(done) {
@@ -206,7 +225,10 @@ gulp.task('build-src', ['lint-src', 'clean', 'build-i18n'], build);
 // Build the i18n translations
 gulp.task('build-i18n', ['clean'], copyI18n);
 
-gulp.task('build', ['build-src', 'build-i18n']);
+// Build the annotated documentation
+gulp.task('build-doc', buildDoc);
+
+gulp.task('build', ['build-src', 'build-i18n', 'build-doc']);
 
 // Lint and run our tests
 gulp.task('test', ['lint-src', 'lint-test'], test);

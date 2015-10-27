@@ -47,6 +47,7 @@
     "glob": "^5.0.14",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.0.0",
+    "docco": "~0.6.3",
     "gulp-eslint": "^1.0.0",
     "gulp-file": "^0.2.0",
     "gulp-filter": "^3.0.0",
