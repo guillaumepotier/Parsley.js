@@ -122,6 +122,12 @@ function copyI18n(done) {
     .on('end', done);
 }
 
+function writeVersion() {
+  return gulp.src('index.html')
+    .pipe($.replace(/<span class="parsley-version">[^<]*</, `<span class="parsley-version">v${manifest.version}<`))
+    .pipe(gulp.dest('.'));
+}
+
 function _runBrowserifyBundle(bundler) {
   return bundler.bundle()
     .on('error', err => {
@@ -228,7 +234,9 @@ gulp.task('build-i18n', ['clean'], copyI18n);
 // Build the annotated documentation
 gulp.task('build-doc', buildDoc);
 
-gulp.task('build', ['build-src', 'build-i18n', 'build-doc']);
+gulp.task('write-version', writeVersion);
+
+gulp.task('build', ['build-src', 'build-i18n', 'build-doc', 'write-version']);
 
 // Lint and run our tests
 gulp.task('test', ['lint-src', 'lint-test'], test);
