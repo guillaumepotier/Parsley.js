@@ -16,8 +16,8 @@
     "jquery": ">1.8"
   },
   "devDependencies": {
-    "validator.js": "~1.0.0",
-    "requirejs": "~2.1.0",
+    "expect.js": "*",
+    "mocha": "*",
     "bootstrap": "~3.0.3",
     "sinonjs": "~1.7.3",
     "uwidget": "~0.0.1"

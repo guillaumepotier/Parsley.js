@@ -128,22 +128,20 @@ function writeVersion() {
     .pipe(gulp.dest('.'));
 }
 
-function _runBrowserifyBundle(bundler) {
+function _runBrowserifyBundle(bundler, dest) {
   return bundler.bundle()
     .on('error', err => {
       console.log(err.message);
       this.emit('end');
     })
     .pipe($.plumber())
-    .pipe(source('./tmp/__spec-build.js'))
+    .pipe(source(dest || './tmp/__spec-build.js'))
     .pipe(buffer())
     .pipe(gulp.dest(''))
     .pipe($.livereload());
 }
 
-// Build the unit test suite for running tests
-// in the browser
-function _browserifyBundle() {
+function browserifyBundler() {
   // Our browserify bundle is made up of our unit tests, which
   // should individually load up pieces of our application.
   // We also include the browserify setup file.
@@ -151,18 +149,29 @@ function _browserifyBundle() {
   const allFiles = ['./test/setup/browserify.js'].concat(testFiles);
 
   // Create our bundler, passing in the arguments required for watchify
-  let bundler = browserify(allFiles, watchify.args);
-
-  // Watch the bundler, and re-bundle it whenever files change
-  bundler = watchify(bundler);
-  bundler.on('update', () => _runBrowserifyBundle(bundler));
+  const bundler = browserify(allFiles, watchify.args);
 
   // Set up Babelify so that ES6 works in the tests
   bundler.transform(babelify.configure({
     sourceMapRelative: __dirname + '/src'
   }));
 
+  return bundler;
+}
+
+// Build the unit test suite for running tests
+// in the browser
+function _browserifyBundle() {
+  let bundler = browserifyBundler();
+  // Watch the bundler, and re-bundle it whenever files change
+  bundler = watchify(bundler);
+  bundler.on('update', () => _runBrowserifyBundle(bundler));
+
   return _runBrowserifyBundle(bundler);
+}
+
+function buildDocTest() {
+  return _runBrowserifyBundle(browserifyBundler(), './doc/assets/__spec-build.js');
 }
 
 function _mocha() {
@@ -234,9 +243,12 @@ gulp.task('build-i18n', ['clean'], copyI18n);
 // Build the annotated documentation
 gulp.task('build-doc', buildDoc);
 
+// Build the annotated documentation
+gulp.task('build-doc-test', buildDocTest);
+
 gulp.task('write-version', writeVersion);
 
-gulp.task('build', ['build-src', 'build-i18n', 'build-doc', 'write-version']);
+gulp.task('build', ['build-src', 'build-i18n', 'build-doc', 'build-doc-test', 'write-version']);
 
 // Lint and run our tests
 gulp.task('test', ['lint-src', 'lint-test'], test);
