@@ -1,0 +1,28 @@
+{
+  "name": "uwidget",
+  "version": "0.0.2",
+  "devDependencies": {
+    "jquery": "~1.10.0"
+  },
+  "keywords": [
+    "widget",
+    "API",
+    "jquery"
+  ],
+  "author": {
+    "name": "Guillaume Potier",
+    "email": "guillaume@wisembly.com",
+    "url": "http://guillaumepotier.com/"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/guillaumepotier/uwidget",
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.2",
+    "commit": "5324c86db19b6c062780caf30d63861809eb82b0"
+  },
+  "_source": "git://github.com/guillaumepotier/uwidget.git",
+  "_target": "~0.0.1",
+  "_originalSource": "uwidget"
+}
