@@ -171,7 +171,7 @@ function _browserifyBundle() {
 }
 
 function buildDocTest() {
-  return _runBrowserifyBundle(browserifyBundler(), './doc/assets/__spec-build.js');
+  return _runBrowserifyBundle(browserifyBundler(), './doc/assets/spec-build.js');
 }
 
 function _mocha() {
