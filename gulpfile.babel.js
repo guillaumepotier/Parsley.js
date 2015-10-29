@@ -89,7 +89,7 @@ function build(done) {
       .pipe($.filter(['*', '!**/*.js.map']))
       .pipe($.rename(exportFileName + '.min.js'))
       .pipe($.sourcemaps.init({ loadMaps: true }))
-      .pipe($.uglify())
+      .pipe($.uglify({preserveComments: 'license'}))
       .pipe($.sourcemaps.write('./'))
       .pipe(gulp.dest(destinationFolder))
       .on('end', done);
