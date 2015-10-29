@@ -9213,7 +9213,7 @@ return jQuery;
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "parsleyjs",
-  "version": "2.3.0-rc3",
+  "version": "2.2.0-rc4",
   "homepage": "http://parsleyjs.org",
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
