@@ -123,9 +123,10 @@ function copyI18n(done) {
 }
 
 function writeVersion() {
-  return gulp.src('index.html')
-    .pipe($.replace(/<span class="parsley-version">[^<]*</, `<span class="parsley-version">v${manifest.version}<`))
-    .pipe(gulp.dest('.'));
+  return gulp.src(['index.html', 'doc/download.html'], { base: "./" })
+    .pipe($.replace(/class="parsley-version">[^<]*</, `class="parsley-version">v${manifest.version}<`))
+    .pipe($.replace(/releases\/tag\/[^"]*/, `releases/tag/${manifest.version}`))
+    .pipe(gulp.dest('.'))
 }
 
 function _runBrowserifyBundle(bundler, dest) {
