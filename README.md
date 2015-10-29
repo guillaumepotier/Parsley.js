@@ -36,13 +36,12 @@ Some integrations are
 
 First time: install `npm` and:
 ```
-npm install -g bower gulp
+npm install -g gulp
 ```
 
 then
 ```
 npm install
-bower install
 gulp test
 ```
 
