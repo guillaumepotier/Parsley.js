@@ -25,56 +25,56 @@
     <link href="http://yandex.st/highlightjs/7.3/styles/github.min.css" rel="stylesheet">
 
     <link href="../../src/parsley.css" rel="stylesheet">
-    <style>
-      body {
-        color: #111111;
-      }
-      .row {
-        margin-top: 10px;
-      }
-      .code-block {
-        margin-top: 20px;
-      }
-      .hidden {
-        display: none;
-      }
-      .row h2 {
-        color: #FF851B;
-      }
-      .row p {
-        text-align: justify;
-      }
-      .first {
-        padding-left: 15px;
-        border-left: 2px solid #FF851B;
-      }
-      .second {
-        padding-left: 15px;
-        border-left: 2px solid #5bc0de;
-      }
-      .validate {
-        margin-top: 10px;
-      }
-      h4 {
-        margin-bottom: 10px;
-      }
-      .invalid-form-error-message {
-        margin-top: 10px;
-        padding: 5px;
-      }
-      .invalid-form-error-message.filled {
-        border-left: 2px solid red;
-      }
-      p.parsley-success {
-        color: #468847;
-        background-color: #DFF0D8;
-        border: 1px solid #D6E9C6;
-      }
-      p.parsley-error {
-        color: #B94A48;
-        background-color: #F2DEDE;
-        border: 1px solid #EED3D7;
-      }
+    <style class="example">
+body {
+  color: #111111;
+}
+.row {
+  margin-top: 10px;
+}
+.code-block {
+  margin-top: 20px;
+}
+.hidden {
+  display: none;
+}
+.row h2 {
+  color: #FF851B;
+}
+.row p {
+  text-align: justify;
+}
+.first {
+  padding-left: 15px;
+  border-left: 2px solid #FF851B;
+}
+.second {
+  padding-left: 15px;
+  border-left: 2px solid #5bc0de;
+}
+.validate {
+  margin-top: 10px;
+}
+h4 {
+  margin-bottom: 10px;
+}
+.invalid-form-error-message {
+  margin-top: 10px;
+  padding: 5px;
+}
+.invalid-form-error-message.filled {
+  border-left: 2px solid red;
+}
+p.parsley-success {
+  color: #468847;
+  background-color: #DFF0D8;
+  border: 1px solid #D6E9C6;
+}
+p.parsley-error {
+  color: #B94A48;
+  background-color: #F2DEDE;
+  border: 1px solid #EED3D7;
+}
     </style>
   </head>
 
@@ -113,7 +113,9 @@
 
         <div class="col-md-4">
           <h2>Simple form example *</h2>
-          <small class="pull-left"><a href="../examples.html">&lt;&lt; Back to examples</a></small>
+          <small class="pull-left"><a href="../examples.html">&lt;&lt; Back to examples</a>
+          — <a href="#" class="play">Play with in CodePen</a>
+          </small>
           <span class="clearfix"></span>
           <hr></hr>
 
@@ -149,8 +151,9 @@
     Sleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" /><br/>
     Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" /><br/>
     Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" /><br/>
-  <p>
+  </p>
 
+  <p>
   <label for="heard">Heard about us via *:</label>
   <select id="heard" required>
     <option value="">Choose..</option>
@@ -159,9 +162,12 @@
     <option value="mouth">Word of mouth</option>
     <option value="other">Other..</option>
   </select>
+  </p>
 
+  <p>
   <label for="message">Message (20 chars min, 100 max) :</label>
   <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 character comment.." data-parsley-validation-threshold="10"></textarea>
+  </p>
 
   <br/>
   <span class="btn btn-default">validate</span>
