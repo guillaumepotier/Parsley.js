@@ -107,69 +107,31 @@
           <span class="clearfix"></span>
 
           <hr></hr>
-          <div class="form-group">
-            <h4>Correctly fill at least one of these blocks</h4>
-            <form id="demo-form" data-parsley-validate>
-              <div class="first">
-                <label for="firstname">Firstname:</label>
-                <input type="text" class="form-control" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+          <div class="form-group example">
+<h4>Correctly fill at least one of these blocks</h4>
+<form id="demo-form" data-parsley-validate>
+  <div class="first">
+    <label for="firstname">Firstname:</label>
+    <input type="text" class="form-control" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
 
-                <label for="lastname">Lastname:</label>
-                <input type="text" class="form-control" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
-              </div>
-              <hr></hr>
-              <div class="second">
-                <label for="fullname">Fullname:</label>
-                <input type="text" class="form-control" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
-              </div>
+    <label for="lastname">Lastname:</label>
+    <input type="text" class="form-control" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+  </div>
+  <hr></hr>
+  <div class="second">
+    <label for="fullname">Fullname:</label>
+    <input type="text" class="form-control" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
+  </div>
 
-              <div class="invalid-form-error-message"></div>
-              <input type="submit" class="btn btn-default validate" />
-            </form>
+  <div class="invalid-form-error-message"></div>
+  <input type="submit" class="btn btn-default validate" />
+</form>
           </div>
         </div>
         <div class="col-md-8">
           <div class="code-block">
-<pre><code>&lt;form id="demo-form" data-parsley-validate>
-  &lt;div class="first">
-    &lt;label for="firstname">Firstname:&lt;/label>
-    &lt;input type="text" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
-
-    &lt;label for="lastname">Lastname:&lt;/label>
-    &lt;input type="text" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
-  &lt;/div>
-  &lt;hr>&lt;/hr>
-  &lt;div class="second">
-    &lt;label for="fullname">Fullname:&lt;/label>
-    &lt;input type="text" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
-  &lt;/div>
-
-  &lt;div class="invalid-form-error-message">&lt;/div>
-  &lt;input type="submit" class="btn btn-default validate" />
-&lt;/form>
-
-&lt;script type="text/javascript">
-$(document).ready(function () {
-  $('#demo-form').on('form:validate.parsley', function (evt, formInstance) {
-
-    // if one of these blocks is not failing do not prevent submission
-    // we use here group validation with option force (validate even non required fields)
-    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true)) {
-      $('.invalid-form-error-message').html('');
-      return;
-    }
-    // else stop form submission
-    formInstance.submitEvent.preventDefault();
-
-    // and display a gentle message
-    $('.invalid-form-error-message')
-      .html("You must correctly fill the fields of at least one of these two blocks!")
-      .addClass("filled");
-    return;
-  });
-});
-&lt;/script>
-</code></pre>
+            <pre><code class="example">
+            </code></pre>
           </div>
         </div>
       </div>
@@ -187,36 +149,22 @@ $(document).ready(function () {
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
 
     <script type="text/javascript" src="../../dist/parsley.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" class="example">
+$(document).ready(function () {
+  $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
+    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true)) {
+      $('.invalid-form-error-message').html('');
+      return;
+    }
 
-      $(document).ready(function () {
-        $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
-          if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true)) {
-            $('.invalid-form-error-message').html('');
-            return;
-          }
-
-          formInstance.submitEvent.preventDefault();
-          $('.invalid-form-error-message')
-            .html("You must correctly fill the fields of at least one of these two blocks!")
-            .addClass("filled");
-          return;
-        });
-      });
-
-      try {
-        hljs.initHighlightingOnLoad();
-      } catch ( err ) {}
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-37229467-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+    formInstance.submitEvent.preventDefault();
+    $('.invalid-form-error-message')
+      .html("You must correctly fill the fields of at least one of these two blocks!")
+      .addClass("filled");
+    return;
+  });
+});
     </script>
+    <script type="text/javascript" src="../assets/example.js"></script>
   </body>
 </html>
