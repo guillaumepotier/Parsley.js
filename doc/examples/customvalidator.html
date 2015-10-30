@@ -110,72 +110,33 @@
           <span class="clearfix"></span>
 
           <hr></hr>
-          <div class="form-group">
-            <form id="demo-form" data-parsley-validate>
-              <label for="question">Do you code? *</label>
-              <p>
-                <input type="radio" name="question1" value="yes" required /> Yes
-                <input type="radio" name="question1" value="no" /> No
-              </p>
+          <div class="form-group example">
+<form id="demo-form" data-parsley-validate>
+  <label for="question">Do you code? *</label>
+  <p>
+    <input type="radio" name="question1" value="yes" required /> Yes
+    <input type="radio" name="question1" value="no" /> No
+  </p>
 
-              <label for="languages">If yes, in which language(s)?</label>
-              <input type="text" class="form-control" name="languages" data-parsley-conditionalrequired='["[name=\"question1\"]:checked", "yes"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you are a programmer!" />
+  <label for="languages">If yes, in which language(s)?</label>
+  <input type="text" class="form-control" name="languages" data-parsley-conditionalrequired='["[name=\"question1\"]:checked", "yes"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you are a programmer!" />
 
-              <label for="question">Do you eat dog food? *</label>
-              <p>
-                <input type="radio" name="question2" value="yes" required /> Yes
-                <input type="radio" name="question2" value="no" /> No
-              </p>
+  <label for="question">Do you eat dog food? *</label>
+  <p>
+    <input type="radio" name="question2" value="yes" required /> Yes
+    <input type="radio" name="question2" value="no" /> No
+  </p>
 
-              <label for="why">If no, why?</label>
-              <input type="text" class="form-control" name="why" data-parsley-conditionalrequired='["[name=\"question2\"]:checked", "no"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you do not eat dog food!" />
+  <label for="why">If no, why?</label>
+  <input type="text" class="form-control" name="why" data-parsley-conditionalrequired='["[name=\"question2\"]:checked", "no"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you do not eat dog food!" />
 
-              <input type="submit" class="btn btn-default pull-right" />
-            </form>
+  <input type="submit" class="btn btn-default pull-right" />
+</form>
           </div>
         </div>
         <div class="col-md-8">
           <div class="code-block">
-<pre><code>&lt;form id="demo-form" data-parsley-validate>
-  &lt;label for="question">Do you code? *&lt;/label>
-  &lt;p>
-    &lt;input type="radio" name="question1" value="yes" required /> Yes
-    &lt;input type="radio" name="question1" value="no" /> No
-  &lt;/p>
-
-  &lt;label for="languages">If yes, in which language(s)?&lt;/label>
-  &lt;input type="text" class="form-control" name="languages" data-parsley-conditionalrequired='["[name=\"question1\"]:checked", "yes"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you are a programmer!" />
-
-  &lt;label for="question">Do you eat dog food? *&lt;/label>
-  &lt;p>
-    &lt;input type="radio" name="question2" value="yes" required /> Yes
-    &lt;input type="radio" name="question2" value="no" /> No
-  &lt;/p>
-
-  &lt;label for="why">If no, why?&lt;/label>
-  &lt;input type="text" class="form-control" name="why" data-parsley-conditionalrequired='["[name=\"question2\"]:checked", "no"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you do not eat dog food!" />
-
-  &lt;input type="submit" class="btn btn-default pull-right" />
-&lt;/form>
-
-&lt;script type="text/javascript">
-  window.ParsleyConfig = {
-    validators: {
-      conditionalrequired: {
-        fn: function (value, requirements) {
-          // if requirements[0] value does not meet requirements[1] expectation, field is required
-          if (requirements[1] == $(requirements[0]).val() && '' == value)
-          return false;
-
-          return true;
-        },
-        priority: 32
-      }
-    }
-  };
-&lt;/script>
-&lt;script type="text/javascript" src="../../dist/parsley.js">&lt;/script>
-</code></pre>
+<pre><code class="example"></code></pre>
           </div>
         </div>
       </div>
@@ -192,39 +153,24 @@
     <script type="text/javascript" src="../../bower_components/bootstrap/js/affix.js"></script>
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
 
-    <script type="text/javascript">
-      window.ParsleyConfig = {
-        validators: {
-          conditionalrequired: {
-            fn: function (value, requirements) {
-              // if requirements[0] value does not meet requirements[1] expectation, field is required
-              if (requirements[1] == $(requirements[0]).val() && '' == value)
-                return false;
-
-              return true;
-            },
-            priority: 32
-          }
-        }
-      };
-    </script>
-
     <script type="text/javascript" src="../../dist/parsley.js"></script>
 
-    <script type="text/javascript">
-      try {
-        hljs.initHighlightingOnLoad();
-      } catch ( err ) {}
+    <script type="text/javascript" class="example">
+window.ParsleyConfig = {
+  validators: {
+    conditionalrequired: {
+      fn: function (value, requirements) {
+        // if requirements[0] value does not meet requirements[1] expectation, field is required
+        if (requirements[1] == $(requirements[0]).val() && '' == value)
+          return false;
 
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-37229467-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+        return true;
+      },
+      priority: 32
+    }
+  }
+};
     </script>
+    <script type="text/javascript" src="../assets/example.js"></script>
   </body>
 </html>

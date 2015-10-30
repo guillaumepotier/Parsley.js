@@ -127,100 +127,52 @@
             <p>Everything seems to be ok :)</p>
           </div>
 
-          <div class="form-group">
-            <form id="demo-form" data-parsley-validate>
-              <label for="fullname">Full Name * :</label>
-              <input type="text" class="form-control" name="fullname" required />
+          <div class="form-group example">
+<form id="demo-form" data-parsley-validate>
+  <label for="fullname">Full Name * :</label>
+  <input type="text" class="form-control" name="fullname" required />
 
-              <label for="email">Email * :</label>
-              <input type="email" class="form-control" name="email" data-parsley-trigger="change" required />
+  <label for="email">Email * :</label>
+  <input type="email" class="form-control" name="email" data-parsley-trigger="change" required />
 
-              <label for="gender">Gender *:</label>
-              <p>
-                M: <input type="radio" name="gender" id="genderM" value="M" required />
-                F: <input type="radio" name="gender" id="genderF" value="F" />
-              </p>
+  <label for="gender">Gender *:</label>
+  <p>
+    M: <input type="radio" name="gender" id="genderM" value="M" required />
+    F: <input type="radio" name="gender" id="genderF" value="F" />
+  </p>
 
-              <label for="hobbies">Hobbies (Optional, but 2 minimum):</label>
-              <p>
-                Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" /><br/>
-                Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" /><br/>
-                Eating <input type="checkbox" name="hobbies[]" id="hobby3" value="eat" /><br/>
-                Sleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" /><br/>
-                Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" /><br/>
-                Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" /><br/>
-              <p>
+  <label for="hobbies">Hobbies (Optional, but 2 minimum):</label>
+  <p>
+    Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" /><br/>
+    Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" /><br/>
+    Eating <input type="checkbox" name="hobbies[]" id="hobby3" value="eat" /><br/>
+    Sleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" /><br/>
+    Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" /><br/>
+    Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" /><br/>
+  <p>
 
-              <label for="heard">Heard about us via *:</label>
-              <select id="heard" required>
-                <option value="">Choose..</option>
-                <option value="press">Press</option>
-                <option value="net">Internet</option>
-                <option value="mouth">Word of mouth</option>
-                <option value="other">Other..</option>
-              </select>
+  <label for="heard">Heard about us via *:</label>
+  <select id="heard" required>
+    <option value="">Choose..</option>
+    <option value="press">Press</option>
+    <option value="net">Internet</option>
+    <option value="mouth">Word of mouth</option>
+    <option value="other">Other..</option>
+  </select>
 
-              <label for="message">Message (20 chars min, 100 max) :</label>
-              <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 character comment.." data-parsley-validation-threshold="10"></textarea>
+  <label for="message">Message (20 chars min, 100 max) :</label>
+  <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 character comment.." data-parsley-validation-threshold="10"></textarea>
 
-              <br/>
-              <span class="btn btn-default">validate</span>
+  <br/>
+  <span class="btn btn-default">validate</span>
 
-              <p><small>* Please, note that this demo form is not a perfect example of UX-awareness. The aim here is to show a quick overview of parsley-API and Parsley customizable behavior.</small></p>
-            </form>
+  <p><small>* Please, note that this demo form is not a perfect example of UX-awareness. The aim here is to show a quick overview of parsley-API and Parsley customizable behavior.</small></p>
+</form>
           </div>
         </div>
         <div class="col-md-8">
           <div class="code-block">
-<pre><code>&lt;form id="demo-form" data-parsley-validate>
-
-  &lt;!-- this field is just required, it would be validated on form submit -->
-  &lt;label for="fullname">Full Name * :&lt;/label>
-  &lt;input type="text" name="fullname" required />
-
-  &lt;!-- this required field must be an email, and validation will be run on
-  field change -->
-  &lt;label for="email">Email * :&lt;/label>
-  &lt;input type="email" name="email" data-parsley-trigger="change" required />
-
-  &lt;!-- radio and checkbox inputs by default have to be wrapped in a parent
-  elemnt (here &lt;p>) that will have success and error classes -->
-  &lt;label for="gender">Gender *:&lt;/label>
-  &lt;p>
-    M: &lt;input type="radio" name="gender" id="genderM" value="M" required />
-    F: &lt;input type="radio" name="gender" id="genderF" value="F" />
-  &lt;/p>
-
-  &lt;!-- here, field is not required, it won't throw any error if no checkbox
-  is checked. But if checked, two at least must be checked -->
-  &lt;label for="hobbies">Hobbies (Optional, but 2 minimum):&lt;/label>
-  &lt;p>
-    Skiing &lt;input type="checkbox" name="hobbies" value="ski" data-parsley-mincheck="2" />
-    Running &lt;input type="checkbox" name="hobbies" value="run" />
-    Eating &lt;input type="checkbox" name="hobbies" value="eat" />
-    Sleeping &lt;input type="checkbox" name="hobbies" value="sleep" />
-    Reading &lt;input type="checkbox" name="hobbies" value="read" />
-    Coding &lt;input type="checkbox" name="hobbies" value="code" />
-  &lt;p>
-
-
-  &lt;!-- regular select input. Nothing more to add. -->
-  &lt;label for="heard">Heard about us via *:&lt;/label>
-  &lt;select id="heard" required>
-    &lt;option value="">Choose..&lt;/option>
-    &lt;option value="press">Press&lt;/option>
-    &lt;option value="net">Internet&lt;/option>
-    &lt;option value="mouth">Word of mouth&lt;/option>
-    &lt;option value="other">Other..&lt;/option>
-  &lt;/select>
-
-  &lt;!-- this optional textarea have a length validator that would be checked on keyup after 10 first characters, with a custom message only for minlength validator -->
-  &lt;label for="message">Message (20 chars min, 100 max) :&lt;/label>
-  &lt;textarea name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-validation-threshold="10" data-parsley-minlength-message = "Come on! You need to enter at least a 20 character comment..">&lt;/textarea>
-
-  &lt;input type="submit" />
-&lt;/form>
-</code></pre>
+<pre><code class="example"></code></pre>
           </div>
         </div>
       </div>
@@ -239,42 +191,29 @@
     <script type="text/javascript" src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
 
     <script type="text/javascript" src="../../dist/parsley.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" class="example">
+$(document).ready(function () {
+  $.listen('parsley:field:validate', function () {
+    validateFront();
+  });
 
-      $(document).ready(function () {
-        $.listen('parsley:field:validate', function () {
-          validateFront();
-        });
+  $('#demo-form .btn').on('click', function () {
+    $('#demo-form').parsley().validate();
+    validateFront();
+  });
 
-        $('#demo-form .btn').on('click', function () {
-          $('#demo-form').parsley().validate();
-          validateFront();
-        });
-
-        var validateFront = function () {
-          if (true === $('#demo-form').parsley().isValid()) {
-            $('.bs-callout-info').removeClass('hidden');
-            $('.bs-callout-warning').addClass('hidden');
-          } else {
-            $('.bs-callout-info').addClass('hidden');
-            $('.bs-callout-warning').removeClass('hidden');
-          }
-        };
-      });
-
-      try {
-        hljs.initHighlightingOnLoad();
-      } catch ( err ) {}
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-37229467-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+  var validateFront = function () {
+    if (true === $('#demo-form').parsley().isValid()) {
+      $('.bs-callout-info').removeClass('hidden');
+      $('.bs-callout-warning').addClass('hidden');
+    } else {
+      $('.bs-callout-info').addClass('hidden');
+      $('.bs-callout-warning').removeClass('hidden');
+    }
+  };
+});
     </script>
+    <script type="text/javascript" src="../assets/example.js"></script>
+
   </body>
 </html>
