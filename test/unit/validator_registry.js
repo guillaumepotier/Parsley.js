@@ -84,10 +84,13 @@ describe('ParsleyValidatorRegistry', () => {
   });
   it('should have a type="number" validator', () => {
     expectValidation('foo',       'type', 'number').not.to.be(true);
+    expectValidation('-',         'type', 'number').not.to.be(true);
     expectValidation('1',         'type', 'number').to.be(true);
     expectValidation('1.5',       'type', 'number').to.be(true);
     expectValidation('-1.5',      'type', 'number').to.be(true);
     expectValidation('1,500.642', 'type', 'number').to.be(true);
+    expectValidation('0.5',       'type', 'number').to.be(true);
+    expectValidation('.5',        'type', 'number').to.be(true);
   });
   it('should have a type="digits" validator', () => {
     expectValidation('foo',       'type', 'digits').not.to.be(true);
