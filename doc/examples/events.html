@@ -111,18 +111,18 @@
           <hr></hr>
           <div class="form-group example">
 <h4>Correctly fill at least one of these blocks</h4>
-<form id="demo-form" data-parsley-validate>
+<form class="demo-form" data-parsley-validate>
   <div class="first">
     <label for="firstname">Firstname:</label>
-    <input type="text" class="form-control" name="firstname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+    <input type="text" class="form-control" name="firstname" data-parsley-length="[4, 20]" data-parsley-group="block1" />
 
     <label for="lastname">Lastname:</label>
-    <input type="text" class="form-control" name="lastname" data-parsley-range="[4, 20]" data-parsley-group="block1" />
+    <input type="text" class="form-control" name="lastname" data-parsley-length="[4, 20]" data-parsley-group="block1" />
   </div>
   <hr></hr>
   <div class="second">
     <label for="fullname">Fullname:</label>
-    <input type="text" class="form-control" name="fullname" data-parsley-range="[8, 40]" data-parsley-group="block2" />
+    <input type="text" class="form-control" name="fullname" data-parsley-length="[8, 40]" data-parsley-group="block2" />
   </div>
 
   <div class="invalid-form-error-message"></div>
@@ -152,18 +152,14 @@
 
     <script type="text/javascript" src="../../dist/parsley.js"></script>
     <script type="text/javascript" class="example">
-$(document).ready(function () {
-  $('#demo-form').parsley().subscribe('parsley:form:validate', function (formInstance) {
-    if (formInstance.isValid('block1', true) || formInstance.isValid('block2', true)) {
-      $('.invalid-form-error-message').html('');
-      return;
-    }
-
-    formInstance.submitEvent.preventDefault();
+$(function () {
+  $('.demo-form').parsley().on('form:validate', function (formInstance) {
+    var ok = formInstance.isValid('block1', true) || formInstance.isValid('block2', true);
     $('.invalid-form-error-message')
-      .html("You must correctly fill the fields of at least one of these two blocks!")
-      .addClass("filled");
-    return;
+      .html(ok ? '' : 'You must correctly fill at least one of these two blocks!')
+      .toggleClass('filled', !ok);
+    if (!ok)
+      formInstance.validationResult = false;
   });
 });
     </script>
