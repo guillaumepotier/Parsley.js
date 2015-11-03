@@ -78,6 +78,12 @@ ParsleyForm.prototype = {
   whenValidate: function (group, force, event) {
     var that = this;
     this.submitEvent = event;
+    if (event) {
+      this.submitEvent.preventDefault = () => {
+        ParsleyUtils.warnOnce("Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`");
+        this.validationResult = false;
+      };
+    }
     this.validationResult = true;
 
     // fire validate event to eventually modify things before very validation

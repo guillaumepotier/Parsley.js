@@ -226,6 +226,21 @@ describe('ParsleyForm', () => {
     $('#element').submit();
   });
 
+  it('should deprecate interruptions with submitEvent.preventDefault()', () => {
+    expectWarning(() => {
+      $('<form id="element"></form>')
+      .appendTo('body')
+      .parsley()
+      .on('form:validate', (form) => {
+        form.submitEvent.preventDefault();
+      })
+      .on('form:submit', (form) => {
+        throw new Error('Form should not have been submitted');
+      });
+      $('#element').submit();
+    });
+  });
+
   it('should fire field:reset event if fields are removed or excluded', () => {
     var parsleyInstance;
     var steps = [];
