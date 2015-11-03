@@ -1,14 +1,16 @@
 (function() {
   var html = $.trim($('div.example').html());
   var js = $.trim($('script.example').text());
-  $('code.example').text(
-    html +
-    '\n\n<' + 'script type="text/javascript">\n' +
-    js +
-    '\n<' + '/script>\n'
-  );
+  function createCodeExample() {
+    $('code.example').text(
+      html +
+      '\n\n<' + 'script type="text/javascript">\n' +
+      js +
+      '\n<' + '/script>\n'
+    );
+  }
 
-  $('.play').click(function() {
+  function launchEditor() {
     var css = $.trim($('style.example').text());
 
     var data = {
@@ -28,23 +30,35 @@
         'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0-rc4/src/parsley.css'
       ].join(';')
     };
-    console.log(data);
+
     var $input = $('<input type="hidden" name="data">')
       .val(JSON.stringify(data));
     var $form = $('<form action="http://codepen.io/pen/define?editors=101" method="POST" target="_blank">')
       .append($input)
       .submit();
-  })
+  }
 
-  try {
-    hljs.initHighlightingOnLoad();
-  } catch ( err ) {}
+  function track() {
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-37229467-1']);
+    _gaq.push(['_trackPageview']);
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-37229467-1']);
-  _gaq.push(['_trackPageview']);
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  }
 
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  function init() {
+    createCodeExample();
+
+    try {
+      hljs.initHighlightingOnLoad();
+    } catch ( err ) {}
+
+    $('.play').click(launchEditor)
+
+    track();
+  }
+
+  init();
 })();
