@@ -26,24 +26,6 @@
 
     <link href="../../src/parsley.css" rel="stylesheet">
     <style class="example">
-  body {
-    color: #111111;
-  }
-  .row {
-    margin-top: 10px;
-  }
-  .code-block {
-    margin-top: 20px;
-  }
-  .hidden {
-    display: none;
-  }
-  .row h2 {
-    color: #FF851B;
-  }
-  .row p {
-    text-align: justify;
-  }
   .first {
     padding-left: 15px;
     border-left: 2px solid #FF851B;
@@ -68,7 +50,7 @@
 </style>
   </head>
 
-  <body>
+  <body class="examples">
 
     <div class="container">
 
@@ -156,7 +138,7 @@ $(function () {
   $('.demo-form').parsley().on('form:validate', function (formInstance) {
     var ok = formInstance.isValid('block1', true) || formInstance.isValid('block2', true);
     $('.invalid-form-error-message')
-      .html(ok ? '' : 'You must correctly fill at least one of these two blocks!')
+      .html(ok ? '' : 'You must correctly fill *at least one of these two blocks!')
       .toggleClass('filled', !ok);
     if (!ok)
       formInstance.validationResult = false;

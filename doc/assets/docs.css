@@ -170,6 +170,19 @@ body {
   padding-left: 28px;
 }
 /*
+* Examples
+*
+*/
+.code-block {
+  margin-top: 20px;
+}
+body.examples .row h2 {
+  color: #FF851B;
+}
+body.examples .row p {
+  text-align: justify;
+}
+/*
 * Callouts
 *
 * Not quite alerts, but custom and helpful notes for folks reading the docs.
