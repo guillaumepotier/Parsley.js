@@ -44,13 +44,13 @@ body {
 .row p {
   text-align: justify;
 }
-.first {
+.form-section {
   padding-left: 15px;
   border-left: 2px solid #FF851B;
+  display: none;
 }
-.second {
-  padding-left: 15px;
-  border-left: 2px solid #5bc0de;
+.form-section.current {
+  display: inherit;
 }
 .validate {
   margin-top: 10px;
@@ -113,24 +113,32 @@ h4 {
 
           <hr></hr>
           <div class="form-group example">
-<form id="demo-form" data-parsley-validate>
-  <div class="first block1 show">
-    <label for="firstname">Firstname:</label>
-    <input type="text" class="form-control" name="firstname" required data-parsley-group="block1" />
+<form class="demo-form">
+  <div class="form-section">
+    <label for="firstname">First Name:</label>
+    <input type="text" class="form-control" name="firstname" required />
 
-    <label for="lastname">Lastname:</label>
-    <input type="text" class="form-control" name="lastname" required data-parsley-group="block1" />
-    <span class="next btn btn-info pull-right" data-current-block="1" data-next-block="2">Next ></span>
-    <span class="clearfix"></span>
+    <label for="lastname">Last Name:</label>
+    <input type="text" class="form-control" name="lastname" required />
   </div>
 
-  <div class="second block2 hidden">
+  <div class="form-section">
     <label for="email">Email:</label>
-    <input type="email" class="form-control" name="email" required data-parsley-group="block2" />
-    <span class="next btn btn-info pull-left" data-current-block="2" data-next-block="1">&lt; Previous</span>
+    <input type="email" class="form-control" name="email" required />
+  </div>
+
+  <div class="form-section">
+    <label for="color">Favorite color:</label>
+    <input type="text" class="form-control" name="color" required />
+  </div>
+
+  <div class="form-navigation">
+    <button type="button" class="previous btn btn-info pull-left">&lt; Previous</button>
     <input type="submit" class="btn btn-default pull-right" />
+    <button type="button" class="next btn btn-info pull-right">Next ></button>
     <span class="clearfix"></span>
   </div>
+
 </form>
           </div>
         </div>
@@ -155,27 +163,43 @@ h4 {
 
     <script type="text/javascript" src="../../dist/parsley.js"></script>
     <script type="text/javascript" class="example">
-$(document).ready(function () {
-  $('.next').on('click', function () {
-    var current = $(this).data('currentBlock'),
-      next = $(this).data('nextBlock');
+$(function () {
+  var $sections = $('.form-section');
 
-    // only validate going forward. If current group is invalid, do not go further
-    // .parsley().validate() returns validation result AND show errors
-    if (next > current)
-      if (false === $('#demo-form').parsley().validate('block' + current))
-        return;
+  function navigateTo(index) {
+    // Mark the current section with the class 'current'
+    $sections
+      .removeClass('current')
+      .eq(index)
+        .addClass('current');
+    // Disable or hide the navigation buttons depending on which section we're in:
+    var atTheEnd = index >= $sections.length - 1;
+    $('.form-navigation .previous').toggle(index > 0);
+    $('.form-navigation .next').toggle(!atTheEnd);
+    $('.form-navigation [type=submit]').toggle(atTheEnd);
+  }
 
-    // validation was ok. We can go on next step.
-    $('.block' + current)
-      .removeClass('show')
-      .addClass('hidden');
+  function curIndex() {
+    // Return the current index by looking at which section has the class current
+    return $sections.index($sections.filter('.current'));
+  }
 
-    $('.block' + next)
-      .removeClass('hidden')
-      .addClass('show');
-
+  // Previous button is easy, just go back
+  $('.form-navigation .previous').click(function() {
+    navigateTo(curIndex() - 1);
   });
+
+  // Next button goes forward iff current block validates
+  $('.form-navigation .next').click(function() {
+    if ($('.demo-form').parsley().validate('block-' + curIndex()))
+      navigateTo(curIndex() + 1);
+  });
+
+  // Prepare sections by setting the `data-parsley-group` attribute to 'block-1', 'block-2', etc.
+  $sections.each(function(index, section) {
+    $(section).find(':input').attr('data-parsley-group', 'block-' + index);
+  });
+  navigateTo(0); // Start at the beginning;
 });
     </script>
     <script type="text/javascript" src="../assets/example.js"></script>
