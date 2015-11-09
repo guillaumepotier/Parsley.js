@@ -46,7 +46,9 @@ ParsleyMultiple.prototype = {
   // See `ParsleyField.getValue()`
   getValue: function () {
     // Value could be overriden in DOM
-    if ('undefined' !== typeof this.options.value)
+    if ('function' === typeof this.options.value)
+      value = this.options.value(this);
+    else if ('undefined' !== typeof this.options.value)
       return this.options.value;
 
     // Radio input case
