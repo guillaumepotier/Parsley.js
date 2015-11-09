@@ -132,13 +132,13 @@ ParsleyValidatorRegistry.prototype = {
       ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
       return;
     }
-    return this._setValidator.apply(this, arguments);
+    return this._setValidator(...arguments);
   },
 
   updateValidator: function (name, arg1, arg2) {
     if (!this.validators[name]) {
       ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
-      return this.addValidator.apply(this, arguments);
+      return this.addValidator(...arguments);
     }
     return this._setValidator(this, arguments);
   },

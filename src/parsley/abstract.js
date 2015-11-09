@@ -117,7 +117,7 @@ ParsleyAbstract.prototype = {
 
   asyncIsValid: function () {
     ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenIsValid instead");
-    return this.whenValid.apply(this, arguments);
+    return this.whenValid(...arguments);
   },
 
   _findRelatedMultiple: function () {

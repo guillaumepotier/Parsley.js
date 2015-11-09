@@ -111,8 +111,8 @@ ParsleyField.prototype = {
     $.each(groupedConstraints, (_, constraints) => {
       // Process one group of constraints at a time, we validate the constraints
       // and combine the promises together.
-      var promise = $.when.apply($,
-        $.map(constraints, constraint => this._validateConstraint(value, constraint))
+      var promise = $.when(
+        ...$.map(constraints, constraint => this._validateConstraint(value, constraint))
       );
       promises.push(promise);
       if (promise.state() === 'rejected')

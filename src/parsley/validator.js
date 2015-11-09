@@ -98,16 +98,16 @@ ParsleyValidator.prototype = {
     if ($.isArray(value)) {
       if (!this.validateMultiple)
         throw 'Validator `' + this.name + '` does not handle multiple values';
-      return this.validateMultiple.apply(this, arguments);
+      return this.validateMultiple(...arguments);
     } else {
       if (this.validateNumber) {
         if (isNaN(value))
           return false;
         arguments[0] = parseFloat(arguments[0]);
-        return this.validateNumber.apply(this, arguments);
+        return this.validateNumber(...arguments);
       }
       if (this.validateString) {
-        return this.validateString.apply(this, arguments);
+        return this.validateString(...arguments);
       }
       throw 'Validator `' + this.name + '` only handles multiple values';
     }

@@ -104,7 +104,7 @@ ParsleyForm.prototype = {
       return r.resolve().promise();
     };
 
-    return $.when.apply($, promises)
+    return $.when(...promises)
       .done(  () => { this._trigger('success'); })
       .fail(  () => { this.validationResult = false; this._trigger('error'); })
       .always(() => { this._trigger('validated'); })
@@ -132,7 +132,7 @@ ParsleyForm.prototype = {
           return field.whenValid(force);
       });
     });
-    return $.when.apply($, promises);
+    return $.when(...promises);
   },
 
   _isFieldInGroup: function (field, group) {

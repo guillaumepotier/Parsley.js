@@ -76,7 +76,7 @@ $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessag
   window.Parsley[method] = $.proxy(registry, method);
   window.ParsleyValidator[method] = function () {
     ParsleyUtils.warnOnce(`Accessing the method '${method}' through ParsleyValidator is deprecated. Simply call 'window.Parsley.${method}(...)'`);
-    return window.Parsley[method].apply(window.Parsley, arguments);
+    return window.Parsley[method](...arguments);
   };
 });
 
