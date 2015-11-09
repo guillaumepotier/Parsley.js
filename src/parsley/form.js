@@ -19,8 +19,6 @@ var statusMapping = {pending: null, resolved: true, rejected: false};
 
 ParsleyForm.prototype = {
   onSubmitValidate: function (event) {
-    var that = this;
-
     // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
     if (true === event.parsley)
       return;
@@ -39,8 +37,8 @@ ParsleyForm.prototype = {
     event.preventDefault();
 
     this.whenValidate(undefined, undefined, event)
-      .done(function () { that._submit(); })
-      .always(function () { that._$submitSource = null; });
+      .done(() => { this._submit(); })
+      .always(() => { this._$submitSource = null; });
 
     return this;
   },
@@ -76,7 +74,6 @@ ParsleyForm.prototype = {
   },
 
   whenValidate: function (group, force, event) {
-    var that = this;
     this.submitEvent = event;
     if (event) {
       this.submitEvent.preventDefault = () => {
@@ -92,25 +89,25 @@ ParsleyForm.prototype = {
     // Refresh form DOM options and form's fields that could have changed
     this._refreshFields();
 
-    var promises = this._withoutReactualizingFormOptions(function () {
-      return $.map(this.fields, function(field) {
+    var promises = this._withoutReactualizingFormOptions(() => {
+      return $.map(this.fields, field => {
         // do not validate a field if not the same as given validation group
-        if (!group || that._isFieldInGroup(field, group))
+        if (!group || this._isFieldInGroup(field, group))
           return field.whenValidate(force);
       });
     });
 
-    var promiseBasedOnValidationResult = function () {
+    var promiseBasedOnValidationResult = () => {
       var r = $.Deferred();
-      if (false === that.validationResult)
+      if (false === this.validationResult)
         r.reject();
       return r.resolve().promise();
     };
 
     return $.when.apply($, promises)
-      .done(  function () { that._trigger('success'); })
-      .fail(  function () { that.validationResult = false; that._trigger('error'); })
-      .always(function () { that._trigger('validated'); })
+      .done(  () => { this._trigger('success'); })
+      .fail(  () => { this.validationResult = false; this._trigger('error'); })
+      .always(() => { this._trigger('validated'); })
       .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
   },
 
@@ -126,13 +123,12 @@ ParsleyForm.prototype = {
   // Returns a promise.
   // A validation that immediately fails will interrupt the validations.
   whenValid: function (group, force) {
-    var that = this;
     this._refreshFields();
 
-    var promises = this._withoutReactualizingFormOptions(function () {
-      return $.map(this.fields, function(field) {
+    var promises = this._withoutReactualizingFormOptions(() => {
+      return $.map(this.fields, field => {
         // do not validate a field if not the same as given validation group
-        if (!group || that._isFieldInGroup(field, group))
+        if (!group || this._isFieldInGroup(field, group))
           return field.whenValid(force);
       });
     });
@@ -150,29 +146,28 @@ ParsleyForm.prototype = {
   },
 
   _bindFields: function () {
-    var self = this;
     var oldFields = this.fields;
 
     this.fields = [];
     this.fieldsMappedById = {};
 
-    this._withoutReactualizingFormOptions(function () {
+    this._withoutReactualizingFormOptions(() => {
       this.$element
       .find(this.options.inputs)
       .not(this.options.excluded)
-      .each(function () {
-        var fieldInstance = new window.Parsley.Factory(this, {}, self);
+      .each((_, element) => {
+        var fieldInstance = new window.Parsley.Factory(element, {}, this);
 
         // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
         if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded))
-          if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
-            self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
-            self.fields.push(fieldInstance);
+          if ('undefined' === typeof this.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
+            this.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
+            this.fields.push(fieldInstance);
           }
       });
 
-      $(oldFields).not(self.fields).each(function () {
-        this._trigger('reset');
+      $(oldFields).not(this.fields).each((_, field) => {
+        field._trigger('reset');
       });
     });
     return this;
@@ -188,7 +183,7 @@ ParsleyForm.prototype = {
   _withoutReactualizingFormOptions: function (fn) {
     var oldActualizeOptions = this.actualizeOptions;
     this.actualizeOptions = function () { return this; };
-    var result = fn.call(this); // Keep the current `this`.
+    var result = fn();
     this.actualizeOptions = oldActualizeOptions;
     return result;
   },

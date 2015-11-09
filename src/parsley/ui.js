@@ -7,15 +7,14 @@ var ParsleyUI = function (options) {
 
 ParsleyUI.prototype = {
   listen: function () {
-    var that = this;
     window.Parsley
-    .on('form:init',       function () { that.setupForm (this); } )
-    .on('field:init',      function () { that.setupField(this); } )
-    .on('field:validated', function () { that.reflow    (this); } )
-    .on('form:validated',  function () { that.focus     (this); } )
-    .on('field:reset',     function () { that.reset     (this); } )
-    .on('form:destroy',    function () { that.destroy   (this); } )
-    .on('field:destroy',   function () { that.destroy   (this); } );
+    .on('form:init',       (form ) => { this.setupForm (form ); } )
+    .on('field:init',      (field) => { this.setupField(field); } )
+    .on('field:validated', (field) => { this.reflow    (field); } )
+    .on('form:validated',  (form ) => { this.focus     (form ); } )
+    .on('field:reset',     (field) => { this.reset     (field); } )
+    .on('form:destroy',    (form ) => { this.destroy   (form ); } )
+    .on('field:destroy',   (field) => { this.destroy   (field); } );
 
     return this;
   },

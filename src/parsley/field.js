@@ -45,17 +45,15 @@ ParsleyField.prototype = {
   // Validate field and trigger some events for mainly `ParsleyUI`
   // @returns a promise that succeeds only when all validations do.
   whenValidate: function (force) {
-    var that = this;
-
     this.value = this.getValue();
 
     // Field Validate event. `this.value` could be altered for custom needs
     this._trigger('validate');
 
     return this.whenValid(force, this.value)
-      .done(function ()   { that._trigger('success'); })
-      .fail(function ()   { that._trigger('error'); })
-      .always(function () { that._trigger('validated'); });
+      .done(() =>   { this._trigger('success'); })
+      .fail(() =>   { this._trigger('error'); })
+      .always(() => { this._trigger('validated'); });
   },
 
   hasConstraints: function () {
@@ -110,12 +108,11 @@ ParsleyField.prototype = {
 
     var groupedConstraints = this._getGroupedConstraints();
     var promises = [];
-    var that = this;
-    $.each(groupedConstraints, function(_, constraints) {
+    $.each(groupedConstraints, (_, constraints) => {
       // Process one group of constraints at a time, we validate the constraints
       // and combine the promises together.
       var promise = $.when.apply($,
-        $.map(constraints, $.proxy(that, '_validateConstraint', value))
+        $.map(constraints, constraint => this._validateConstraint(value, constraint))
       );
       promises.push(promise);
       if (promise.state() === 'rejected')
@@ -126,16 +123,15 @@ ParsleyField.prototype = {
 
   // @returns a promise
   _validateConstraint: function(value, constraint) {
-    var that = this;
     var result = constraint.validate(value, this);
     // Map false to a failed promise
     if (false === result)
       result = $.Deferred().reject();
     // Make sure we return a promise and that we record failures
-    return $.when(result).fail(function(errorMessage) {
-      if (true === that.validationResult)
-        that.validationResult = [];
-      that.validationResult.push({
+    return $.when(result).fail(errorMessage => {
+      if (true === this.validationResult)
+        this.validationResult = [];
+      this.validationResult.push({
         assert: constraint,
         errorMessage: 'string' === typeof errorMessage && errorMessage
       });

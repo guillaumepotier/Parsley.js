@@ -34,9 +34,8 @@ ConstraintFactory.prototype = {
   },
 
   _parseRequirements: function(options) {
-    var that = this;
-    this.requirementList = this.validator.parseRequirements(this.requirements, function(key) {
-      return options[that.name + capitalize(key)];
+    this.requirementList = this.validator.parseRequirements(this.requirements, key => {
+      return options[this.name + capitalize(key)];
     });
   }
 };

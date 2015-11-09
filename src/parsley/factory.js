@@ -56,7 +56,6 @@ ParsleyFactory.prototype = {
   // Multiples fields are a real nightmare :(
   // Maybe some refactoring would be appreciated here...
   handleMultiple: function () {
-    var that = this;
     var name;
     var multiple;
     var parsleyMultipleInstance;
@@ -85,9 +84,9 @@ ParsleyFactory.prototype = {
 
     // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
     if ('undefined' !== typeof name) {
-      $('input[name="' + name + '"]').each(function () {
-        if ($(this).is('input[type=radio], input[type=checkbox]'))
-          $(this).attr(that.options.namespace + 'multiple', that.options.multiple);
+      $('input[name="' + name + '"]').each((i, input) => {
+        if ($(input).is('input[type=radio], input[type=checkbox]'))
+          $(input).attr(this.options.namespace + 'multiple', this.options.multiple);
       });
     }
 
