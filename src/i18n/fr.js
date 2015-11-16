@@ -24,3 +24,5 @@ window.Parsley.addMessages('fr', {
   check:          "Vous devez sélectionner entre %s et %s choix.",
   equalto:        "Cette valeur devrait être identique."
 });
+
+Parsley.setLocale('fr');
