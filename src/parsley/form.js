@@ -71,7 +71,6 @@ ParsleyForm.prototype = {
   // Consider using `whenValidate` instead.
   validate: function (options) {
     if (arguments.length >= 1 && !$.isPlainObject(options)) {
-      debugger;
       ParsleyUtils.warnOnce('Calling validate on a parsley form without passing arguments as an object is deprecated.');
       var [group, force, event] = arguments;
       options = {group, force, event};
@@ -97,9 +96,7 @@ ParsleyForm.prototype = {
 
     var promises = this._withoutReactualizingFormOptions(() => {
       return $.map(this.fields, field => {
-        // do not validate a field if not the same as given validation group
-        if (!group || this._isFieldInGroup(field, group))
-          return field.whenValidate({force});
+        return field.whenValidate({force, group});
       });
     });
 
@@ -138,18 +135,10 @@ ParsleyForm.prototype = {
 
     var promises = this._withoutReactualizingFormOptions(() => {
       return $.map(this.fields, field => {
-        // do not validate a field if not the same as given validation group
-        if (!group || this._isFieldInGroup(field, group))
-          return field.whenValid({force});
+        return field.whenValid({group, force});
       });
     });
     return $.when(...promises);
-  },
-
-  _isFieldInGroup: function (field, group) {
-    if ($.isArray(field.options.group))
-      return -1 !== $.inArray(group, field.options.group);
-    return field.options.group === group;
   },
 
   _refreshFields: function () {

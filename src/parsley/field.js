@@ -39,6 +39,8 @@ ParsleyField.prototype = {
       options = {options};
     }
     var promise = this.whenValidate(options);
+    if (!promise)  // If excluded with `group` option
+      return true;
     switch (promise.state()) {
       case 'pending': return null;
       case 'resolved': return true;
@@ -47,14 +49,20 @@ ParsleyField.prototype = {
   },
 
   // Validate field and trigger some events for mainly `ParsleyUI`
-  // @returns a promise that succeeds only when all validations do.
-  whenValidate: function ({force} =  {}) {
+  // @returns a promise that succeeds only when all validations do
+  // or `undefined` if field is not in the given `group`.
+  whenValidate: function ({force, group} =  {}) {
+    // do not validate a field if not the same as given validation group
+    this.refreshConstraints();
+    if (group && !this._isInGroup(group))
+      return;
+
     this.value = this.getValue();
 
     // Field Validate event. `this.value` could be altered for custom needs
     this._trigger('validate');
 
-    return this.whenValid({force, value: this.value})
+    return this.whenValid({force, value: this.value, _refreshed: true})
       .done(() =>   { this._trigger('success'); })
       .fail(() =>   { this._trigger('error'); })
       .always(() => { this._trigger('validated'); });
@@ -77,6 +85,12 @@ ParsleyField.prototype = {
     return true;
   },
 
+  _isInGroup: function (group) {
+    if ($.isArray(this.options.group))
+      return -1 !== $.inArray(group, this.options.group);
+    return this.options.group === group;
+  },
+
   // Just validate field. Do not trigger any event.
   // Returns `true` iff all constraints pass, `false` if there are failures,
   // or `null` if the result can not be determined yet (depends on a promise)
@@ -87,16 +101,25 @@ ParsleyField.prototype = {
       var [force, value] = arguments;
       options = {force, value};
     }
-    return statusMapping[this.whenValid(options).state()];
+    var promise = this.whenValid(options);
+    if (!promise) // Excluded via `group`
+      return true;
+    return statusMapping[promise.state()];
   },
 
   // Just validate field. Do not trigger any event.
-  // @returns a promise that succeeds only when all validations do.
+  // @returns a promise that succeeds only when all validations do
+  // or `undefined` if the field is not in the given `group`.
   // The argument `force` will force validation of empty fields.
   // If a `value` is given, it will be validated instead of the value of the input.
-  whenValid: function ({force = false, value} = {}) {
+  whenValid: function ({force = false, value, group, _refreshed} = {}) {
     // Recompute options and rebind constraints to have latest changes
-    this.refreshConstraints();
+    if (!_refreshed)
+      this.refreshConstraints();
+    // do not validate a field if not the same as given validation group
+    if (group && !this._isInGroup(group))
+      return;
+
     this.validationResult = true;
 
     // A field without constraint is valid

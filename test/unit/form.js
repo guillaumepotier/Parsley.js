@@ -64,13 +64,14 @@ describe('ParsleyForm', () => {
       '<form id="element">'                                                                        +
         '<input id="field1" type="text" data-parsley-group="foo" data-parsley-required="true" />'  +
         '<div id="field2"></div>'                                                                  +
-        '<textarea id="field3" data-parsley-group="bar" data-parsley-required="true"></textarea>'  +
+        '<textarea id="field3" data-parsley-required="true"></textarea>'  +
       '</form>');
     var parsleyForm = $('#element').parsley();
     expect(parsleyForm.isValid()).to.be(false);
     $('#field1').val('value');
     expect(parsleyForm.isValid()).to.be(false);
     expect(parsleyForm.isValid({group: 'foo'})).to.be(true);
+    $('#field3').attr('data-parsley-group', 'bar');
     expectWarning(() => {
       expect(parsleyForm.isValid('bar')).to.be(false);
     });
