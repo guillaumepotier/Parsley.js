@@ -349,24 +349,24 @@ if (false === instance.options.priorityEnabled)
             </thead>
             <tbody>
               <tr>
-                <td><code>whenValid(group, force)</code> <version>#2.2</version></td>
+                <td><code>whenValid({group, force})</code> <version>#2.2</version></td>
                 <td><code>promise</code></td>
                 <td>Returns a jQuery promise that will be fulfilled if and only if the Form is valid. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non-required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
-                <td><code>isValid(group, force)</code> <version>#2.0</version></td>
+                <td><code>isValid({group, force})</code> <version>#2.0</version></td>
                 <td><code>boolean or null</code></td>
                 <td>Similar to <code>whenValid</code> but returns <code>true</code> if the promise is already fulfilled, <code>false</code> if already rejected, and <code>null</code> if the validation is still pending.</td>
               </tr>
               <tr>
-                <td><code>whenValidate(group, force)</code> <version>#2.0</version></td>
+                <td><code>whenValidate({group, force})</code> <version>#2.0</version></td>
                 <td>
                   <code>promise</code>
                 </td>
                 <td>Validate form. Prevents submission if not valid. <strong>Fires <a href="#events">events</a> and affects UI.</strong>. You can only validate a certain group of fields by specifying optional <code>group</code> string parameter. If <code>group</code> is given, it only validates fields that belong to this group. If <code>force</code> is given, it force validates even non required fields (<a href="examples/events.html">See example</a>). Same result as <code>whenValid</code>.</td>
               </tr>
               <tr>
-                <td><code>validate(group, force)</code> <version>#2.0</version></td>
+                <td><code>validate({group, force})</code> <version>#2.0</version></td>
                 <td>
                   <code>boolean or null</code>
                 </td>
@@ -464,22 +464,22 @@ if (false === instance.options.priorityEnabled)
             </thead>
             <tbody>
               <tr>
-                <td><code>isValid(force)</code> <version>#2.0</version></td>
+                <td><code>isValid({force})</code> <version>#2.0</version></td>
                 <td>
                   <code>true</code> if all ok<br/>
-                  <code>[]</code> if empty optional field<br/>
-                  <code>[Violation [, Violation..]]</code> if fails
+                  <code>null</code> if some validations are still pending<br/>
+                  <code>[Violation, ...]]</code> if fails
                 </td>
-                <td>Returns if the field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>force</code> is given, it forces validation even on non-required fields (<a href="examples/events.html">See example</a>)</td>
+                <td>Returns if the field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>force</code> is set, it forces validation even on non-required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
-                <td><code>validate(force)</code> <version>#2.0</version></td>
+                <td><code>validate({force})</code> <version>#2.0</version></td>
                 <td>
                   <code>true</code> if all ok<br/>
-                  <code>[]</code> if empty optional field<br/>
-                  <code>[Violation [, Violation..]]</code> if fails
+                  <code>null</code> if some validations are still pending<br/>
+                  <code>[Violation, ...]]</code> if fails
                 </td>
-                <td>Validate Field. <strong>Fires <a href="#events">events</a> and affects UI.</strong> If <code>force</code> is given, force validate even non required fields (<a href="examples/events.html">See example</a>)</td>
+                <td>Validate Field. <strong>Fires <a href="#events">events</a> and affects UI.</strong> If <code>force</code> is set, force validate even non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
               <tr>
                 <td><code>reset()</code> <version>#2.0</version></td>

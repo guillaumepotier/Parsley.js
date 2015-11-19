@@ -136,7 +136,7 @@
     <script type="text/javascript" class="example">
 $(function () {
   $('.demo-form').parsley().on('form:validate', function (formInstance) {
-    var ok = formInstance.isValid('block1', true) || formInstance.isValid('block2', true);
+    var ok = formInstance.isValid({group: 'block1', force: true}) || formInstance.isValid({group: 'block2', force: true});
     $('.invalid-form-error-message')
       .html(ok ? '' : 'You must correctly fill *at least one of these two blocks!')
       .toggleClass('filled', !ok);

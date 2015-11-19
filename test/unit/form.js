@@ -70,8 +70,10 @@ describe('ParsleyForm', () => {
     expect(parsleyForm.isValid()).to.be(false);
     $('#field1').val('value');
     expect(parsleyForm.isValid()).to.be(false);
-    expect(parsleyForm.isValid('foo')).to.be(true);
-    expect(parsleyForm.isValid('bar')).to.be(false);
+    expect(parsleyForm.isValid({group: 'foo'})).to.be(true);
+    expectWarning(() => {
+      expect(parsleyForm.isValid('bar')).to.be(false);
+    });
   });
   it('should handle group validation with controls with multiple group names', () => {
     $('body').append(
@@ -143,9 +145,11 @@ describe('ParsleyForm', () => {
         '<input id="field3" data-parsley-notblank="true" />'  +
       '</form>');
     expect($('#element').parsley().isValid()).to.be(true);
-    expect($('#element').parsley().isValid(undefined, true)).to.be(false);
+    expect($('#element').parsley().isValid({force: true})).to.be(false);
     expect($('#element').parsley().validate()).to.be(true);
-    expect($('#element').parsley().validate(undefined, true)).to.be(false);
+    expectWarning(() => {
+      expect($('#element').parsley().validate(undefined, true)).to.be(false);
+    });
   });
   it('should properly bind dynamically added fields', () => {
     $('body').append('<form id="element" data-parsley-trigger="change"></form>');

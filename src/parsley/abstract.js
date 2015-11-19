@@ -115,9 +115,9 @@ ParsleyAbstract.prototype = {
     this._trigger('destroy');
   },
 
-  asyncIsValid: function () {
-    ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenIsValid instead");
-    return this.whenValid(...arguments);
+  asyncIsValid: function (group, force) {
+    ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenValid instead");
+    return this.whenValid({group, force});
   },
 
   _findRelated: function () {

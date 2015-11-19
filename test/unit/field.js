@@ -104,9 +104,7 @@ describe('ParsleyField', () => {
     (attrs ? `with attributes ${attrs}` : '') +
     `by ${valid ? 'accepting' : 'rejecting'} "${value}"`, () => {
       var $input = $(`<input type="number" ${attrs}>`);
-      var r = $input.parsley().isValid(value);
-      r = $input.parsley().isValid(value);
-      expect(r).to.be(valid);
+      expect($input.parsley().isValid({value})).to.be(valid);
     });
   };
 
@@ -294,17 +292,17 @@ describe('ParsleyField', () => {
     $('body').append('<input type="email" id="element" />');
     expect($('#element').parsley().isValid()).to.be.eql(true);
     expect($('#element').parsley().validate()).to.be.eql(true);
-    expect($('#element').parsley().isValid(true)).to.be(false);
-    expect($('#element').parsley().validate(true).length).to.be(1);
-    expect($('#element').parsley().isValid('not an email')).to.be(false);
-    expect($('#element').parsley().isValid('foo@example.com')).to.be(true);
+    expect($('#element').parsley().isValid({force: true})).to.be(false);
+    expect($('#element').parsley().validate({force: true}).length).to.be(1);
+    expect($('#element').parsley().isValid({value: 'not an email'})).to.be(false);
+    expect($('#element').parsley().isValid({value: 'foo@example.com'})).to.be(true);
   });
   it('should allow passing a specific value to `isValid` method', () => {
-    expect($('<input type="email" value="">').parsley().isValid(false)).to.be(true);
     expect($('<input type="email" value="foo">').parsley().isValid()).to.be(false);
-    expect($('<input type="email" value="foo">').parsley().isValid(false, '')).to.be(true);
-    expect($('<input type="email" value="">').parsley().isValid(true)).to.be(false);
-    expect($('<input type="email" value="foo">').parsley().isValid(true, '')).to.be(false);
+    expect($('<input type="email" value="foo">').parsley().isValid({value: ''})).to.be(true);
+    expectWarning(() => {
+      expect($('<input type="email" value="foo">').parsley().isValid(true, '')).to.be(false);
+    });
   });
   it('should have a whitespace="squish" option', () => {
     $('body').append('<input type="text" id="element" value=" foo    bar " />');

@@ -160,7 +160,7 @@ $(function () {
 
   // Next button goes forward iff current block validates
   $('.form-navigation .next').click(function() {
-    if ($('.demo-form').parsley().validate('block-' + curIndex()))
+    if ($('.demo-form').parsley().validate({group: 'block-' + curIndex()}))
       navigateTo(curIndex() + 1);
   });
 

@@ -36,7 +36,7 @@ ParsleyForm.prototype = {
     event.stopImmediatePropagation();
     event.preventDefault();
 
-    this.whenValidate(undefined, undefined, event)
+    this.whenValidate({event})
       .done(() => { this._submit(); })
       .always(() => { this._$submitSource = null; });
 
@@ -69,11 +69,17 @@ ParsleyForm.prototype = {
   // if a failure is immediately detected, or `null`
   // if dependant on a promise.
   // Consider using `whenValidate` instead.
-  validate: function (group, force, event) {
-    return statusMapping[ this.whenValidate(group, force, event).state() ];
+  validate: function (options) {
+    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+      debugger;
+      ParsleyUtils.warnOnce('Calling validate on a parsley form without passing arguments as an object is deprecated.');
+      var [group, force, event] = arguments;
+      options = {group, force, event};
+    }
+    return statusMapping[ this.whenValidate(options).state() ];
   },
 
-  whenValidate: function (group, force, event) {
+  whenValidate: function ({group, force, event} = {}) {
     this.submitEvent = event;
     if (event) {
       this.submitEvent.preventDefault = () => {
@@ -93,7 +99,7 @@ ParsleyForm.prototype = {
       return $.map(this.fields, field => {
         // do not validate a field if not the same as given validation group
         if (!group || this._isFieldInGroup(field, group))
-          return field.whenValidate(force);
+          return field.whenValidate({force});
       });
     });
 
@@ -115,21 +121,26 @@ ParsleyForm.prototype = {
   // Returns `true` if all fields are valid, `false` if a failure is detected
   // or `null` if the result depends on an unresolved promise.
   // Prefer using `whenValid` instead.
-  isValid: function (group, force) {
-    return statusMapping[ this.whenValid(group, force).state() ];
+  isValid: function (options) {
+    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+      ParsleyUtils.warnOnce('Calling isValid on a parsley form without passing arguments as an object is deprecated.');
+      var [group, force] = arguments;
+      options = {group, force};
+    }
+    return statusMapping[ this.whenValid(options).state() ];
   },
 
   // Iterate over refreshed fields and validate them.
   // Returns a promise.
   // A validation that immediately fails will interrupt the validations.
-  whenValid: function (group, force) {
+  whenValid: function ({group, force} = {}) {
     this._refreshFields();
 
     var promises = this._withoutReactualizingFormOptions(() => {
       return $.map(this.fields, field => {
         // do not validate a field if not the same as given validation group
         if (!group || this._isFieldInGroup(field, group))
-          return field.whenValid(force);
+          return field.whenValid({force});
       });
     });
     return $.when(...promises);

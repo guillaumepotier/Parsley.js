@@ -33,8 +33,12 @@ ParsleyField.prototype = {
   // Validate field and trigger some events for mainly `ParsleyUI`
   // @returns `true`, an array of the validators that failed, or
   // `null` if validation is not finished. Prefer using whenValidate
-  validate: function (force) {
-    var promise = this.whenValidate(force);
+  validate: function (options) {
+    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+      ParsleyUtils.warnOnce('Calling validate on a parsley field without passing arguments as an object is deprecated.');
+      options = {options};
+    }
+    var promise = this.whenValidate(options);
     switch (promise.state()) {
       case 'pending': return null;
       case 'resolved': return true;
@@ -44,13 +48,13 @@ ParsleyField.prototype = {
 
   // Validate field and trigger some events for mainly `ParsleyUI`
   // @returns a promise that succeeds only when all validations do.
-  whenValidate: function (force) {
+  whenValidate: function ({force} =  {}) {
     this.value = this.getValue();
 
     // Field Validate event. `this.value` could be altered for custom needs
     this._trigger('validate');
 
-    return this.whenValid(force, this.value)
+    return this.whenValid({force, value: this.value})
       .done(() =>   { this._trigger('success'); })
       .fail(() =>   { this._trigger('error'); })
       .always(() => { this._trigger('validated'); });
@@ -77,15 +81,20 @@ ParsleyField.prototype = {
   // Returns `true` iff all constraints pass, `false` if there are failures,
   // or `null` if the result can not be determined yet (depends on a promise)
   // See also `whenValid`.
-  isValid: function (force, value) {
-    return statusMapping[this.whenValid(force, value).state()];
+  isValid: function (options) {
+    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+      ParsleyUtils.warnOnce('Calling isValid on a parsley field without passing arguments as an object is deprecated.');
+      var [force, value] = arguments;
+      options = {force, value};
+    }
+    return statusMapping[this.whenValid(options).state()];
   },
 
   // Just validate field. Do not trigger any event.
   // @returns a promise that succeeds only when all validations do.
-  // The argument `force` is optional, defaults to `false`.
-  // The argument `value` is optional. If given, it will be validated instead of the value of the input.
-  whenValid: function (force, value) {
+  // The argument `force` will force validation of empty fields.
+  // If a `value` is given, it will be validated instead of the value of the input.
+  whenValid: function ({force = false, value} = {}) {
     // Recompute options and rebind constraints to have latest changes
     this.refreshConstraints();
     this.validationResult = true;
@@ -94,11 +103,6 @@ ParsleyField.prototype = {
     if (!this.hasConstraints())
       return $.when();
 
-    // Make `force` argument optional
-    if ('boolean' !== typeof force && 'undefined' === typeof value) {
-      value = force;
-      force = false;
-    }
     // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
     if ('undefined' === typeof value || null === value)
       value = this.getValue();
