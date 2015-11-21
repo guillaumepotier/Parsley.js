@@ -207,8 +207,8 @@ ParsleyUI.prototype = {
   },
 
   setupForm: function (formInstance) {
-    formInstance.$element.on('submit.Parsley', false, $.proxy(formInstance.onSubmitValidate, formInstance));
-    formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', $.proxy(formInstance.onSubmitButton, formInstance));
+    formInstance.$element.on('submit.Parsley', false, evt => { formInstance.onSubmitValidate(evt); });
+    formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { formInstance.onSubmitButton(evt); });
 
     // UI could be disabled
     if (false === formInstance.options.uiEnabled)
@@ -337,17 +337,17 @@ ParsleyUI.prototype = {
     if (fieldInstance.options.multiple)
       $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
         if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
-          return $(this).on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
+          return $(this).on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
       });
 
     // Select case
     if (fieldInstance.$element.is('select'))
       if (!new RegExp('change', 'i').test(fieldInstance.options.trigger || ''))
-        return fieldInstance.$element.on('change.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
+        return fieldInstance.$element.on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
 
     // All other inputs fields
     if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
-      return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, $.proxy(fieldInstance.validate, fieldInstance));
+      return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
   },
 
   reset: function (parsleyInstance) {
