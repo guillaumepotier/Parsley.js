@@ -31,19 +31,8 @@ $.extend(true, Parsley, {
     };
 
     return this;
-  },
-
-  eventValidate: function (event) {
-    // For keyup, keypress, keydown.. events that could be a little bit obstrusive
-    // do not validate if val length < min threshold on first validation. Once field have been validated once and info
-    // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
-    if (new RegExp('key').test(event.type))
-      if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationThreshold)
-        return;
-
-    this._ui.validatedOnce = true;
-    this.whenValidate();
   }
+
 });
 
 Parsley.addValidator('remote', {
