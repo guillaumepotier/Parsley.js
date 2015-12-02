@@ -83,17 +83,17 @@ p.parsley-error {
           <span class="clearfix"></span>
           <hr></hr>
 
-          <div class="bs-callout bs-callout-warning hidden">
-            <h4>Oh snap!</h4>
-            <p>This form seems to be invalid :(</p>
-          </div>
+<div class="form-group example">
+<div class="bs-callout bs-callout-warning hidden">
+  <h4>Oh snap!</h4>
+  <p>This form seems to be invalid :(</p>
+</div>
 
-          <div class="bs-callout bs-callout-info hidden">
-            <h4>Yay!</h4>
-            <p>Everything seems to be ok :)</p>
-          </div>
+<div class="bs-callout bs-callout-info hidden">
+  <h4>Yay!</h4>
+  <p>Everything seems to be ok :)</p>
+</div>
 
-          <div class="form-group example">
 <form id="demo-form" data-parsley-validate>
   <label for="fullname">Full Name * :</label>
   <input type="text" class="form-control" name="fullname" required />
@@ -134,7 +134,7 @@ p.parsley-error {
   </p>
 
   <br/>
-  <span class="btn btn-default">validate</span>
+  <input type="submit" class="btn btn-default" value="validate"/>
 
   <p><small>* Please, note that this demo form is not a perfect example of UX-awareness. The aim here is to show a quick overview of parsley-API and Parsley customizable behavior.</small></p>
 </form>
@@ -162,25 +162,15 @@ p.parsley-error {
 
     <script type="text/javascript" src="../../dist/parsley.js"></script>
     <script type="text/javascript" class="example">
-$(document).ready(function () {
-  $.listen('parsley:field:validate', function () {
-    validateFront();
+$(function () {
+  $('#demo-form').parsley().on('field:validated', function() {
+    var ok = $('.parsley-error').length === 0;
+    $('.bs-callout-info').toggleClass('hidden', !ok);
+    $('.bs-callout-warning').toggleClass('hidden', ok);
+  })
+  .on('form:success', function() {
+    return false; // Don't submit form for this demo
   });
-
-  $('#demo-form .btn').on('click', function () {
-    $('#demo-form').parsley().validate();
-    validateFront();
-  });
-
-  var validateFront = function () {
-    if (true === $('#demo-form').parsley().isValid()) {
-      $('.bs-callout-info').removeClass('hidden');
-      $('.bs-callout-warning').addClass('hidden');
-    } else {
-      $('.bs-callout-info').addClass('hidden');
-      $('.bs-callout-warning').removeClass('hidden');
-    }
-  };
 });
     </script>
     <script type="text/javascript" src="../assets/example.js"></script>
