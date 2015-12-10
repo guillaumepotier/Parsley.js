@@ -118,6 +118,7 @@ function buildDoc(done) {
 function copyI18n(done) {
   gulp.src(['src/i18n/*.js'])
     .pipe($.replace("import Parsley from 'parsley';", "// Load this after Parsley"))  // Quick hack
+    .pipe($.replace("import Parsley from '../parsley/main';", ""))  // en uses special import
     .pipe(gulp.dest('dist/i18n/'))
     .on('end', done);
 }
