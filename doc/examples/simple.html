@@ -168,7 +168,7 @@ $(function () {
     $('.bs-callout-info').toggleClass('hidden', !ok);
     $('.bs-callout-warning').toggleClass('hidden', ok);
   })
-  .on('form:success', function() {
+  .on('form:submit', function() {
     return false; // Don't submit form for this demo
   });
 });
