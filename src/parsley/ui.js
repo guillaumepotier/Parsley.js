@@ -322,7 +322,7 @@ ParsleyUI.prototype = {
     // For keyup, keypress, keydown... events that could be a little bit obstrusive
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
-    if (new RegExp('key').test(event.type))
+    if (/key/.test(event.type))
       if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationThreshold)
         return;
 
@@ -336,17 +336,17 @@ ParsleyUI.prototype = {
     // Radio and checkboxes fields must bind every field multiple
     if (fieldInstance.options.multiple)
       $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
-        if (!new RegExp('change', 'i').test($(this).parsley().options.trigger || ''))
+        if (!/change/i.test($(this).parsley().options.trigger || ''))
           return $(this).on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
       });
 
     // Select case
     if (fieldInstance.$element.is('select'))
-      if (!new RegExp('change', 'i').test(fieldInstance.options.trigger || ''))
+      if (!/change/i.test(fieldInstance.options.trigger || ''))
         return fieldInstance.$element.on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
 
     // All other inputs fields
-    if (!new RegExp('keyup', 'i').test(fieldInstance.options.trigger || ''))
+    if (!/keyup/i.test(fieldInstance.options.trigger || ''))
       return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
   },
 

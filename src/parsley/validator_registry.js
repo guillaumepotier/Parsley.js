@@ -193,7 +193,7 @@ ParsleyValidatorRegistry.prototype = {
       return string;
     }
 
-    return 'string' === typeof string ? string.replace(new RegExp('%s', 'i'), parameters) : '';
+    return 'string' === typeof string ? string.replace(/%s/i, parameters) : '';
   },
 
   // Here is the Parsley default validators list.
