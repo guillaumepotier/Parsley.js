@@ -337,7 +337,7 @@ ParsleyUI.prototype = {
     if (fieldInstance.options.multiple)
       $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
         if (!/change/i.test($(this).parsley().options.trigger || ''))
-          return $(this).on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
+          $(this).on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
       });
 
     // Select case
