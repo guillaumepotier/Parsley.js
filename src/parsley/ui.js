@@ -305,22 +305,21 @@ ParsleyUI.prototype = {
     if ('' === triggers)
       return;
 
-    // Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise
     $toBind.on(
       triggers.split(' ').join('.Parsley ') + '.Parsley',
-      $.proxy('function' === typeof fieldInstance.eventValidate ? fieldInstance.eventValidate : this.eventValidate, fieldInstance));
+      event => { this.eventValidate(fieldInstance, event); }
+    );
   },
 
-  // Called through $.proxy with fieldInstance. `this` context is ParsleyField
-  eventValidate: function (event) {
+  eventValidate: function (field, event) {
     // For keyup, keypress, keydown... events that could be a little bit obstrusive
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
     if (/key/.test(event.type))
-      if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationThreshold)
+      if (!field._ui.validationInformationVisible && field.getValue().length <= field.options.validationThreshold)
         return;
 
-    this.validate();
+    field.validate();
   },
 
   manageFailingFieldTrigger: function (fieldInstance) {

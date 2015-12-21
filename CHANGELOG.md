@@ -1,5 +1,8 @@
 # Parsley 2.x changelog
 
+## master
+- Drop support for undocumented option `eventValidate`.
+
 ## 2.2.0-rc3
 
 - Merged both versions (remote and basic) of Parsley.
