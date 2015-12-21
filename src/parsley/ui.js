@@ -30,9 +30,6 @@ ParsleyUI.prototype = {
     // Then store current validation result for next reflow
     fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
 
-    // Field have been validated at least once if here. Useful for binded key events...
-    fieldInstance._ui.validatedOnce = true;
-
     // Handle valid / invalid / none field class
     this.manageStatusClass(fieldInstance);
 
@@ -239,7 +236,6 @@ ParsleyUI.prototype = {
 
     // ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly
     _ui.lastValidationResult = [];
-    _ui.validatedOnce = false;
     _ui.validationInformationVisible = false;
 
     // Store it in fieldInstance for later
@@ -324,7 +320,6 @@ ParsleyUI.prototype = {
       if (!this._ui.validationInformationVisible && this.getValue().length <= this.options.validationThreshold)
         return;
 
-    this._ui.validatedOnce = true;
     this.validate();
   },
 
@@ -370,7 +365,6 @@ ParsleyUI.prototype = {
     this._resetClass(parsleyInstance);
 
     // Reset validation flags and last validation result
-    parsleyInstance._ui.validatedOnce = false;
     parsleyInstance._ui.lastValidationResult = [];
     parsleyInstance._ui.validationInformationVisible = false;
     parsleyInstance._ui.failedOnce = false;
