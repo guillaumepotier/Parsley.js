@@ -207,7 +207,7 @@ ParsleyUI.prototype = {
   },
 
   setupForm: function (formInstance) {
-    formInstance.$element.on('submit.Parsley', false, evt => { formInstance.onSubmitValidate(evt); });
+    formInstance.$element.on('submit.Parsley', evt => { formInstance.onSubmitValidate(evt); });
     formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { formInstance.onSubmitButton(evt); });
 
     // UI could be disabled
@@ -337,17 +337,17 @@ ParsleyUI.prototype = {
     if (fieldInstance.options.multiple)
       fieldInstance._findRelatedMultiple().each(function () {
         if (!/change/i.test($(this).parsley().options.trigger || ''))
-          $(this).on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
+          $(this).on('change.ParsleyFailedOnce', () => { fieldInstance.validate(); });
       });
 
     // Select case
     if (fieldInstance.$element.is('select'))
       if (!/change/i.test(fieldInstance.options.trigger || ''))
-        return fieldInstance.$element.on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
+        return fieldInstance.$element.on('change.ParsleyFailedOnce', () => { fieldInstance.validate(); });
 
     // All other inputs fields
     if (!/keyup/i.test(fieldInstance.options.trigger || ''))
-      return fieldInstance.$element.on('keyup.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
+      return fieldInstance.$element.on('keyup.ParsleyFailedOnce', () => { fieldInstance.validate(); });
   },
 
   reset: function (parsleyInstance) {
