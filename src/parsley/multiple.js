@@ -53,13 +53,13 @@ ParsleyMultiple.prototype = {
 
     // Radio input case
     if (this.$element.is('input[type=radio]'))
-      return this._findRelatedMultiple().filter(':checked').val() || '';
+      return this._findRelated().filter(':checked').val() || '';
 
     // checkbox input case
     if (this.$element.is('input[type=checkbox]')) {
       var values = [];
 
-      this._findRelatedMultiple().filter(':checked').each(function () {
+      this._findRelated().filter(':checked').each(function () {
         values.push($(this).val());
       });
 

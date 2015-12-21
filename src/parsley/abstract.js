@@ -120,7 +120,7 @@ ParsleyAbstract.prototype = {
     return this.whenValid(...arguments);
   },
 
-  _findRelatedMultiple: function () {
+  _findRelated: function () {
     return this.options.multiple ?
       this.parent.$element.find(`[${this.options.namespace}multiple="${this.options.multiple}"]`)
     : this.$element;

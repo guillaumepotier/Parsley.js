@@ -91,7 +91,7 @@ ParsleyFactory.prototype = {
     }
 
     // Check here if we don't already have a related multiple instance saved
-    var $previouslyRelated = this._findRelatedMultiple();
+    var $previouslyRelated = this._findRelated();
     for (var i = 0; i < $previouslyRelated.length; i++) {
       parsleyMultipleInstance = $($previouslyRelated.get(i)).data('Parsley');
       if ('undefined' !== typeof parsleyMultipleInstance) {

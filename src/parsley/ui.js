@@ -295,7 +295,7 @@ ParsleyUI.prototype = {
   },
 
   actualizeTriggers: function (fieldInstance) {
-    var $toBind = fieldInstance._findRelatedMultiple();
+    var $toBind = fieldInstance._findRelated();
 
     // Remove Parsley events already binded on this field
     $toBind.off('.Parsley');
@@ -333,7 +333,7 @@ ParsleyUI.prototype = {
 
     // Radio and checkboxes fields must bind every field multiple
     if (fieldInstance.options.multiple)
-      fieldInstance._findRelatedMultiple().each(function () {
+      fieldInstance._findRelated().each(function () {
         if (!/change/i.test($(this).parsley().options.trigger || ''))
           $(this).on('change.ParsleyFailedOnce', () => { fieldInstance.validate(); });
       });
