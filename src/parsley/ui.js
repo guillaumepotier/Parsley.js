@@ -335,7 +335,7 @@ ParsleyUI.prototype = {
 
     // Radio and checkboxes fields must bind every field multiple
     if (fieldInstance.options.multiple)
-      $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]').each(function () {
+      fieldInstance._findRelatedMultiple().each(function () {
         if (!/change/i.test($(this).parsley().options.trigger || ''))
           $(this).on('change.ParsleyFailedOnce', false, () => { fieldInstance.validate(); });
       });
