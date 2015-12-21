@@ -295,9 +295,7 @@ ParsleyUI.prototype = {
   },
 
   actualizeTriggers: function (fieldInstance) {
-    var $toBind = fieldInstance.$element;
-    if (fieldInstance.options.multiple)
-      $toBind = $('[' + fieldInstance.options.namespace + 'multiple="' + fieldInstance.options.multiple + '"]');
+    var $toBind = fieldInstance._findRelatedMultiple();
 
     // Remove Parsley events already binded on this field
     $toBind.off('.Parsley');

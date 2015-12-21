@@ -121,7 +121,9 @@ ParsleyAbstract.prototype = {
   },
 
   _findRelatedMultiple: function () {
-    return this.parent.$element.find(`[${this.options.namespace}multiple="${this.options.multiple}"]`);
+    return this.options.multiple ?
+      this.parent.$element.find(`[${this.options.namespace}multiple="${this.options.multiple}"]`)
+    : this.$element;
   }
 };
 
