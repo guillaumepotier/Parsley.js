@@ -77,6 +77,7 @@
     "entryFileName": "parsley",
     "mainVarName": "parsley",
     "mochaGlobals": [
+      "$",
       "stub",
       "spy",
       "expect",
