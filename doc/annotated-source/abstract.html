@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
 <span class="hljs-keyword">var</span> ParsleyAbstract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{};
@@ -372,11 +372,13 @@ Returns false if execution was interrupted.</p>
 
   asyncIsValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     ParsleyUtils.warnOnce(<span class="hljs-string">"asyncIsValid is deprecated; please use whenIsValid instead"</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid(...arguments);
   },
 
-  _findRelatedMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.parent.$element.find(<span class="hljs-string">`[<span class="hljs-subst">${this.options.namespace}</span>multiple="<span class="hljs-subst">${this.options.multiple}</span>"]`</span>);
+  _findRelated: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.multiple ?
+      <span class="hljs-keyword">this</span>.parent.$element.find(<span class="hljs-string">`[<span class="hljs-subst">${this.options.namespace}</span>multiple="<span class="hljs-subst">${this.options.multiple}</span>"]`</span>)
+    : <span class="hljs-keyword">this</span>.$element;
   }
 };
 
