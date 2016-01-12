@@ -318,6 +318,15 @@ if (false === instance.options.priorityEnabled)
                 <td>Either validate higher priority constraints first and stop on first failure (<code>true</code>), or validate all constraints simultaneously and show all the failing ones (<code>false</code>).</td>
               </tr>
               <tr>
+                <td><code>data-parsley-inputs</code> <version>#2.0</version></td>
+                <td>
+                  <code>input,</code><br/>
+                  <code>textarea,</code><br/>
+                  <code>select</code></td>
+                <td>When looking for fields within a form, Parsley uses this selector.
+                  The fields found will then be filtered using the <code>excluded<code> option below.</td>
+              </tr>
+              <tr>
                 <td><code>data-parsley-excluded</code> <version>#2.0</version></td>
                 <td>
                   <code>input[type=button],</code><br/>
