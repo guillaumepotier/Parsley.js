@@ -7,10 +7,10 @@ import fr from '../../src/i18n/fr';
 describe('ParsleyValidatorRegistry', () => {
   var validatorRegistry = Parsley._validatorRegistry;
 
-  var expectValidation = function(value, name, requirements) {
+  var expectValidation = function(value, name, requirements, extra = {}) {
     var validatorSpec = validatorRegistry.validators[name];
     var validator = new ParsleyValidator(validatorSpec);
-    var argList = validator.parseRequirements(requirements);
+    var argList = validator.parseRequirements(requirements, key => { return extra[key]; });
     argList.unshift(value);
     return expect(validator.validate.apply(validator, argList));
   };
@@ -86,11 +86,11 @@ describe('ParsleyValidatorRegistry', () => {
     expectValidation('foo',       'type', 'number').not.to.be(true);
     expectValidation('-',         'type', 'number').not.to.be(true);
     expectValidation('1',         'type', 'number').to.be(true);
-    expectValidation('1.5',       'type', 'number').to.be(true);
-    expectValidation('-1.5',      'type', 'number').to.be(true);
-    expectValidation('1,500.642', 'type', 'number').to.be(true);
-    expectValidation('0.5',       'type', 'number').to.be(true);
-    expectValidation('.5',        'type', 'number').to.be(true);
+    expectValidation('1.5',       'type', 'number', {step: 'any'}).to.be(true);
+    expectValidation('-1.5',      'type', 'number', {step: 'any'}).to.be(true);
+    expectValidation('1500.642',  'type', 'number', {step: 'any'}).to.be(true);
+    expectValidation('0.5',       'type', 'number', {step: 'any'}).to.be(true);
+    expectValidation('.5',        'type', 'number', {step: 'any'}).to.be(true);
   });
   it('should have a type="digits" validator', () => {
     expectValidation('foo',       'type', 'digits').not.to.be(true);

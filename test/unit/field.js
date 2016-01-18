@@ -93,26 +93,61 @@ describe('ParsleyField', () => {
     // still 5 validators, with maxlength instead of length now
     expect(parsleyField.actualizeOptions().constraints.length).to.be(5);
   });
-  it('should use integer validation HTML5 `number` type without a step attribute', () => {
-    $('body').append('<input type="number" id="element" />');
-    var parsleyField = $('#element').parsley();
-    expect(parsleyField.constraints[0].requirements).to.be('integer');
+
+  var itShouldFollowSpecForNumber = (step, min, initial, value, valid) => {
+    var attrs = [
+      step ? `step="${step}" ` : '',
+      min  ? `min="${min}" ` : '',
+      initial ? `value="${initial}" ` : ''
+    ].join('');
+    it('should follow HTML5 spec to validate "number" type ' +
+    (attrs ? `with attributes ${attrs}` : '') +
+    `by ${valid ? 'accepting' : 'rejecting'} "${value}"`, () => {
+      var $input = $(`<input type="number" ${attrs}>`);
+      var r = $input.parsley().isValid(value);
+      r = $input.parsley().isValid(value);
+      expect(r).to.be(valid);
+    });
+  };
+
+  var checks = [
+    // step | min | initial | good        | bad values
+    //      |     |  value  | values      |
+    // ---- | --- | ------- | ----------- | ----------
+    "       |     |         | 1, -2, 4.0  | 1.1, 4.       ",
+    "  any  |     |         | -2, 4.3, .1 | 4., hi, ., 1. ",
+    "  AnY  |     |         | .1e+2, -.2  | 4e, 4e-, .e+2 ",
+    "  0.1  |     |         | -2, 4.3     | 4.03          ",
+    "       | 0.3 |         | 4.3         | -2, -2.7, 4.0 ",
+    "       |     |   0.3   | -2.7, 4.3   | -2, -2.3, 4.0 ",
+    "  0.4  | 0.3 |         | 1.1         | -2.9, 1.6, 1.8",
+    "  0.4  |     |   0.3   | -2.9, 1.1   | 1.6, 1.8      ",
+    "  0.4  | 0.3 |   0.5   | 1.1         | -2.9, 1.6, 1.8"
+  ];
+  $.each(checks, (_, check) => {
+    var trim = val => { return val.trim(); };
+    var [step, min, initial, ...goodAndBad] = check.split('|').map(trim);
+    var xs = goodAndBad.map(values => {
+      return values.split(',').map(trim);
+    });
+    var [good, bad] = xs;
+    $.each(good, (_, val) => {
+      itShouldFollowSpecForNumber(step, min, initial, val, true);
+      itShouldFollowSpecForNumber(step, min, initial, val.trim() + '0', true);
+    });
+    $.each(bad, (_, val) => {
+      itShouldFollowSpecForNumber(step, min, initial, val, false);
+    });
   });
-  it('should use integer validation HTML5 `number` type with integer value step', () => {
-    $('body').append('<input type="number" id="element" step="3" />');
-    var parsleyField = $('#element').parsley();
-    expect(parsleyField.constraints[0].requirements).to.be('integer');
-  });
-  it('should use number validation for HTML5 `number` with float value step', () => {
-    $('body').append('<input type="number" id="element" step="0.3" />');
-    var parsleyField = $('#element').parsley();
-    expect(parsleyField.constraints[0].requirements).to.be('number');
-  });
-  it('should use number validation for HTML5 `number` with step="any"', () => {
-    $('body').append('<input type="number" id="element" step="any" />');
-    var parsleyField = $('#element').parsley();
-    expect(parsleyField.constraints[0].requirements).to.be('number');
-  });
+  // 'any' must be exact match
+  itShouldFollowSpecForNumber('   any    ', '', '', '4.2', false);
+  // min / initial should be auto-trimmed
+  itShouldFollowSpecForNumber('0.2', '   0.3    ', '', '0.3', true);
+  // scientific notation
+  itShouldFollowSpecForNumber('', '0.3', '', '43e-1', true);
+  // commas are not accepted in the spec
+  itShouldFollowSpecForNumber('any', '', '', '1,000', false);
+
   it('should valid simple validator', () => {
     $('body').append('<input type="text" id="element" value="" />');
     var parsleyField = $('#element').parsley()

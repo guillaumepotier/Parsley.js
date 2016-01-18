@@ -569,7 +569,8 @@ if (false === instance.options.priorityEnabled)
                   Number <version>#2.0</version>
                 </td>
                 <td><code>data-parsley-type="number"</code></td>
-                <td>Validates that a value is a valid number.<span class="label label-warning">Warning!</span> HTML5 <code>type="number"</code> is bound with the below <code>integer</code> validator, but for browsers that support it, the value accessible from javascript in case of invalid input is <code>""</code>, so you will never get an error (unless it is also <code>required</code>).</td>
+                <td>Validates that a value is a valid number according to the given <code>step</code>, <code>min</code> and original <code>value</code>.
+                  <span class="label label-warning">Warning!</span> HTML5 <code>type="number"</code> can be counterintuitive. Moreover, for browsers that support it, the value accessible from javascript in case of invalid input is <code>""</code>, so you will never get an error (unless it is also <code>required</code>).</td>
               </tr>
               <tr>
                 <td>
