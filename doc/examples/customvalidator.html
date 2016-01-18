@@ -70,24 +70,11 @@
           <hr></hr>
           <div class="form-group example">
 <form id="demo-form" data-parsley-validate>
-  <label for="question">Do you code? *</label>
-  <p>
-    <input type="radio" name="question1" value="yes" required /> Yes
-    <input type="radio" name="question1" value="no" /> No
-  </p>
+  <label for="question">Please enter a palindrome:</label>
+  <input type="text" class="form-control" name="s" required data-parsley-palindrome="3">
 
-  <label for="languages">If yes, in which language(s)?</label>
-  <input type="text" class="form-control" name="languages" data-parsley-conditionalrequired='["[name=\"question1\"]:checked", "yes"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you are a programmer!" />
-
-  <label for="question">Do you eat dog food? *</label>
-  <p>
-    <input type="radio" name="question2" value="yes" required /> Yes
-    <input type="radio" name="question2" value="no" /> No
-  </p>
-
-  <label for="why">If no, why?</label>
-  <input type="text" class="form-control" name="why" data-parsley-conditionalrequired='["[name=\"question2\"]:checked", "no"]' data-parsley-validate-if-empty data-parsley-success-class="" data-parsley-conditionalrequired-message="This value is required since you do not eat dog food!" />
-
+  <label for="question">Please enter a multiple of 3:</label>
+  <input type="text" class="form-control" name="nb" required data-parsley-multiple-of="3">
   <input type="submit" class="btn btn-default pull-right" />
 </form>
           </div>
@@ -114,20 +101,27 @@
     <script type="text/javascript" src="../../dist/parsley.js"></script>
 
     <script type="text/javascript" class="example">
-window.ParsleyConfig = {
-  validators: {
-    conditionalrequired: {
-      fn: function (value, requirements) {
-        // if requirements[0] value does not meet requirements[1] expectation, field is required
-        if (requirements[1] == $(requirements[0]).val() && '' == value)
-          return false;
-
-        return true;
-      },
-      priority: 32
-    }
+window.Parsley.addValidator('palindrome', {
+  validateString: function(value) {
+    return value.split('').reverse().join('') === value;
+  },
+  messages: {
+    en: 'This string is not the reverse of itself',
+    fr: "Cette valeur n'est pas l'inverse d'elle même."
   }
-};
+});
+
+window.Parsley.addValidator('multipleOf', {
+  validateNumber: function(value, requirement) {
+    return value % requirement === 0;
+  },
+  requirementType: 'integer',
+  messages: {
+    en: 'This value should be a multiple of %s.',
+    fr: "Ce nombre n'est pas un multiple de %s."
+  }
+});
+
     </script>
     <script type="text/javascript" src="../assets/example.js"></script>
   </body>
