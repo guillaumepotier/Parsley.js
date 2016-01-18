@@ -179,7 +179,7 @@
 ParsleyFactory.prototype = {
   init: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Parsley'</span>;
-    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'2.2.0-rc4'</span>;
+    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'2.2.0'</span>;
     <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();</pre></div></div>
             
         </li>
@@ -248,7 +248,6 @@ Maybe some refactoring would be appreciated here…</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  handleMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
     <span class="hljs-keyword">var</span> name;
     <span class="hljs-keyword">var</span> multiple;
     <span class="hljs-keyword">var</span> parsleyMultipleInstance;</pre></div></div>
@@ -337,9 +336,9 @@ Maybe some refactoring would be appreciated here…</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> name) {
-      $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">if</span> ($(<span class="hljs-keyword">this</span>).is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>))
-          $(<span class="hljs-keyword">this</span>).attr(that.options.namespace + <span class="hljs-string">'multiple'</span>, that.options.multiple);
+      $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each((i, input) =&gt; {
+        <span class="hljs-keyword">if</span> ($(input).is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>))
+          $(input).attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
       });
     }</pre></div></div>
             
@@ -356,7 +355,7 @@ Maybe some refactoring would be appreciated here…</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $previouslyRelated = <span class="hljs-keyword">this</span>._findRelatedMultiple();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $previouslyRelated = <span class="hljs-keyword">this</span>._findRelated();
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; $previouslyRelated.length; i++) {
       parsleyMultipleInstance = $($previouslyRelated.get(i)).data(<span class="hljs-string">'Parsley'</span>);
       <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyMultipleInstance) {

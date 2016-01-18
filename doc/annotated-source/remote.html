@@ -165,32 +165,8 @@ result in state() === ‘rejected’.</p>
     };
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  },
-
-  eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>For keyup, keypress, keydown.. events that could be a little bit obstrusive
-do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
-about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'key'</span>).test(event.type))
-      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._ui.validationInformationVisible &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
-        <span class="hljs-keyword">return</span>;
-
-    <span class="hljs-keyword">this</span>._ui.validatedOnce = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.whenValidate();
   }
+
 });
 
 Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
@@ -215,11 +191,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Fill current value</p>
 
@@ -234,11 +210,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Merge options passed in from the function with the ones in the attribute</p>
 
@@ -249,11 +225,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>All <code>$.ajax(options)</code> could be overridden or extended directly from DOM in <code>data-parsley-remote-options</code></p>
 
@@ -268,11 +244,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Generate store key based on ajax options</p>
 
@@ -285,11 +261,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Initialise querry cache</p>
 
@@ -301,11 +277,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Try to retrieve stored xhr</p>
 
@@ -332,7 +308,7 @@ Parsley.on(<span class="hljs-string">'form:submit'</span>, <span class="hljs-fun
 
 <span class="hljs-built_in">window</span>.ParsleyExtend.addAsyncValidator = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
   ParsleyUtils.warnOnce(<span class="hljs-string">'Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`'</span>);
-  <span class="hljs-keyword">return</span> Parsley.apply(Parsley.addAsyncValidator, <span class="hljs-built_in">arguments</span>);
+  <span class="hljs-keyword">return</span> Parsley.addAsyncValidator(...arguments);
 };</pre></div></div>
             
         </li>

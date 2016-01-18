@@ -370,13 +370,15 @@ Returns false if execution was interrupted.</p>
     <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'destroy'</span>);
   },
 
-  asyncIsValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    ParsleyUtils.warnOnce(<span class="hljs-string">"asyncIsValid is deprecated; please use whenIsValid instead"</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+  asyncIsValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{
+    ParsleyUtils.warnOnce(<span class="hljs-string">"asyncIsValid is deprecated; please use whenValid instead"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid({group, force});
   },
 
-  _findRelatedMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.parent.$element.find(<span class="hljs-string">`[<span class="hljs-subst">${this.options.namespace}</span>multiple="<span class="hljs-subst">${this.options.multiple}</span>"]`</span>);
+  _findRelated: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.multiple ?
+      <span class="hljs-keyword">this</span>.parent.$element.find(<span class="hljs-string">`[<span class="hljs-subst">${this.options.namespace}</span>multiple="<span class="hljs-subst">${this.options.multiple}</span>"]`</span>)
+    : <span class="hljs-keyword">this</span>.$element;
   }
 };
 

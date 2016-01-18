@@ -282,16 +282,16 @@ ParsleyValidator.prototype = {</pre></div></div>
     <span class="hljs-keyword">if</span> ($.isArray(value)) {
       <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.validateMultiple)
         <span class="hljs-keyword">throw</span> <span class="hljs-string">'Validator `'</span> + <span class="hljs-keyword">this</span>.name + <span class="hljs-string">'` does not handle multiple values'</span>;
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateMultiple.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateMultiple(...arguments);
     } <span class="hljs-keyword">else</span> {
       <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.validateNumber) {
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(value))
           <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
         <span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>] = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>]);
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateNumber.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateNumber(...arguments);
       }
       <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.validateString) {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateString.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateString(...arguments);
       }
       <span class="hljs-keyword">throw</span> <span class="hljs-string">'Validator `'</span> + <span class="hljs-keyword">this</span>.name + <span class="hljs-string">'` only handles multiple values'</span>;
     }

@@ -115,15 +115,14 @@
 
 ParsleyUI.prototype = {
   listen: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
     <span class="hljs-built_in">window</span>.Parsley
-    .on(<span class="hljs-string">'form:init'</span>,       <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.setupForm (<span class="hljs-keyword">this</span>); } )
-    .on(<span class="hljs-string">'field:init'</span>,      <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.setupField(<span class="hljs-keyword">this</span>); } )
-    .on(<span class="hljs-string">'field:validated'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.reflow    (<span class="hljs-keyword">this</span>); } )
-    .on(<span class="hljs-string">'form:validated'</span>,  <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.focus     (<span class="hljs-keyword">this</span>); } )
-    .on(<span class="hljs-string">'field:reset'</span>,     <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.reset     (<span class="hljs-keyword">this</span>); } )
-    .on(<span class="hljs-string">'form:destroy'</span>,    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.destroy   (<span class="hljs-keyword">this</span>); } )
-    .on(<span class="hljs-string">'field:destroy'</span>,   <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.destroy   (<span class="hljs-keyword">this</span>); } );
+    .on(<span class="hljs-string">'form:init'</span>,       (form ) =&gt; { <span class="hljs-keyword">this</span>.setupForm (form ); } )
+    .on(<span class="hljs-string">'field:init'</span>,      (field) =&gt; { <span class="hljs-keyword">this</span>.setupField(field); } )
+    .on(<span class="hljs-string">'field:validated'</span>, (field) =&gt; { <span class="hljs-keyword">this</span>.reflow    (field); } )
+    .on(<span class="hljs-string">'form:validated'</span>,  (form ) =&gt; { <span class="hljs-keyword">this</span>.focus     (form ); } )
+    .on(<span class="hljs-string">'field:reset'</span>,     (field) =&gt; { <span class="hljs-keyword">this</span>.reset     (field); } )
+    .on(<span class="hljs-string">'form:destroy'</span>,    (form ) =&gt; { <span class="hljs-keyword">this</span>.destroy   (form ); } )
+    .on(<span class="hljs-string">'field:destroy'</span>,   (field) =&gt; { <span class="hljs-keyword">this</span>.destroy   (field); } );
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   },
@@ -185,11 +184,11 @@ ParsleyUI.prototype = {
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Field have been validated at least once if here. Useful for binded key events…</p>
+              <p>Handle valid / invalid / none field class</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fieldInstance._ui.validatedOnce = <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.manageStatusClass(fieldInstance);</pre></div></div>
             
         </li>
         
@@ -200,11 +199,11 @@ ParsleyUI.prototype = {
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Handle valid / invalid / none field class</p>
+              <p>Add, remove, updated errors messages</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.manageStatusClass(fieldInstance);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.manageErrorsMessages(fieldInstance, diff);</pre></div></div>
             
         </li>
         
@@ -215,21 +214,6 @@ ParsleyUI.prototype = {
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Add, remove, updated errors messages</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.manageErrorsMessages(fieldInstance, diff);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
               <p>Triggers impl</p>
 
             </div>
@@ -239,11 +223,11 @@ ParsleyUI.prototype = {
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user</p>
 
@@ -256,11 +240,11 @@ ParsleyUI.prototype = {
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Returns an array of field’s error message(s)</p>
 
@@ -271,11 +255,11 @@ ParsleyUI.prototype = {
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>No error message, field is valid</p>
 
@@ -309,11 +293,11 @@ ParsleyUI.prototype = {
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Case where we have errorMessage option that configure an unique field error message, regardless failing validators</p>
 
@@ -345,11 +329,11 @@ ParsleyUI.prototype = {
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Show, hide, update failing constraints messages</p>
 
@@ -368,11 +352,11 @@ ParsleyUI.prototype = {
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>TODO: strange API here, intuitive for manual usage with addError(pslyInstance, ‘foo’, ‘bar’)
 but a little bit complex for above internal usage, with forced undefined parameter…</p>
@@ -396,11 +380,11 @@ but a little bit complex for above internal usage, with forced undefined paramet
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Same as above</p>
 
@@ -419,11 +403,11 @@ but a little bit complex for above internal usage, with forced undefined paramet
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Same as above twice</p>
 
@@ -438,11 +422,11 @@ but a little bit complex for above internal usage, with forced undefined paramet
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>edge case possible here: remove a standard Parsley error that is still failing in fieldInstance.validationResult
 but highly improbable cuz’ manually removing a well Parsley handled error makes no sense.</p>
@@ -510,17 +494,17 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
   },
 
   setupForm: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">formInstance</span>) </span>{
-    formInstance.$element.on(<span class="hljs-string">'submit.Parsley'</span>, <span class="hljs-literal">false</span>, $.proxy(formInstance.onSubmitValidate, formInstance));
-    formInstance.$element.on(<span class="hljs-string">'click.Parsley'</span>, <span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>, $.proxy(formInstance.onSubmitButton, formInstance));</pre></div></div>
+    formInstance.$element.on(<span class="hljs-string">'submit.Parsley'</span>, evt =&gt; { formInstance.onSubmitValidate(evt); });
+    formInstance.$element.on(<span class="hljs-string">'click.Parsley'</span>, <span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>, evt =&gt; { formInstance.onSubmitButton(evt); });</pre></div></div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>UI could be disabled</p>
 
@@ -538,11 +522,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>UI could be disabled</p>
 
@@ -556,11 +540,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Give field its Parsley id in DOM</p>
 
@@ -573,11 +557,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>$errorClassHandler is the $element that woul have parsley-error and parsley-success classes</p>
 
@@ -588,11 +572,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>$errorsWrapper is a div that would contain the various field errors, it will be appended into $errorsContainer</p>
 
@@ -604,28 +588,27 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>ValidationResult UI storage to detect what have changed bwt two validations, and update DOM accordingly</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    _ui.lastValidationResult = [];
-    _ui.validatedOnce = <span class="hljs-literal">false</span>;
     _ui.validationInformationVisible = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Store it in fieldInstance for later</p>
 
@@ -636,11 +619,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Bind triggers first time</p>
 
@@ -652,11 +635,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Determine which element will have <code>parsley-error</code> and <code>parsley-success</code> classes</p>
 
@@ -667,11 +650,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>An element selector could be passed through DOM with <code>data-parsley-class-handler=#foo</code></p>
 
@@ -683,11 +666,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Class handled could also be determined by function given in Parsley options</p>
 
@@ -698,11 +681,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-29">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>If this function returned a valid existing DOM element, go for it</p>
 
@@ -714,11 +697,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Otherwise, if simple element (input, texatrea, select…) it will perfectly host the classes</p>
 
@@ -730,11 +713,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>But if multiple element (radio, checkbox), that would be their parent</p>
 
@@ -749,11 +732,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Nothing to do if already inserted</p>
 
@@ -780,18 +763,16 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
   },
 
   actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
-    <span class="hljs-keyword">var</span> $toBind = fieldInstance.$element;
-    <span class="hljs-keyword">if</span> (fieldInstance.options.multiple)
-      $toBind = $(<span class="hljs-string">'['</span> + fieldInstance.options.namespace + <span class="hljs-string">'multiple="'</span> + fieldInstance.options.multiple + <span class="hljs-string">'"]'</span>);</pre></div></div>
+    <span class="hljs-keyword">var</span> $toBind = fieldInstance._findRelated();</pre></div></div>
             
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Remove Parsley events already binded on this field</p>
 
@@ -802,11 +783,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>If no trigger is set, all good</p>
 
@@ -818,7 +799,40 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     <span class="hljs-keyword">var</span> triggers = fieldInstance.options.trigger.replace(<span class="hljs-regexp">/^\s+/g</span> , <span class="hljs-string">''</span>).replace(<span class="hljs-regexp">/\s+$/g</span> , <span class="hljs-string">''</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">''</span> === triggers)
-      <span class="hljs-keyword">return</span>;</pre></div></div>
+      <span class="hljs-keyword">return</span>;
+
+    $toBind.on(
+      triggers.split(<span class="hljs-string">' '</span>).join(<span class="hljs-string">'.Parsley '</span>) + <span class="hljs-string">'.Parsley'</span>,
+      event =&gt; { <span class="hljs-keyword">this</span>.eventValidate(fieldInstance, event); }
+    );
+  },
+
+  eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">field, event</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>For keyup, keypress, keydown… events that could be a little bit obstrusive
+do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
+about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/key/</span>.test(event.type))
+      <span class="hljs-keyword">if</span> (!field._ui.validationInformationVisible &amp;&amp; field.getValue().length &lt;= field.options.validationThreshold)
+        <span class="hljs-keyword">return</span>;
+
+    field.validate();
+  },
+
+  manageFailingFieldTrigger: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
+    fieldInstance._ui.failedOnce = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -829,14 +843,15 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>Bind fieldInstance.eventValidate if exists (for parsley.ajax for example), ParsleyUI.eventValidate otherwise</p>
+              <p>Radio and checkboxes fields must bind every field multiple</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    $toBind.on(
-      triggers.split(<span class="hljs-string">' '</span>).join(<span class="hljs-string">'.Parsley '</span>) + <span class="hljs-string">'.Parsley'</span>,
-      $.proxy(<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> fieldInstance.eventValidate ? fieldInstance.eventValidate : <span class="hljs-keyword">this</span>.eventValidate, fieldInstance));
-  },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (fieldInstance.options.multiple)
+      fieldInstance._findRelated().each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">if</span> (!<span class="hljs-regexp">/change/i</span>.test($(<span class="hljs-keyword">this</span>).parsley().options.trigger || <span class="hljs-string">''</span>))
+          $(<span class="hljs-keyword">this</span>).on(<span class="hljs-string">'change.ParsleyFailedOnce'</span>, () =&gt; { fieldInstance.validate(); });
+      });</pre></div></div>
             
         </li>
         
@@ -847,11 +862,13 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>Called through $.proxy with fieldInstance. <code>this</code> context is ParsleyField</p>
+              <p>Select case</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (fieldInstance.$element.is(<span class="hljs-string">'select'</span>))
+      <span class="hljs-keyword">if</span> (!<span class="hljs-regexp">/change/i</span>.test(fieldInstance.options.trigger || <span class="hljs-string">''</span>))
+        <span class="hljs-keyword">return</span> fieldInstance.$element.on(<span class="hljs-string">'change.ParsleyFailedOnce'</span>, () =&gt; { fieldInstance.validate(); });</pre></div></div>
             
         </li>
         
@@ -862,22 +879,15 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>For keyup, keypress, keydown… events that could be a little bit obstrusive
-do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
-about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.</p>
+              <p>All other inputs fields</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'key'</span>).test(event.type))
-      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._ui.validationInformationVisible &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
-        <span class="hljs-keyword">return</span>;
-
-    <span class="hljs-keyword">this</span>._ui.validatedOnce = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.validate();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-regexp">/keyup/i</span>.test(fieldInstance.options.trigger || <span class="hljs-string">''</span>))
+      <span class="hljs-keyword">return</span> fieldInstance.$element.on(<span class="hljs-string">'keyup.ParsleyFailedOnce'</span>, () =&gt; { fieldInstance.validate(); });
   },
 
-  manageFailingFieldTrigger: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fieldInstance</span>) </span>{
-    fieldInstance._ui.failedOnce = <span class="hljs-literal">true</span>;</pre></div></div>
+  reset: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parsleyInstance</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -887,61 +897,6 @@ about success or failure have been displayed, always validate with this trigger 
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <p>Radio and checkboxes fields must bind every field multiple</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (fieldInstance.options.multiple)
-      $(<span class="hljs-string">'['</span> + fieldInstance.options.namespace + <span class="hljs-string">'multiple="'</span> + fieldInstance.options.multiple + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'change'</span>, <span class="hljs-string">'i'</span>).test($(<span class="hljs-keyword">this</span>).parsley().options.trigger || <span class="hljs-string">''</span>))
-          <span class="hljs-keyword">return</span> $(<span class="hljs-keyword">this</span>).on(<span class="hljs-string">'change.ParsleyFailedOnce'</span>, <span class="hljs-literal">false</span>, $.proxy(fieldInstance.validate, fieldInstance));
-      });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
-              <p>Select case</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (fieldInstance.$element.is(<span class="hljs-string">'select'</span>))
-      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'change'</span>, <span class="hljs-string">'i'</span>).test(fieldInstance.options.trigger || <span class="hljs-string">''</span>))
-        <span class="hljs-keyword">return</span> fieldInstance.$element.on(<span class="hljs-string">'change.ParsleyFailedOnce'</span>, <span class="hljs-literal">false</span>, $.proxy(fieldInstance.validate, fieldInstance));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>All other inputs fields</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'keyup'</span>, <span class="hljs-string">'i'</span>).test(fieldInstance.options.trigger || <span class="hljs-string">''</span>))
-      <span class="hljs-keyword">return</span> fieldInstance.$element.on(<span class="hljs-string">'keyup.ParsleyFailedOnce'</span>, <span class="hljs-literal">false</span>, $.proxy(fieldInstance.validate, fieldInstance));
-  },
-
-  reset: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parsleyInstance</span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Reset all event listeners</p>
 
@@ -953,11 +908,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-42">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Nothing to do if UI never initialized for this field</p>
 
@@ -972,11 +927,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-43">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Reset all errors’ li</p>
 
@@ -990,11 +945,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-44">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Reset validation class</p>
 
@@ -1005,18 +960,17 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-45">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Reset validation flags and last validation result</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    parsleyInstance._ui.validatedOnce = <span class="hljs-literal">false</span>;
-    parsleyInstance._ui.lastValidationResult = [];
+            <div class="content"><div class='highlight'><pre>    parsleyInstance._ui.lastValidationResult = [];
     parsleyInstance._ui.validationInformationVisible = <span class="hljs-literal">false</span>;
     parsleyInstance._ui.failedOnce = <span class="hljs-literal">false</span>;
   },

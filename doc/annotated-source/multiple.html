@@ -240,7 +240,9 @@ ParsleyMultiple.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.value)
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.value)
+      value = <span class="hljs-keyword">this</span>.options.value(<span class="hljs-keyword">this</span>);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.value)
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.value;</pre></div></div>
             
         </li>
@@ -257,7 +259,7 @@ ParsleyMultiple.prototype = {</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=radio]'</span>))
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._findRelatedMultiple().filter(<span class="hljs-string">':checked'</span>).val() || <span class="hljs-string">''</span>;</pre></div></div>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).val() || <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -275,7 +277,7 @@ ParsleyMultiple.prototype = {</pre></div></div>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=checkbox]'</span>)) {
       <span class="hljs-keyword">var</span> values = [];
 
-      <span class="hljs-keyword">this</span>._findRelatedMultiple().filter(<span class="hljs-string">':checked'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
         values.push($(<span class="hljs-keyword">this</span>).val());
       });
 

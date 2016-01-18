@@ -143,7 +143,7 @@
     actualizeOptions: <span class="hljs-literal">null</span>,
     _resetOptions: <span class="hljs-literal">null</span>,
     Factory: ParsleyFactory,
-    version: <span class="hljs-string">'2.2.0-rc4'</span>
+    version: <span class="hljs-string">'2.2.0'</span>
   });</pre></div></div>
             
         </li>
@@ -294,7 +294,7 @@ $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages ge
   <span class="hljs-built_in">window</span>.Parsley[method] = $.proxy(registry, method);
   <span class="hljs-built_in">window</span>.ParsleyValidator[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing the method '<span class="hljs-subst">${method}</span>' through ParsleyValidator is deprecated. Simply call 'window.Parsley.<span class="hljs-subst">${method}</span>(...)'`</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.Parsley[method].apply(<span class="hljs-built_in">window</span>.Parsley, <span class="hljs-built_in">arguments</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.Parsley[method](...arguments);
   };
 });</pre></div></div>
             
