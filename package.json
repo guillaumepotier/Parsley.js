@@ -1,7 +1,7 @@
 {
   "name": "parsleyjs",
   "version": "2.2.0-rc4",
-  "homepage": "http://parsleyjs.org",
+  "homepage": "https://github.com/guillaumepotier/Parsley.js",
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
   "main": "dist/parsley.js",
@@ -28,11 +28,9 @@
     "email": "guillaume@wisembly.com",
     "url": "http://guillaumepotier.com/"
   },
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/guillaumepotier/Parsley.js/issues"
   },
-  "homepage": "https://github.com/guillaumepotier/Parsley.js",
   "dependencies": {
     "jquery": ">=1.8.0"
   },
@@ -41,13 +39,13 @@
     "babel-eslint": "^4.0.5",
     "babelify": "^6.0.0",
     "browserify": "^11.0.1",
-    "expect.js": "*",
     "del": "^1.1.1",
+    "docco": "~0.6.3",
     "esperanto": "^0.7.4",
+    "expect.js": "*",
     "glob": "^5.0.14",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.0.0",
-    "docco": "~0.6.3",
     "gulp-eslint": "^1.0.0",
     "gulp-file": "^0.2.0",
     "gulp-filter": "^3.0.0",

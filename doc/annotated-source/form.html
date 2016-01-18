@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ParsleyAbstract <span class="hljs-keyword">from</span> <span class="hljs-string">'./abstract'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
@@ -126,8 +126,7 @@
 <span class="hljs-keyword">var</span> statusMapping = {pending: <span class="hljs-literal">null</span>, resolved: <span class="hljs-literal">true</span>, rejected: <span class="hljs-literal">false</span>};
 
 ParsleyForm.prototype = {
-  onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;</pre></div></div>
+  onSubmitValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -183,8 +182,8 @@ we cancel this submit and will fake it after validation.</p>
     event.preventDefault();
 
     <span class="hljs-keyword">this</span>.whenValidate(<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, event)
-      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._submit(); })
-      .always(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._$submitSource = <span class="hljs-literal">null</span>; });
+      .done(() =&gt; { <span class="hljs-keyword">this</span>._submit(); })
+      .always(() =&gt; { <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>; });
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   },
@@ -270,8 +269,13 @@ Prefer <code>whenValidate</code>.</p>
   },
 
   whenValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force, event</span>) </span>{
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
     <span class="hljs-keyword">this</span>.submitEvent = event;
+    <span class="hljs-keyword">if</span> (event) {
+      <span class="hljs-keyword">this</span>.submitEvent.preventDefault = () =&gt; {
+        ParsleyUtils.warnOnce(<span class="hljs-string">"Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`"</span>);
+        <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>;
+      };
+    }
     <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
@@ -304,8 +308,8 @@ Prefer <code>whenValidate</code>.</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._refreshFields();
 
-    <span class="hljs-keyword">var</span> promises = <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">field</span>) </span>{</pre></div></div>
+    <span class="hljs-keyword">var</span> promises = <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(() =&gt; {
+      <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, field =&gt; {</pre></div></div>
             
         </li>
         
@@ -320,22 +324,22 @@ Prefer <code>whenValidate</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!group || that._isFieldInGroup(field, group))
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!group || <span class="hljs-keyword">this</span>._isFieldInGroup(field, group))
           <span class="hljs-keyword">return</span> field.whenValidate(force);
       });
     });
 
-    <span class="hljs-keyword">var</span> promiseBasedOnValidationResult = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> promiseBasedOnValidationResult = () =&gt; {
       <span class="hljs-keyword">var</span> r = $.Deferred();
-      <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === that.validationResult)
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.validationResult)
         r.reject();
       <span class="hljs-keyword">return</span> r.resolve().promise();
     };
 
-    <span class="hljs-keyword">return</span> $.when.apply($, promises)
-      .done(  <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._trigger(<span class="hljs-string">'success'</span>); })
-      .fail(  <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that.validationResult = <span class="hljs-literal">false</span>; that._trigger(<span class="hljs-string">'error'</span>); })
-      .always(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._trigger(<span class="hljs-string">'validated'</span>); })
+    <span class="hljs-keyword">return</span> $.when(...promises)
+      .done(  () =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
+      .fail(  () =&gt; { <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>; <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>); })
+      .always(() =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validated'</span>); })
       .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
   },</pre></div></div>
             
@@ -375,11 +379,10 @@ A validation that immediately fails will interrupt the validations.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  whenValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
     <span class="hljs-keyword">this</span>._refreshFields();
 
-    <span class="hljs-keyword">var</span> promises = <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">field</span>) </span>{</pre></div></div>
+    <span class="hljs-keyword">var</span> promises = <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(() =&gt; {
+      <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, field =&gt; {</pre></div></div>
             
         </li>
         
@@ -394,16 +397,16 @@ A validation that immediately fails will interrupt the validations.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!group || that._isFieldInGroup(field, group))
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!group || <span class="hljs-keyword">this</span>._isFieldInGroup(field, group))
           <span class="hljs-keyword">return</span> field.whenValid(force);
       });
     });
-    <span class="hljs-keyword">return</span> $.when.apply($, promises);
+    <span class="hljs-keyword">return</span> $.when(...promises);
   },
 
   _isFieldInGroup: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">field, group</span>) </span>{
     <span class="hljs-keyword">if</span> ($.isArray(field.options.group))
-      <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span> !== $.inArray(group, field.options.group);
+      <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span> !== $.inArray(group, field.options.group);
     <span class="hljs-keyword">return</span> field.options.group === group;
   },
 
@@ -412,18 +415,17 @@ A validation that immediately fails will interrupt the validations.</p>
   },
 
   _bindFields: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
     <span class="hljs-keyword">var</span> oldFields = <span class="hljs-keyword">this</span>.fields;
 
     <span class="hljs-keyword">this</span>.fields = [];
     <span class="hljs-keyword">this</span>.fieldsMappedById = {};
 
-    <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(() =&gt; {
       <span class="hljs-keyword">this</span>.$element
       .find(<span class="hljs-keyword">this</span>.options.inputs)
       .not(<span class="hljs-keyword">this</span>.options.excluded)
-      .each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> <span class="hljs-built_in">window</span>.Parsley.Factory(<span class="hljs-keyword">this</span>, {}, self);</pre></div></div>
+      .each((_, element) =&gt; {
+        <span class="hljs-keyword">var</span> fieldInstance = <span class="hljs-keyword">new</span> <span class="hljs-built_in">window</span>.Parsley.Factory(element, {}, <span class="hljs-keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -439,14 +441,14 @@ A validation that immediately fails will interrupt the validations.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ((<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__ || <span class="hljs-string">'ParsleyFieldMultiple'</span> === fieldInstance.__class__) &amp;&amp; (<span class="hljs-literal">true</span> !== fieldInstance.options.excluded))
-          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> self.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__]) {
-            self.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__] = fieldInstance;
-            self.fields.push(fieldInstance);
+          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__]) {
+            <span class="hljs-keyword">this</span>.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__] = fieldInstance;
+            <span class="hljs-keyword">this</span>.fields.push(fieldInstance);
           }
       });
 
-      $(oldFields).not(self.fields).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'reset'</span>);
+      $(oldFields).not(<span class="hljs-keyword">this</span>.fields).each((_, field) =&gt; {
+        field._trigger(<span class="hljs-string">'reset'</span>);
       });
     });
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
@@ -474,7 +476,7 @@ the method actualizeOptions on this form while <code>fn</code> is called.</p>
             <div class="content"><div class='highlight'><pre>  _withoutReactualizingFormOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fn</span>) </span>{
     <span class="hljs-keyword">var</span> oldActualizeOptions = <span class="hljs-keyword">this</span>.actualizeOptions;
     <span class="hljs-keyword">this</span>.actualizeOptions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; };
-    <span class="hljs-keyword">var</span> result = fn.call(<span class="hljs-keyword">this</span>); <span class="hljs-comment">// Keep the current `this`.</span>
+    <span class="hljs-keyword">var</span> result = fn();
     <span class="hljs-keyword">this</span>.actualizeOptions = oldActualizeOptions;
     <span class="hljs-keyword">return</span> result;
   },</pre></div></div>

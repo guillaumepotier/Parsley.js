@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ConstraintFactory <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/constraint'</span>;
 <span class="hljs-keyword">import</span> ParsleyUI <span class="hljs-keyword">from</span> <span class="hljs-string">'./ui'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
@@ -214,8 +214,6 @@ ParsleyField.prototype = {</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>  whenValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">force</span>) </span>{
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
-
     <span class="hljs-keyword">this</span>.value = <span class="hljs-keyword">this</span>.getValue();</pre></div></div>
             
         </li>
@@ -234,9 +232,9 @@ ParsleyField.prototype = {</pre></div></div>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validate'</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid(force, <span class="hljs-keyword">this</span>.value)
-      .done(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>)   </span>{ that._trigger(<span class="hljs-string">'success'</span>); })
-      .fail(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>)   </span>{ that._trigger(<span class="hljs-string">'error'</span>); })
-      .always(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ that._trigger(<span class="hljs-string">'validated'</span>); });
+      .done(() =&gt;   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
+      .fail(() =&gt;   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>); })
+      .always(() =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validated'</span>); });
   },
 
   hasConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -389,8 +387,7 @@ The argument <code>value</code> is optional. If given, it will be validated inst
 
     <span class="hljs-keyword">var</span> groupedConstraints = <span class="hljs-keyword">this</span>._getGroupedConstraints();
     <span class="hljs-keyword">var</span> promises = [];
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
-    $.each(groupedConstraints, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_, constraints</span>) </span>{</pre></div></div>
+    $.each(groupedConstraints, (_, constraints) =&gt; {</pre></div></div>
             
         </li>
         
@@ -406,8 +403,8 @@ and combine the promises together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> promise = $.when.apply($,
-        $.map(constraints, $.proxy(that, <span class="hljs-string">'_validateConstraint'</span>, value))
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> promise = $.when(
+        ...$.map(constraints, constraint =&gt; <span class="hljs-keyword">this</span>._validateConstraint(value, constraint))
       );
       promises.push(promise);
       <span class="hljs-keyword">if</span> (promise.state() === <span class="hljs-string">'rejected'</span>)
@@ -430,7 +427,6 @@ and combine the promises together.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  _validateConstraint: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, constraint</span>) </span>{
-    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
     <span class="hljs-keyword">var</span> result = constraint.validate(value, <span class="hljs-keyword">this</span>);</pre></div></div>
             
         </li>
@@ -462,10 +458,10 @@ and combine the promises together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> $.when(result).fail(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">errorMessage</span>) </span>{
-      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === that.validationResult)
-        that.validationResult = [];
-      that.validationResult.push({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> $.when(result).fail(errorMessage =&gt; {
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.validationResult)
+        <span class="hljs-keyword">this</span>.validationResult = [];
+      <span class="hljs-keyword">this</span>.validationResult.push({
         assert: constraint,
         errorMessage: <span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> errorMessage &amp;&amp; errorMessage
       });
