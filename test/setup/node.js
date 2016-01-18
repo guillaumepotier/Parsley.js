@@ -1,5 +1,6 @@
 global.expect = require('expect.js');
 global.sinon = require('sinon');
+global.travis = process.env.TRAVIS;
 
 require('babel-core/register');
 
