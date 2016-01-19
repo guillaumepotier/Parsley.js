@@ -75,6 +75,10 @@
 
   <label for="question">Please enter a multiple of 3:</label>
   <input type="text" class="form-control" name="nb" required data-parsley-multiple-of="3">
+
+  <label for="question">Please provide a file smaller than 42Kb:</label>
+  <input type="file" name="f" required data-parsley-max-file-size="42">
+
   <input type="submit" class="btn btn-default pull-right" />
 </form>
           </div>
@@ -119,6 +123,22 @@ window.Parsley.addValidator('multipleOf', {
   messages: {
     en: 'This value should be a multiple of %s.',
     fr: "Ce nombre n'est pas un multiple de %s."
+  }
+});
+
+window.Parsley.addValidator('maxFileSize', {
+  validateString: function(_value, maxSize, parsleyInstance) {
+    if (!window.FormData) {
+      alert('You are making all developpers in the world cringe. Upgrade your browser!');
+      return true;
+    }
+    var files = parsleyInstance.$element[0].files;
+    return files.length != 1  || files[0].size <= maxSize * 1024;
+  },
+  requirementType: 'integer',
+  messages: {
+    en: 'This file should not be larger than %s Kb',
+    fr: "Ce fichier est plus grand que %s Kb."
   }
 });
 
