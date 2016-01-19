@@ -3,6 +3,10 @@ import ParsleyUI from '../../src/parsley/ui';
 import Parsley from '../../src/parsley';
 
 describe('ParsleyUI', () => {
+  before(() => {
+    Parsley.setLocale('en');
+  });
+
   it('should be a function', () => {
     expect(ParsleyUI).to.be.a('function');
   });

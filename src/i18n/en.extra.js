@@ -1,5 +1,5 @@
 // Validation errors messages for Parsley
-import Parsley from 'parsley';
+import Parsley from '../parsley';
 
 Parsley.addMessages('en', {
   dateiso:  "This value should be a valid date (YYYY-MM-DD).",

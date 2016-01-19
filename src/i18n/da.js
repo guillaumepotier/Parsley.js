@@ -1,5 +1,5 @@
 // Validation errors messages for Parsley
-import Parsley from 'parsley';
+import Parsley from '../parsley';
 
 Parsley.addMessages('da', {
   defaultMessage: "Indtast venligst en korrekt værdi.",

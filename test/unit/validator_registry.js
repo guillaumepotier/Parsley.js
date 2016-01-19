@@ -16,7 +16,7 @@ describe('ParsleyValidatorRegistry', () => {
   };
 
   afterEach(() => {
-    window.Parsley.setLocale('en');
+    Parsley.setLocale('en');
   });
 
   it('should be a function', () => {

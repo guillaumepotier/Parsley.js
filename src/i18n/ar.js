@@ -1,5 +1,5 @@
 // Validation errors messages for Parsley
-import Parsley from 'parsley';
+import Parsley from '../parsley';
 
 Parsley.addMessages('ar', {
   defaultMessage: "تأكد من صحة القيمة المدخل",

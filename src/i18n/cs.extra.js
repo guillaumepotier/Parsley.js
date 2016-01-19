@@ -1,5 +1,5 @@
 // Validation errors messages for Parsley
-import Parsley from 'parsley';
+import Parsley from '../parsley';
 
 Parsley.addMessages('cs', {
   dateiso:  "Tato položka musí být datum ve formátu RRRR-MM-DD.",

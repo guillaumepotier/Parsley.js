@@ -1,5 +1,5 @@
 // Validation errors messages for Parsley
-import Parsley from 'parsley';
+import Parsley from '../parsley';
 
 Parsley.addMessages('ko', {
   defaultMessage: "입력하신 내용이 올바르지 않습니다.",

@@ -1,5 +1,5 @@
 // Validation errors messages for Parsley
-import Parsley from 'parsley';
+import Parsley from '../parsley';
 
 Parsley.addMessages('fi', {
   defaultMessage: "Sy&ouml;tetty arvo on virheellinen.",

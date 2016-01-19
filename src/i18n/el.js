@@ -1,5 +1,5 @@
 // Validation errors messages for Parsley
-import Parsley from 'parsley';
+import Parsley from '../parsley';
 
 Parsley.addMessages('el', {
   defaultMessage: "Η τιμή φαίνεται να είναι μη έγκυρη.",
