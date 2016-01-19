@@ -792,11 +792,11 @@ if (false === instance.options.priorityEnabled)
           <p>
           <p>The preferred way to register them (after <code>parsley.js</code> is loaded) looks like:
 
-<pre><code>&lt;input type="text" data-parsley-multipleof="3" />
+<pre><code>&lt;input type="text" data-parsley-multiple-of="3" />
 [...]
 &lt;script type="text/javascript">
 window.Parsley
-  .addValidator('multipleof', {
+  .addValidator('multipleOf', {
     requirementType: 'integer',
     validateNumber: function(value, requirement) {
       return 0 === value % requirement;
