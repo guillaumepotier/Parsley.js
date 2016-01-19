@@ -244,19 +244,19 @@ describe('ParsleyValidatorRegistry', () => {
   });
 
   it('should provide two ways to add error messages', () => {
-    window.Parsley.addValidator('testmessage', {
+    window.Parsley.addValidator('testMessage', {
       validateString: $.noop,
       messages: {
         en: 'Not good at all',
         fr: 'Très nul'
       }
     });
-    window.Parsley.addMessage('es', 'testmessage', 'Muy malo');
-    expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Not good at all');
+    window.Parsley.addMessage('es', 'testMessage', 'Muy malo');
+    expect(window.Parsley.getErrorMessage({name: 'testMessage'})).to.eql('Not good at all');
     window.Parsley.setLocale('fr');
-    expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Très nul');
+    expect(window.Parsley.getErrorMessage({name: 'testMessage'})).to.eql('Très nul');
     window.Parsley.setLocale('es');
-    expect(window.Parsley.getErrorMessage({name: 'testmessage'})).to.eql('Muy malo');
+    expect(window.Parsley.getErrorMessage({name: 'testMessage'})).to.eql('Muy malo');
     window.Parsley.setLocale('en');
   });
 });
