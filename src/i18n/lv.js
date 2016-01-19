@@ -1,5 +1,5 @@
-// This is bundled with the Parsley library
-import Parsley from '../parsley/main';
+// Validation errors messages for Parsley
+import Parsley from 'parsley';
 
 Parsley.addMessages('lv', {
   defaultMessage: "Šis ieraksts veikts nekorekti.",
