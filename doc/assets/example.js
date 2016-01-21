@@ -22,12 +22,12 @@
       html_classes: 'codepen',
       js_external: [
         '//code.jquery.com/jquery-2.1.3.js',
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0-rc4/dist/parsley.js'
+        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/dist/parsley.js'
       ].join(';'),
       css_external: [
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0-rc4/bower_components/bootstrap/dist/css/bootstrap.css',
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0-rc4/doc/assets/docs.css',
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0-rc4/src/parsley.css'
+        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/bower_components/bootstrap/dist/css/bootstrap.css',
+        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/doc/assets/docs.css',
+        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/src/parsley.css'
       ].join(';')
     };
 
