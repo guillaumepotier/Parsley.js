@@ -160,18 +160,15 @@ describe('ParsleyMultiple', () => {
   it('should remove errors on change, whatever field is changed', () => {
     $('body').append(
       '<form id="element" >' +
-        '<input type="checkbox" name="check[]" id="check1" value="1" required data-parsley-mincheck="1" />'  +
+        '<input type="checkbox" name="check[]" id="check1" value="1" required />'  +
         '<input type="checkbox" name="check[]" id="check2" value="2" />'  +
         '<input type="checkbox" name="check[]" id="check3" value="3" />'  +
         '<input type="checkbox" name="check[]" id="check4" value="4" />'  +
       '</form>');
-    var parsleyInstance = $('#check1').parsley();
-    parsleyInstance.validate();
-    expect(parsleyInstance.$elements.length).to.be(4);
-    expect(parsleyInstance.validationResult).not.to.be(true);
-    $('#check2').attr('checked', 'checked');
-    $('#check2').trigger($.Event('change'));
-    expect(parsleyInstance.validationResult).to.be.eql(true);
+    $('#element').parsley().validate();
+    expect($('.parsley-errors-list.filled').length).to.be(1);
+    $('#check2').attr('checked', 'checked').trigger('change');
+    expect($('.parsley-errors-list.filled').length).to.be(0);
   });
   it('should add errors on change if trigger enabled, whatever field is changed', () => {
     $('body').append(
