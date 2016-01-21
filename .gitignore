@@ -29,4 +29,4 @@ tmp
 # Users Environment Variables
 .lock-wscript
 
-test/env/browserify_bundle.js
+doc/assets/spec-build.js
