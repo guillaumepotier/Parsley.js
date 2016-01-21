@@ -80,6 +80,7 @@ function build(done) {
 
     $.file(exportFileName + '.js', res.code, { src: true })
       .pipe($.plumber())
+      .pipe($.replace('@@version', manifest.version))
       .pipe($.sourcemaps.init({ loadMaps: true }))
       .pipe($.babel())
       .pipe($.header(head, {pkg: manifest, now: moment()}))
@@ -109,7 +110,6 @@ function buildDoc(done) {
       gulp.src(dest + '*.html', { base: "./" })
       .pipe($.replace('<div id="jump_page">', '<div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>'))
       .pipe($.replace('</body>', '<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>'))
-      .pipe($.replace('@@version', manifest.version))
       .pipe(gulp.dest('.'))
       .on('end', done);
   });
