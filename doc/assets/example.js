@@ -12,7 +12,7 @@
 
   function launchEditor() {
     var css = $.trim($('style.example').text());
-
+    var distUrl = 'https://rawgit.com/guillaumepotier/Parsley.js/' + window.Parsley.version;
     var data = {
       title: $(document).attr('title'),
       description: "Where does this show???",
@@ -22,12 +22,12 @@
       html_classes: 'codepen',
       js_external: [
         '//code.jquery.com/jquery-2.1.3.js',
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/dist/parsley.js'
+        distUrl + '/dist/parsley.js'
       ].join(';'),
       css_external: [
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/bower_components/bootstrap/dist/css/bootstrap.css',
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/doc/assets/docs.css',
-        'https://rawgit.com/guillaumepotier/Parsley.js/2.2.0/src/parsley.css'
+        distUrl + '/bower_components/bootstrap/dist/css/bootstrap.css',
+        distUrl + '/doc/assets/docs.css',
+        distUrl + '/src/parsley.css'
       ].join(';')
     };
 
