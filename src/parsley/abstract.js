@@ -26,9 +26,9 @@ ParsleyAbstract.prototype = {
 
   _listeners: null,
 
-  // Register a callback for the given event name.
-  // Callback is called with context as the first argument and the `this`.
-  // The context is the current parsley instance, or window.Parsley if global.
+  // Register a callback for the given event name
+  // Callback is called with context as the first argument and the `this`
+  // The context is the current parsley instance, or window.Parsley if global
   // A return value of `false` will interrupt the calls
   on: function (name, fn) {
     this._listeners = this._listeners || {};
@@ -38,7 +38,7 @@ ParsleyAbstract.prototype = {
     return this;
   },
 
-  // Deprecated. Use `on` instead.
+  // Deprecated. Use `on` instead
   subscribe: function(name, fn) {
     $.listenTo(this, name.toLowerCase(), fn);
   },
@@ -63,9 +63,9 @@ ParsleyAbstract.prototype = {
     $.unsubscribeTo(this, name.toLowerCase());
   },
 
-  // Trigger an event of the given name.
-  // A return value of `false` interrupts the callback chain.
-  // Returns false if execution was interrupted.
+  // Trigger an event of the given name
+  // A return value of `false` interrupts the callback chain
+  // Returns false if execution was interrupted
   trigger: function (name, target, extraArg) {
     target = target || this;
     var queue = this._listeners && this._listeners[name];
