@@ -179,7 +179,7 @@ describe('ParsleyUI', () => {
     parsleyField.validate();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-required')).to.be(true);
-    $('#element').val('foo').trigger($.Event('keyup'));
+    $('#element').val('foo').trigger('input');
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
   });
   it('should auto bind error trigger on select field error (select)', () => {
@@ -312,7 +312,7 @@ describe('ParsleyUI', () => {
     parsleyInstance.reset();
     parsleyInstance.validate();
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(1);
-    $('#element').val('foo').trigger($.Event('keyup'));
+    $('#element').val('foo').trigger('input');
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
   });
   it('should re-bind error triggers after a reset (select)', () => {
@@ -327,7 +327,7 @@ describe('ParsleyUI', () => {
     parsleyInstance.validate();
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(1);
     $('#element option[value="foo"]').prop('selected', true);
-    $('#element').trigger($.Event('change'));
+    $('#element').trigger('input');
     expect($('ul#parsley-id-' + parsleyInstance.__id__ + ' li').length).to.be(0);
   });
   it('should re-bind custom triggers after a reset', () => {

@@ -317,21 +317,7 @@ ParsleyUI.Field = {
   manageFailingFieldTrigger: function () {
     this._ui.failedOnce = true;
 
-    // Radio and checkboxes fields must bind every field multiple
-    if (this.options.multiple)
-      this._findRelated().each((_, element) => {
-        if (!/change/i.test($(element).parsley().options.trigger || ''))
-          $(element).on('change.ParsleyFailedOnce', () => { this.validate(); });
-      });
-
-    // Select case
-    if (this.$element.is('select'))
-      if (!/change/i.test(this.options.trigger || ''))
-        return this.$element.on('change.ParsleyFailedOnce', () => { this.validate(); });
-
-    // All other inputs fields
-    if (!/keyup/i.test(this.options.trigger || ''))
-      return this.$element.on('keyup.ParsleyFailedOnce', () => { this.validate(); });
+    this._findRelated().on('input.ParsleyFailedOnce', () => { this.validate(); });
   },
 
   resetUI: function () {

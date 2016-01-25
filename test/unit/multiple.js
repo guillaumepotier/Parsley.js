@@ -167,7 +167,7 @@ describe('ParsleyMultiple', () => {
       '</form>');
     $('#element').parsley().validate();
     expect($('.parsley-errors-list.filled').length).to.be(1);
-    $('#check2').attr('checked', 'checked').trigger('change');
+    $('#check2').attr('checked', 'checked').trigger('input');
     expect($('.parsley-errors-list.filled').length).to.be(0);
   });
   it('should add errors on change if trigger enabled, whatever field is changed', () => {
@@ -206,7 +206,7 @@ describe('ParsleyMultiple', () => {
     var parsleyInstance = $('#element').parsley({namespace: 'foo-bar-'});
     parsleyInstance.validate();
     expect($('ul.parsley-errors-list li').length).to.be(1);
-    $('#radio2').trigger('click').trigger('change');
+    $('#radio2').trigger('click').trigger('input');
     expect($('ul.parsley-errors-list li').length).to.be(0);
   });
   it('should handle dynamic multiple items removal', () => {
