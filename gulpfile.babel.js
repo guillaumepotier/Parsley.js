@@ -152,6 +152,7 @@ function browserifyBundler() {
   const allFiles = ['./test/setup/browserify.js'].concat(testFiles);
 
   // Create our bundler, passing in the arguments required for watchify
+  watchify.args.debug = true;
   const bundler = browserify(allFiles, watchify.args);
 
   // Set up Babelify so that ES6 works in the tests
