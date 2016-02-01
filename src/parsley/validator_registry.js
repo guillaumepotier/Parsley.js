@@ -243,9 +243,12 @@ ParsleyValidatorRegistry.prototype = {
         if ('number' === type) {
           if (!/^any$/i.test(step || '')) {
             var nb = Number(value);
+            var decimals = Math.max(decimalPlaces(step), decimalPlaces(base));
+            if (decimalPlaces(nb) > decimals) // Value can't have too many decimals
+              return false;
             // Be careful of rounding errors by using integers.
-            var mul = Math.pow(10, Math.max(decimalPlaces(step), decimalPlaces(base)));
-            if ((nb * mul - base * mul) % (step * mul) != 0)
+            var toInt = f => { return Math.round(f * Math.pow(10, decimals)); };
+            if ((toInt(nb) - toInt(base)) % toInt(step) != 0)
               return false;
           }
         }
