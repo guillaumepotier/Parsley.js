@@ -98,10 +98,16 @@ describe('ParsleyForm', () => {
     expect(parsleyForm.isValid('qux')).to.be(false);
   });
   if (!travis) // No idea why this particular test is failing on Travis
-    it('should handle form submission correctly', () => {
+    it('should send submit button values, even for async validations', () => {
+      var deferred = null;
+      window.Parsley.addValidator('custom', () => {
+        deferred = $.Deferred();
+        return deferred.promise();
+      });
+
       $('body').append(
         '<form id="element">'                 +
-          '<input id="field1" type="text" name="nick" data-parsley-required="true" />'  +
+          '<input id="field1" type="text" name="nick" data-parsley-custom data-parsley-required />'  +
           '<div id="field2" name="comment"></div>'                                         +
           '<input type="submit" name="foo" value="bar" />'  +
           '<input type="submit" name="foo" value="other" />'  +
@@ -109,9 +115,10 @@ describe('ParsleyForm', () => {
       var parsleyForm = $('#element').parsley();
 
       $('#element input:last').click();
-      // Form should not be submitted at this point
+      // Form should not be submitted at this point, coz field is required
+      expect(deferred).to.be(null);
 
-      $('#field1').val('foo');
+      $('#field1').val('something');
       var values = [];
       $(document).on('submit', evt => {
         expect(evt.parsley).to.be(true);
@@ -119,8 +126,13 @@ describe('ParsleyForm', () => {
         evt.preventDefault();
       });
       $('#element input:last').click();
+      expect(values).to.eql([]);
+      deferred.resolve();
+      expect(values).to.eql(['other']);
       $('#element').submit(); // Similar to pressing 'enter'
+      deferred.resolve();
       expect(values).to.eql(['other', 'bar']);
+      window.Parsley.removeValidator('custom');
     });
   it('should not validate when triggered by a button with formnovalidate', () => {
     var $form = $('<form id="element"><input type="string" required /><input type="submit" formnovalidate /><form>').appendTo($('body'));
