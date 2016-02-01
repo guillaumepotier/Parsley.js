@@ -120,7 +120,7 @@ describe('ParsleyForm', () => {
 
       $('#field1').val('something');
       var values = [];
-      $(document).on('submit', evt => {
+      $('#element').on('submit', evt => {
         expect(evt.parsley).to.be(true);
         values.push($('form input[type!=submit][name="foo"]').val());
         evt.preventDefault();
