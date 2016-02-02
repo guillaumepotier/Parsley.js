@@ -26,11 +26,12 @@ ParsleyForm.prototype = {
     // If we didn't come here through a submit button, use the first one in the form
     var $submitSource = this._$submitSource || this.$element.find('input[type="submit"], button[type="submit"]').first();
     this._$submitSource = null;
-
+    this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
     if ($submitSource.is('[formnovalidate]'))
       return;
 
     var promise = this.whenValidate({event});
+
     if ('resolved' === promise.state() && false !== this._trigger('submit')) {
       // All good, let event go through. We make this distinction because browsers
       // differ in their handling of `submit` being called from inside a submit event [#1047]
@@ -52,15 +53,17 @@ ParsleyForm.prototype = {
   _submit: function ($submitSource) {
     if (false === this._trigger('submit'))
       return;
-    this.$element.find('.parsley_synthetic_submit_button').remove();
     // Add submit button's data
     if ($submitSource) {
-      $('<input class="parsley_synthetic_submit_button" type="hidden">')
-      .attr('name', $submitSource.attr('name'))
-      .attr('value', $submitSource.attr('value'))
-      .appendTo(this.$element);
+      var $synthetic = this.$element.find('.parsley-synthetic-submit-button').prop('disabled', false);
+      if (0 === $synthetic.length)
+        $synthetic = $('<input class="parsley-synthetic-submit-button" type="hidden">').appendTo(this.$element);
+      $synthetic.attr({
+        name: $submitSource.attr('name'),
+        value: $submitSource.attr('value')
+      });
     }
-    //
+
     this.$element.trigger($.extend($.Event('submit'), {parsley: true}));
   },
 
