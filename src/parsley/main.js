@@ -83,6 +83,14 @@ $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessag
 // ### ParsleyUI
 // UI is a separate class that only listens to some events and then modifies the DOM accordingly
 window.Parsley.UI = new ParsleyUI();
+// Deprecated global object
+window.ParsleyUI = {};
+$.each('addError updateError removeError getErrorsMessages'.split(' '), function (i, method) {
+  window.ParsleyUI[method] = function (instance, ...rest) {
+    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Simply call 'Parsley.UI.${method}'.`);
+    return window.Parsley.UI[method](instance, ...rest);
+  };
+});
 
 // ### PARSLEY auto-binding
 // Prevent it by setting `ParsleyConfig.autoBind` to `false`

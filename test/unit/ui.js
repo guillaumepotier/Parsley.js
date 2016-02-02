@@ -259,14 +259,20 @@ describe('ParsleyUI', () => {
     parsleyField.validate();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
     expect($('#element').hasClass('parsley-error')).to.be(false);
-    window.Parsley.UI.addError(parsleyField, 'foo', 'bar');
+    expectWarning(() => {
+      window.ParsleyUI.addError(parsleyField, 'foo', 'bar');
+    });
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
     expect($('#element').hasClass('parsley-error')).to.be(true);
     expect($('li.parsley-foo').length).to.be(1);
     expect($('li.parsley-foo').text()).to.be('bar');
-    window.Parsley.UI.updateError(parsleyField, 'foo', 'baz');
+    expectWarning(() => {
+      window.ParsleyUI.updateError(parsleyField, 'foo', 'baz');
+    });
     expect($('li.parsley-foo').text()).to.be('baz');
-    window.Parsley.UI.removeError(parsleyField, 'foo');
+    expectWarning(() => {
+      window.ParsleyUI.removeError(parsleyField, 'foo');
+    });
     expect($('#element').hasClass('parsley-error')).to.be(false);
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
   });
@@ -274,13 +280,17 @@ describe('ParsleyUI', () => {
     $('body').append('<input type="email" id="element" value="foo" data-parsley-minlength="5" />');
     var parsleyInstance = $('#element').parsley();
     parsleyInstance.validate();
-    expect(window.Parsley.UI.getErrorsMessages(parsleyInstance).length).to.be(1);
-    expect(window.Parsley.UI.getErrorsMessages(parsleyInstance)[0]).to.be('This value should be a valid email.');
+    expectWarning(() => {
+      window.ParsleyUI.getErrorsMessages(parsleyInstance);
+    });
+    expect(window.ParsleyUI.getErrorsMessages(parsleyInstance).length).to.be(1);
+    expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value should be a valid email.');
 
     $('#element').attr('data-parsley-priority-enabled', false);
     parsleyInstance.validate();
-    expect(window.Parsley.UI.getErrorsMessages(parsleyInstance).length).to.be(2);
-    expect(window.Parsley.UI.getErrorsMessages(parsleyInstance)[0]).to.be('This value is too short. It should have 5 characters or more.');
+    expect(window.ParsleyUI.getErrorsMessages(parsleyInstance).length).to.be(2);
+    expect(window.ParsleyUI.getErrorsMessages(parsleyInstance)[0]).to.be('This value is too short. It should have 5 characters or more.');
+
   });
   it('should not have errors ul created for excluded fields', () => {
     $('body').append('<div id="hidden"><input type="hidden" id="element" value="foo" data-parsley-minlength="5" /></div>');
