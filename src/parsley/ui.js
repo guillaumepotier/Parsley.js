@@ -48,7 +48,7 @@ ParsleyUI.prototype = {
 
   reflow: function (fieldInstance) {
     // If this field has not an active UI (case for multiples) don't bother doing something
-    if ('undefined' === typeof fieldInstance._ui || false === fieldInstance._ui.active)
+    if (!fieldInstance._ui)
       return;
 
     // Diff between two validation results
@@ -210,13 +210,12 @@ ParsleyUI.prototype = {
   },
 
   setupField: function (fieldInstance) {
-    var _ui = {active: false};
 
     // UI could be disabled
     if (false === fieldInstance.options.uiEnabled)
       return;
 
-    _ui.active = true;
+    var _ui = {};
 
     // Give field its Parsley id in DOM
     fieldInstance.$element.attr(fieldInstance.options.namespace + 'id', fieldInstance.__id__);
