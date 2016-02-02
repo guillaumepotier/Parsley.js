@@ -5,11 +5,11 @@ var ParsleyUI = function () {
   window.Parsley
   .on('form:init',       (form ) => { this.setupForm (form ); } )
   .on('form:validated',  (form ) => { this.focus     (form ); } )
-  .on('form:destroy',    (form ) => { this.destroy   (form ); } )
+  .on('form:destroy',    (form ) => { this.destroyForm(form); } )
   .on('field:init',      (field) => { this.setupField(field); } )
   .on('field:validated', (field) => { this.reflow    (field); } )
   .on('field:reset',     (field) => { this.reset     (field); } )
-  .on('field:destroy',   (field) => { this.destroy   (field); } );
+  .on('field:destroy',   (field) => { this.destroyField(field); } );
 };
 
 var diffResults = function (newResult, oldResult, deep) {
@@ -71,6 +71,11 @@ ParsleyUI.prototype = {
       return null;
 
     return formInstance._focusedField.focus();
+  },
+
+  destroyForm: function (formInstance) {
+    // Reset all event listeners
+    formInstance.$element.off('.Parsley');
   },
 
   reflow: function (fieldInstance) {
@@ -346,9 +351,6 @@ ParsleyUI.prototype = {
     if ('undefined' === typeof parsleyInstance._ui)
       return;
 
-    if ('ParsleyForm' === parsleyInstance.__class__)
-      return;
-
     // Reset all errors' li
     parsleyInstance._ui.$errorsWrapper
       .removeClass('filled')
@@ -364,11 +366,8 @@ ParsleyUI.prototype = {
     parsleyInstance._ui.failedOnce = false;
   },
 
-  destroy: function (parsleyInstance) {
+  destroyField: function (parsleyInstance) {
     this.reset(parsleyInstance);
-
-    if ('ParsleyForm' === parsleyInstance.__class__)
-      return;
 
     if ('undefined' !== typeof parsleyInstance._ui)
       parsleyInstance._ui.$errorsWrapper.remove();
