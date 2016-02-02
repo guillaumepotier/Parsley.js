@@ -358,6 +358,13 @@ describe('ParsleyUI', () => {
     expect($(`ul#parsley-id-${parsleyField.__id__} li`).text()).to.be("Hey, this ain't good at all");
     window.Parsley.removeValidator('customValidator');
   });
+  it('should run before events are fired', () => {
+    $('body').append('<input type="text" id="element" required/>');
+    var parsley = $('#element').parsley().on('field:validated', () => {
+      expect($('.parsley-errors-list')).to.have.length(1);
+    });
+    parsley.validate();
+  });
 
   afterEach(() => {
     $('#element, .parsley-errors-list').remove();

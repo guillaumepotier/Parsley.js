@@ -1,16 +1,7 @@
 import $ from 'jquery';
 import ParsleyUtils from './utils';
 
-var ParsleyUI = function () {
-  window.Parsley
-  .on('form:init',       (form ) => { form.bindForm();  } )
-  .on('form:validated',  (form ) => { form.focus();     } )
-  .on('form:destroy',    (form ) => { form.destroyUI(); } )
-  .on('field:init',      (field) => { field.actualizeTriggers(); } )
-  .on('field:validated', (field) => { field.reflowUI(); } )
-  .on('field:reset',     (field) => { field.resetUI();  } )
-  .on('field:destroy',   (field) => { field.destroyUI();} );
-};
+var ParsleyUI = {};
 
 var diffResults = function (newResult, oldResult, deep) {
   var added = [];
@@ -40,7 +31,7 @@ var diffResults = function (newResult, oldResult, deep) {
 
 ParsleyUI.Form = {
 
-  bindForm: function () {
+  actualizeTriggers: function () {
     this.$element.on('submit.Parsley', evt => { this.onSubmitValidate(evt); });
     this.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { this.onSubmitButton(evt); });
 

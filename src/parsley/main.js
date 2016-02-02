@@ -81,8 +81,6 @@ $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessag
 });
 
 // ### ParsleyUI
-// UI is a separate class that only listens to some events and then modifies the DOM accordingly
-new ParsleyUI();
 // Deprecated global object
 window.Parsley.UI = ParsleyUI;
 window.ParsleyUI = {};

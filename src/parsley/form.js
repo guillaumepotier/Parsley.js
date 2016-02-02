@@ -112,7 +112,11 @@ ParsleyForm.prototype = {
 
     return $.when(...promises)
       .done(  () => { this._trigger('success'); })
-      .fail(  () => { this.validationResult = false; this._trigger('error'); })
+      .fail(  () => {
+        this.validationResult = false;
+        this.focus();
+        this._trigger('error');
+      })
       .always(() => { this._trigger('validated'); })
       .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
   },
