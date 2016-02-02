@@ -3,13 +3,13 @@ import ParsleyUtils from './utils';
 
 var ParsleyUI = function () {
   window.Parsley
-  .on('form:init',       (form ) => { ParsleyUI.Form.setupForm (form ); } )
+  .on('form:init',       (form ) => { ParsleyUI.Form.bindForm (form ); } )
   .on('form:validated',  (form ) => { ParsleyUI.Form.focus     (form ); } )
-  .on('form:destroy',    (form ) => { ParsleyUI.Form.destroyForm(form); } )
+  .on('form:destroy',    (form ) => { ParsleyUI.Form.destroyUI(form); } )
   .on('field:init',      (field) => { ParsleyUI.Field.actualizeTriggers(field); } )
-  .on('field:validated', (field) => { ParsleyUI.Field.reflow    (field); } )
-  .on('field:reset',     (field) => { ParsleyUI.Field.reset     (field); } )
-  .on('field:destroy',   (field) => { ParsleyUI.Field.destroyField(field); } );
+  .on('field:validated', (field) => { ParsleyUI.Field.reflowUI  (field); } )
+  .on('field:reset',     (field) => { ParsleyUI.Field.resetUI     (field); } )
+  .on('field:destroy',   (field) => { ParsleyUI.Field.destroyUI(field); } );
 };
 
 var diffResults = function (newResult, oldResult, deep) {
@@ -40,7 +40,7 @@ var diffResults = function (newResult, oldResult, deep) {
 
 ParsleyUI.Form = {
 
-  setupForm: function (formInstance) {
+  bindForm: function (formInstance) {
     formInstance.$element.on('submit.Parsley', evt => { formInstance.onSubmitValidate(evt); });
     formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { formInstance.onSubmitButton(evt); });
 
@@ -72,7 +72,7 @@ ParsleyUI.Form = {
     return formInstance._focusedField.focus();
   },
 
-  destroyForm: function (formInstance) {
+  destroyUI: function (formInstance) {
     // Reset all event listeners
     formInstance.$element.off('.Parsley');
   }
@@ -81,7 +81,7 @@ ParsleyUI.Form = {
 
 ParsleyUI.Field = {
 
-  reflow: function (fieldInstance) {
+  reflowUI: function (fieldInstance) {
     this._buildUI(fieldInstance);
 
     // If this field doesn't have an active UI don't bother doing something
@@ -343,7 +343,7 @@ ParsleyUI.Field = {
       return fieldInstance.$element.on('keyup.ParsleyFailedOnce', () => { fieldInstance.validate(); });
   },
 
-  reset: function (parsleyInstance) {
+  resetUI: function (parsleyInstance) {
     // Reset all event listeners
     this.actualizeTriggers(parsleyInstance);
     parsleyInstance.$element.off('.ParsleyFailedOnce');
@@ -367,8 +367,8 @@ ParsleyUI.Field = {
     parsleyInstance._ui.failedOnce = false;
   },
 
-  destroyField: function (parsleyInstance) {
-    this.reset(parsleyInstance);
+  destroyUI: function (parsleyInstance) {
+    this.resetUI(parsleyInstance);
 
     if ('undefined' !== typeof parsleyInstance._ui)
       parsleyInstance._ui.$errorsWrapper.remove();
