@@ -6,7 +6,7 @@ var ParsleyUI = function () {
   .on('form:init',       (form ) => { ParsleyUI.Form.setupForm (form ); } )
   .on('form:validated',  (form ) => { ParsleyUI.Form.focus     (form ); } )
   .on('form:destroy',    (form ) => { ParsleyUI.Form.destroyForm(form); } )
-  .on('field:init',      (field) => { ParsleyUI.Field.setupField(field); } )
+  .on('field:init',      (field) => { ParsleyUI.Field.actualizeTriggers(field); } )
   .on('field:validated', (field) => { ParsleyUI.Field.reflow    (field); } )
   .on('field:reset',     (field) => { ParsleyUI.Field.reset     (field); } )
   .on('field:destroy',   (field) => { ParsleyUI.Field.destroyField(field); } );
@@ -82,7 +82,9 @@ ParsleyUI.Form = {
 ParsleyUI.Field = {
 
   reflow: function (fieldInstance) {
-    // If this field has not an active UI (case for multiples) don't bother doing something
+    this._buildUI(fieldInstance);
+
+    // If this field doesn't have an active UI don't bother doing something
     if (!fieldInstance._ui)
       return;
 
@@ -218,10 +220,9 @@ ParsleyUI.Field = {
     return window.Parsley.getErrorMessage(constraint);
   },
 
-  setupField: function (fieldInstance) {
-
-    // UI could be disabled
-    if (false === fieldInstance.options.uiEnabled)
+  _buildUI: function (fieldInstance) {
+    // UI could be already built or disabled
+    if (fieldInstance._ui || false === fieldInstance.options.uiEnabled)
       return;
 
     var _ui = {};
@@ -243,9 +244,6 @@ ParsleyUI.Field = {
 
     // Store it in fieldInstance for later
     fieldInstance._ui = _ui;
-
-    // Bind triggers first time
-    this.actualizeTriggers(fieldInstance);
   },
 
   // Determine which element will have `parsley-error` and `parsley-success` classes
@@ -319,7 +317,7 @@ ParsleyUI.Field = {
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
     if (/key/.test(event.type))
-      if (!field._ui.validationInformationVisible && field.getValue().length <= field.options.validationThreshold)
+      if (!(field._ui && field._ui.validationInformationVisible) && field.getValue().length <= field.options.validationThreshold)
         return;
 
     field.validate();

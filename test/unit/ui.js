@@ -10,9 +10,9 @@ describe('ParsleyUI', () => {
   it('should create proper errors container when needed', () => {
     $('body').append('<input type="text" id="element" data-parsley-required />');
     var parsleyField = $('#element').psly();
-    expect($('#element').attr('data-parsley-id')).to.be(parsleyField.__id__);
     expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(0);
     parsleyField.validate();
+    expect($('#element').attr('data-parsley-id')).to.be(parsleyField.__id__);
     expect($('ul#parsley-id-' + parsleyField.__id__).length).to.be(1);
     expect($('ul#parsley-id-' + parsleyField.__id__).hasClass('parsley-errors-list')).to.be(true);
   });
