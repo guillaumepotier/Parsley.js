@@ -30,14 +30,17 @@ ParsleyForm.prototype = {
     if ($submitSource.is('[formnovalidate]'))
       return;
 
-    // Because some validations might be asynchroneous,
-    // we cancel this submit and will fake it after validation.
-    event.stopImmediatePropagation();
-    event.preventDefault();
-
-    this.whenValidate({event}).done(() => { this._submit($submitSource); });
-
-    return this;
+    var promise = this.whenValidate({event});
+    if ('resolved' === promise.state() && false !== this._trigger('submit')) {
+      // All good, let event go through. We make this distinction because browsers
+      // differ in their handling of `submit` being called from inside a submit event [#1047]
+    } else {
+      // Rejected or pending: cancel this submit
+      event.stopImmediatePropagation();
+      event.preventDefault();
+      if ('pending' === promise.state())
+        promise.done(() => { this._submit($submitSource); });
+    }
   },
 
   onSubmitButton: function(event) {
