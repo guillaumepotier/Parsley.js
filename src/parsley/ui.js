@@ -9,14 +9,46 @@ ParsleyUI.prototype = {
   listen: function () {
     window.Parsley
     .on('form:init',       (form ) => { this.setupForm (form ); } )
+    .on('form:validated',  (form ) => { this.focus     (form ); } )
+    .on('form:destroy',    (form ) => { this.destroy   (form ); } )
     .on('field:init',      (field) => { this.setupField(field); } )
     .on('field:validated', (field) => { this.reflow    (field); } )
-    .on('form:validated',  (form ) => { this.focus     (form ); } )
     .on('field:reset',     (field) => { this.reset     (field); } )
-    .on('form:destroy',    (form ) => { this.destroy   (form ); } )
     .on('field:destroy',   (field) => { this.destroy   (field); } );
 
     return this;
+  },
+
+  setupForm: function (formInstance) {
+    formInstance.$element.on('submit.Parsley', evt => { formInstance.onSubmitValidate(evt); });
+    formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { formInstance.onSubmitButton(evt); });
+
+    // UI could be disabled
+    if (false === formInstance.options.uiEnabled)
+      return;
+
+    formInstance.$element.attr('novalidate', '');
+  },
+
+  focus: function (formInstance) {
+    formInstance._focusedField = null;
+
+    if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
+      return null;
+
+    for (var i = 0; i < formInstance.fields.length; i++) {
+      var field = formInstance.fields[i];
+      if (true !== field.validationResult && field.validationResult.length > 0 && 'undefined' === typeof field.options.noFocus) {
+        formInstance._focusedField = field.$element;
+        if ('first' === formInstance.options.focus)
+          break;
+      }
+    }
+
+    if (null === formInstance._focusedField)
+      return null;
+
+    return formInstance._focusedField.focus();
   },
 
   reflow: function (fieldInstance) {
@@ -147,27 +179,6 @@ ParsleyUI.prototype = {
       this.manageStatusClass(fieldInstance);
   },
 
-  focus: function (formInstance) {
-    formInstance._focusedField = null;
-
-    if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
-      return null;
-
-    for (var i = 0; i < formInstance.fields.length; i++) {
-      var field = formInstance.fields[i];
-      if (true !== field.validationResult && field.validationResult.length > 0 && 'undefined' === typeof field.options.noFocus) {
-        formInstance._focusedField = field.$element;
-        if ('first' === formInstance.options.focus)
-          break;
-      }
-    }
-
-    if (null === formInstance._focusedField)
-      return null;
-
-    return formInstance._focusedField.focus();
-  },
-
   _getErrorMessage: function (fieldInstance, constraint) {
     var customConstraintErrorMessage = constraint.name + 'Message';
 
@@ -201,17 +212,6 @@ ParsleyUI.prototype = {
       added: added,
       removed: !deep ? this._diff(oldResult, newResult, true).added : []
     };
-  },
-
-  setupForm: function (formInstance) {
-    formInstance.$element.on('submit.Parsley', evt => { formInstance.onSubmitValidate(evt); });
-    formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { formInstance.onSubmitButton(evt); });
-
-    // UI could be disabled
-    if (false === formInstance.options.uiEnabled)
-      return;
-
-    formInstance.$element.attr('novalidate', '');
   },
 
   setupField: function (fieldInstance) {
