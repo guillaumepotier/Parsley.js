@@ -3,13 +3,13 @@ import ParsleyUtils from './utils';
 
 var ParsleyUI = function () {
   window.Parsley
-  .on('form:init',       (form ) => { this.setupForm (form ); } )
-  .on('form:validated',  (form ) => { this.focus     (form ); } )
-  .on('form:destroy',    (form ) => { this.destroyForm(form); } )
-  .on('field:init',      (field) => { this.setupField(field); } )
-  .on('field:validated', (field) => { this.reflow    (field); } )
-  .on('field:reset',     (field) => { this.reset     (field); } )
-  .on('field:destroy',   (field) => { this.destroyField(field); } );
+  .on('form:init',       (form ) => { ParsleyUI.Form.setupForm (form ); } )
+  .on('form:validated',  (form ) => { ParsleyUI.Form.focus     (form ); } )
+  .on('form:destroy',    (form ) => { ParsleyUI.Form.destroyForm(form); } )
+  .on('field:init',      (field) => { ParsleyUI.Field.setupField(field); } )
+  .on('field:validated', (field) => { ParsleyUI.Field.reflow    (field); } )
+  .on('field:reset',     (field) => { ParsleyUI.Field.reset     (field); } )
+  .on('field:destroy',   (field) => { ParsleyUI.Field.destroyField(field); } );
 };
 
 var diffResults = function (newResult, oldResult, deep) {
@@ -38,8 +38,7 @@ var diffResults = function (newResult, oldResult, deep) {
   };
 };
 
-
-ParsleyUI.prototype = {
+ParsleyUI.Form = {
 
   setupForm: function (formInstance) {
     formInstance.$element.on('submit.Parsley', evt => { formInstance.onSubmitValidate(evt); });
@@ -76,7 +75,11 @@ ParsleyUI.prototype = {
   destroyForm: function (formInstance) {
     // Reset all event listeners
     formInstance.$element.off('.Parsley');
-  },
+  }
+
+};
+
+ParsleyUI.Field = {
 
   reflow: function (fieldInstance) {
     // If this field has not an active UI (case for multiples) don't bother doing something
