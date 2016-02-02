@@ -27,7 +27,7 @@ var Parsley = $.extend(new ParsleyAbstract(), {
 
 // Supplement ParsleyField and Form with ParsleyAbstract
 // This way, the constructors will have access to those methods
-$.extend(ParsleyField.prototype, ParsleyAbstract.prototype);
+$.extend(ParsleyField.prototype, ParsleyUI.Field, ParsleyAbstract.prototype);
 $.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);
 // Inherit actualizeOptions and _resetOptions:
 $.extend(ParsleyFactory.prototype, ParsleyAbstract.prototype);
@@ -88,8 +88,8 @@ window.Parsley.UI = ParsleyUI;
 window.ParsleyUI = {};
 $.each('addError updateError removeError getErrorsMessages'.split(' '), function (i, method) {
   window.ParsleyUI[method] = function (instance, ...rest) {
-    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Simply call 'Parsley.UI.Field.${method}'.`);
-    return window.Parsley.UI.Field[method](instance, ...rest);
+    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Simply call '${method}' on the instance directly.`);
+    return instance[method](...rest);
   };
 });
 
