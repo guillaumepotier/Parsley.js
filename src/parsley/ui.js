@@ -12,6 +12,33 @@ var ParsleyUI = function () {
   .on('field:destroy',   (field) => { this.destroy   (field); } );
 };
 
+var diffResults = function (newResult, oldResult, deep) {
+  var added = [];
+  var kept = [];
+
+  for (var i = 0; i < newResult.length; i++) {
+    var found = false;
+
+    for (var j = 0; j < oldResult.length; j++)
+      if (newResult[i].assert.name === oldResult[j].assert.name) {
+        found = true;
+        break;
+      }
+
+    if (found)
+      kept.push(newResult[i]);
+    else
+      added.push(newResult[i]);
+  }
+
+  return {
+    kept: kept,
+    added: added,
+    removed: !deep ? diffResults(oldResult, newResult, true).added : []
+  };
+};
+
+
 ParsleyUI.prototype = {
 
   setupForm: function (formInstance) {
@@ -52,7 +79,7 @@ ParsleyUI.prototype = {
       return;
 
     // Diff between two validation results
-    var diff = this._diff(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
+    var diff = diffResults(fieldInstance.validationResult, fieldInstance._ui.lastValidationResult);
 
     // Then store current validation result for next reflow
     fieldInstance._ui.lastValidationResult = fieldInstance.validationResult;
@@ -181,32 +208,6 @@ ParsleyUI.prototype = {
       return window.Parsley.formatMessage(fieldInstance.options[customConstraintErrorMessage], constraint.requirements);
 
     return window.Parsley.getErrorMessage(constraint);
-  },
-
-  _diff: function (newResult, oldResult, deep) {
-    var added = [];
-    var kept = [];
-
-    for (var i = 0; i < newResult.length; i++) {
-      var found = false;
-
-      for (var j = 0; j < oldResult.length; j++)
-        if (newResult[i].assert.name === oldResult[j].assert.name) {
-          found = true;
-          break;
-        }
-
-      if (found)
-        kept.push(newResult[i]);
-      else
-        added.push(newResult[i]);
-    }
-
-    return {
-      kept: kept,
-      added: added,
-      removed: !deep ? this._diff(oldResult, newResult, true).added : []
-    };
   },
 
   setupField: function (fieldInstance) {
