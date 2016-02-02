@@ -3,9 +3,9 @@ import ParsleyUtils from './utils';
 
 var ParsleyUI = function () {
   window.Parsley
-  .on('form:init',       (form ) => { ParsleyUI.Form.bindForm (form ); } )
-  .on('form:validated',  (form ) => { ParsleyUI.Form.focus     (form ); } )
-  .on('form:destroy',    (form ) => { ParsleyUI.Form.destroyUI(form); } )
+  .on('form:init',       (form ) => { form.bindForm();  } )
+  .on('form:validated',  (form ) => { form.focus();     } )
+  .on('form:destroy',    (form ) => { form.destroyUI(); } )
   .on('field:init',      (field) => { ParsleyUI.Field.actualizeTriggers(field); } )
   .on('field:validated', (field) => { ParsleyUI.Field.reflowUI  (field); } )
   .on('field:reset',     (field) => { ParsleyUI.Field.resetUI     (field); } )
@@ -40,41 +40,41 @@ var diffResults = function (newResult, oldResult, deep) {
 
 ParsleyUI.Form = {
 
-  bindForm: function (formInstance) {
-    formInstance.$element.on('submit.Parsley', evt => { formInstance.onSubmitValidate(evt); });
-    formInstance.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { formInstance.onSubmitButton(evt); });
+  bindForm: function () {
+    this.$element.on('submit.Parsley', evt => { this.onSubmitValidate(evt); });
+    this.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { this.onSubmitButton(evt); });
 
     // UI could be disabled
-    if (false === formInstance.options.uiEnabled)
+    if (false === this.options.uiEnabled)
       return;
 
-    formInstance.$element.attr('novalidate', '');
+    this.$element.attr('novalidate', '');
   },
 
-  focus: function (formInstance) {
-    formInstance._focusedField = null;
+  focus: function () {
+    this._focusedField = null;
 
-    if (true === formInstance.validationResult || 'none' === formInstance.options.focus)
+    if (true === this.validationResult || 'none' === this.options.focus)
       return null;
 
-    for (var i = 0; i < formInstance.fields.length; i++) {
-      var field = formInstance.fields[i];
+    for (var i = 0; i < this.fields.length; i++) {
+      var field = this.fields[i];
       if (true !== field.validationResult && field.validationResult.length > 0 && 'undefined' === typeof field.options.noFocus) {
-        formInstance._focusedField = field.$element;
-        if ('first' === formInstance.options.focus)
+        this._focusedField = field.$element;
+        if ('first' === this.options.focus)
           break;
       }
     }
 
-    if (null === formInstance._focusedField)
+    if (null === this._focusedField)
       return null;
 
-    return formInstance._focusedField.focus();
+    return this._focusedField.focus();
   },
 
-  destroyUI: function (formInstance) {
+  destroyUI: function () {
     // Reset all event listeners
-    formInstance.$element.off('.Parsley');
+    this.$element.off('.Parsley');
   }
 
 };

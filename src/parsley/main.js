@@ -28,7 +28,7 @@ var Parsley = $.extend(new ParsleyAbstract(), {
 // Supplement ParsleyField and Form with ParsleyAbstract
 // This way, the constructors will have access to those methods
 $.extend(ParsleyField.prototype, ParsleyAbstract.prototype);
-$.extend(ParsleyForm.prototype, ParsleyAbstract.prototype);
+$.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);
 // Inherit actualizeOptions and _resetOptions:
 $.extend(ParsleyFactory.prototype, ParsleyAbstract.prototype);
 
