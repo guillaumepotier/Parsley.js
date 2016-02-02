@@ -1,6 +1,7 @@
 # Parsley 2.x changelog
 
 ## master
+- Removed constant ParsleyUI
 
 ## 2.2.0
 

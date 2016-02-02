@@ -82,9 +82,7 @@ $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessag
 
 // ### ParsleyUI
 // UI is a separate class that only listens to some events and then modifies the DOM accordingly
-// Could be overriden by defining a `window.ParsleyConfig.ParsleyUI` appropriate class (with `listen()` method basically)
-window.ParsleyUI = 'function' === typeof window.ParsleyConfig.ParsleyUI ?
-  new window.ParsleyConfig.ParsleyUI().listen() : new ParsleyUI().listen();
+window.Parsley.UI = new ParsleyUI();
 
 // ### PARSLEY auto-binding
 // Prevent it by setting `ParsleyConfig.autoBind` to `false`

@@ -1,23 +1,18 @@
 import $ from 'jquery';
 import ParsleyUtils from './utils';
 
-var ParsleyUI = function (options) {
-  this.__class__ = 'ParsleyUI';
+var ParsleyUI = function () {
+  window.Parsley
+  .on('form:init',       (form ) => { this.setupForm (form ); } )
+  .on('form:validated',  (form ) => { this.focus     (form ); } )
+  .on('form:destroy',    (form ) => { this.destroy   (form ); } )
+  .on('field:init',      (field) => { this.setupField(field); } )
+  .on('field:validated', (field) => { this.reflow    (field); } )
+  .on('field:reset',     (field) => { this.reset     (field); } )
+  .on('field:destroy',   (field) => { this.destroy   (field); } );
 };
 
 ParsleyUI.prototype = {
-  listen: function () {
-    window.Parsley
-    .on('form:init',       (form ) => { this.setupForm (form ); } )
-    .on('form:validated',  (form ) => { this.focus     (form ); } )
-    .on('form:destroy',    (form ) => { this.destroy   (form ); } )
-    .on('field:init',      (field) => { this.setupField(field); } )
-    .on('field:validated', (field) => { this.reflow    (field); } )
-    .on('field:reset',     (field) => { this.reset     (field); } )
-    .on('field:destroy',   (field) => { this.destroy   (field); } );
-
-    return this;
-  },
 
   setupForm: function (formInstance) {
     formInstance.$element.on('submit.Parsley', evt => { formInstance.onSubmitValidate(evt); });

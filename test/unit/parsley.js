@@ -7,7 +7,6 @@ describe('ParsleyFactory', () => {
     expect(ParsleyFactory).to.be.a('function');
   });
   it('should register some window globals', () => {
-    expect(window.ParsleyUI).not.to.be(undefined);
     expect(window.ParsleyUtils).not.to.be(undefined);
     expect(window.ParsleyValidator).not.to.be(undefined);
   });
