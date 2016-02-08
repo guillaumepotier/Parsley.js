@@ -1,9 +1,9 @@
 # Parsley 2.x changelog
 
 ## master
-- Removed constant ParsleyUI
-
 - Parsley now relies on `input` events instead of `change` and `keyup` events.
+- Parsley updates the UI before firing success/error/validated events
+- Deprecated uses of ParsleyUI
 
 ## 2.2.0
 
