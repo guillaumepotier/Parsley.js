@@ -31,7 +31,7 @@ var diffResults = function (newResult, oldResult, deep) {
 
 ParsleyUI.Form = {
 
-  actualizeTriggers: function () {
+  _actualizeTriggers: function () {
     this.$element.on('submit.Parsley', evt => { this.onSubmitValidate(evt); });
     this.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { this.onSubmitButton(evt); });
 
@@ -63,7 +63,7 @@ ParsleyUI.Form = {
     return this._focusedField.focus();
   },
 
-  destroyUI: function () {
+  _destroyUI: function () {
     // Reset all event listeners
     this.$element.off('.Parsley');
   }
@@ -72,7 +72,7 @@ ParsleyUI.Form = {
 
 ParsleyUI.Field = {
 
-  reflowUI: function () {
+  _reflowUI: function () {
     this._buildUI();
 
     // If this field doesn't have an active UI don't bother doing something
@@ -86,17 +86,17 @@ ParsleyUI.Field = {
     this._ui.lastValidationResult = this.validationResult;
 
     // Handle valid / invalid / none field class
-    this.manageStatusClass();
+    this._manageStatusClass();
 
     // Add, remove, updated errors messages
-    this.manageErrorsMessages(diff);
+    this._manageErrorsMessages(diff);
 
     // Triggers impl
-    this.actualizeTriggers();
+    this._actualizeTriggers();
 
     // If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user
     if ((diff.kept.length || diff.added.length) && true !== this._ui.failedOnce)
-      this.manageFailingFieldTrigger();
+      this._manageFailingFieldTrigger();
   },
 
   // Returns an array of field's error message(s)
@@ -114,7 +114,7 @@ ParsleyUI.Field = {
     return messages;
   },
 
-  manageStatusClass: function () {
+  _manageStatusClass: function () {
     if (this.hasConstraints() && this.needsValidation() && true === this.validationResult)
       this._successClass();
     else if (this.validationResult.length > 0)
@@ -123,7 +123,7 @@ ParsleyUI.Field = {
       this._resetClass();
   },
 
-  manageErrorsMessages: function (diff) {
+  _manageErrorsMessages: function (diff) {
     if ('undefined' !== typeof this.options.errorsMessagesDisabled)
       return;
 
@@ -199,7 +199,7 @@ ParsleyUI.Field = {
     // edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
     // but highly improbable cuz' manually removing a well Parsley handled error makes no sense.
     if (true !== doNotUpdateClass)
-      this.manageStatusClass();
+      this._manageStatusClass();
   },
 
   _getErrorMessage: function (constraint) {
@@ -282,7 +282,7 @@ ParsleyUI.Field = {
     return $from.after(this._ui.$errorsWrapper);
   },
 
-  actualizeTriggers: function () {
+  _actualizeTriggers: function () {
     var $toBind = this._findRelated();
 
     // Remove Parsley events already binded on this field
@@ -299,11 +299,11 @@ ParsleyUI.Field = {
 
     $toBind.on(
       triggers.split(' ').join('.Parsley ') + '.Parsley',
-      event => { this.eventValidate(event); }
+      event => { this._eventValidate(event); }
     );
   },
 
-  eventValidate: function (event) {
+  _eventValidate: function (event) {
     // For keyup, keypress, keydown... events that could be a little bit obstrusive
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
@@ -314,15 +314,15 @@ ParsleyUI.Field = {
     this.validate();
   },
 
-  manageFailingFieldTrigger: function () {
+  _manageFailingFieldTrigger: function () {
     this._ui.failedOnce = true;
 
     this._findRelated().on('input.ParsleyFailedOnce', () => { this.validate(); });
   },
 
-  resetUI: function () {
+  _resetUI: function () {
     // Reset all event listeners
-    this.actualizeTriggers();
+    this._actualizeTriggers();
     this.$element.off('.ParsleyFailedOnce');
 
     // Nothing to do if UI never initialized for this field
@@ -344,8 +344,8 @@ ParsleyUI.Field = {
     this._ui.failedOnce = false;
   },
 
-  destroyUI: function () {
-    this.resetUI();
+  _destroyUI: function () {
+    this._resetUI();
 
     if ('undefined' !== typeof this._ui)
       this._ui.$errorsWrapper.remove();

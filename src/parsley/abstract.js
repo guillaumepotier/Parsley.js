@@ -87,7 +87,7 @@ ParsleyAbstract.prototype = {
   reset: function () {
     // Field case: just emit a reset event for UI
     if ('ParsleyForm' !== this.__class__) {
-      this.resetUI();
+      this._resetUI();
       return this._trigger('reset');
     }
 
@@ -101,7 +101,7 @@ ParsleyAbstract.prototype = {
   // Destroy Parsley instance (+ UI)
   destroy: function () {
     // Field case: emit destroy event to clean UI and then destroy stored instance
-    this.destroyUI();
+    this._destroyUI();
     if ('ParsleyForm' !== this.__class__) {
       this.$element.removeData('Parsley');
       this.$element.removeData('ParsleyFieldMultiple');

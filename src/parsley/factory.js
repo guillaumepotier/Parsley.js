@@ -152,7 +152,7 @@ ParsleyFactory.prototype = {
     this.$element.data('Parsley', parsleyInstance);
 
     // Tell the world we have a new ParsleyForm or ParsleyField instance!
-    parsleyInstance.actualizeTriggers();
+    parsleyInstance._actualizeTriggers();
     parsleyInstance._trigger('init');
 
     return parsleyInstance;

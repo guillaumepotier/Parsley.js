@@ -63,7 +63,7 @@ ParsleyField.prototype = {
     this._trigger('validate');
 
     return this.whenValid({force, value: this.value, _refreshed: true})
-      .always(() => { this.reflowUI(); })
+      .always(() => { this._reflowUI(); })
       .done(() =>   { this._trigger('success'); })
       .fail(() =>   { this._trigger('error'); })
       .always(() => { this._trigger('validated'); });
