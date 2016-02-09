@@ -45,22 +45,10 @@ npm install
 gulp test
 ```
 
-## Build `dist/`
+## Build `dist/` and `doc/annotated-source`
 
 ```
 gulp build
-```
-
-## Generate annotated documentation
-
-First time:
-```
-npm install -g docco
-```
-
-then
-```
-grunt build-annotated-source
 ```
 
 ## Run tests
