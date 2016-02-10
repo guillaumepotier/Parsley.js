@@ -95,7 +95,7 @@ ParsleyUI.Field = {
     this._actualizeTriggers();
 
     // If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user
-    if ((diff.kept.length || diff.added.length) && true !== this._ui.failedOnce)
+    if ((diff.kept.length || diff.added.length) && true !== this._failedOnce)
       this._manageFailingFieldTrigger();
   },
 
@@ -285,22 +285,23 @@ ParsleyUI.Field = {
   _actualizeTriggers: function () {
     var $toBind = this._findRelated();
 
-    // Remove Parsley events already binded on this field
+    // Remove Parsley events already bound on this field
     $toBind.off('.Parsley');
+    if (this._failedOnce)
+      $toBind.on('input.ParsleyFailedOnce', () => { this.validate(); });
+    else {
+      $toBind.off('.ParsleyFailedOnce');
+      var triggers = this.options.trigger && this.options.trigger.replace(/^\s+/g , '').replace(/\s+$/g , '');
 
-    // If no trigger is set, all good
-    if (false === this.options.trigger)
-      return;
+      // If no trigger is set, all good
+      if (!triggers)
+        return;
 
-    var triggers = this.options.trigger.replace(/^\s+/g , '').replace(/\s+$/g , '');
-
-    if ('' === triggers)
-      return;
-
-    $toBind.on(
-      triggers.split(' ').join('.Parsley ') + '.Parsley',
-      event => { this._eventValidate(event); }
-    );
+      $toBind.on(
+        triggers.split(' ').join('.Parsley ') + '.Parsley',
+        event => { this._eventValidate(event); }
+      );
+    }
   },
 
   _eventValidate: function (event) {
@@ -315,15 +316,15 @@ ParsleyUI.Field = {
   },
 
   _manageFailingFieldTrigger: function () {
-    this._ui.failedOnce = true;
-
+    this._failedOnce = true;
+    this._actualizeTriggers();
     this._findRelated().on('input.ParsleyFailedOnce', () => { this.validate(); });
   },
 
   _resetUI: function () {
     // Reset all event listeners
+    this._failedOnce = false;
     this._actualizeTriggers();
-    this.$element.off('.ParsleyFailedOnce');
 
     // Nothing to do if UI never initialized for this field
     if ('undefined' === typeof this._ui)
@@ -341,7 +342,6 @@ ParsleyUI.Field = {
     // Reset validation flags and last validation result
     this._ui.lastValidationResult = [];
     this._ui.validationInformationVisible = false;
-    this._ui.failedOnce = false;
   },
 
   _destroyUI: function () {
