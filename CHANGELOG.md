@@ -2,10 +2,12 @@
 
 ## master
 
-## 2.3.0
+## 2.3.1
 
-- Parsley now relies on `input` events instead of `change` and `keyup` events.
-  Custom triggers are unbound once a field has failed.
+- Parsley now relies on `input` events instead of `change` and `keyup` events
+  to revalidate after the first failure. This is now customizable with the
+  `triggerAfterFailure` option. Triggers specified with the `trigger` option
+  are unbound once a field has failed.
 - Parsley updates the UI before firing success/error/validated events
 - Deprecated uses of ParsleyUI. Methods are now instance methods of ParsleyField,
   with modernized interfaces.

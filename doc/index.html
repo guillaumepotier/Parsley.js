@@ -942,8 +942,13 @@ window.Parsley
           <tbody>
             <tr>
               <td>Trigger <version>#2.0</version></td>
-              <td><code>data-parsley-trigger="change"</code></td>
-              <td>Specify one or many javascript events that will trigger item validation. To set multiple events, separate them with a space <code>data-parsley-trigger="focusin focusout"</code>. <a href="http://api.jquery.com/category/events/" target="_blank">See the various events supported by jQuery.</a></td>
+              <td><code>data-parsley-trigger="input"</code></td>
+              <td>Specify one or many javascript events that will trigger item validation, before any failure. To set multiple events, separate them with a space <code>data-parsley-trigger="focusin focusout"</code>. Default is <code>null</code>. <a href="http://api.jquery.com/category/events/" target="_blank">See the various events supported by jQuery.</a></td>
+            </tr>
+            <tr>
+              <td>Trigger After Failure<version>#2.0</version></td>
+              <td><code>data-parsley-trigger-after-failure="focusout"</code></td>
+              <td>Specify one or many javascript events that will trigger item validation, after the first failure. Default is <a href="https://developer.mozilla.org/en-US/docs/Web/Events/input"><code>'input'</code></a>.</td>
             </tr>
             <td>No focus <version>#2.0</version></td>
               <td><code>data-parsley-no-focus</code></td>

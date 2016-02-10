@@ -172,6 +172,17 @@ describe('ParsleyUI', () => {
     $('#element').trigger($.Event('change'));
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
   });
+  it('should allow customization of triggers after first error', () => {
+    $('body').append('<input type="email" id="element" required data-parsley-trigger-after-failure="focusout" />');
+    var parsleyField = $('#element').psly();
+    parsleyField.validate();
+    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
+    $('#element').val('a@example.com');
+    $('#element').trigger('input');
+    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
+    $('#element').trigger('focusout');
+    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
+  });
   it('should auto bind error trigger on select field error (input=text)', () => {
     $('body').append('<input type="email" id="element" required />');
     var parsleyField = $('#element').psly();

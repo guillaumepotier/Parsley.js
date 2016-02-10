@@ -36,8 +36,11 @@ var ParsleyDefaults = {
   // Focused field on form validation error. 'first'|'last'|'none'
   focus: 'first',
 
-  // `$.Event()` that will trigger validation. eg: `keyup`, `change`...
+  // event(s) that will trigger validation before first failure. eg: `input`...
   trigger: false,
+
+  // event(s) that will trigger validation after first failure.
+  triggerAfterFailure: 'input',
 
   // Class that would be added on every failing validation Parsley field
   errorClass: 'parsley-error',

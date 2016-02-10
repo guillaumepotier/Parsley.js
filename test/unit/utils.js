@@ -67,4 +67,17 @@ describe('ParsleyUtils', () => {
     expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'required-message')).to.be(true);
     expect(ParsleyUtils.checkAttr($element, 'data-parsley-', 'validate')).to.be(true);
   });
+
+  describe('namespaceEvents', () => {
+    var itMaps = (what, toWhat) => {
+      it(`maps '${what}' to ''`, () => {
+        expect(ParsleyUtils.namespaceEvents(what, 'ns')).to.eql(toWhat);
+      });
+    };
+    itMaps('foo', 'foo.ns');
+    for (var evt of ['', '  ', false, null, undefined]) {
+      itMaps(evt, '');
+    }
+    itMaps('   foo    bar   ', 'foo.ns bar.ns');
+  });
 });

@@ -95,8 +95,10 @@ ParsleyUI.Field = {
     this._actualizeTriggers();
 
     // If field is not valid for the first time, bind keyup trigger to ease UX and quickly inform user
-    if ((diff.kept.length || diff.added.length) && true !== this._failedOnce)
-      this._manageFailingFieldTrigger();
+    if ((diff.kept.length || diff.added.length) && !this._failedOnce) {
+      this._failedOnce = true;
+      this._actualizeTriggers();
+    }
   },
 
   // Returns an array of field's error message(s)
@@ -288,37 +290,25 @@ ParsleyUI.Field = {
     // Remove Parsley events already bound on this field
     $toBind.off('.Parsley');
     if (this._failedOnce)
-      $toBind.on('input.ParsleyFailedOnce', () => { this.validate(); });
+      $toBind.on(ParsleyUtils.namespaceEvents(this.options.triggerAfterFailure, 'Parsley'), () => {
+        this.validate();
+      });
     else {
-      $toBind.off('.ParsleyFailedOnce');
-      var triggers = this.options.trigger && this.options.trigger.replace(/^\s+/g , '').replace(/\s+$/g , '');
-
-      // If no trigger is set, all good
-      if (!triggers)
-        return;
-
-      $toBind.on(
-        triggers.split(' ').join('.Parsley ') + '.Parsley',
-        event => { this._eventValidate(event); }
-      );
+      $toBind.on(ParsleyUtils.namespaceEvents(this.options.trigger, 'Parsley'), event => {
+        this._eventValidate(event);
+      });
     }
   },
 
   _eventValidate: function (event) {
-    // For keyup, keypress, keydown... events that could be a little bit obstrusive
+    // For keyup, keypress, keydown, input... events that could be a little bit obstrusive
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
-    if (/key/.test(event.type))
+    if (/key|input/.test(event.type))
       if (!(this._ui && field._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold)
         return;
 
     this.validate();
-  },
-
-  _manageFailingFieldTrigger: function () {
-    this._failedOnce = true;
-    this._actualizeTriggers();
-    this._findRelated().on('input.ParsleyFailedOnce', () => { this.validate(); });
   },
 
   _resetUI: function () {

@@ -102,6 +102,13 @@ var ParsleyUtils = {
     return string.replace(/^\s+|\s+$/g, '');
   },
 
+  namespaceEvents: function(events, namespace) {
+    events = this.trimString(events || '').split(/\s+/);
+    if (!events[0])
+      return '';
+    return $.map(events, evt => { return `${evt}.${namespace}`; }).join(' ');
+  },
+
   // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
   objectCreate: Object.create || (function () {
     var Object = function () {};
