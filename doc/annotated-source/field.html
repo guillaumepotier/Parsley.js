@@ -257,6 +257,7 @@ or <code>undefined</code> if field is not in the given <code>group</code>.</p>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validate'</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid({force, value: <span class="hljs-keyword">this</span>.value, _refreshed: <span class="hljs-literal">true</span>})
+      .always(() =&gt; { <span class="hljs-keyword">this</span>._reflowUI(); })
       .done(() =&gt;   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
       .fail(() =&gt;   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>); })
       .always(() =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validated'</span>); });

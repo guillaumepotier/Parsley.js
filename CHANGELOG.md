@@ -1,6 +1,9 @@
 # Parsley 2.x changelog
 
 ## master
+
+## 2.3.0
+
 - Parsley now relies on `input` events instead of `change` and `keyup` events.
   Custom triggers are unbound once a field has failed.
 - Parsley updates the UI before firing success/error/validated events

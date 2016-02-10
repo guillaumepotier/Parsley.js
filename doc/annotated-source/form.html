@@ -157,12 +157,15 @@ ParsleyForm.prototype = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>).first();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._$submitSource.is(<span class="hljs-string">'[formnovalidate]'</span>)) {
-      <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>).first();
+    <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley-synthetic-submit-button'</span>).prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-literal">true</span>);
+    <span class="hljs-keyword">if</span> ($submitSource.is(<span class="hljs-string">'[formnovalidate]'</span>))
       <span class="hljs-keyword">return</span>;
-    }</pre></div></div>
+
+    <span class="hljs-keyword">var</span> promise = <span class="hljs-keyword">this</span>.whenValidate({event});
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'resolved'</span> === promise.state() &amp;&amp; <span class="hljs-literal">false</span> !== <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'submit'</span>)) {</pre></div></div>
             
         </li>
         
@@ -173,24 +176,12 @@ ParsleyForm.prototype = {
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Because some validations might be asynchroneous,
-we cancel this submit and will fake it after validation.</p>
+              <p>All good, let event go through. We make this distinction because browsers
+differ in their handling of <code>submit</code> being called from inside a submit event [#1047]</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    event.stopImmediatePropagation();
-    event.preventDefault();
-
-    <span class="hljs-keyword">this</span>.whenValidate({event})
-      .done(() =&gt; { <span class="hljs-keyword">this</span>._submit(); })
-      .always(() =&gt; { <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>; });
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  },
-
-  onSubmitButton: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-    <span class="hljs-keyword">this</span>._$submitSource = $(event.target);
-  },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    } <span class="hljs-keyword">else</span> {</pre></div></div>
             
         </li>
         
@@ -201,16 +192,20 @@ we cancel this submit and will fake it after validation.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>internal
-_submit submits the form, this time without going through the validations.
-Care must be taken to “fake” the actual submit button being clicked.</p>
+              <p>Rejected or pending: cancel this submit</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _submit: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'submit'</span>))
-      <span class="hljs-keyword">return</span>;
-    <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley_synthetic_submit_button'</span>).remove();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      event.stopImmediatePropagation();
+      event.preventDefault();
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'pending'</span> === promise.state())
+        promise.done(() =&gt; { <span class="hljs-keyword">this</span>._submit($submitSource); });
+    }
+  },
+
+  onSubmitButton: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
+    <span class="hljs-keyword">this</span>._$submitSource = $(event.target);
+  },</pre></div></div>
             
         </li>
         
@@ -221,16 +216,15 @@ Care must be taken to “fake” the actual submit button being clicked.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Add submit button’s data</p>
+              <p>internal
+_submit submits the form, this time without going through the validations.
+Care must be taken to “fake” the actual submit button being clicked.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._$submitSource) {
-      $(<span class="hljs-string">'&lt;input class="parsley_synthetic_submit_button" type="hidden"&gt;'</span>)
-      .attr(<span class="hljs-string">'name'</span>, <span class="hljs-keyword">this</span>._$submitSource.attr(<span class="hljs-string">'name'</span>))
-      .attr(<span class="hljs-string">'value'</span>, <span class="hljs-keyword">this</span>._$submitSource.attr(<span class="hljs-string">'value'</span>))
-      .appendTo(<span class="hljs-keyword">this</span>.$element);
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _submit: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$submitSource</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'submit'</span>))
+      <span class="hljs-keyword">return</span>;</pre></div></div>
             
         </li>
         
@@ -241,10 +235,21 @@ Care must be taken to “fake” the actual submit button being clicked.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              
+              <p>Add submit button’s data</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$element.trigger($.extend($.Event(<span class="hljs-string">'submit'</span>), {parsley: <span class="hljs-literal">true</span>}));
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ($submitSource) {
+      <span class="hljs-keyword">var</span> $synthetic = <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley-synthetic-submit-button'</span>).prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-literal">false</span>);
+      <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> === $synthetic.length)
+        $synthetic = $(<span class="hljs-string">'&lt;input class="parsley-synthetic-submit-button" type="hidden"&gt;'</span>).appendTo(<span class="hljs-keyword">this</span>.$element);
+      $synthetic.attr({
+        name: $submitSource.attr(<span class="hljs-string">'name'</span>),
+        value: $submitSource.attr(<span class="hljs-string">'value'</span>)
+      });
+    }
+
+    <span class="hljs-keyword">this</span>.$element.trigger($.extend($.Event(<span class="hljs-string">'submit'</span>), {parsley: <span class="hljs-literal">true</span>}));
   },</pre></div></div>
             
         </li>
@@ -276,10 +281,10 @@ Consider using <code>whenValidate</code> instead.</p>
   whenValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">{group, force, event} = {}</span>) </span>{
     <span class="hljs-keyword">this</span>.submitEvent = event;
     <span class="hljs-keyword">if</span> (event) {
-      <span class="hljs-keyword">this</span>.submitEvent.preventDefault = () =&gt; {
+      <span class="hljs-keyword">this</span>.submitEvent = $.extend({}, event, {preventDefault: () =&gt; {
         ParsleyUtils.warnOnce(<span class="hljs-string">"Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`"</span>);
         <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>;
-      };
+      }});
     }
     <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">true</span>;</pre></div></div>
             
@@ -328,7 +333,11 @@ Consider using <code>whenValidate</code> instead.</p>
 
     <span class="hljs-keyword">return</span> $.when(...promises)
       .done(  () =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
-      .fail(  () =&gt; { <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>; <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>); })
+      .fail(  () =&gt; {
+        <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">this</span>.focus();
+        <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>);
+      })
       .always(() =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validated'</span>); })
       .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
   },</pre></div></div>

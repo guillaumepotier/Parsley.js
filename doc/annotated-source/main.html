@@ -143,7 +143,7 @@
     actualizeOptions: <span class="hljs-literal">null</span>,
     _resetOptions: <span class="hljs-literal">null</span>,
     Factory: ParsleyFactory,
-    version: <span class="hljs-string">'2.2.0'</span>
+    version: <span class="hljs-string">'@@version'</span>
   });</pre></div></div>
             
         </li>
@@ -160,8 +160,8 @@ This way, the constructors will have access to those methods</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$.extend(ParsleyField.prototype, ParsleyAbstract.prototype);
-$.extend(ParsleyForm.prototype, ParsleyAbstract.prototype);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>$.extend(ParsleyField.prototype, ParsleyUI.Field, ParsleyAbstract.prototype);
+$.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre></div></div>
             
         </li>
         
@@ -308,13 +308,29 @@ $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages ge
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <h3 id="parsleyui">ParsleyUI</h3>
-<p>UI is a separate class that only listens to some events and then modifies the DOM accordingly
-Could be overriden by defining a <code>window.ParsleyConfig.ParsleyUI</code> appropriate class (with <code>listen()</code> method basically)</p>
+<p>Deprecated global object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.ParsleyUI = <span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.ParsleyConfig.ParsleyUI ?
-  <span class="hljs-keyword">new</span> <span class="hljs-built_in">window</span>.ParsleyConfig.ParsleyUI().listen() : <span class="hljs-keyword">new</span> ParsleyUI().listen();</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.Parsley.UI = ParsleyUI;
+<span class="hljs-built_in">window</span>.ParsleyUI = {
+  removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, doNotUpdateClass</span>) </span>{
+    <span class="hljs-keyword">var</span> updateClass = <span class="hljs-literal">true</span> !== doNotUpdateClass;
+    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly.`</span>);
+    <span class="hljs-keyword">return</span> instance.removeError(name, {updateClass});
+  },
+  getErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance</span>) </span>{
+    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'getErrorsMessages' on the instance directly.`</span>);
+    <span class="hljs-keyword">return</span> instance.getErrorsMessages();
+  }
+};
+$.each(<span class="hljs-string">'addError updateError'</span>.split(<span class="hljs-string">' '</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i, method</span>) </span>{
+  <span class="hljs-built_in">window</span>.ParsleyUI[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, message, assert, doNotUpdateClass</span>) </span>{
+    <span class="hljs-keyword">var</span> updateClass = <span class="hljs-literal">true</span> !== doNotUpdateClass;
+    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call '<span class="hljs-subst">${method}</span>' on the instance directly.`</span>);
+    <span class="hljs-keyword">return</span> instance[method](name, {message, assert, updateClass});
+  };
+});</pre></div></div>
             
         </li>
         

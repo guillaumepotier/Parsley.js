@@ -179,7 +179,7 @@
 ParsleyFactory.prototype = {
   init: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Parsley'</span>;
-    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'2.2.0'</span>;
+    <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'@@version'</span>;
     <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();</pre></div></div>
             
         </li>
@@ -464,7 +464,8 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    parsleyInstance._trigger(<span class="hljs-string">'init'</span>);
+            <div class="content"><div class='highlight'><pre>    parsleyInstance._actualizeTriggers();
+    parsleyInstance._trigger(<span class="hljs-string">'init'</span>);
 
     <span class="hljs-keyword">return</span> parsleyInstance;
   }

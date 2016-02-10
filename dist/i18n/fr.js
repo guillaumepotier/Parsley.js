@@ -1,6 +1,7 @@
-// Load this after Parsley to add these error messages
+// Validation errors messages for Parsley
+// Load this after Parsley
 
-window.Parsley.addMessages('fr', {
+Parsley.addMessages('fr', {
   defaultMessage: "Cette valeur semble non valide.",
   type: {
     email:        "Cette valeur n'est pas une adresse email valide.",
@@ -24,3 +25,5 @@ window.Parsley.addMessages('fr', {
   check:          "Vous devez sélectionner entre %s et %s choix.",
   equalto:        "Cette valeur devrait être identique."
 });
+
+Parsley.setLocale('fr');
