@@ -83,11 +83,22 @@ $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessag
 // ### ParsleyUI
 // Deprecated global object
 window.Parsley.UI = ParsleyUI;
-window.ParsleyUI = {};
-$.each('addError updateError removeError getErrorsMessages'.split(' '), function (i, method) {
-  window.ParsleyUI[method] = function (instance, ...rest) {
-    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Simply call '${method}' on the instance directly.`);
-    return instance[method](...rest);
+window.ParsleyUI = {
+  removeError: function (instance, name, doNotUpdateClass) {
+    var updateClass = true !== doNotUpdateClass;
+    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly.`);
+    return instance.removeError(name, {updateClass});
+  },
+  getErrorsMessages: function (instance) {
+    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'getErrorsMessages' on the instance directly.`);
+    return instance.getErrorsMessages();
+  }
+};
+$.each('addError updateError'.split(' '), function (i, method) {
+  window.ParsleyUI[method] = function (instance, name, message, assert, doNotUpdateClass) {
+    var updateClass = true !== doNotUpdateClass;
+    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call '${method}' on the instance directly.`);
+    return instance[method](name, {message, assert, updateClass});
   };
 });
 

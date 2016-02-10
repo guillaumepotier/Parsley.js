@@ -153,18 +153,18 @@ ParsleyUI.Field = {
 
     // Show, hide, update failing constraints messages
     for (var i = 0; i < diff.removed.length; i++)
-      this.removeError(diff.removed[i].assert.name, true);
+      this.removeError(diff.removed[i].assert.name, {updateClass: false});
 
     for (i = 0; i < diff.added.length; i++)
-      this.addError(diff.added[i].assert.name, diff.added[i].errorMessage, diff.added[i].assert, true);
+      this.addError(diff.added[i].assert.name, {message: diff.added[i].errorMessage, assert: diff.added[i].assert, updateClass: false});
 
     for (i = 0; i < diff.kept.length; i++)
-      this.updateError(diff.kept[i].assert.name, diff.kept[i].errorMessage, diff.kept[i].assert, true);
+      this.updateError(diff.kept[i].assert.name, {message: diff.kept[i].errorMessage, assert: diff.kept[i].assert, updateClass: false});
   },
 
   // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
   // but a little bit complex for above internal usage, with forced undefined parameter...
-  addError: function (name, message, assert, doNotUpdateClass) {
+  addError: function (name, {message, assert, updateClass = true} = {}) {
     this._insertErrorWrapper();
     this._ui.$errorsWrapper
       .addClass('filled')
@@ -174,23 +174,23 @@ ParsleyUI.Field = {
         .html(message || this._getErrorMessage(assert))
       );
 
-    if (true !== doNotUpdateClass)
+    if (updateClass)
       this._errorClass();
   },
 
   // Same as above
-  updateError: function (name, message, assert, doNotUpdateClass) {
+  updateError: function (name, {message, assert, updateClass = true} = {}) {
     this._ui.$errorsWrapper
       .addClass('filled')
       .find('.parsley-' + name)
       .html(message || this._getErrorMessage(assert));
 
-    if (true !== doNotUpdateClass)
+    if (updateClass)
       this._errorClass();
   },
 
   // Same as above twice
-  removeError: function (name, doNotUpdateClass) {
+  removeError: function (name, {updateClass = true} = {}) {
     this._ui.$errorsWrapper
       .removeClass('filled')
       .find('.parsley-' + name)
@@ -198,7 +198,7 @@ ParsleyUI.Field = {
 
     // edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
     // but highly improbable cuz' manually removing a well Parsley handled error makes no sense.
-    if (true !== doNotUpdateClass)
+    if (updateClass)
       this._manageStatusClass();
   },
 

@@ -3,7 +3,8 @@
 ## master
 - Parsley now relies on `input` events instead of `change` and `keyup` events.
 - Parsley updates the UI before firing success/error/validated events
-- Deprecated uses of ParsleyUI
+- Deprecated uses of ParsleyUI. Methods are now instance methods of ParsleyField,
+  with modernized interfaces.
 
 ## 2.2.0
 
