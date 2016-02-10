@@ -271,6 +271,13 @@ returns object from dom attributes and values</p>
 
   trimString: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">''</span>);
+  },
+
+  namespaceEvents: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">events, namespace</span>) </span>{
+    events = <span class="hljs-keyword">this</span>.trimString(events || <span class="hljs-string">''</span>).split(<span class="hljs-regexp">/\s+/</span>);
+    <span class="hljs-keyword">if</span> (!events[<span class="hljs-number">0</span>])
+      <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+    <span class="hljs-keyword">return</span> $.map(events, evt =&gt; { <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${evt}</span>.<span class="hljs-subst">${namespace}</span>`</span>; }).join(<span class="hljs-string">' '</span>);
   },</pre></div></div>
             
         </li>

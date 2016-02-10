@@ -312,8 +312,10 @@ ParsleyUI.Field = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ((diff.kept.length || diff.added.length) &amp;&amp; <span class="hljs-literal">true</span> !== <span class="hljs-keyword">this</span>._failedOnce)
-      <span class="hljs-keyword">this</span>._manageFailingFieldTrigger();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ((diff.kept.length || diff.added.length) &amp;&amp; !<span class="hljs-keyword">this</span>._failedOnce) {
+      <span class="hljs-keyword">this</span>._failedOnce = <span class="hljs-literal">true</span>;
+      <span class="hljs-keyword">this</span>._actualizeTriggers();
+    }
   },</pre></div></div>
             
         </li>
@@ -773,10 +775,17 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
             
             <div class="content"><div class='highlight'><pre>    $toBind.off(<span class="hljs-string">'.Parsley'</span>);
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._failedOnce)
-      $toBind.on(<span class="hljs-string">'input.ParsleyFailedOnce'</span>, () =&gt; { <span class="hljs-keyword">this</span>.validate(); });
+      $toBind.on(ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.triggerAfterFailure, <span class="hljs-string">'Parsley'</span>), () =&gt; {
+        <span class="hljs-keyword">this</span>.validate();
+      });
     <span class="hljs-keyword">else</span> {
-      $toBind.off(<span class="hljs-string">'.ParsleyFailedOnce'</span>);
-      <span class="hljs-keyword">var</span> triggers = <span class="hljs-keyword">this</span>.options.trigger &amp;&amp; <span class="hljs-keyword">this</span>.options.trigger.replace(<span class="hljs-regexp">/^\s+/g</span> , <span class="hljs-string">''</span>).replace(<span class="hljs-regexp">/\s+$/g</span> , <span class="hljs-string">''</span>);</pre></div></div>
+      $toBind.on(ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.trigger, <span class="hljs-string">'Parsley'</span>), event =&gt; {
+        <span class="hljs-keyword">this</span>._eventValidate(event);
+      });
+    }
+  },
+
+  _eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -787,21 +796,20 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>If no trigger is set, all good</p>
+              <p>For keyup, keypress, keydown, input… events that could be a little bit obstrusive
+do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
+about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (!triggers)
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/key|input/</span>.test(event.type))
+      <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>._ui &amp;&amp; field._ui.validationInformationVisible) &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
         <span class="hljs-keyword">return</span>;
 
-      $toBind.on(
-        triggers.split(<span class="hljs-string">' '</span>).join(<span class="hljs-string">'.Parsley '</span>) + <span class="hljs-string">'.Parsley'</span>,
-        event =&gt; { <span class="hljs-keyword">this</span>._eventValidate(event); }
-      );
-    }
+    <span class="hljs-keyword">this</span>.validate();
   },
 
-  _eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
+  _resetUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -811,36 +819,6 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>For keyup, keypress, keydown… events that could be a little bit obstrusive
-do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
-about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/key/</span>.test(event.type))
-      <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>._ui &amp;&amp; field._ui.validationInformationVisible) &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
-        <span class="hljs-keyword">return</span>;
-
-    <span class="hljs-keyword">this</span>.validate();
-  },
-
-  _manageFailingFieldTrigger: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">this</span>._failedOnce = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>._actualizeTriggers();
-    <span class="hljs-keyword">this</span>._findRelated().on(<span class="hljs-string">'input.ParsleyFailedOnce'</span>, () =&gt; { <span class="hljs-keyword">this</span>.validate(); });
-  },
-
-  _resetUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Reset all event listeners</p>
 
@@ -852,11 +830,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Nothing to do if UI never initialized for this field</p>
 
@@ -868,11 +846,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Reset all errors’ li</p>
 
@@ -886,11 +864,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Reset validation class</p>
 
@@ -901,11 +879,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Reset validation flags and last validation result</p>
 

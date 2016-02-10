@@ -284,7 +284,7 @@ eg: <code>data-parsley-stop-on-first-failing-constraint=&quot;false&quot;</code>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p><code>$.Event()</code> that will trigger validation. eg: <code>keyup</code>, <code>change</code>…</p>
+              <p>event(s) that will trigger validation before first failure. eg: <code>input</code>…</p>
 
             </div>
             
@@ -299,11 +299,11 @@ eg: <code>data-parsley-stop-on-first-failing-constraint=&quot;false&quot;</code>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Class that would be added on every failing validation Parsley field</p>
+              <p>event(s) that will trigger validation after first failure.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  errorClass: <span class="hljs-string">'parsley-error'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  triggerAfterFailure: <span class="hljs-string">'input'</span>,</pre></div></div>
             
         </li>
         
@@ -314,11 +314,11 @@ eg: <code>data-parsley-stop-on-first-failing-constraint=&quot;false&quot;</code>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Same for success validation</p>
+              <p>Class that would be added on every failing validation Parsley field</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  successClass: <span class="hljs-string">'parsley-success'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  errorClass: <span class="hljs-string">'parsley-error'</span>,</pre></div></div>
             
         </li>
         
@@ -328,6 +328,21 @@ eg: <code>data-parsley-stop-on-first-failing-constraint=&quot;false&quot;</code>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Same for success validation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  successClass: <span class="hljs-string">'parsley-success'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Return the <code>$element</code> that will receive these above success or error classes
 Could also be (and given directly from DOM) a valid selector like <code>&#39;#div&#39;</code></p>
@@ -339,11 +354,11 @@ Could also be (and given directly from DOM) a valid selector like <code>&#39;#di
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Return the <code>$element</code> where errors will be appended
 Could also be (and given directly from DOM) a valid selector like <code>&#39;#div&#39;</code></p>
@@ -355,11 +370,11 @@ Could also be (and given directly from DOM) a valid selector like <code>&#39;#di
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>ul elem that would receive errors’ list</p>
 
@@ -370,11 +385,11 @@ Could also be (and given directly from DOM) a valid selector like <code>&#39;#di
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>li elem that would receive error message</p>
 
