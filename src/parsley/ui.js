@@ -246,7 +246,7 @@ ParsleyUI.Field = {
       return $(this.options.classHandler);
 
     // Class handled could also be determined by function given in Parsley options
-    var $handler = this.options.classHandler();
+    var $handler = this.options.classHandler.call(this, this);
 
     // If this function returned a valid existing DOM element, go for it
     if ('undefined' !== typeof $handler && $handler.length)
@@ -273,7 +273,7 @@ ParsleyUI.Field = {
       else
         ParsleyUtils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM');
     } else if ('function' === typeof this.options.errorsContainer)
-      $errorsContainer = this.options.errorsContainer();
+      $errorsContainer = this.options.errorsContainer.call(this, this);
 
     if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
       return $errorsContainer.append(this._ui.$errorsWrapper);

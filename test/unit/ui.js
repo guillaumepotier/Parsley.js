@@ -28,7 +28,11 @@ describe('ParsleyUI', () => {
     $('#element').psly().destroy();
     $('#field1').removeAttr('data-parsley-errors-container');
     $('#element').psly({
-      errorsContainer: () => { return $('#container2'); }
+      errorsContainer: function (ins) {
+        expect(ins).to.be($('#field1').psly());
+        expect(this).to.be($('#field1').psly());
+        return $('#container2');
+      }
     }).validate();
     expect($('#container2 .parsley-errors-list').length).to.be(1);
   });
@@ -106,7 +110,11 @@ describe('ParsleyUI', () => {
     $('#element').psly().destroy();
     $('#field1').removeAttr('data-parsley-class-handler');
     $('#element').psly({
-      classHandler: () => { return $('#field3'); }
+      classHandler: function (ins) {
+        expect(ins).to.be($('#field1').parsley());
+        expect(this).to.be($('#field1').parsley());
+        return $('#field3');
+      }
     }).validate();
     expect($('#field3').hasClass('parsley-error')).to.be(true);
   });
