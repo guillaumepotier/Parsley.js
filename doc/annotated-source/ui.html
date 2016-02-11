@@ -671,7 +671,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $handler = <span class="hljs-keyword">this</span>.options.classHandler();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $handler = <span class="hljs-keyword">this</span>.options.classHandler.call(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -746,7 +746,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       <span class="hljs-keyword">else</span>
         ParsleyUtils.warn(<span class="hljs-string">'The errors container `'</span> + <span class="hljs-keyword">this</span>.options.errorsContainer + <span class="hljs-string">'` does not exist in DOM'</span>);
     } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.errorsContainer)
-      $errorsContainer = <span class="hljs-keyword">this</span>.options.errorsContainer();
+      $errorsContainer = <span class="hljs-keyword">this</span>.options.errorsContainer.call(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $errorsContainer &amp;&amp; $errorsContainer.length)
       <span class="hljs-keyword">return</span> $errorsContainer.append(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);

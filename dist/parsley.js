@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.1 - built Wed, Feb 10th 2016, 10:06 am
+* Version 2.3.2 - built Wed, Feb 10th 2016, 7:37 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1002,7 +1002,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       if ('string' === typeof this.options.classHandler && $(this.options.classHandler).length) return $(this.options.classHandler);
 
       // Class handled could also be determined by function given in Parsley options
-      var $handler = this.options.classHandler();
+      var $handler = this.options.classHandler.call(this, this);
 
       // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length) return $handler;
@@ -1022,7 +1022,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       if ('string' === typeof this.options.errorsContainer) {
         if ($(this.options.errorsContainer).length) return $(this.options.errorsContainer).append(this._ui.$errorsWrapper);else ParsleyUtils__default.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM');
-      } else if ('function' === typeof this.options.errorsContainer) $errorsContainer = this.options.errorsContainer();
+      } else if ('function' === typeof this.options.errorsContainer) $errorsContainer = this.options.errorsContainer.call(this, this);
 
       if ('undefined' !== typeof $errorsContainer && $errorsContainer.length) return $errorsContainer.append(this._ui.$errorsWrapper);
 
@@ -1826,7 +1826,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.1';
+      this.__version__ = '2.3.2';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1948,7 +1948,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.1'
+    version: '2.3.2'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
