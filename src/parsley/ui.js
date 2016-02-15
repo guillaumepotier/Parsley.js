@@ -305,7 +305,7 @@ ParsleyUI.Field = {
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
     if (/key|input/.test(event.type))
-      if (!(this._ui && field._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold)
+      if (!(this._ui && this._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold)
         return;
 
     this.validate();

@@ -226,13 +226,15 @@ describe('ParsleyUI', () => {
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
   });
   it('should handle trigger keyup threshold validation', () => {
-    $('body').append('<input type="email" id="element" data-parsley-validation-threshold="2" required data-parsley-trigger="keyup" />');
+    $('body').append('<input type="email" id="element" data-parsley-validation-threshold="7" required data-parsley-trigger="keyup" />');
     var parsleyField = $('#element').psly();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
-    $('#element').val('fo').trigger($.Event('keyup'));
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
-    $('#element').val('foo').trigger($.Event('keyup'));
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
+    $('#element').val('a@b.com').trigger('keyup');
+    expect($('#element').hasClass('success')).to.be(false);
+    $('#element').val('aa@b.com').trigger('keyup');
+    expect($('#element').hasClass('parsley-success')).to.be(true);
+    $('#element').val('@b.com').trigger('keyup');
+    expect($('#element').hasClass('parsley-success')).to.be(false);
   });
   it('should handle UI disabling', () => {
     $('body').append('<input type="email" id="element" data-parsley-ui-enabled="false" required data-parsley-trigger="keyup" />');
