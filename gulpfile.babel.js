@@ -14,7 +14,7 @@ import source  from 'vinyl-source-stream';
 import fs  from 'fs';
 import moment  from 'moment';
 import docco  from 'docco';
-
+import {spawn} from 'child_process';
 import manifest  from './package.json';
 
 // Load all of our Gulp plugins
@@ -226,6 +226,33 @@ function testBrowser() {
   });
 }
 
+function gitClean() {
+  $.git.status({args : '--porcelain'}, (err, stdout) => {
+    if (err) throw err;
+    if (/^ ?M/.test(stdout)) throw 'You have uncommitted changes!'
+  });
+}
+
+function npmPublish(done) {
+  spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', done);
+}
+
+function gitPush() {
+  $.git.push('origin', 'master', {args: '--follow-tags'}, err => { if (err) throw err });
+}
+
+function gitTag() {
+  $.git.tag(manifest.version, {quiet: false}, err => { if (err) throw err });
+}
+
+gulp.task('release-git-clean', gitClean);
+gulp.task('release-npm-publish', npmPublish);
+gulp.task('release-git-push', gitPush);
+gulp.task('release-git-tag', gitTag);
+
+gulp.task('release', () => {
+  runSequence(['release-git-clean', 'release-git-tag', 'release-git-push', 'release-npm-publish']);
+});
 // Remove the built files
 gulp.task('clean', cleanDist);
 
