@@ -251,7 +251,7 @@ gulp.task('release-git-push', gitPush);
 gulp.task('release-git-tag', gitTag);
 
 gulp.task('release', () => {
-  runSequence(['release-git-clean', 'release-git-tag', 'release-git-push', 'release-npm-publish']);
+  runSequence('release-git-clean', 'release-git-tag', 'release-git-push', 'release-npm-publish');
 });
 // Remove the built files
 gulp.task('clean', cleanDist);
