@@ -803,7 +803,7 @@ about success or failure have been displayed, always validate with this trigger 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/key|input/</span>.test(event.type))
-      <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>._ui &amp;&amp; field._ui.validationInformationVisible) &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
+      <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>._ui &amp;&amp; <span class="hljs-keyword">this</span>._ui.validationInformationVisible) &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
         <span class="hljs-keyword">return</span>;
 
     <span class="hljs-keyword">this</span>.validate();

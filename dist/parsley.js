@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.2 - built Wed, Feb 10th 2016, 7:37 pm
+* Version 2.3.3 - built Mon, Feb 15th 2016, 2:57 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1051,7 +1051,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       // For keyup, keypress, keydown, input... events that could be a little bit obstrusive
       // do not validate if val length < min threshold on first validation. Once field have been validated once and info
       // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
-      if (/key|input/.test(event.type)) if (!(this._ui && field._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold) return;
+      if (/key|input/.test(event.type)) if (!(this._ui && this._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold) return;
 
       this.validate();
     },
@@ -1826,7 +1826,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.2';
+      this.__version__ = '2.3.3';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1948,7 +1948,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.2'
+    version: '2.3.3'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
