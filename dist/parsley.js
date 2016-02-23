@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.3 - built Mon, Feb 15th 2016, 2:57 pm
+* Version 2.3.4 - built Tue, Feb 23rd 2016, 11:10 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1826,7 +1826,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.3';
+      this.__version__ = '2.3.4';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1948,7 +1948,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.3'
+    version: '2.3.4'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
@@ -2028,6 +2028,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return instance[method](name, { message: message, assert: assert, updateClass: updateClass });
     };
   });
+
+  // Alleviate glaring Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1250521
+  // See also https://github.com/guillaumepotier/Parsley.js/issues/1068
+  if (/firefox/i.test(navigator.userAgent)) {
+    $(document).on('change', 'select', function (evt) {
+      $(evt.target).trigger('input');
+    });
+  }
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`

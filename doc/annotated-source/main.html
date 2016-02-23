@@ -341,6 +341,26 @@ $.each(<span class="hljs-string">'addError updateError'</span>.split(<span class
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
+              <p>Alleviate glaring Firefox bug <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1250521">https://bugzilla.mozilla.org/show_bug.cgi?id=1250521</a>
+See also <a href="https://github.com/guillaumepotier/Parsley.js/issues/1068">https://github.com/guillaumepotier/Parsley.js/issues/1068</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (<span class="hljs-regexp">/firefox/i</span>.test(navigator.userAgent)) {
+  $(<span class="hljs-built_in">document</span>).on(<span class="hljs-string">'change'</span>, <span class="hljs-string">'select'</span>, evt =&gt; {
+    $(evt.target).trigger(<span class="hljs-string">'input'</span>);
+  });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
               <h3 id="parsley-auto-binding">PARSLEY auto-binding</h3>
 <p>Prevent it by setting <code>ParsleyConfig.autoBind</code> to <code>false</code></p>
 
@@ -352,11 +372,11 @@ $.each(<span class="hljs-string">'addError updateError'</span>.split(<span class
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Works only on <code>data-parsley-validate</code>.</p>
 
