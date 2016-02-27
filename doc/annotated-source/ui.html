@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
 <span class="hljs-keyword">var</span> ParsleyUI = {};
@@ -766,10 +766,10 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $errorsContainer &amp;&amp; $errorsContainer.length)
       <span class="hljs-keyword">return</span> $errorsContainer.append(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
 
-    <span class="hljs-keyword">var</span> $from = <span class="hljs-keyword">this</span>.$element;
+    <span class="hljs-keyword">var</span> $<span class="hljs-keyword">from</span> = <span class="hljs-keyword">this</span>.$element;
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple)
-      $from = $from.parent();
-    <span class="hljs-keyword">return</span> $from.after(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
+      $<span class="hljs-keyword">from</span> = $<span class="hljs-keyword">from</span>.parent();
+    <span class="hljs-keyword">return</span> $<span class="hljs-keyword">from</span>.after(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
   },
 
   _actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{

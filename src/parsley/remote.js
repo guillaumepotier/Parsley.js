@@ -43,14 +43,14 @@ Parsley.addValidator('remote', {
     'options': 'object'
   },
 
-  validateString: function (value, url, options, instance) {
+  validateString: function validateString(value, url, options, instance) {
     var data = {};
     var ajaxOptions;
     var csr;
     var validator = options.validator || (true === options.reverse ? 'reverse' : 'default');
+    var useCache = options.useCache === undefined ? true : options.useCache;
 
-    if ('undefined' === typeof Parsley.asyncValidators[validator])
-      throw new Error('Calling an undefined async validator: `' + validator + '`');
+    if ('undefined' === typeof Parsley.asyncValidators[validator]) throw new Error('Calling an undefined async validator: `' + validator + '`');
 
     url = Parsley.asyncValidators[validator].url || url;
 
@@ -62,7 +62,7 @@ Parsley.addValidator('remote', {
     }
 
     // Merge options passed in from the function with the ones in the attribute
-    var remoteOptions = $.extend(true, options.options || {} , Parsley.asyncValidators[validator].options);
+    var remoteOptions = $.extend(true, options.options || {}, Parsley.asyncValidators[validator].options);
 
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
@@ -74,16 +74,22 @@ Parsley.addValidator('remote', {
     // Generate store key based on ajax options
     instance.trigger('field:ajaxoptions', instance, ajaxOptions);
 
-    csr = $.param(ajaxOptions);
+    if (useCache) {
+      try {
+        csr = $.param(ajaxOptions);
+      } catch (e) {
+        useCache = false;
+      }
+    }
 
-    // Initialise querry cache
-    if ('undefined' === typeof Parsley._remoteCache)
-      Parsley._remoteCache = {};
+    // Initialise query cache
+    if ('undefined' === typeof Parsley._remoteCache) Parsley._remoteCache = {};
 
     // Try to retrieve stored xhr
-    var xhr = Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions);
+    var xhr = useCache ? (Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions))
+                           : $.ajax(ajaxOptions);
 
-    var handleXhr = function () {
+    var handleXhr = function handleXhr() {
       var result = Parsley.asyncValidators[validator].fn.call(instance, xhr, url, options);
       if (!result) // Map falsy results to rejected promise
         result = $.Deferred().reject();
