@@ -86,7 +86,7 @@ window.Parsley.UI = ParsleyUI;
 window.ParsleyUI = {
   removeError: function (instance, name, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly.`);
+    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
     return instance.removeError(name, {updateClass});
   },
   getErrorsMessages: function (instance) {
@@ -97,7 +97,7 @@ window.ParsleyUI = {
 $.each('addError updateError'.split(' '), function (i, method) {
   window.ParsleyUI[method] = function (instance, name, message, assert, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call '${method}' on the instance directly.`);
+    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call '${method}' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
     return instance[method](name, {message, assert, updateClass});
   };
 });
