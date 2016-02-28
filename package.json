@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "homepage": "http://parsleyjs.org",
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",

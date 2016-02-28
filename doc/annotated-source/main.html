@@ -316,7 +316,7 @@ $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages ge
 <span class="hljs-built_in">window</span>.ParsleyUI = {
   removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, doNotUpdateClass</span>) </span>{
     <span class="hljs-keyword">var</span> updateClass = <span class="hljs-literal">true</span> !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly.`</span>);
+    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`</span>);
     <span class="hljs-keyword">return</span> instance.removeError(name, {updateClass});
   },
   getErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance</span>) </span>{
@@ -327,7 +327,7 @@ $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages ge
 $.each(<span class="hljs-string">'addError updateError'</span>.split(<span class="hljs-string">' '</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i, method</span>) </span>{
   <span class="hljs-built_in">window</span>.ParsleyUI[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, message, assert, doNotUpdateClass</span>) </span>{
     <span class="hljs-keyword">var</span> updateClass = <span class="hljs-literal">true</span> !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call '<span class="hljs-subst">${method}</span>' on the instance directly.`</span>);
+    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call '<span class="hljs-subst">${method}</span>' on the instance directly. Please comment in issue 1073 as to your need to call this method.`</span>);
     <span class="hljs-keyword">return</span> instance[method](name, {message, assert, updateClass});
   };
 });</pre></div></div>

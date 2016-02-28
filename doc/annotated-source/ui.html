@@ -356,6 +356,83 @@ ParsleyUI.Field = {
        <span class="hljs-keyword">this</span>._getErrorMessage(<span class="hljs-keyword">this</span>.validationResult[i].assert));
 
     <span class="hljs-keyword">return</span> messages;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>It’s a goal of Parsley that this method is no longer required [#1073]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  addError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert, updateClass = true} = {}</span>) </span>{
+    <span class="hljs-keyword">this</span>._buildUI();
+    <span class="hljs-keyword">this</span>._addError(name, {message, assert});
+
+    <span class="hljs-keyword">if</span> (updateClass)
+      <span class="hljs-keyword">this</span>._errorClass();
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>It’s a goal of Parsley that this method is no longer required [#1073]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  updateError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert, updateClass = true} = {}</span>) </span>{
+    <span class="hljs-keyword">this</span>._buildUI();
+    <span class="hljs-keyword">this</span>._updateError(name, {message, assert});
+
+    <span class="hljs-keyword">if</span> (updateClass)
+      <span class="hljs-keyword">this</span>._errorClass();
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>It’s a goal of Parsley that this method is no longer required [#1073]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {updateClass = true} = {}</span>) </span>{
+    <span class="hljs-keyword">this</span>._buildUI();
+    <span class="hljs-keyword">this</span>._removeError(name);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
+but highly improbable cuz’ manually removing a well Parsley handled error makes no sense.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (updateClass)
+      <span class="hljs-keyword">this</span>._manageStatusClass();
   },
 
   _manageStatusClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -374,11 +451,11 @@ ParsleyUI.Field = {
         </li>
         
         
-        <li id="section-13">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Case where we have errorMessage option that configure an unique field error message, regardless failing validators</p>
 
@@ -410,41 +487,28 @@ ParsleyUI.Field = {
         </li>
         
         
-        <li id="section-14">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Show, hide, update failing constraints messages</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; diff.removed.length; i++)
-      <span class="hljs-keyword">this</span>.removeError(diff.removed[i].assert.name, {updateClass: <span class="hljs-literal">false</span>});
+      <span class="hljs-keyword">this</span>._removeError(diff.removed[i].assert.name);
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; diff.added.length; i++)
-      <span class="hljs-keyword">this</span>.addError(diff.added[i].assert.name, {message: diff.added[i].errorMessage, assert: diff.added[i].assert, updateClass: <span class="hljs-literal">false</span>});
+      <span class="hljs-keyword">this</span>._addError(diff.added[i].assert.name, {message: diff.added[i].errorMessage, assert: diff.added[i].assert});
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; diff.kept.length; i++)
-      <span class="hljs-keyword">this</span>.updateError(diff.kept[i].assert.name, {message: diff.kept[i].errorMessage, assert: diff.kept[i].assert, updateClass: <span class="hljs-literal">false</span>});
-  },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>TODO: strange API here, intuitive for manual usage with addError(pslyInstance, ‘foo’, ‘bar’)
-but a little bit complex for above internal usage, with forced undefined parameter…</p>
+      <span class="hljs-keyword">this</span>._updateError(diff.kept[i].assert.name, {message: diff.kept[i].errorMessage, assert: diff.kept[i].assert});
+  },
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  addError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert, updateClass = true} = {}</span>) </span>{
+
+  _addError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert}</span>) </span>{
     <span class="hljs-keyword">this</span>._insertErrorWrapper();
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .addClass(<span class="hljs-string">'filled'</span>)
@@ -453,69 +517,20 @@ but a little bit complex for above internal usage, with forced undefined paramet
         .addClass(<span class="hljs-string">'parsley-'</span> + name)
         .html(message || <span class="hljs-keyword">this</span>._getErrorMessage(assert))
       );
+  },
 
-    <span class="hljs-keyword">if</span> (updateClass)
-      <span class="hljs-keyword">this</span>._errorClass();
-  },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Same as above</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  updateError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert, updateClass = true} = {}</span>) </span>{
+  _updateError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert}</span>) </span>{
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .addClass(<span class="hljs-string">'filled'</span>)
       .find(<span class="hljs-string">'.parsley-'</span> + name)
       .html(message || <span class="hljs-keyword">this</span>._getErrorMessage(assert));
+  },
 
-    <span class="hljs-keyword">if</span> (updateClass)
-      <span class="hljs-keyword">this</span>._errorClass();
-  },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>Same as above twice</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {updateClass = true} = {}</span>) </span>{
+  _removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .removeClass(<span class="hljs-string">'filled'</span>)
       .find(<span class="hljs-string">'.parsley-'</span> + name)
-      .remove();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
-but highly improbable cuz’ manually removing a well Parsley handled error makes no sense.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (updateClass)
-      <span class="hljs-keyword">this</span>._manageStatusClass();
+      .remove();
   },
 
   _getErrorMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">constraint</span>) </span>{

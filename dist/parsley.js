@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.4 - built Tue, Feb 23rd 2016, 11:10 am
+* Version 2.3.5 - built Sun, Feb 28th 2016, 6:25 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -891,6 +891,51 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return messages;
     },
 
+    // It's a goal of Parsley that this method is no longer required [#1073]
+    addError: function addError(name) {
+      var _ref2 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+      var message = _ref2.message;
+      var assert = _ref2.assert;
+      var _ref2$updateClass = _ref2.updateClass;
+      var updateClass = _ref2$updateClass === undefined ? true : _ref2$updateClass;
+
+      this._buildUI();
+      this._addError(name, { message: message, assert: assert });
+
+      if (updateClass) this._errorClass();
+    },
+
+    // It's a goal of Parsley that this method is no longer required [#1073]
+    updateError: function updateError(name) {
+      var _ref3 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+      var message = _ref3.message;
+      var assert = _ref3.assert;
+      var _ref3$updateClass = _ref3.updateClass;
+      var updateClass = _ref3$updateClass === undefined ? true : _ref3$updateClass;
+
+      this._buildUI();
+      this._updateError(name, { message: message, assert: assert });
+
+      if (updateClass) this._errorClass();
+    },
+
+    // It's a goal of Parsley that this method is no longer required [#1073]
+    removeError: function removeError(name) {
+      var _ref4 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+      var _ref4$updateClass = _ref4.updateClass;
+      var updateClass = _ref4$updateClass === undefined ? true : _ref4$updateClass;
+
+      this._buildUI();
+      this._removeError(name);
+
+      // edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
+      // but highly improbable cuz' manually removing a well Parsley handled error makes no sense.
+      if (updateClass) this._manageStatusClass();
+    },
+
     _manageStatusClass: function _manageStatusClass() {
       if (this.hasConstraints() && this.needsValidation() && true === this.validationResult) this._successClass();else if (this.validationResult.length > 0) this._errorClass();else this._resetClass();
     },
@@ -912,55 +957,30 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
 
       // Show, hide, update failing constraints messages
-      for (var i = 0; i < diff.removed.length; i++) this.removeError(diff.removed[i].assert.name, { updateClass: false });
+      for (var i = 0; i < diff.removed.length; i++) this._removeError(diff.removed[i].assert.name);
 
-      for (i = 0; i < diff.added.length; i++) this.addError(diff.added[i].assert.name, { message: diff.added[i].errorMessage, assert: diff.added[i].assert, updateClass: false });
+      for (i = 0; i < diff.added.length; i++) this._addError(diff.added[i].assert.name, { message: diff.added[i].errorMessage, assert: diff.added[i].assert });
 
-      for (i = 0; i < diff.kept.length; i++) this.updateError(diff.kept[i].assert.name, { message: diff.kept[i].errorMessage, assert: diff.kept[i].assert, updateClass: false });
+      for (i = 0; i < diff.kept.length; i++) this._updateError(diff.kept[i].assert.name, { message: diff.kept[i].errorMessage, assert: diff.kept[i].assert });
     },
 
-    // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
-    // but a little bit complex for above internal usage, with forced undefined parameter...
-    addError: function addError(name) {
-      var _ref2 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-      var message = _ref2.message;
-      var assert = _ref2.assert;
-      var _ref2$updateClass = _ref2.updateClass;
-      var updateClass = _ref2$updateClass === undefined ? true : _ref2$updateClass;
+    _addError: function _addError(name, _ref5) {
+      var message = _ref5.message;
+      var assert = _ref5.assert;
 
       this._insertErrorWrapper();
       this._ui.$errorsWrapper.addClass('filled').append($(this.options.errorTemplate).addClass('parsley-' + name).html(message || this._getErrorMessage(assert)));
-
-      if (updateClass) this._errorClass();
     },
 
-    // Same as above
-    updateError: function updateError(name) {
-      var _ref3 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-      var message = _ref3.message;
-      var assert = _ref3.assert;
-      var _ref3$updateClass = _ref3.updateClass;
-      var updateClass = _ref3$updateClass === undefined ? true : _ref3$updateClass;
+    _updateError: function _updateError(name, _ref6) {
+      var message = _ref6.message;
+      var assert = _ref6.assert;
 
       this._ui.$errorsWrapper.addClass('filled').find('.parsley-' + name).html(message || this._getErrorMessage(assert));
-
-      if (updateClass) this._errorClass();
     },
 
-    // Same as above twice
-    removeError: function removeError(name) {
-      var _ref4 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-      var _ref4$updateClass = _ref4.updateClass;
-      var updateClass = _ref4$updateClass === undefined ? true : _ref4$updateClass;
-
+    _removeError: function _removeError(name) {
       this._ui.$errorsWrapper.removeClass('filled').find('.parsley-' + name).remove();
-
-      // edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
-      // but highly improbable cuz' manually removing a well Parsley handled error makes no sense.
-      if (updateClass) this._manageStatusClass();
     },
 
     _getErrorMessage: function _getErrorMessage(constraint) {
@@ -1183,11 +1203,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     whenValidate: function whenValidate() {
       var _this4 = this;
 
-      var _ref5 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var _ref7 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      var group = _ref5.group;
-      var force = _ref5.force;
-      var event = _ref5.event;
+      var group = _ref7.group;
+      var force = _ref7.force;
+      var event = _ref7.event;
 
       this.submitEvent = event;
       if (event) {
@@ -1251,10 +1271,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     whenValid: function whenValid() {
       var _this5 = this;
 
-      var _ref6 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var _ref8 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      var group = _ref6.group;
-      var force = _ref6.force;
+      var group = _ref8.group;
+      var force = _ref8.force;
 
       this._refreshFields();
 
@@ -1414,10 +1434,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     whenValidate: function whenValidate() {
       var _this8 = this;
 
-      var _ref7 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var _ref9 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      var force = _ref7.force;
-      var group = _ref7.group;
+      var force = _ref9.force;
+      var group = _ref9.group;
 
       // do not validate a field if not the same as given validation group
       this.refreshConstraints();
@@ -1488,13 +1508,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     whenValid: function whenValid() {
       var _this9 = this;
 
-      var _ref8 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var _ref10 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      var _ref8$force = _ref8.force;
-      var force = _ref8$force === undefined ? false : _ref8$force;
-      var value = _ref8.value;
-      var group = _ref8.group;
-      var _refreshed = _ref8._refreshed;
+      var _ref10$force = _ref10.force;
+      var force = _ref10$force === undefined ? false : _ref10$force;
+      var value = _ref10.value;
+      var group = _ref10.group;
+      var _refreshed = _ref10._refreshed;
 
       // Recompute options and rebind constraints to have latest changes
       if (!_refreshed) this.refreshConstraints();
@@ -1826,7 +1846,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.4';
+      this.__version__ = '2.3.5';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1948,7 +1968,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.4'
+    version: '2.3.5'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
@@ -2013,7 +2033,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   window.ParsleyUI = {
     removeError: function removeError(instance, name, doNotUpdateClass) {
       var updateClass = true !== doNotUpdateClass;
-      ParsleyUtils__default.warnOnce('Accessing ParsleyUI is deprecated. Call \'removeError\' on the instance directly.');
+      ParsleyUtils__default.warnOnce('Accessing ParsleyUI is deprecated. Call \'removeError\' on the instance directly. Please comment in issue 1073 as to your need to call this method.');
       return instance.removeError(name, { updateClass: updateClass });
     },
     getErrorsMessages: function getErrorsMessages(instance) {
@@ -2024,7 +2044,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   $.each('addError updateError'.split(' '), function (i, method) {
     window.ParsleyUI[method] = function (instance, name, message, assert, doNotUpdateClass) {
       var updateClass = true !== doNotUpdateClass;
-      ParsleyUtils__default.warnOnce('Accessing ParsleyUI is deprecated. Call \'' + method + '\' on the instance directly.');
+      ParsleyUtils__default.warnOnce('Accessing ParsleyUI is deprecated. Call \'' + method + '\' on the instance directly. Please comment in issue 1073 as to your need to call this method.');
       return instance[method](name, { message: message, assert: assert, updateClass: updateClass });
     };
   });
