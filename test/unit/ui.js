@@ -277,6 +277,7 @@ describe('ParsleyUI', () => {
   it('should test the manual add / update / remove error', () => {
     $('body').append('<input type="text" id="element" />');
     var parsleyField = $('#element').parsley();
+    parsleyField.removeError('non-existent');
     parsleyField.validate();
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(0);
     expect($('#element').hasClass('parsley-error')).to.be(false);

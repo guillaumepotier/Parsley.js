@@ -116,6 +116,35 @@ ParsleyUI.Field = {
     return messages;
   },
 
+  // It's a goal of Parsley that this method is no longer required [#1073]
+  addError: function (name, {message, assert, updateClass = true} = {}) {
+    this._buildUI();
+    this._addError(name, {message, assert});
+
+    if (updateClass)
+      this._errorClass();
+  },
+
+  // It's a goal of Parsley that this method is no longer required [#1073]
+  updateError: function (name, {message, assert, updateClass = true} = {}) {
+    this._buildUI();
+    this._updateError(name, {message, assert});
+
+    if (updateClass)
+      this._errorClass();
+  },
+
+  // It's a goal of Parsley that this method is no longer required [#1073]
+  removeError: function (name, {updateClass = true} = {}) {
+    this._buildUI();
+    this._removeError(name);
+
+    // edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
+    // but highly improbable cuz' manually removing a well Parsley handled error makes no sense.
+    if (updateClass)
+      this._manageStatusClass();
+  },
+
   _manageStatusClass: function () {
     if (this.hasConstraints() && this.needsValidation() && true === this.validationResult)
       this._successClass();
@@ -155,18 +184,17 @@ ParsleyUI.Field = {
 
     // Show, hide, update failing constraints messages
     for (var i = 0; i < diff.removed.length; i++)
-      this.removeError(diff.removed[i].assert.name, {updateClass: false});
+      this._removeError(diff.removed[i].assert.name);
 
     for (i = 0; i < diff.added.length; i++)
-      this.addError(diff.added[i].assert.name, {message: diff.added[i].errorMessage, assert: diff.added[i].assert, updateClass: false});
+      this._addError(diff.added[i].assert.name, {message: diff.added[i].errorMessage, assert: diff.added[i].assert});
 
     for (i = 0; i < diff.kept.length; i++)
-      this.updateError(diff.kept[i].assert.name, {message: diff.kept[i].errorMessage, assert: diff.kept[i].assert, updateClass: false});
+      this._updateError(diff.kept[i].assert.name, {message: diff.kept[i].errorMessage, assert: diff.kept[i].assert});
   },
 
-  // TODO: strange API here, intuitive for manual usage with addError(pslyInstance, 'foo', 'bar')
-  // but a little bit complex for above internal usage, with forced undefined parameter...
-  addError: function (name, {message, assert, updateClass = true} = {}) {
+
+  _addError: function (name, {message, assert}) {
     this._insertErrorWrapper();
     this._ui.$errorsWrapper
       .addClass('filled')
@@ -175,33 +203,20 @@ ParsleyUI.Field = {
         .addClass('parsley-' + name)
         .html(message || this._getErrorMessage(assert))
       );
-
-    if (updateClass)
-      this._errorClass();
   },
 
-  // Same as above
-  updateError: function (name, {message, assert, updateClass = true} = {}) {
+  _updateError: function (name, {message, assert}) {
     this._ui.$errorsWrapper
       .addClass('filled')
       .find('.parsley-' + name)
       .html(message || this._getErrorMessage(assert));
-
-    if (updateClass)
-      this._errorClass();
   },
 
-  // Same as above twice
-  removeError: function (name, {updateClass = true} = {}) {
+  _removeError: function (name) {
     this._ui.$errorsWrapper
       .removeClass('filled')
       .find('.parsley-' + name)
       .remove();
-
-    // edge case possible here: remove a standard Parsley error that is still failing in this.validationResult
-    // but highly improbable cuz' manually removing a well Parsley handled error makes no sense.
-    if (updateClass)
-      this._manageStatusClass();
   },
 
   _getErrorMessage: function (constraint) {
