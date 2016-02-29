@@ -127,7 +127,7 @@ ParsleyField.prototype = {
     if (!this.hasConstraints())
       return $.when();
 
-    // Value could be passed as argument, needed to add more power to 'parsley:field:validate'
+    // Value could be passed as argument, needed to add more power to 'field:validate'
     if ('undefined' === typeof value || null === value)
       value = this.getValue();
 
