@@ -48,7 +48,6 @@ Parsley.addValidator('remote', {
     var ajaxOptions;
     var csr;
     var validator = options.validator || (true === options.reverse ? 'reverse' : 'default');
-    var useCache = options.useCache === undefined ? true : options.useCache;
 
     if ('undefined' === typeof Parsley.asyncValidators[validator]) throw new Error('Calling an undefined async validator: `' + validator + '`');
 
@@ -68,17 +67,20 @@ Parsley.addValidator('remote', {
     ajaxOptions = $.extend(true, {}, {
       url: url,
       data: data,
-      type: 'GET'
+      type: 'GET',
+      useCache: true
     }, remoteOptions);
+
+    if (ajaxOptions.useCache === "false") ajaxOptions.useCache = false;
 
     // Generate store key based on ajax options
     instance.trigger('field:ajaxoptions', instance, ajaxOptions);
 
-    if (useCache) {
+    if (ajaxOptions.useCache) {
       try {
         csr = $.param(ajaxOptions);
       } catch (e) {
-        useCache = false;
+        ajaxOptions.useCache = false;
       }
     }
 
@@ -86,7 +88,7 @@ Parsley.addValidator('remote', {
     if ('undefined' === typeof Parsley._remoteCache) Parsley._remoteCache = {};
 
     // Try to retrieve stored xhr
-    var xhr = useCache ? (Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions))
+    var xhr = ajaxOptions.useCache ? (Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions))
                            : $.ajax(ajaxOptions);
 
     var handleXhr = function handleXhr() {

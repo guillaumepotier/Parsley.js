@@ -209,4 +209,63 @@ describe('ParsleyRemote', () => {
   afterEach(() => {
     $('#element, .parsley-errors-list').remove();
   });
+
+  it('should successfully make a request with FormData', done => {
+    var img =
+      $('<img id="image">')
+      .appendTo('body');
+
+    var parsleyInstance =
+      $('<input id="element" name="element" data-parsley-remote="http://parsleyjs.org" value="foobar"/>')
+      .appendTo('body')
+      .parsley()
+      .on('field:ajaxoptions', (parsleyField, options) => {
+        let formData = new FormData();
+        formData.append("data", img);
+        options.data = formData;
+      });
+
+    stubAjax(200);
+
+    parsleyInstance.whenValid()
+      .done(() => {
+        let req = $.ajax.args[0][0];
+        expect(req.data).to.be.a(FormData);
+        expect(() => { $.param(req.data); }).to.throwException();
+        done();
+      });
+  });
+
+  it('should take {useCache: false} as an html-driven option to skip remote caching', done => {
+    var parsleyInstance =
+      $('<input id="element" name="element" data-parsley-remote="http://parsleyjs.org" data-parsley-remote-options=\'{"useCache": "false"}\' value="foobar"/>')
+      .appendTo('body')
+      .parsley();
+
+    stubAjax(200);
+
+    parsleyInstance.whenValid()
+      .done(() => {
+        expect(Parsley._remoteCache).to.be.empty();
+        done();
+      });
+  });
+
+  it('should take {useCache: false} added to options in the `ajaxoptions` event handler to skip remote caching', done => {
+    var parsleyInstance =
+      $('<input id="element" name="element" data-parsley-remote="http://parsleyjs.org" value="foobar"/>')
+      .appendTo('body')
+      .parsley()
+      .on('field:ajaxoptions', (parsleyField, options) => {
+        options.useCache = false;
+      });
+
+    stubAjax(200);
+
+    parsleyInstance.whenValid()
+      .done(() => {
+        expect(Parsley._remoteCache).to.be.empty();
+        done();
+      });
+  });
 });

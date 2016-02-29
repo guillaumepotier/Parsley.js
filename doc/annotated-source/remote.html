@@ -182,7 +182,6 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
     <span class="hljs-keyword">var</span> ajaxOptions;
     <span class="hljs-keyword">var</span> csr;
     <span class="hljs-keyword">var</span> validator = options.validator || (<span class="hljs-literal">true</span> === options.reverse ? <span class="hljs-string">'reverse'</span> : <span class="hljs-string">'default'</span>);
-    <span class="hljs-keyword">var</span> useCache = options.useCache === <span class="hljs-literal">undefined</span> ? <span class="hljs-literal">true</span> : options.useCache;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> Parsley.asyncValidators[validator]) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Calling an undefined async validator: `'</span> + validator + <span class="hljs-string">'`'</span>);
 
@@ -238,8 +237,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
             <div class="content"><div class='highlight'><pre>    ajaxOptions = $.extend(<span class="hljs-literal">true</span>, {}, {
       url: url,
       data: data,
-      type: <span class="hljs-string">'GET'</span>
-    }, remoteOptions);</pre></div></div>
+      type: <span class="hljs-string">'GET'</span>,
+      useCache: <span class="hljs-literal">true</span>
+    }, remoteOptions);
+
+    <span class="hljs-keyword">if</span> (ajaxOptions.useCache === <span class="hljs-string">"false"</span>) ajaxOptions.useCache = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -256,11 +258,11 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
             
             <div class="content"><div class='highlight'><pre>    instance.trigger(<span class="hljs-string">'field:ajaxoptions'</span>, instance, ajaxOptions);
 
-    <span class="hljs-keyword">if</span> (useCache) {
+    <span class="hljs-keyword">if</span> (ajaxOptions.useCache) {
       <span class="hljs-keyword">try</span> {
         csr = $.param(ajaxOptions);
       } <span class="hljs-keyword">catch</span> (e) {
-        useCache = <span class="hljs-literal">false</span>;
+        ajaxOptions.useCache = <span class="hljs-literal">false</span>;
       }
     }</pre></div></div>
             
@@ -292,7 +294,7 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> xhr = useCache ? (Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> xhr = ajaxOptions.useCache ? (Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions))
                            : $.ajax(ajaxOptions);
 
     <span class="hljs-keyword">var</span> handleXhr = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleXhr</span>(<span class="hljs-params"></span>) </span>{
