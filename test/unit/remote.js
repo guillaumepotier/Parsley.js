@@ -230,7 +230,7 @@ describe('ParsleyRemote', () => {
     parsleyInstance.whenValid()
       .done(() => {
         let req = $.ajax.args[0][0];
-        expect(req.data).to.be.a(FormData);
+        expect(req.data).to.be.a(window.FormData);
         expect(() => { $.param(req.data); }).to.throwException();
         done();
       });

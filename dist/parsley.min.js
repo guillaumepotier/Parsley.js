@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.5 - built Mon, Feb 29th 2016, 9:43 am
+* Version 2.3.5 - built Mon, Feb 29th 2016, 10:24 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
