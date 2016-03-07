@@ -161,26 +161,13 @@
             Parsley comes with various error messages for its built-in validators. They are shipped in English by default, but many other languages are available, thanks to the awesome international Parsley community. <a href="https://github.com/guillaumepotier/Parsley.js/tree/master/src/i18n">See the available localizations here</a>.
           </p>
           <p>
-            To load a different locale and its messages, you have two possibilities:
-            <ul>
-              <li>
-                Load your needed localization <strong>before</strong> Parsley, then select the one you need once Parsley is loaded and if you want to switch from the English default. In this example, we'll load both French and Italian translations, and use French:
-<pre><code>&lt;script src="jquery.js">&lt;/script>
-&lt;script src="i18n/fr.js">&lt;/script>
-&lt;script src="i18n/it.js">&lt;/script>
-&lt;script src="parsley.min.js">&lt;/script>
-&lt;script type="text/javascript">
-  window.Parsley.setLocale('fr');
-&lt;/script>
-</code></pre>
-              </li>
-              <li>
-                Load your needed localization <strong>after</strong> Parsley. The last loaded file will automatically set the messages locale for Parsley. In this example, we'll load both French and Italian translations, and use Italian:
+            To load a different locale and its messages, include them after Parsley:
 <pre><code>&lt;script src="jquery.js">&lt;/script>
 &lt;script src="parsley.min.js">&lt;/script>
 &lt;script src="i18n/fr.js">&lt;/script>
 &lt;script src="i18n/it.js">&lt;/script>
 </code></pre>
+                The last loaded file will automatically set the messages locale for Parsley. In the example above, we load both French and Italian translations, and use Italian.
             </li>
             </ul>
           </p>
