@@ -358,9 +358,9 @@ if (false === instance.options.priorityEnabled)
               <tr>
                 <td><code>validate({group, force})</code> <version>#2.0</version></td>
                 <td>
-                  <code>boolean or null</code>
+                  <code>true, array, or null</code>
                 </td>
-                <td>Same as <code>whenValidate</code> except it returns <code>true</code> if the promise is already fulfilled, <code>false</code> if already rejected, and <code>null</code> if the validation is still pending.</td>
+                <td>Same as <code>whenValidate</code> except it returns <code>true</code> if the promise is already fulfilled, an array of Parsley error objects if already rejected, and <code>null</code> if the validation is still pending.</td>
               </tr>
               <tr>
                 <td><code>reset()</code> <version>#2.0</version></td>

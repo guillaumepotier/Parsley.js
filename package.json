@@ -82,7 +82,8 @@
       "stub",
       "spy",
       "expect",
-      "expectWarning"
+      "expectWarning",
+      "FormData"
     ]
   },
   "spm": {

@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.5 - built Sun, Feb 28th 2016, 6:25 am
+* Version 2.3.5 - built Mon, Feb 29th 2016, 10:44 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -2218,19 +2218,28 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       ajaxOptions = $.extend(true, {}, {
         url: url,
         data: data,
-        type: 'GET'
+        type: 'GET',
+        useCache: true
       }, remoteOptions);
+
+      if (ajaxOptions.useCache === "false") ajaxOptions.useCache = false;
 
       // Generate store key based on ajax options
       instance.trigger('field:ajaxoptions', instance, ajaxOptions);
 
-      csr = $.param(ajaxOptions);
+      if (ajaxOptions.useCache) {
+        try {
+          csr = $.param(ajaxOptions);
+        } catch (e) {
+          ajaxOptions.useCache = false;
+        }
+      }
 
-      // Initialise querry cache
+      // Initialise query cache
       if ('undefined' === typeof Parsley._remoteCache) Parsley._remoteCache = {};
 
       // Try to retrieve stored xhr
-      var xhr = Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions);
+      var xhr = ajaxOptions.useCache ? Parsley._remoteCache[csr] = Parsley._remoteCache[csr] || $.ajax(ajaxOptions) : $.ajax(ajaxOptions);
 
       var handleXhr = function handleXhr() {
         var result = Parsley.asyncValidators[validator].fn.call(instance, xhr, url, options);
