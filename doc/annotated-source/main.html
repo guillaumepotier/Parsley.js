@@ -341,12 +341,14 @@ $.each(<span class="hljs-string">'addError updateError'</span>.split(<span class
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Alleviate glaring Firefox bug <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1250521">https://bugzilla.mozilla.org/show_bug.cgi?id=1250521</a>
+              <p>Alleviate glaring Firefox &amp; IR bugs:
+ FF: <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1250521">https://bugzilla.mozilla.org/show_bug.cgi?id=1250521</a>
+ IE: <a href="https://connect.microsoft.com/IE/feedback/details/1816207">https://connect.microsoft.com/IE/feedback/details/1816207</a>
 See also <a href="https://github.com/guillaumepotier/Parsley.js/issues/1068">https://github.com/guillaumepotier/Parsley.js/issues/1068</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (<span class="hljs-regexp">/firefox/i</span>.test(navigator.userAgent)) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (<span class="hljs-regexp">/firefox|msie/i</span>.test(navigator.userAgent)) {
   $(<span class="hljs-built_in">document</span>).on(<span class="hljs-string">'change'</span>, <span class="hljs-string">'select'</span>, evt =&gt; {
     $(evt.target).trigger(<span class="hljs-string">'input'</span>);
   });

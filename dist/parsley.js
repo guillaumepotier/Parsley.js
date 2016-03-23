@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.6 - built Wed, Mar 23rd 2016, 10:57 am
+* Version 2.3.7 - built Wed, Mar 23rd 2016, 2:56 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1846,7 +1846,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.6';
+      this.__version__ = '2.3.7';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1968,7 +1968,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.6'
+    version: '2.3.7'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
@@ -2049,9 +2049,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
   });
 
-  // Alleviate glaring Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1250521
+  // Alleviate glaring Firefox & IR bugs:
+  //  FF: https://bugzilla.mozilla.org/show_bug.cgi?id=1250521
+  //  IE: https://connect.microsoft.com/IE/feedback/details/1816207
   // See also https://github.com/guillaumepotier/Parsley.js/issues/1068
-  if (/firefox/i.test(navigator.userAgent)) {
+  if (/firefox|msie/i.test(navigator.userAgent)) {
     $(document).on('change', 'select', function (evt) {
       $(evt.target).trigger('input');
     });
