@@ -241,7 +241,7 @@ ParsleyMultiple.prototype = {</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.value)
-      value = <span class="hljs-keyword">this</span>.options.value(<span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.value(<span class="hljs-keyword">this</span>);
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.value)
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.value;</pre></div></div>
             
