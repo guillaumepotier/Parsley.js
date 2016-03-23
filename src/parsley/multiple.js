@@ -47,7 +47,7 @@ ParsleyMultiple.prototype = {
   getValue: function () {
     // Value could be overriden in DOM
     if ('function' === typeof this.options.value)
-      value = this.options.value(this);
+      return this.options.value(this);
     else if ('undefined' !== typeof this.options.value)
       return this.options.value;
 
