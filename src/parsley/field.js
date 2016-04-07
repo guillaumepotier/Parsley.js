@@ -157,7 +157,7 @@ ParsleyField.prototype = {
       result = $.Deferred().reject();
     // Make sure we return a promise and that we record failures
     return $.when(result).fail(errorMessage => {
-      if (true === this.validationResult)
+      if (!(this.validationResult instanceof Array))
         this.validationResult = [];
       this.validationResult.push({
         assert: constraint,
