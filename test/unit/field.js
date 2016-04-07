@@ -240,7 +240,7 @@ describe('ParsleyField', () => {
     $('#element').psly()
     .on('field:validate', function () {
       // we are before validation!
-      expect(this.validationResult.length).to.be(0);
+      expect(this.validationResult).to.be(true);
       done();
     })
     .validate();

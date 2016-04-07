@@ -20,7 +20,7 @@ var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
   // Initialize some properties
   this.constraints = [];
   this.constraintsByName = {};
-  this.validationResult = [];
+  this.validationResult = true;
 
   // Bind constraints
   this._bindConstraints();

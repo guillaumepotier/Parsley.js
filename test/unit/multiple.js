@@ -179,7 +179,7 @@ describe('ParsleyMultiple', () => {
         '<input type="checkbox" name="check[]" id="check4" value="4" />'  +
       '</form>');
     var parsleyInstance = $('#check1').parsley();
-    expect(parsleyInstance.validationResult.length).to.be(0);
+    expect(parsleyInstance.validationResult).to.be(true);
     $('#check3').trigger($.Event('change'));
     expect(parsleyInstance.validationResult.length).to.be(1);
   });
