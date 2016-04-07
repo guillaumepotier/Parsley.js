@@ -5,7 +5,6 @@ import ParsleyUtils from './utils';
 
 var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
   this.__class__ = 'ParsleyField';
-  this.__id__ = ParsleyUtils.generateID();
 
   this.$element = $(field);
 

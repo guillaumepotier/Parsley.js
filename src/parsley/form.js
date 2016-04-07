@@ -4,7 +4,6 @@ import ParsleyUtils from './utils';
 
 var ParsleyForm = function (element, domOptions, options) {
   this.__class__ = 'ParsleyForm';
-  this.__id__ = ParsleyUtils.generateID();
 
   this.$element = $(element);
   this.domOptions = domOptions;

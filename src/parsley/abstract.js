@@ -1,7 +1,9 @@
 import $ from 'jquery';
 import ParsleyUtils from './utils';
 
-var ParsleyAbstract = function () {};
+var ParsleyAbstract = function () {
+  this.__id__ = ParsleyUtils.generateID();
+};
 
 ParsleyAbstract.prototype = {
   asyncSupport: true, // Deprecated
