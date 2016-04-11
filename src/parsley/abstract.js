@@ -8,6 +8,16 @@ var ParsleyAbstract = function () {
 ParsleyAbstract.prototype = {
   asyncSupport: true, // Deprecated
 
+  _pipeAccordingToValidationResult: function () {
+    var pipe = () => {
+      var r = $.Deferred();
+      if (false === this.validationResult)
+        r.reject();
+      return r.resolve().promise();
+    };
+    return [pipe, pipe];
+  },
+
   actualizeOptions: function () {
     ParsleyUtils.attr(this.$element, this.options.namespace, this.domOptions);
     if (this.parent && this.parent.actualizeOptions)
