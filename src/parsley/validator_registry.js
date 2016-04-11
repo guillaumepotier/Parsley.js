@@ -153,7 +153,7 @@ ParsleyValidatorRegistry.prototype = {
       ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
       return this.addValidator(...arguments);
     }
-    return this._setValidator(this, arguments);
+    return this._setValidator(...arguments);
   },
 
   removeValidator: function (name) {
