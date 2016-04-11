@@ -65,7 +65,8 @@ ParsleyField.prototype = {
       .always(() => { this._reflowUI(); })
       .done(() =>   { this._trigger('success'); })
       .fail(() =>   { this._trigger('error'); })
-      .always(() => { this._trigger('validated'); });
+      .always(() => { this._trigger('validated'); })
+      .pipe(...this._pipeAccordingToValidationResult());
   },
 
   hasConstraints: function () {

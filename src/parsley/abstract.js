@@ -11,7 +11,7 @@ ParsleyAbstract.prototype = {
   _pipeAccordingToValidationResult: function () {
     var pipe = () => {
       var r = $.Deferred();
-      if (false === this.validationResult)
+      if (true !== this.validationResult)
         r.reject();
       return r.resolve().promise();
     };
