@@ -407,12 +407,14 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyForm'</span>:
         parsleyInstance = $.extend(
           <span class="hljs-keyword">new</span> ParsleyForm(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options),
+          <span class="hljs-keyword">new</span> ParsleyAbstract(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         )._bindFields();
         <span class="hljs-keyword">break</span>;
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyField'</span>:
         parsleyInstance = $.extend(
           <span class="hljs-keyword">new</span> ParsleyField(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
+          <span class="hljs-keyword">new</span> ParsleyAbstract(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         );
         <span class="hljs-keyword">break</span>;
@@ -420,6 +422,7 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
         parsleyInstance = $.extend(
           <span class="hljs-keyword">new</span> ParsleyField(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
           <span class="hljs-keyword">new</span> ParsleyMultiple(),
+          <span class="hljs-keyword">new</span> ParsleyAbstract(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         )._init();
         <span class="hljs-keyword">break</span>;

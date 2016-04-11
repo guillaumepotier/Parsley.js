@@ -109,10 +109,22 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
-<span class="hljs-keyword">var</span> ParsleyAbstract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{};
+<span class="hljs-keyword">var</span> ParsleyAbstract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();
+};
 
 ParsleyAbstract.prototype = {
   asyncSupport: <span class="hljs-literal">true</span>, <span class="hljs-comment">// Deprecated</span>
+
+  _pipeAccordingToValidationResult: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> pipe = () =&gt; {
+      <span class="hljs-keyword">var</span> r = $.Deferred();
+      <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== <span class="hljs-keyword">this</span>.validationResult)
+        r.reject();
+      <span class="hljs-keyword">return</span> r.resolve().promise();
+    };
+    <span class="hljs-keyword">return</span> [pipe, pipe];
+  },
 
   actualizeOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     ParsleyUtils.attr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-keyword">this</span>.domOptions);

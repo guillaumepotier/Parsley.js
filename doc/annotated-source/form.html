@@ -112,7 +112,6 @@
 
 <span class="hljs-keyword">var</span> ParsleyForm = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, domOptions, options</span>) </span>{
   <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyForm'</span>;
-  <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();
 
   <span class="hljs-keyword">this</span>.$element = $(element);
   <span class="hljs-keyword">this</span>.domOptions = domOptions;
@@ -324,13 +323,6 @@ Consider using <code>whenValidate</code> instead.</p>
       });
     });
 
-    <span class="hljs-keyword">var</span> promiseBasedOnValidationResult = () =&gt; {
-      <span class="hljs-keyword">var</span> r = $.Deferred();
-      <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.validationResult)
-        r.reject();
-      <span class="hljs-keyword">return</span> r.resolve().promise();
-    };
-
     <span class="hljs-keyword">return</span> $.when(...promises)
       .done(  () =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
       .fail(  () =&gt; {
@@ -339,7 +331,7 @@ Consider using <code>whenValidate</code> instead.</p>
         <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>);
       })
       .always(() =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validated'</span>); })
-      .pipe(  promiseBasedOnValidationResult, promiseBasedOnValidationResult);
+      .pipe(...this._pipeAccordingToValidationResult());
   },</pre></div></div>
             
         </li>
