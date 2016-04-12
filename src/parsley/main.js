@@ -102,16 +102,6 @@ $.each('addError updateError'.split(' '), function (i, method) {
   };
 });
 
-// Alleviate glaring Firefox & IR bugs:
-//  FF: https://bugzilla.mozilla.org/show_bug.cgi?id=1250521
-//  IE: https://connect.microsoft.com/IE/feedback/details/1816207
-// See also https://github.com/guillaumepotier/Parsley.js/issues/1068
-if (/firefox|msie/i.test(navigator.userAgent)) {
-  $(document).on('change', 'select', evt => {
-    $(evt.target).trigger('input');
-  });
-}
-
 // ### PARSLEY auto-binding
 // Prevent it by setting `ParsleyConfig.autoBind` to `false`
 if (false !== window.ParsleyConfig.autoBind) {
