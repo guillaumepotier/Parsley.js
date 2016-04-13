@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.8 - built Mon, Apr 11th 2016, 8:30 am
+* Version 2.3.9 - built Tue, Apr 12th 2016, 9:29 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -602,7 +602,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         ParsleyUtils__default.warn('Validator "' + name + '" is not already defined.');
         return this.addValidator.apply(this, arguments);
       }
-      return this._setValidator(this, arguments);
+      return this._setValidator.apply(this, arguments);
     },
 
     removeValidator: function removeValidator(name) {
@@ -1853,7 +1853,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.8';
+      this.__version__ = '2.3.9';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1975,7 +1975,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.8'
+    version: '2.3.9'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
@@ -2055,16 +2055,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return instance[method](name, { message: message, assert: assert, updateClass: updateClass });
     };
   });
-
-  // Alleviate glaring Firefox & IR bugs:
-  //  FF: https://bugzilla.mozilla.org/show_bug.cgi?id=1250521
-  //  IE: https://connect.microsoft.com/IE/feedback/details/1816207
-  // See also https://github.com/guillaumepotier/Parsley.js/issues/1068
-  if (/firefox|msie/i.test(navigator.userAgent)) {
-    $(document).on('change', 'select', function (evt) {
-      $(evt.target).trigger('input');
-    });
-  }
 
   // ### PARSLEY auto-binding
   // Prevent it by setting `ParsleyConfig.autoBind` to `false`
@@ -2291,6 +2281,95 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   });
 
   Parsley.setLocale('en');
+
+  /**
+   * inputevent - Alleviate browser bugs for input events
+   * https://github.com/marcandre/inputevent
+   * @version v0.0.1 - (built Tue, Apr 12th 2016, 4:31 pm)
+   * @author Marc-Andre Lafortune <github@marc-andre.ca>
+   * @license MIT
+   */
+
+  function InputEvent() {
+    var _this13 = this;
+
+    var globals = window || global;
+
+    // Slightly odd way to have the object constructed have method force bound.
+    // Used to test duplicate library
+    $.extend(this, {
+
+      inputsToCheck: ['select', 'input[type="checkbox"]', 'input[type="radio"]'],
+
+      // For browsers that do not support isTrusted, assumes event is native.
+      isNativeEvent: function isNativeEvent(evt) {
+        return evt.originalEvent && evt.originalEvent.isTrusted !== false;
+      },
+
+      fakeInputEvent: function fakeInputEvent(evt) {
+        if (_this13.isNativeEvent(evt)) {
+          $(evt.target).trigger('input');
+        }
+      },
+
+      misbehaves: function misbehaves(evt) {
+        if (_this13.isNativeEvent(evt)) {
+          _this13.behavesOk(evt);
+          $(document).on('change.inputevent', evt.data.selector, _this13.fakeInputEvent);
+          _this13.fakeInputEvent(evt);
+        }
+      },
+
+      behavesOk: function behavesOk(evt) {
+        if (_this13.isNativeEvent(evt)) {
+          $(document) // Simply unbinds the testing handler
+          .off('input.inputevent', evt.data.selector, _this13.behavesOk).off('change.inputevent', evt.data.selector, _this13.misbehaves);
+        }
+      },
+
+      // Bind the testing handlers
+      install: function install() {
+        if (globals.inputEventPatched) {
+          return;
+        }
+        globals.inputEventPatched = '0.0.1';
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = _this13.inputsToCheck[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var selector = _step.value;
+
+            $(document).on('input.inputevent', selector, { selector: selector }, _this13.behavesOk).on('change.inputevent', selector, { selector: selector }, _this13.misbehaves);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator['return']) {
+              _iterator['return']();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      },
+
+      uninstall: function uninstall() {
+        delete globals.inputEventPatched;
+        $(document).off('.inputevent');
+      }
+
+    });
+  };
+
+  var inputevent = new InputEvent();
+
+  inputevent.install();
 
   var parsley = Parsley;
 
