@@ -1,7 +1,7 @@
 /**
  * inputevent - Alleviate browser bugs for input events
  * https://github.com/marcandre/inputevent
- * @version v0.0.2 - (built Wed, Apr 13th 2016, 2:06 pm)
+ * @version v0.0.3 - (built Thu, Apr 14th 2016, 5:58 pm)
  * @author Marc-Andre Lafortune <github@marc-andre.ca>
  * @license MIT
  */
@@ -14,8 +14,6 @@ function InputEvent() {
   // Slightly odd way construct our object. This way methods are force bound.
   // Used to test for duplicate library.
   $.extend(this, {
-
-    inputsToCheck: ['select', 'input[type="checkbox"]', 'input[type="radio"]', 'input[type="file"]'],
 
     // For browsers that do not support isTrusted, assumes event is native.
     isNativeEvent: evt => {
@@ -50,8 +48,8 @@ function InputEvent() {
       if (globals.inputEventPatched) {
         return;
       }
-      globals.inputEventPatched = '0.0.2';
-      for (let selector of this.inputsToCheck) {
+      globals.inputEventPatched = '0.0.3';
+      for (let selector of ['select', 'input[type="checkbox"]', 'input[type="radio"]', 'input[type="file"]']) {
         $(document)
           .on('input.inputevent', selector, {selector}, this.behavesOk)
           .on('change.inputevent', selector, {selector}, this.misbehaves);
