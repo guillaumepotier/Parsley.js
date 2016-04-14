@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.9 - built Tue, Apr 12th 2016, 9:29 pm
+* Version 2.3.10 - built Thu, Apr 14th 2016, 6:04 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1853,7 +1853,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.9';
+      this.__version__ = '2.3.10';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1975,7 +1975,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.9'
+    version: '2.3.10'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
@@ -2285,7 +2285,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   /**
    * inputevent - Alleviate browser bugs for input events
    * https://github.com/marcandre/inputevent
-   * @version v0.0.1 - (built Tue, Apr 12th 2016, 4:31 pm)
+   * @version v0.0.3 - (built Thu, Apr 14th 2016, 5:58 pm)
    * @author Marc-Andre Lafortune <github@marc-andre.ca>
    * @license MIT
    */
@@ -2295,11 +2295,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     var globals = window || global;
 
-    // Slightly odd way to have the object constructed have method force bound.
-    // Used to test duplicate library
+    // Slightly odd way construct our object. This way methods are force bound.
+    // Used to test for duplicate library.
     $.extend(this, {
-
-      inputsToCheck: ['select', 'input[type="checkbox"]', 'input[type="radio"]'],
 
       // For browsers that do not support isTrusted, assumes event is native.
       isNativeEvent: function isNativeEvent(evt) {
@@ -2332,30 +2330,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         if (globals.inputEventPatched) {
           return;
         }
-        globals.inputEventPatched = '0.0.1';
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = _this13.inputsToCheck[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var selector = _step.value;
-
-            $(document).on('input.inputevent', selector, { selector: selector }, _this13.behavesOk).on('change.inputevent', selector, { selector: selector }, _this13.misbehaves);
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator['return']) {
-              _iterator['return']();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+        globals.inputEventPatched = '0.0.3';
+        var _arr = ['select', 'input[type="checkbox"]', 'input[type="radio"]', 'input[type="file"]'];
+        for (var _i = 0; _i < _arr.length; _i++) {
+          var selector = _arr[_i];
+          $(document).on('input.inputevent', selector, { selector: selector }, _this13.behavesOk).on('change.inputevent', selector, { selector: selector }, _this13.misbehaves);
         }
       },
 
