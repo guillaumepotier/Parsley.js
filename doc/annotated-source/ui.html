@@ -773,7 +773,8 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
   },
 
   _actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> $toBind = <span class="hljs-keyword">this</span>._findRelated();</pre></div></div>
+    <span class="hljs-keyword">var</span> $toBind = <span class="hljs-keyword">this</span>._findRelated();
+    <span class="hljs-keyword">var</span> trigger;</pre></div></div>
             
         </li>
         
@@ -793,8 +794,8 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       $toBind.on(ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.triggerAfterFailure, <span class="hljs-string">'Parsley'</span>), () =&gt; {
         <span class="hljs-keyword">this</span>.validate();
       });
-    <span class="hljs-keyword">else</span> {
-      $toBind.on(ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.trigger, <span class="hljs-string">'Parsley'</span>), event =&gt; {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (trigger = ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.trigger, <span class="hljs-string">'Parsley'</span>)) {
+      $toBind.on(trigger, event =&gt; {
         <span class="hljs-keyword">this</span>._eventValidate(event);
       });
     }
