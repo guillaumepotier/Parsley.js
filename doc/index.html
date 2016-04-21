@@ -471,6 +471,10 @@ if (false === instance.options.priorityEnabled)
                 </td>
                 <td>Validate Field. <strong>Fires <a href="#events">events</a> and affects UI.</strong> If <code>force</code> is set, force validate even non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
+              <td>Get errors messages <version>#2.0</version></td>
+                <td><code>getErrorsMessages();</code></td>
+                <td>Returns an array of the field errors messages displayed once validated.</td>
+              </tr>
               <tr>
                 <td><code>reset()</code> <version>#2.0</version></td>
                 <td></td>
@@ -973,6 +977,10 @@ window.Parsley
         </table>
 
         <h3 id="ui-for-javascript">UI for javascript</h3>
+        <p>
+          Field instances have low level methods to add, update &amp; remove manage error messages. You have to manage these errors completely manually and they should be independant with other validations. Prefer using custom validations whenever possible.
+          Note that <code>getErrorsMessages</code> only return errors from validations and not manually added errors.
+        </p>
         <table class="table table-stripped table-bordered">
           <thead>
             <tr>
@@ -984,20 +992,16 @@ window.Parsley
           <tbody>
             <tr>
               <td>Add error <version>#2.0</version></td>
-              <td><code>window.ParsleyUI.addError(parsleyInstance, name, message);</code></td>
-              <td>Manually add an error message.</td>
+              <td><code>addError(name, {message, assert, updateClass = true});</code></td>
+              <td>Add an error message.</td>
             </tr>
             <td>Update error <version>#2.0</version></td>
-              <td><code>window.ParsleyUI.updateError(parsleyInstance, name, message);</code></td>
-              <td>Manually edit an error message.</td>
+              <td><code>updateError(name, {message, assert, updateClass = true});</code></td>
+              <td>Update an already added error message error.</td>
             </tr>
             <td>Remove error <version>#2.0</version></td>
-              <td><code>window.ParsleyUI.removeError(parsleyInstance, name);</code></td>
-              <td>Manually remove an error message.</td>
-            </tr>
-            <td>Get errors messages <version>#2.0</version></td>
-              <td><code>window.ParsleyUI.getErrorsMessages(parsleyInstance);</code></td>
-              <td>Returns an array of the field errors messages displayed once validated.</td>
+              <td><code>removeError(name, {updateClass = true});</code></td>
+              <td>Remove an already present error.</td>
             </tr>
           </tbody>
         </table>
