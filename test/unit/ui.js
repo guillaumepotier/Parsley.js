@@ -36,6 +36,26 @@ describe('ParsleyUI', () => {
     }).validate();
     expect($('#container2 .parsley-errors-list').length).to.be(1);
   });
+  it('should handle errors-container option with function', () => {
+    $('body').append(
+      '<form id="element">'                                                                                    +
+        '<input id="field1" type="text" required data-parsley-errors-container="parsleyContainerFunction" />'  +
+        '<div id="container"></div>'                                                                           +
+        '<div id="container2"></div>'                                                                          +
+      '</form>');
+    window.parsleyContainerFunction = function (ins) {
+      expect(ins).to.be($('#field1').psly());
+      expect(this).to.be($('#field1').psly());
+      return $('#container2');
+    };
+    $('#element').psly().validate();
+    expect($('#container .parsley-errors-list').length).to.be(1);
+    $('#element').psly().destroy();
+    $('#field1').removeAttr('data-parsley-errors-container');
+    $('#element').psly().validate();
+    expect($('#container2 .parsley-errors-list').length).to.be(1);
+    delete window.parsleyContainerFunction;
+  });
   it('should handle wrong errors-container option', () => {
     $('body').append('<input type="text" id="element" data-parsley-errors-container="#donotexist" required/>');
     var parsley = $('#element').psly();

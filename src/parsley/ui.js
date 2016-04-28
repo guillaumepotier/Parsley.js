@@ -273,6 +273,8 @@ ParsleyUI.Field = {
       // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
+    } else if ($handlerFunction) {
+      ParsleyUtils.warn('The class handler `' + $handlerFunction + '` does not exist in DOM nor as a global JS function');
     }
 
     // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
@@ -293,8 +295,10 @@ ParsleyUI.Field = {
     if ('string' === typeof this.options.errorsContainer) {
       if ($(this.options.errorsContainer).length)
         return $(this.options.errorsContainer).append(this._ui.$errorsWrapper);
+      else if ('function' === typeof window[this.options.errorsContainer])
+				return window[this.options.errorsContainer].append(this._ui.$errorsWrapper);
       else
-        ParsleyUtils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM');
+        ParsleyUtils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM nor as a global JS function');
     } else if ('function' === typeof this.options.errorsContainer)
       $errorsContainer = this.options.errorsContainer.call(this, this);
 
