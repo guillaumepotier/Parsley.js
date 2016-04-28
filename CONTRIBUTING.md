@@ -26,6 +26,8 @@ To run tests locally:
     gulp test-browser    	# starts a local server
     open test/runner.html # open in your favorite browser
 
+*Note:* Parsley is written in EcmaScript 6.
+
 *Note:* There's currently a test that fails on some system, a beer to you if you can fix that, see https://github.com/guillaumepotier/Parsley.js/issues/1095
 
 **More tips general to any open source projects**
@@ -42,6 +44,8 @@ functions are followed by one space on Parsley. Use two spaces as tabs.
 3) You MUST commit a passing test-suite
 
 4) You SHOULD write documentation
+
+5) You MUST NOT modify `/dist`. Changes are made only to `/src`, `/test`, etc...
 
 Please, write [commit messages that make
 sense](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html),
