@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/guillaumepotier/Parsley.js",
   "dependencies": {
-    "jquery": ">=1.8.0 <2.2.0"
+    "jquery": ">=1.8.0"
   },
   "devDependencies": {
     "babel-core": "^5.2.17",
@@ -69,7 +69,7 @@
     "mocha": "^2.1.0",
     "moment": "*",
     "run-sequence": "^1.0.2",
-    "simple-jsdom": "0.0.2",
+    "jsdom": "^8.4.1",
     "sinon": "^1.12.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
