@@ -273,7 +273,7 @@ ParsleyUI.Field = {
       // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
-    } else if ('object' === typeof $handlerFunction && $handlerFunction instanceOf jQuery && $handlerFunction.length) {
+    } else if ('object' === typeof $handlerFunction && $handlerFunction instanceof jQuery && $handlerFunction.length) {
       return $handlerFunction;
     } else if ($handlerFunction) {
       ParsleyUtils.warn('The class handler `' + $handlerFunction + '` does not exist in DOM nor as a global JS function');
