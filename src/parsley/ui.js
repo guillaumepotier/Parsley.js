@@ -286,23 +286,23 @@ ParsleyUI.Field = {
   },
 
   _insertErrorWrapper: function () {
-    var $errorsContainer;
+    var $errorsContainer = this.options.errorsContainer;
 
     // Nothing to do if already inserted
     if (0 !== this._ui.$errorsWrapper.parent().length)
       return this._ui.$errorsWrapper.parent();
 
-    if ('string' === typeof this.options.errorsContainer) {
-      if ($(this.options.errorsContainer).length)
-        return $(this.options.errorsContainer).append(this._ui.$errorsWrapper);
-      else if ('function' === typeof window[this.options.errorsContainer])
-        $errorsContainer = window[this.options.errorsContainer];
+    if ('string' === typeof $errorsContainer) {
+      if ($($errorsContainer).length)
+        return $($errorsContainer).append(this._ui.$errorsWrapper);
+      else if ('function' === typeof window[$errorsContainer])
+        $errorsContainer = window[$errorsContainer];
       else
-        ParsleyUtils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM nor as a global JS function');
+        ParsleyUtils.warn('The errors container `' + $errorsContainer + '` does not exist in DOM nor as a global JS function');
     }
 
-    if ('function' === typeof this.options.errorsContainer)
-      $errorsContainer = this.options.errorsContainer.call(this, this);
+    if ('function' === typeof $errorsContainer)
+      $errorsContainer = $errorsContainer.call(this, this);
 
     if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
       return $errorsContainer.append(this._ui.$errorsWrapper);
