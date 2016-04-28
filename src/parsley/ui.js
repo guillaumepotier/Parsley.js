@@ -259,7 +259,7 @@ ParsleyUI.Field = {
     // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
     if ('string' === typeof this.options.classHandler && $(this.options.classHandler).length)
       return $(this.options.classHandler);
-    
+
     // Class handled could also be determined by function given in Parsley options
 	var $handlerFunction = this.options.classHandler;
     

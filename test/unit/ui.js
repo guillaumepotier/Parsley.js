@@ -105,7 +105,6 @@ describe('ParsleyUI', () => {
         '<div id="field2"></div>'                                                           +
         '<div id="field3"></div>'                                                           +
         '<div id="field4"></div>'                                                           +
-        '<div id="field5"></div>'                                                           +
       '</form>');
     $('#element').psly().validate();
     expect($('#field2').hasClass('parsley-error')).to.be(true);
