@@ -261,20 +261,20 @@ ParsleyUI.Field = {
       return $(this.options.classHandler);
 
     // Class handled could also be determined by function given in Parsley options
-	var $handlerFunction = this.options.classHandler;
-    
-    // It might also be the function name of a global function
-	if ('string' === typeof this.options.classHandler && 'function' === typeof window[this.options.classHandler])
-	  $handlerFunction = window[this.options.classHandler];
+    var $handlerFunction = this.options.classHandler;
 
-	if ('function' === typeof $handlerFunction)
-	{
+    // It might also be the function name of a global function
+    if ('string' === typeof this.options.classHandler && 'function' === typeof window[this.options.classHandler])
+      $handlerFunction = window[this.options.classHandler];
+
+    if ('function' === typeof $handlerFunction)
+    {
       var $handler = $handlerFunction.call(this, this);
 
       // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length)
         return $handler;
-	}
+    }
 
     // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
     if (!this.options.multiple || this.$element.is('select'))
