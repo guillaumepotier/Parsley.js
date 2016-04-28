@@ -116,7 +116,7 @@ describe('ParsleyUI', () => {
       return $('#field4');
     };
     $('#element').psly().validate();
-    expect($('#field4').hasClass('parsley-error')).to.be(false);
+    expect($('#field4').hasClass('parsley-error')).to.be(true);
     $('#field1').attr('data-parsley-class-handler', 'someUndefinedFunctionName');
     $('#element').psly().validate();
     expect($('#field1').hasClass('parsley-error')).to.be(true);
