@@ -18,6 +18,18 @@ This makes it possible for you to be sure you have isolated the issue to a minim
 
 ## Pull requests?
 
+To run tests locally:
+
+    npm install	          # needed only the very first time!
+    gulp test             # runs tests in the console
+    # or to run them in the browser:
+    gulp test-browser    	# starts a local server
+    open test/runner.html # open in your favorite browser
+
+*Note:* There's currently a test that fails on some system, a beer to you if you can fix that, see https://github.com/guillaumepotier/Parsley.js/issues/1095
+
+**More tips general to any open source projects**
+
 Here are a few simple rules you'll have to follow in order to ease code reviews,
 discussions and PR merging.
 
@@ -39,7 +51,7 @@ before submitting your Pull Request.
 One may ask you to [squash your
 commits](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)
 too. This is used to "clean" your Pull Request before merging it (we don't want
-commits such as `fix tests`, `fix 2`, `fix 3`, etc.).
+commits such as `fix tests`, `fix 2`, `fix 3`, etc.). Good rule of thumb: the test-suite must pass at each commit point.
 
 Also, while creating your Pull Request on GitHub, you MUST write a description
 which gives the context and/or explains why you are creating it.
