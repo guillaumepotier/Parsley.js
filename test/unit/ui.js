@@ -50,10 +50,6 @@ describe('ParsleyUI', () => {
     };
     $('#element').psly().validate();
     expect($('#container .parsley-errors-list').length).to.be(1);
-    $('#element').psly().destroy();
-    $('#field1').removeAttr('data-parsley-errors-container');
-    $('#element').psly().validate();
-    expect($('#container2 .parsley-errors-list').length).to.be(1);
     delete window.parsleyContainerFunction;
   });
   it('should handle wrong errors-container option', () => {
@@ -154,7 +150,9 @@ describe('ParsleyUI', () => {
     expect($('#field4').hasClass('parsley-error')).to.be(true);
     $('#element').psly().destroy();
     $('#field1').attr('data-parsley-class-handler', 'someUndefinedFunctionName');
-    $('#element').psly().validate();
+    expectWarning(() => {
+      $('#element').psly().validate();
+    });
     expect($('#field1').hasClass('parsley-error')).to.be(true);
     delete window.parsleyClassHandler;
   });
