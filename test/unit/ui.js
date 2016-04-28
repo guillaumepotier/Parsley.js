@@ -104,10 +104,23 @@ describe('ParsleyUI', () => {
         '<input id="field1" type="email" data-parsley-class-handler="#field2" required />'  +
         '<div id="field2"></div>'                                                           +
         '<div id="field3"></div>'                                                           +
+        '<div id="field4"></div>'                                                           +
+        '<div id="field5"></div>'                                                           +
       '</form>');
     $('#element').psly().validate();
     expect($('#field2').hasClass('parsley-error')).to.be(true);
     $('#element').psly().destroy();
+    $('#field1').attr('data-parsley-class-handler', 'parsleyClassHandler');
+    window.parsleyClassHandler = function (ins) {
+      expect(ins).to.be($('#field1').parsley());
+      expect(this).to.be($('#field1').parsley());
+      return $('#field4');
+    };
+    $('#element').psly().validate();
+    expect($('#field4').hasClass('parsley-error')).to.be(true);    
+    $('#field1').attr('data-parsley-class-handler', 'someUndefinedFunctionName');
+    $('#element').psly().validate();
+    expect($('#field1').hasClass('parsley-error')).to.be(true);    
     $('#field1').removeAttr('data-parsley-class-handler');
     $('#element').psly({
       classHandler: function (ins) {

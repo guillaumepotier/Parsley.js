@@ -259,13 +259,22 @@ ParsleyUI.Field = {
     // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
     if ('string' === typeof this.options.classHandler && $(this.options.classHandler).length)
       return $(this.options.classHandler);
-
+    
     // Class handled could also be determined by function given in Parsley options
-    var $handler = this.options.classHandler.call(this, this);
+	var $handlerFunction = this.options.classHandler;
+    
+    // It might also be the function name of a global function
+	if ('string' === typeof this.options.classHandler && 'function' === typeof window[this.options.classHandler])
+	  $handlerFunction = window[this.options.classHandler];
 
-    // If this function returned a valid existing DOM element, go for it
-    if ('undefined' !== typeof $handler && $handler.length)
-      return $handler;
+	if ('function' === typeof $handlerFunction)
+	{
+      var $handler = $handlerFunction.call(this, this);
+
+      // If this function returned a valid existing DOM element, go for it
+      if ('undefined' !== typeof $handler && $handler.length)
+        return $handler;
+	}
 
     // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
     if (!this.options.multiple || this.$element.is('select'))
