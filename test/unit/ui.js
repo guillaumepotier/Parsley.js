@@ -116,10 +116,10 @@ describe('ParsleyUI', () => {
       return $('#field4');
     };
     $('#element').psly().validate();
-    expect($('#field4').hasClass('parsley-error')).to.be(true);    
+    expect($('#field4').hasClass('parsley-error')).to.be(false);
     $('#field1').attr('data-parsley-class-handler', 'someUndefinedFunctionName');
     $('#element').psly().validate();
-    expect($('#field1').hasClass('parsley-error')).to.be(true);    
+    expect($('#field1').hasClass('parsley-error')).to.be(true);
     $('#field1').removeAttr('data-parsley-class-handler');
     $('#element').psly({
       classHandler: function (ins) {

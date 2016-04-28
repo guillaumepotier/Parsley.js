@@ -267,8 +267,7 @@ ParsleyUI.Field = {
     if ('string' === typeof this.options.classHandler && 'function' === typeof window[this.options.classHandler])
       $handlerFunction = window[this.options.classHandler];
 
-    if ('function' === typeof $handlerFunction)
-    {
+    if ('function' === typeof $handlerFunction) {
       var $handler = $handlerFunction.call(this, this);
 
       // If this function returned a valid existing DOM element, go for it
