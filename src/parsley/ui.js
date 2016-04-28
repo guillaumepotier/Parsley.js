@@ -256,22 +256,28 @@ UI.Field = {
 
   // Determine which element will have `parsley-error` and `parsley-success` classes
   _manageClassHandler: function () {
-    // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
-    if ('string' === typeof this.options.classHandler) {
-      if ($(this.options.classHandler).length === 0)
-        ParsleyUtils.warn('No elements found that match the selector `' + this.options.classHandler + '` set in options.classHandler or data-parsley-class-handler');
-
-      //return element or empty set
+    // Class handled could also be determined by function given in Parsley options
+    if ('string' === typeof this.options.classHandler && $(this.options.classHandler).length)
       return $(this.options.classHandler);
-    }
 
     // Class handled could also be determined by function given in Parsley options
-    if ('function' === typeof this.options.classHandler)
-      var $handler = this.options.classHandler.call(this, this);
+    var $handlerFunction = this.options.classHandler;
 
-    // If this function returned a valid existing DOM element, go for it
-    if ('undefined' !== typeof $handler && $handler.length)
-      return $handler;
+    // It might also be the function name of a global function
+    if ('string' === typeof this.options.classHandler && 'function' === typeof window[this.options.classHandler])
+      $handlerFunction = window[this.options.classHandler];
+
+    if ('function' === typeof $handlerFunction) {
+      var $handler = $handlerFunction.call(this, this);
+
+      // If this function returned a valid existing DOM element, go for it
+      if ('undefined' !== typeof $handler && $handler.length)
+        return $handler;
+    } else if ('object' === typeof $handlerFunction && $handlerFunction instanceof jQuery && $handlerFunction.length) {
+      return $handlerFunction;
+    } else if ($handlerFunction) {
+      Utils.warn('The class handler `' + $handlerFunction + '` does not exist in DOM nor as a global JS function');
+    }
 
     return this._inputHolder();
   },
@@ -286,21 +292,25 @@ UI.Field = {
   },
 
   _insertErrorWrapper: function () {
-    var $errorsContainer;
+    var $errorsContainer = this.options.errorsContainer;
 
     // Nothing to do if already inserted
     if (0 !== this._ui.$errorsWrapper.parent().length)
       return this._ui.$errorsWrapper.parent();
 
-    if ('string' === typeof this.options.errorsContainer) {
-      if ($(this.options.errorsContainer).length)
-        return $(this.options.errorsContainer).append(this._ui.$errorsWrapper);
+    if ('string' === typeof $errorsContainer) {
+      if ($($errorsContainer).length)
+        return $($errorsContainer).append(this._ui.$errorsWrapper);
+      else if ('function' === typeof window[$errorsContainer])
+        $errorsContainer = window[$errorsContainer];
       else
-        Utils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM');
-    } else if ('function' === typeof this.options.errorsContainer)
-      $errorsContainer = this.options.errorsContainer.call(this, this);
+        Utils.warn('The errors container `' + $errorsContainer + '` does not exist in DOM nor as a global JS function');
+    }
 
-    if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
+    if ('function' === typeof $errorsContainer)
+      $errorsContainer = $errorsContainer.call(this, this);
+
+    if ('object' === typeof $errorsContainer && $errorsContainer.length)
       return $errorsContainer.append(this._ui.$errorsWrapper);
 
     return this._inputHolder().after(this._ui.$errorsWrapper);

@@ -36,6 +36,22 @@ describe('UI', () => {
     }).validate();
     expect($('#container2 .parsley-errors-list').length).to.be(1);
   });
+  it('should handle errors-container option with function', () => {
+    $('body').append(
+      '<form id="element">'                                                                                    +
+        '<input id="field1" type="text" required data-parsley-errors-container="parsleyContainerFunction" />'  +
+        '<div id="container"></div>'                                                                           +
+        '<div id="container2"></div>'                                                                          +
+      '</form>');
+    window.parsleyContainerFunction = function (ins) {
+      expect(ins).to.be($('#field1').psly());
+      expect(this).to.be($('#field1').psly());
+      return $('#container2');
+    };
+    $('#element').psly().validate();
+    expect($('#container .parsley-errors-list').length).to.be(1);
+    delete window.parsleyContainerFunction;
+  });
   it('should handle wrong errors-container option', () => {
     $('body').append('<input type="text" id="element" data-parsley-errors-container="#donotexist" required/>');
     var parsley = $('#element').psly();
@@ -99,6 +115,28 @@ describe('UI', () => {
       }
     }).validate();
     expect($('#field3').hasClass('parsley-error')).to.be(true);
+  });
+  it('should handle class-handler option with a function', () => {
+    $('body').append(
+      '<form id="element">'                                                                 +
+        '<input id="field1" type="email" data-parsley-class-handler="#field2" required />'  +
+        '<div id="field4"></div>'                                                           +
+      '</form>');
+    $('#field1').attr('data-parsley-class-handler', 'parsleyClassHandler');
+    window.parsleyClassHandler = function (ins) {
+      expect(ins).to.be($('#field1').parsley());
+      expect(this).to.be($('#field1').parsley());
+      return $('#field4');
+    };
+    $('#element').psly().validate();
+    expect($('#field4').hasClass('parsley-error')).to.be(true);
+    $('#element').psly().destroy();
+    $('#field1').attr('data-parsley-class-handler', 'someUndefinedFunctionName');
+    expectWarning(() => {
+      $('#element').psly().validate();
+    });
+    expect($('#field1').hasClass('parsley-error')).to.be(true);
+    delete window.parsleyClassHandler;
   });
   it('should show higher priority error message by default', () => {
     $('body').append('<input type="email" id="element" required />');
