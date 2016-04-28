@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/guillaumepotier/Parsley.js",
   "dependencies": {
-    "jquery": ">=1.8.0"
+    "jquery": ">=1.8.0 <2.2.0"
   },
   "devDependencies": {
     "babel-core": "^5.2.17",
