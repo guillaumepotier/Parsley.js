@@ -296,11 +296,11 @@ ParsleyUI.Field = {
       if ($(this.options.errorsContainer).length)
         return $(this.options.errorsContainer).append(this._ui.$errorsWrapper);
       else if ('function' === typeof window[this.options.errorsContainer])
-				$errorsContainer = window[this.options.errorsContainer];
+        $errorsContainer = window[this.options.errorsContainer];
       else
         ParsleyUtils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM nor as a global JS function');
-    } 
-    
+    }
+
     if ('function' === typeof this.options.errorsContainer)
       $errorsContainer = this.options.errorsContainer.call(this, this);
 

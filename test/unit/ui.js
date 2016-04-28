@@ -137,7 +137,6 @@ describe('ParsleyUI', () => {
       }
     }).validate();
     expect($('#field3').hasClass('parsley-error')).to.be(true);
-    delete window.parsleyClassHandler;
   });
   it('should handle class-handler option with a function', () => {
     $('body').append(
