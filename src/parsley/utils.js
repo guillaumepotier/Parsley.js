@@ -124,7 +124,49 @@ var ParsleyUtils = {
       Object.prototype = null;
       return result;
     };
-  })()
+  })(),
+
+  // http://underscorejs.org/#now
+  now: Date.now || function () {
+    return new Date().getTime();
+  },
+
+  // http://underscorejs.org/#debounce
+  debounce: function (func, wait, immediate) {
+    var timeout;
+    var args;
+    var context;
+    var timestamp;
+    var result;
+
+    var later = function () {
+      var last = ParsleyUtils.now() - timestamp;
+
+      if (last < wait && last >= 0) {
+        timeout = setTimeout(later, wait - last);
+      } else {
+        timeout = null;
+        if (!immediate) {
+          result = func.apply(context, args);
+          if (!timeout) context = args = null;
+        }
+      }
+    };
+
+    return function () {
+      context = this;
+      args = arguments;
+      timestamp = ParsleyUtils.now();
+      var callNow = immediate && !timeout;
+      if (!timeout) timeout = setTimeout(later, wait);
+      if (callNow) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+
+      return result;
+    };
+  }
 };
 
 export default ParsleyUtils;

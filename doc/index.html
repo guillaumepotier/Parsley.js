@@ -433,6 +433,10 @@ if (false === instance.options.priorityEnabled)
                 <td><code>data-parsley-excluded</code> <version>#2.1</version></td>
                 <td>If set to <code>true</code>, Parsley will ignore this field when binding a form.</td>
               </tr>
+              <tr>
+                <td><code>data-parsley-debounce</code> <version>#2.3</version></td>
+                <td>Postpones validation for a given number of milliseconds after user input has stopped arriving, eg: <code>data-parsley-debounce="500"</code>. Useful for expensive validations (such as remotes) that you don't want to run on every keystroke.</td>
+              </tr>
             </tbody>
           </table>
 
