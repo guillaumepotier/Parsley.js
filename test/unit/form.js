@@ -337,6 +337,31 @@ describe('ParsleyForm', () => {
     deferred.resolve();
   });
 
+  it('should handle priority correctly', () => {
+    var calls = [];
+    var form = $('<form id="element"><input value="0" data-parsley-custom1 data-parsley-custom2 data-parsley-custom3 data-parsley-custom4/></form>')
+    .appendTo('body')
+    .parsley()
+      .on('form:submit', evt => { return false; });
+    for (const i of [1, 2, 3, 4])
+      window.Parsley.addValidator(`custom${i}`, {
+        priority: i <= 2 ? 100 : 10 - i,
+        validateNumber: function(value, requirement) {
+          calls.push(i);
+          return value > i;
+        }
+      });
+    $('#element').submit();
+    $('#element input').val('3');
+    $('#element').submit();
+    $('#element input').val('5');
+    $('#element').submit();
+    expect(calls).to.eql([2, 1, 2, 1, 3, 2, 1, 3, 4]);
+    for (const i of [1, 2, 3, 4])
+      window.Parsley.removeValidator(`custom${i}`);
+
+  });
+
   afterEach(() => {
     $('#element').remove();
   });
