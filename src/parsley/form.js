@@ -165,7 +165,7 @@ ParsleyForm.prototype = {
           }
       });
 
-      $(oldFields).not(this.fields).each((_, field) => {
+      $.each(ParsleyUtils.difference(oldFields, this.fields), (_, field) => {
         field._trigger('reset');
       });
     });

@@ -109,6 +109,15 @@ var ParsleyUtils = {
     return $.map(events, evt => { return `${evt}.${namespace}`; }).join(' ');
   },
 
+  difference: function(array, remove) {
+    // This is O(N^2), should be optimized
+    let result = [];
+    for (const elem of array)
+      if (remove.indexOf(elem) == -1)
+        result.push(elem);
+    return result;
+  },
+
   // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
   objectCreate: Object.create || (function () {
     var Object = function () {};
