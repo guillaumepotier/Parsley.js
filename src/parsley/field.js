@@ -139,14 +139,14 @@ ParsleyField.prototype = {
     $.each(groupedConstraints, (_, constraints) => {
       // Process one group of constraints at a time, we validate the constraints
       // and combine the promises together.
-      var promise = $.when(
-        ...$.map(constraints, constraint => this._validateConstraint(value, constraint))
+      var promise = ParsleyUtils.all(
+        $.map(constraints, constraint => this._validateConstraint(value, constraint))
       );
       promises.push(promise);
       if (promise.state() === 'rejected')
         return false; // Interrupt processing if a group has already failed
     });
-    return $.when(...promises);
+    return ParsleyUtils.all(promises);
   },
 
   // @returns a promise
@@ -156,7 +156,7 @@ ParsleyField.prototype = {
     if (false === result)
       result = $.Deferred().reject();
     // Make sure we return a promise and that we record failures
-    return $.when(result).fail(errorMessage => {
+    return ParsleyUtils.all([result]).fail(errorMessage => {
       if (!(this.validationResult instanceof Array))
         this.validationResult = [];
       this.validationResult.push({

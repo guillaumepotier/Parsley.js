@@ -102,7 +102,7 @@ ParsleyForm.prototype = {
       });
     });
 
-    return $.when(...promises)
+    return ParsleyUtils.all(promises)
       .done(  () => { this._trigger('success'); })
       .fail(  () => {
         this.validationResult = false;
@@ -137,7 +137,7 @@ ParsleyForm.prototype = {
         return field.whenValid({group, force});
       });
     });
-    return $.when(...promises);
+    return ParsleyUtils.all(promises);
   },
 
   _refreshFields: function () {

@@ -118,6 +118,12 @@ var ParsleyUtils = {
     return result;
   },
 
+  // Alter-ego to native Promise.all, but for jQuery
+  all: function(promises) {
+    // jQuery treats $.when() and $.when(singlePromise) differently; let's avoid that and add spurious elements
+    return $.when(...promises, 42, 42);
+  },
+
   // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
   objectCreate: Object.create || (function () {
     var Object = function () {};
