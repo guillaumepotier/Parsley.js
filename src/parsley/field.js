@@ -146,7 +146,7 @@ ParsleyField.prototype = {
       if (promise.state() === 'rejected')
         return false; // Interrupt processing if a group has already failed
     });
-    return $.when.apply($, promises);
+    return $.when(...promises);
   },
 
   // @returns a promise
