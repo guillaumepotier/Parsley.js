@@ -8,7 +8,7 @@ env:
   - JQUERY=1.12
   - JQUERY=2.1
   - JQUERY=2.2
-  - JQUERY=3.0.0-beta1
+  - JQUERY=3.0.0
 install:
   - npm install
   - npm install jquery@$JQUERY

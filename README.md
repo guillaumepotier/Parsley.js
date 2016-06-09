@@ -14,7 +14,7 @@ See `index.html` and `doc/`
 
 ## Requirements
 
-[jQuery](https://jquery.com/) >= 1.8
+[jQuery](https://jquery.com/) >= 1.8 (compatible with 2.x and 3.0)
 [es5-shim](https://github.com/es-shims/es5-shim) if you want need to support IE8
 
 ## Contributing
