@@ -106,7 +106,7 @@ var ParsleyUtils = {
     events = this.trimString(events || '').split(/\s+/);
     if (!events[0])
       return '';
-    return $.map(events, evt => { return `${evt}.${namespace}`; }).join(' ');
+    return $.map(events, evt => `${evt}.${namespace}`).join(' ');
   },
 
   difference: function(array, remove) {

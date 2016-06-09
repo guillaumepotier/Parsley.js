@@ -97,9 +97,7 @@ ParsleyForm.prototype = {
     this._refreshFields();
 
     var promises = this._withoutReactualizingFormOptions(() => {
-      return $.map(this.fields, field => {
-        return field.whenValidate({force, group});
-      });
+      return $.map(this.fields, field => field.whenValidate({force, group}));
     });
 
     return ParsleyUtils.all(promises)
@@ -133,9 +131,7 @@ ParsleyForm.prototype = {
     this._refreshFields();
 
     var promises = this._withoutReactualizingFormOptions(() => {
-      return $.map(this.fields, field => {
-        return field.whenValid({group, force});
-      });
+      return $.map(this.fields, field => field.whenValid({group, force}));
     });
     return ParsleyUtils.all(promises);
   },
