@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.13 - built Tue, May 31st 2016, 8:55 am
+* Version 2.3.14 - built Thu, Jun 9th 2016, 3:51 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -115,6 +115,43 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return $.map(events, function (evt) {
         return evt + '.' + namespace;
       }).join(' ');
+    },
+
+    difference: function difference(array, remove) {
+      // This is O(N^2), should be optimized
+      var result = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = array[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var elem = _step.value;
+
+          if (remove.indexOf(elem) == -1) result.push(elem);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator['return']) {
+            _iterator['return']();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return result;
+    },
+
+    // Alter-ego to native Promise.all, but for jQuery
+    all: function all(promises) {
+      // jQuery treats $.when() and $.when(singlePromise) differently; let's avoid that and add spurious elements
+      return $.when.apply($, _toConsumableArray(promises).concat([42, 42]));
     },
 
     // Object.create polyfill, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill
@@ -1214,7 +1251,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     whenValidate: function whenValidate() {
-      var _$$when$done$fail$always,
+      var _ParsleyUtils__default$all$done$fail$always,
           _this5 = this;
 
       var _ref7 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -1244,7 +1281,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         });
       });
 
-      return (_$$when$done$fail$always = $.when.apply($, _toConsumableArray(promises)).done(function () {
+      return (_ParsleyUtils__default$all$done$fail$always = ParsleyUtils__default.all(promises).done(function () {
         _this5._trigger('success');
       }).fail(function () {
         _this5.validationResult = false;
@@ -1252,7 +1289,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         _this5._trigger('error');
       }).always(function () {
         _this5._trigger('validated');
-      })).pipe.apply(_$$when$done$fail$always, _toConsumableArray(this._pipeAccordingToValidationResult()));
+      })).pipe.apply(_ParsleyUtils__default$all$done$fail$always, _toConsumableArray(this._pipeAccordingToValidationResult()));
     },
 
     // Iterate over refreshed fields, and stop on first failure.
@@ -1291,7 +1328,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return field.whenValid({ group: group, force: force });
         });
       });
-      return $.when.apply($, _toConsumableArray(promises));
+      return ParsleyUtils__default.all(promises);
     },
 
     _refreshFields: function _refreshFields() {
@@ -1317,7 +1354,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         });
 
-        $(oldFields).not(_this7.fields).each(function (_, field) {
+        $.each(ParsleyUtils__default.difference(oldFields, _this7.fields), function (_, field) {
           field._trigger('reset');
         });
       });
@@ -1543,13 +1580,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       $.each(groupedConstraints, function (_, constraints) {
         // Process one group of constraints at a time, we validate the constraints
         // and combine the promises together.
-        var promise = $.when.apply($, _toConsumableArray($.map(constraints, function (constraint) {
+        var promise = ParsleyUtils__default.all($.map(constraints, function (constraint) {
           return _this10._validateConstraint(value, constraint);
-        })));
+        }));
         promises.push(promise);
         if (promise.state() === 'rejected') return false; // Interrupt processing if a group has already failed
       });
-      return $.when.apply($, promises);
+      return ParsleyUtils__default.all(promises);
     },
 
     // @returns a promise
@@ -1560,7 +1597,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       // Map false to a failed promise
       if (false === result) result = $.Deferred().reject();
       // Make sure we return a promise and that we record failures
-      return $.when(result).fail(function (errorMessage) {
+      return ParsleyUtils__default.all([result]).fail(function (errorMessage) {
         if (!(_this11.validationResult instanceof Array)) _this11.validationResult = [];
         _this11.validationResult.push({
           assert: constraint,
@@ -1853,7 +1890,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.13';
+      this.__version__ = '2.3.14';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -1975,7 +2012,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.13'
+    version: '2.3.14'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract

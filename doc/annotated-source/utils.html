@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 
 <span class="hljs-keyword">var</span> globalID = <span class="hljs-number">1</span>;
 <span class="hljs-keyword">var</span> pastWarnings = {};
@@ -277,8 +277,10 @@ returns object from dom attributes and values</p>
     events = <span class="hljs-keyword">this</span>.trimString(events || <span class="hljs-string">''</span>).split(<span class="hljs-regexp">/\s+/</span>);
     <span class="hljs-keyword">if</span> (!events[<span class="hljs-number">0</span>])
       <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
-    <span class="hljs-keyword">return</span> $.map(events, evt =&gt; { <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${evt}</span>.<span class="hljs-subst">${namespace}</span>`</span>; }).join(<span class="hljs-string">' '</span>);
-  },</pre></div></div>
+    <span class="hljs-keyword">return</span> $.map(events, evt =&gt; <span class="hljs-string">`<span class="hljs-subst">${evt}</span>.<span class="hljs-subst">${namespace}</span>`</span>).join(<span class="hljs-string">' '</span>);
+  },
+
+  difference: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">array, remove</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -288,6 +290,57 @@ returns object from dom attributes and values</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>This is O(N^2), should be optimized</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> result = [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> elem <span class="hljs-keyword">of</span> array)
+      <span class="hljs-keyword">if</span> (remove.indexOf(elem) == <span class="hljs-number">-1</span>)
+        result.push(elem);
+    <span class="hljs-keyword">return</span> result;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Alter-ego to native Promise.all, but for jQuery</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  all: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">promises</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>jQuery treats $.when() and $.when(singlePromise) differently; let’s avoid that and add spurious elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> $.when(...promises, <span class="hljs-number">42</span>, <span class="hljs-number">42</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Object.create polyfill, see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill</a></p>
 

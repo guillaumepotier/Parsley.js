@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 <span class="hljs-keyword">import</span> ParsleyDefaults <span class="hljs-keyword">from</span> <span class="hljs-string">'./defaults'</span>;
 <span class="hljs-keyword">import</span> ParsleyValidator <span class="hljs-keyword">from</span> <span class="hljs-string">'./validator'</span>;
@@ -654,7 +654,7 @@ Alternatively, a validator can be a function that returns such an object</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> toInt = f =&gt; { <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.round(f * <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">10</span>, decimals)); };
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> toInt = f =&gt; <span class="hljs-built_in">Math</span>.round(f * <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">10</span>, decimals));
             <span class="hljs-keyword">if</span> ((toInt(nb) - toInt(base)) % toInt(step) != <span class="hljs-number">0</span>)
               <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
           }

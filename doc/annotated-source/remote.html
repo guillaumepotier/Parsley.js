@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 
 <span class="hljs-keyword">import</span> Parsley <span class="hljs-keyword">from</span> <span class="hljs-string">'./main'</span>;
 
@@ -201,7 +201,7 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (url.indexOf(<span class="hljs-string">'{value}'</span>) &gt; -<span class="hljs-number">1</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (url.indexOf(<span class="hljs-string">'{value}'</span>) &gt; <span class="hljs-number">-1</span>) {
       url = url.replace(<span class="hljs-string">'{value}'</span>, <span class="hljs-built_in">encodeURIComponent</span>(value));
     } <span class="hljs-keyword">else</span> {
       data[instance.$element.attr(<span class="hljs-string">'name'</span>) || instance.$element.attr(<span class="hljs-string">'id'</span>)] = value;
@@ -299,7 +299,7 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
     <span class="hljs-keyword">return</span> xhr.then(handleXhr, handleXhr);
   },
 
-  priority: -<span class="hljs-number">1</span>
+  priority: <span class="hljs-number">-1</span>
 });
 
 Parsley.on(<span class="hljs-string">'form:submit'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{

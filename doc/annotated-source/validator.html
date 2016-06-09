@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
 <span class="hljs-keyword">var</span> requirementConverters = {
@@ -275,7 +275,7 @@ ParsleyValidator.prototype = {</pre></div></div>
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.fn) { <span class="hljs-comment">// Legacy style validator</span>
 
       <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">3</span>)  <span class="hljs-comment">// If more args then value, requirement, instance...</span>
-        requirementFirstArg = [].slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>);  <span class="hljs-comment">// Skip first arg (value) and last (instance), combining the rest</span>
+        requirementFirstArg = [].slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>);  <span class="hljs-comment">// Skip first arg (value) and last (instance), combining the rest</span>
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fn.call(<span class="hljs-keyword">this</span>, value, requirementFirstArg);
     }
 

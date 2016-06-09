@@ -106,7 +106,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ from <span class="hljs-string">'jquery'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> ConstraintFactory <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/constraint'</span>;
 <span class="hljs-keyword">import</span> ParsleyUI <span class="hljs-keyword">from</span> <span class="hljs-string">'./ui'</span>;
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
@@ -306,7 +306,7 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
 
   _isInGroup: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group</span>) </span>{
     <span class="hljs-keyword">if</span> ($.isArray(<span class="hljs-keyword">this</span>.options.group))
-      <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span> !== $.inArray(group, <span class="hljs-keyword">this</span>.options.group);
+      <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span> !== $.inArray(group, <span class="hljs-keyword">this</span>.options.group);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.group === group;
   },</pre></div></div>
             
@@ -444,14 +444,14 @@ and combine the promises together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> promise = $.when(
-        ...$.map(constraints, constraint =&gt; <span class="hljs-keyword">this</span>._validateConstraint(value, constraint))
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> promise = ParsleyUtils.all(
+        $.map(constraints, constraint =&gt; <span class="hljs-keyword">this</span>._validateConstraint(value, constraint))
       );
       promises.push(promise);
       <span class="hljs-keyword">if</span> (promise.state() === <span class="hljs-string">'rejected'</span>)
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; <span class="hljs-comment">// Interrupt processing if a group has already failed</span>
     });
-    <span class="hljs-keyword">return</span> $.when.apply($, promises);
+    <span class="hljs-keyword">return</span> ParsleyUtils.all(promises);
   },</pre></div></div>
             
         </li>
@@ -499,7 +499,7 @@ and combine the promises together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> $.when(result).fail(errorMessage =&gt; {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> ParsleyUtils.all([result]).fail(errorMessage =&gt; {
       <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>.validationResult <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>))
         <span class="hljs-keyword">this</span>.validationResult = [];
       <span class="hljs-keyword">this</span>.validationResult.push({
