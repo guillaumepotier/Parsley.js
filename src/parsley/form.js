@@ -44,7 +44,7 @@ ParsleyForm.prototype = {
   },
 
   onSubmitButton: function(event) {
-    this._$submitSource = $(event.target);
+    this._$submitSource = $(event.currentTarget);
   },
   // internal
   // _submit submits the form, this time without going through the validations.
