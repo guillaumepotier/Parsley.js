@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.14 - built Thu, Jun 9th 2016, 3:51 pm
+* Version 2.3.15 - built Tue, Jun 14th 2016, 4:00 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1210,7 +1210,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     onSubmitButton: function onSubmitButton(event) {
-      this._$submitSource = $(event.target);
+      this._$submitSource = $(event.currentTarget);
     },
     // internal
     // _submit submits the form, this time without going through the validations.
@@ -1890,7 +1890,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.14';
+      this.__version__ = '2.3.15';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -2012,7 +2012,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.14'
+    version: '2.3.15'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
