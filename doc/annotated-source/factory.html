@@ -150,6 +150,10 @@
       savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
     }
 
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> === <span class="hljs-keyword">typeof</span> options) {
+      $.extend(savedparsleyFormInstance.options, options);
+    }
+
     <span class="hljs-keyword">return</span> savedparsleyFormInstance;
   }</pre></div></div>
             

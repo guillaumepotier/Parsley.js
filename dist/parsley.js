@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.3.15 - built Tue, Jun 14th 2016, 4:00 am
+* Version 2.4.2 - built Wed, Jun 15th 2016, 9:15 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1875,6 +1875,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
       }
 
+      if ('object' === typeof options) {
+        $.extend(savedparsleyFormInstance.options, options);
+      }
+
       return savedparsleyFormInstance;
     }
 
@@ -1890,7 +1894,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.3.15';
+      this.__version__ = '2.4.2';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -2012,7 +2016,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.3.15'
+    version: '2.4.2'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
