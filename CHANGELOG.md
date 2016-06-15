@@ -2,6 +2,8 @@
 
 ## master
 
+- `$('...').parsley({someOption: 'value'})` will always set the option `someOptions`. Previously if the field/form was already initialized, options were ignored.
+
 ## 2.3.1
 
 - Parsley now relies on `input` events instead of `change` and `keyup` events

@@ -151,7 +151,7 @@
             <h4>Do not add <code>data-parsley-validate</code> to your forms</h4>
             <p>
               Please be aware that Parsley looks at all <code>data-parsley-validate</code> occurrences in DOM on document load and automatically binds them if valid.<br>
-              Once a form or field instance is bound by Parsley, default instantiation options cannot be easily updated, only the ones defined in the DOM would work. Which means that if this DOM validation attribute is present, doing <code>$('#form').parsley(options);</code> would just return the automatically bound instance, and not the one you would expect with the <code>options</code> you wanted to set.
+              Once a form or field instance is bound by Parsley, doing <code>$('#form').parsley(options);</code> will update the existing options but not replace them.
             </p>
           </div>
           </p>
@@ -233,7 +233,7 @@ console.log(instance.isValid()); // No longer valid, as maxlength is 4
 // You can access and override options in javascript too:
 instance.options.maxlength++;
 console.log(instance.isValid()); // Back to being valid, as maxlength is 5
-// Alternatively, the options can be specified the first time a form/field is bound:
+// Alternatively, the options can be specified as:
 var otherInstance = $('#second').parsley({
   maxlength: 10
 });

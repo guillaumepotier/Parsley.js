@@ -109,6 +109,16 @@ describe('ParsleyFactory', () => {
     '</div>');
     expect($('input').parsley().length).to.be(2);
   });
+  it('should set options with $.fn.parsley', () => {
+    $('body').append('<form id="element" data-parsley-foo="bar"></form>');
+    var parsleyInstance = $('#element').parsley({foo: 42});
+    expect(parsleyInstance.options.foo).to.be(42);
+    $('#element').parsley({foo: 'updated'});
+    expect(parsleyInstance.options.foo).to.be('updated');
+    delete parsleyInstance.options.foo;
+    expect(parsleyInstance.options.foo).to.be('bar');
+  });
+
   afterEach(() => {
     $('#element').remove();
   });

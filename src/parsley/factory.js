@@ -18,6 +18,10 @@ var ParsleyFactory = function (element, options, parsleyFormInstance) {
       savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
     }
 
+    if ('object' === typeof options) {
+      $.extend(savedparsleyFormInstance.options, options);
+    }
+
     return savedparsleyFormInstance;
   }
 
