@@ -90,7 +90,7 @@ ParsleyForm.prototype = {
     }
     this.validationResult = true;
 
-    // fire validate event to eventually modify things before very validation
+    // fire validate event to eventually modify things before every validation
     this._trigger('validate');
 
     // Refresh form DOM options and form's fields that could have changed
