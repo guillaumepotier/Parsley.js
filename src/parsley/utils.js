@@ -112,9 +112,10 @@ var ParsleyUtils = {
   difference: function(array, remove) {
     // This is O(N^2), should be optimized
     let result = [];
-    for (const elem of array)
+    $.each(array, (_, elem) => {
       if (remove.indexOf(elem) == -1)
         result.push(elem);
+    });
     return result;
   },
 
