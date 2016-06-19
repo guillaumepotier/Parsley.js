@@ -296,9 +296,10 @@ returns object from dom attributes and values</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> result = [];
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> elem <span class="hljs-keyword">of</span> array)
+    $.each(array, (_, elem) =&gt; {
       <span class="hljs-keyword">if</span> (remove.indexOf(elem) == <span class="hljs-number">-1</span>)
         result.push(elem);
+    });
     <span class="hljs-keyword">return</span> result;
   },</pre></div></div>
             

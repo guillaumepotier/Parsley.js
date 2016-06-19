@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.4.2 - built Wed, Jun 15th 2016, 9:15 am
+* Version 2.4.3 - built Sat, Jun 18th 2016, 9:01 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -120,31 +120,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     difference: function difference(array, remove) {
       // This is O(N^2), should be optimized
       var result = [];
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = array[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var elem = _step.value;
-
-          if (remove.indexOf(elem) == -1) result.push(elem);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator['return']) {
-            _iterator['return']();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
+      $.each(array, function (_, elem) {
+        if (remove.indexOf(elem) == -1) result.push(elem);
+      });
       return result;
     },
 
@@ -1269,7 +1247,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
       this.validationResult = true;
 
-      // fire validate event to eventually modify things before very validation
+      // fire validate event to eventually modify things before every validation
       this._trigger('validate');
 
       // Refresh form DOM options and form's fields that could have changed
@@ -1894,7 +1872,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.4.2';
+      this.__version__ = '2.4.3';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -2016,7 +1994,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.4.2'
+    version: '2.4.3'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract
