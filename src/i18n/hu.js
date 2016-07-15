@@ -2,7 +2,7 @@
 // thus there is no use in adding it to your project.
 import Parsley from '../parsley/main';
 
-Parsley.addMessages('en', {
+Parsley.addMessages('hu', {
   defaultMessage: "Érvénytelen mező.",
   type: {
     email:        "Érvénytelen email cím.",
