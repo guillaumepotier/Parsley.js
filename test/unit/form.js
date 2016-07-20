@@ -110,6 +110,7 @@ describe('ParsleyForm', () => {
         '<div id="field2" name="comment"></div>'                                         +
         '<input type="submit" name="foo" value="bar" />'  +
         '<input type="submit" name="foo" value="other" />'  +
+        '<button type="submit" name="foo" value="but">ok</button>' +
       '</form>');
     var parsleyForm = $('#element').parsley();
 
@@ -124,13 +125,20 @@ describe('ParsleyForm', () => {
       values.push($('form input[type!=submit][name="foo"]').val());
       evt.preventDefault();
     });
-    $('#element input:last').click();
+
+    $('#element button').click();
     expect(values).to.eql([]);
     deferred.resolve();
-    expect(values).to.eql(['other']);
+    expect(values).to.eql(['but']);
+
+    $('#element input[value="other"]').click();
+    deferred.resolve();
+    expect(values).to.eql(['but', 'other']);
+
     $('#element').submit(); // Similar to pressing 'enter'
     deferred.resolve();
-    expect(values).to.eql(['other', 'bar']);
+    expect(values).to.eql(['but', 'other', 'bar']);
+
     window.Parsley.removeValidator('custom');
   });
   it('should not validate when triggered by a button with formnovalidate', () => {
