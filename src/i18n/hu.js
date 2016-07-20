@@ -1,4 +1,4 @@
-// This is included with the Parsley library itself, 
+// This is included with the Parsley library itself,
 // thus there is no use in adding it to your project.
 import Parsley from '../parsley/main';
 
