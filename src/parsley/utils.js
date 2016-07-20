@@ -142,7 +142,7 @@ var ParsleyUtils = {
     };
   })(),
 
-  _SubmitSelector: 'input[type="submit"], button[type="submit"]'
+  _SubmitSelector: 'input[type="submit"], button:submit'
 };
 
 export default ParsleyUtils;

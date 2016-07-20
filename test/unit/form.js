@@ -110,7 +110,7 @@ describe('ParsleyForm', () => {
         '<div id="field2" name="comment"></div>'                                         +
         '<input type="submit" name="foo" value="bar" />'  +
         '<input type="submit" name="foo" value="other" />'  +
-        '<button type="submit" name="foo" value="but">ok</button>' +
+        '<button name="foo" value="but">ok</button>' +
       '</form>');
     var parsleyForm = $('#element').parsley();
 
