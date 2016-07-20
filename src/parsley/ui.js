@@ -33,7 +33,7 @@ ParsleyUI.Form = {
 
   _actualizeTriggers: function () {
     this.$element.on('submit.Parsley', evt => { this.onSubmitValidate(evt); });
-    this.$element.on('click.Parsley', 'input[type="submit"], button[type="submit"]', evt => { this.onSubmitButton(evt); });
+    this.$element.on('click.Parsley', ParsleyUtils._SubmitSelector, evt => { this.onSubmitButton(evt); });
 
     // UI could be disabled
     if (false === this.options.uiEnabled)

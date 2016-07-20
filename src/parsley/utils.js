@@ -140,7 +140,9 @@ var ParsleyUtils = {
       Object.prototype = null;
       return result;
     };
-  })()
+  })(),
+
+  _SubmitSelector: 'input[type="submit"], button[type="submit"]'
 };
 
 export default ParsleyUtils;

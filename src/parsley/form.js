@@ -23,7 +23,7 @@ ParsleyForm.prototype = {
       return;
 
     // If we didn't come here through a submit button, use the first one in the form
-    var $submitSource = this._$submitSource || this.$element.find('input[type="submit"], button[type="submit"]').first();
+    var $submitSource = this._$submitSource || this.$element.find(ParsleyUtils._SubmitSelector).first();
     this._$submitSource = null;
     this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
     if ($submitSource.is('[formnovalidate]'))
