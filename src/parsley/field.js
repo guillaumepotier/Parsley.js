@@ -16,6 +16,13 @@ var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
   this.options = options;
   this.domOptions = domOptions;
 
+  var that = this;
+  if (this.options.debounce) {
+    this.debouncedValidate = ParsleyUtils.debounce(function () {
+      return that.validate();
+    }, this.options.debounce);
+  }
+
   // Initialize some properties
   this.constraints = [];
   this.constraintsByName = {};

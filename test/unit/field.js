@@ -348,6 +348,34 @@ describe('ParsleyField', () => {
       expect($('#element').parsley().getValue()).to.be('foo');
     });
   });
+
+  var debounceCount = 0;
+  var debounceWait = 500;
+  it('should not have executed the debounced yet', () => {
+    // create a custom validator to test debouncing
+    var count = 0;
+    Parsley.addValidator('debounceTest', {
+      requirementType: 'string',
+      validateString: function(value, requirement) {
+        debounceCount++;
+      }
+    });
+    $('body').append('<input type="email" data-parsley-debounce="' + debounceWait + '" data-parsley-debounce-test="true" data-parsley-trigger="keyup" id="element" value="foobar@example.com" />');
+    $('#element').psly();
+    // keystrokes in a short timespan shouldn't trigger validation yet
+    $('#element').trigger($.Event('keyup')).trigger($.Event('keyup')).trigger($.Event('keyup'));
+    expect(count).to.be.eql(0);
+    // now pause to give time for the debounced function to execute
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); } while (curDate-date < debounceWait + 50);
+  });
+  // needs to be a separate assertion in order for the thread to relinquish
+  // control to the debounced timeout resolution
+  it('should have executed the debounced by now', () => {
+      expect(debounceCount).to.be.eql(1);
+  });
+
   it('should inherit options from the form, even if the form is bound after', () => {
     $('body').append('<form id="element" data-parsley-required>' +
       '<input type="text"/></form>');

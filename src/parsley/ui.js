@@ -307,7 +307,7 @@ ParsleyUI.Field = {
     $toBind.off('.Parsley');
     if (this._failedOnce)
       $toBind.on(ParsleyUtils.namespaceEvents(this.options.triggerAfterFailure, 'Parsley'), () => {
-        this.validate();
+        this.options.debounce ? this.debouncedValidate() : this.validate();
       });
     else if (trigger = ParsleyUtils.namespaceEvents(this.options.trigger, 'Parsley')) {
       $toBind.on(trigger, event => {
@@ -324,7 +324,7 @@ ParsleyUI.Field = {
       if (!(this._ui && this._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold)
         return;
 
-    this.validate();
+    this.options.debounce ? this.debouncedValidate() : this.validate();
   },
 
   _resetUI: function () {
