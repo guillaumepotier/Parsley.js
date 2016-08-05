@@ -156,7 +156,7 @@ ParsleyForm.prototype = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>).first();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(ParsleyUtils._SubmitSelector).first();
     <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley-synthetic-submit-button'</span>).prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-literal">true</span>);
     <span class="hljs-keyword">if</span> ($submitSource.is(<span class="hljs-string">'[formnovalidate]'</span>))

@@ -141,7 +141,7 @@ ParsleyUI.Form = {
 
   _actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'submit.Parsley'</span>, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitValidate(evt); });
-    <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'click.Parsley'</span>, <span class="hljs-string">'input[type="submit"], button[type="submit"]'</span>, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitButton(evt); });</pre></div></div>
+    <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'click.Parsley'</span>, ParsleyUtils._SubmitSelector, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitButton(evt); });</pre></div></div>
             
         </li>
         
@@ -702,7 +702,12 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $handler &amp;&amp; $handler.length)
-      <span class="hljs-keyword">return</span> $handler;</pre></div></div>
+      <span class="hljs-keyword">return</span> $handler;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._inputHolder();
+  },
+
+  _inputHolder: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -713,7 +718,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Otherwise, if simple element (input, texatrea, select…) it will perfectly host the classes</p>
+              <p>if simple element (input, texatrea, select…) it will perfectly host the classes and precede the error container</p>
 
             </div>
             
@@ -766,10 +771,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> $errorsContainer &amp;&amp; $errorsContainer.length)
       <span class="hljs-keyword">return</span> $errorsContainer.append(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
 
-    <span class="hljs-keyword">var</span> $<span class="hljs-keyword">from</span> = <span class="hljs-keyword">this</span>.$element;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple)
-      $<span class="hljs-keyword">from</span> = $<span class="hljs-keyword">from</span>.parent();
-    <span class="hljs-keyword">return</span> $<span class="hljs-keyword">from</span>.after(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._inputHolder().after(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
   },
 
   _actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
