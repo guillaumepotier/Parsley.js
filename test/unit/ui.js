@@ -43,16 +43,6 @@ describe('ParsleyUI', () => {
       parsley.validate();
     });
   });
-  it('should add proper parsley class on success or failure (type=text)', () => {
-    $('body').append('<input type="text" id="element" required />');
-    var parsleyField = $('#element').psly();
-    parsleyField.validate();
-    expect($('#element').hasClass('parsley-error')).to.be(true);
-    expect($('#element').hasClass('parsley-success')).to.be(false);
-    $('#element').val('foo').psly().validate();
-    expect($('#element').hasClass('parsley-success')).to.be(true);
-    expect($('#element').hasClass('parsley-error')).to.be(false);
-  });
   it('should not add success class on a field without constraints', () => {
     $('body').append('<input type="text" id="element" />');
     var parsleyField = $('#element').psly();
@@ -66,6 +56,16 @@ describe('ParsleyUI', () => {
     parsleyField.validate();
     expect($('#element').hasClass('parsley-error')).to.be(false);
     expect($('#element').hasClass('parsley-success')).to.be(false);
+  });
+  it('should add proper parsley class on success or failure (type=text)', () => {
+    $('body').append('<input type="text" id="element" required />');
+    var parsleyField = $('#element').psly();
+    parsleyField.validate();
+    expect($('#element').hasClass('parsley-error')).to.be(true);
+    expect($('#element').hasClass('parsley-success')).to.be(false);
+    $('#element').val('foo').psly().validate();
+    expect($('#element').hasClass('parsley-success')).to.be(true);
+    expect($('#element').hasClass('parsley-error')).to.be(false);
   });
   it('should add proper parsley class on success or failure (type=radio)', () => {
     $('body').append('<input type="radio" id="element" required />');
