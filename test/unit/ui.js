@@ -64,6 +64,7 @@ describe('ParsleyUI', () => {
       let $inputHolder = $('#element section').children().first();
       form.validate();
       expect($inputHolder.attr('class')).to.be('parsley-error');
+      expect($('.parsley-errors-list').parent().prop("tagName")).to.be('SECTION');
       // Fill and revalidate:
       fillValue($inputHolder);
       form.validate();

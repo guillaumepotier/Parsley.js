@@ -267,7 +267,11 @@ ParsleyUI.Field = {
     if ('undefined' !== typeof $handler && $handler.length)
       return $handler;
 
-    // Otherwise, if simple element (input, texatrea, select...) it will perfectly host the classes
+    return this._inputHolder();
+  },
+
+  _inputHolder: function() {
+    // if simple element (input, texatrea, select...) it will perfectly host the classes and precede the error container
     if (!this.options.multiple || this.$element.is('select'))
       return this.$element;
 
@@ -293,10 +297,7 @@ ParsleyUI.Field = {
     if ('undefined' !== typeof $errorsContainer && $errorsContainer.length)
       return $errorsContainer.append(this._ui.$errorsWrapper);
 
-    var $from = this.$element;
-    if (this.options.multiple)
-      $from = $from.parent();
-    return $from.after(this._ui.$errorsWrapper);
+    return this._inputHolder().after(this._ui.$errorsWrapper);
   },
 
   _actualizeTriggers: function () {
