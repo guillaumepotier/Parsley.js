@@ -57,47 +57,28 @@ describe('ParsleyUI', () => {
     expect($('#element').hasClass('parsley-error')).to.be(false);
     expect($('#element').hasClass('parsley-success')).to.be(false);
   });
-  it('should add proper parsley class on success or failure (type=text)', () => {
-    $('body').append('<input type="text" id="element" required />');
-    var parsleyField = $('#element').psly();
-    parsleyField.validate();
-    expect($('#element').hasClass('parsley-error')).to.be(true);
-    expect($('#element').hasClass('parsley-success')).to.be(false);
-    $('#element').val('foo').psly().validate();
-    expect($('#element').hasClass('parsley-success')).to.be(true);
-    expect($('#element').hasClass('parsley-error')).to.be(false);
-  });
-  it('should add proper parsley class on success or failure (type=radio)', () => {
-    $('body').append('<input type="radio" id="element" required />');
-    var parsleyField = $('#element').psly();
-    parsleyField.validate();
-    expect($('#element').parent().hasClass('parsley-error')).to.be(true);
-    expect($('#element').parent().hasClass('parsley-success')).to.be(false);
-    $('#element').attr('checked', 'checked').psly().validate();
-    expect($('#element').parent().hasClass('parsley-success')).to.be(true);
-    expect($('#element').parent().hasClass('parsley-error')).to.be(false);
-  });
-  it('should add proper parsley class on success or failure (input=checkbox)', () => {
-    $('body').append('<input type="checkbox" id="element" required />');
-    var parsleyField = $('#element').psly();
-    parsleyField.validate();
-    expect($('#element').parent().hasClass('parsley-error')).to.be(true);
-    expect($('#element').parent().hasClass('parsley-success')).to.be(false);
-    $('#element').attr('checked', 'checked').psly().validate();
-    expect($('#element').parent().hasClass('parsley-success')).to.be(true);
-    expect($('#element').parent().hasClass('parsley-error')).to.be(false);
-  });
-  it('should add proper parsley class on success or failure (select multiple)', () => {
-    $('body').append('<select multiple id="element" required><option value="foo">foo</option></select>');
-    var parsleyField = $('#element').psly();
-    parsleyField.validate();
-    expect($('#element').hasClass('parsley-error')).to.be(true);
-    expect($('#element').hasClass('parsley-success')).to.be(false);
-    $('#element option[value="foo"]').attr('selected', 'selected');
-    parsleyField.validate();
-    expect($('#element').hasClass('parsley-success')).to.be(true);
-    expect($('#element').hasClass('parsley-error')).to.be(false);
-  });
+  var checkType = (type, html, fillValue) => {
+    it(`should add proper parsley class on success or failure (${type})`, () => {
+      $('body').append(`<form id="element"><section>${html}</section></form>`);
+      let form = $('#element').parsley();
+      let $inputHolder = $('#element section').children().first();
+      form.validate();
+      expect($inputHolder.attr('class')).to.be('parsley-error');
+      // Fill and revalidate:
+      fillValue($inputHolder);
+      form.validate();
+      expect($inputHolder.attr('class')).to.be('parsley-success');
+    });
+  };
+
+  let callVal = $input => $input.val('foo');
+  checkType('text', '<input type="text" required/>', callVal);
+  checkType('select', '<select multiple required><option value="foo">foo</option>', callVal);
+
+  let callProp = $fieldset => $fieldset.find('input').prop('checked', true);
+  checkType('radio', '<fieldset><input type="radio" name="foo" required /></fieldset>', callProp);
+  checkType('checkbox', '<fieldset><input type="checkbox" name="foo" required /></fieldset>', callProp);
+
   it('should handle class-handler option', () => {
     $('body').append(
       '<form id="element">'                                                                 +
