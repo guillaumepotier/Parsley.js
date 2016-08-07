@@ -57,7 +57,9 @@ var typeRegexes =  {
         // resource path
         "(?:/\\S*)?" +
       "$", 'i'
-    )
+    ),
+
+  isodate: /^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/
 };
 typeRegexes.range = typeRegexes.number;
 
@@ -329,6 +331,27 @@ ParsleyValidatorRegistry.prototype = {
         return value >= min && value <= max;
       },
       requirementType: ['number', 'number'],
+      priority: 30
+    },
+    isodaterange: {
+      validateString: function (value, min, max) {
+        return value >= min && value <= max;
+      },
+      requirementType: ['isodate', 'isodate'],
+      priority: 30
+    },
+    isodatemin: {
+      validateString: function (value, min) {
+        return value >= min;
+      },
+      requirementType: 'isodate',
+      priority: 30
+    },
+    isodatemax: {
+      validateString: function (value, max) {
+        return value <= max;
+      },
+      requirementType: 'isodate',
       priority: 30
     },
     equalto: {

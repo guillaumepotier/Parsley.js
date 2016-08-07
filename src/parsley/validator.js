@@ -27,6 +27,12 @@ var requirementConverters = {
   object: function(string) {
     return ParsleyUtils.deserializeValue(string);
   },
+  isodate: function(string) {
+    var parts = string.match(/^(\d{4})-(\d\d)-(\d\d)$/);
+    if (!parts)
+      throw 'Invalid isodate: "' + string + '"';
+    return string;
+  },
   regexp: function(regexp) {
     var flags = '';
 

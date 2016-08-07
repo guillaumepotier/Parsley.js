@@ -11,6 +11,7 @@ describe('Validator', () => {
   testParsing('integer', '42', [42]);
   testParsing('number', '4.2', [4.2]);
   testParsing('string', '42', ['42']);
+  testParsing('isodate', '2016-08-05', ['2016-08-05']);
   testParsing(['number', 'string'], '[4.2, 4.2]', [4.2, '4.2']);
   testParsing({
       '': 'number',

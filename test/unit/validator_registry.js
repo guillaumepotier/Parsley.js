@@ -70,6 +70,7 @@ describe('ParsleyValidatorRegistry', () => {
     expectValidation('17',  'max', 10).not.to.be(true);
     $('body').append('<input type="text" id="element" value="7" max="20" />');
     expect($('#element').parsley().isValid()).to.be(true);
+
   });
   it('should have a range validator', () => {
     expectValidation('1',  'range', [5, 10]).not.to.be(true);
@@ -81,6 +82,37 @@ describe('ParsleyValidatorRegistry', () => {
     $('#element').remove();
     $('body').append('<input type="range" id="element" value="7" max="20" min="2" />');
     expect($('#element').parsley().isValid()).to.be(true);
+  });
+  it('should have a isodaterange validator', () => {
+    expectValidation('2016-08-02',  'isodaterange', ['2016-05-01', '2016-08-01']).not.to.be(true);
+    expectValidation('2016-08-01',  'isodaterange', ['2016-05-01', '2016-08-01']).to.be(true);
+    $('#element').remove();
+    $('body').append('<input type="date" id="element" value="2016-08-05" min="2016-08-01" max="2016-08-06" />');
+    expect($('#element').parsley().isValid()).to.be(true);
+
+    $('#element').remove();
+    $('body').append('<input type="date" id="element" value="2016-08-08" min="2016-08-01" max="2016-08-06" />');
+    expect($('#element').parsley().isValid()).to.be(false);
+  });
+  it('should have a isodatemin validator', () => {
+    expectValidation('2016-08-01',  'isodatemin', '2016-08-02').not.to.be(true);
+    expectValidation('2016-08-02',  'isodatemin', '2016-08-02').to.be(true);
+    $('body').append('<input type="date" id="element" value="2016-08-01" min="2016-08-01" />');
+    expect($('#element').parsley().isValid()).to.be(true);
+
+    $('#element').remove();
+    $('body').append('<input type="date" id="element" value="2016-08-01" min="2016-08-02" />');
+    expect($('#element').parsley().isValid()).to.be(false);
+  });
+  it('should have a isodatemax validator', () => {
+    expectValidation('2016-08-01',  'isodatemax', '2016-08-01').to.be(true);
+    expectValidation('2016-08-02',  'isodatemax', '2016-08-01').not.to.be(true);
+    $('body').append('<input type="date" id="element" value="2016-08-01" max="2016-08-01" />');
+    expect($('#element').parsley().isValid()).to.be(true);
+
+    $('#element').remove();
+    $('body').append('<input type="date" id="element" value="2016-08-02" max="2016-08-01" />');
+    expect($('#element').parsley().isValid()).to.be(false);
   });
   it('should have a type="number" validator', () => {
     expectValidation('foo',       'type', 'number').not.to.be(true);
@@ -123,6 +155,10 @@ describe('ParsleyValidatorRegistry', () => {
     expectValidation('http://www.foo.bar',         'type', 'url').to.be(true);
     expectValidation('https://www.foo.bar',        'type', 'url').to.be(true);
     expectValidation('http://192.168.1.1/foo/bar', 'type', 'url').to.be(true);
+  });
+  it('should have a type="isodate" validator', () => {
+    expectValidation('2016-08-31',  'type', 'isodate').to.be(true);
+    expectValidation('2016-8-31',   'type', 'isodate').not.to.be(true);
   });
   it('should have a pattern validator', () => {
     expectValidation('a', 'pattern','[a-z]+'   ).to.be(true);
