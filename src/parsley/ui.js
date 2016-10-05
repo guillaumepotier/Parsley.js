@@ -308,20 +308,20 @@ ParsleyUI.Field = {
     $toBind.off('.Parsley');
     if (this._failedOnce)
       $toBind.on(ParsleyUtils.namespaceEvents(this.options.triggerAfterFailure, 'Parsley'), () => {
-        this.validate();
+        this._validateIfNeeded();
       });
     else if (trigger = ParsleyUtils.namespaceEvents(this.options.trigger, 'Parsley')) {
       $toBind.on(trigger, event => {
-        this._eventValidate(event);
+        this._validateIfNeeded(event);
       });
     }
   },
 
-  _eventValidate: function (event) {
+  _validateIfNeeded: function (event) {
     // For keyup, keypress, keydown, input... events that could be a little bit obstrusive
     // do not validate if val length < min threshold on first validation. Once field have been validated once and info
     // about success or failure have been displayed, always validate with this trigger to reflect every yalidation change.
-    if (/key|input/.test(event.type))
+    if (event && /key|input/.test(event.type))
       if (!(this._ui && this._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold)
         return;
 
