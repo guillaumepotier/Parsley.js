@@ -2,6 +2,8 @@
 
 ## master
 
+- New option `debounce` to minimize validation (#1103)
+
 ## 2.4.2
 
 - `$('...').parsley({someOption: 'value'})` will always set the option `someOptions`. Previously if the field/form was already initialized, options were ignored.

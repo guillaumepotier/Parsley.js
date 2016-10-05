@@ -348,6 +348,24 @@ describe('ParsleyField', () => {
       expect($('#element').parsley().getValue()).to.be('foo');
     });
   });
+
+  it('should delay validation if debounce option specified', done => {
+    // Use a an initially valid input. Any success event will be a sign that validation completed
+    // and treated as a failure. We will make the field invalid before delayed validation occurs,
+    // so only error event will be a test success.
+    $('body').append('<input data-parsley-debounce="100" value="x" required data-parsley-trigger="validatenow" id="element"/>');
+    $('#element').parsley()
+    .on('field:error', () => done())
+    .on('field:success', () => expect().fail('validation should not happen yet'));
+
+    // Trigger validation immediately
+    $('#element').trigger('validatenow');
+    // and a bit later, which should reset the counter
+    setTimeout(() => $('#element').trigger('validatenow'), 50);
+    // Set final condition after a delay longer than our debounce, less than 50+debounce
+    setTimeout(() => $('#element').val(''), 140);
+  });
+
   it('should inherit options from the form, even if the form is bound after', () => {
     $('body').append('<form id="element" data-parsley-required>' +
       '<input type="text"/></form>');

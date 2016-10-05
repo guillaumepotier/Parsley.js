@@ -325,7 +325,11 @@ ParsleyUI.Field = {
       if (!(this._ui && this._ui.validationInformationVisible) && this.getValue().length <= this.options.validationThreshold)
         return;
 
-    this.validate();
+    if (this.options.debounce) {
+      window.clearTimeout(this._debounced);
+      this._debounced = window.setTimeout(() => this.validate(), this.options.debounce);
+    } else
+      this.validate();
   },
 
   _resetUI: function () {
