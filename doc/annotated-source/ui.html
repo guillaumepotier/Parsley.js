@@ -794,16 +794,16 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
             <div class="content"><div class='highlight'><pre>    $toBind.off(<span class="hljs-string">'.Parsley'</span>);
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._failedOnce)
       $toBind.on(ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.triggerAfterFailure, <span class="hljs-string">'Parsley'</span>), () =&gt; {
-        <span class="hljs-keyword">this</span>.validate();
+        <span class="hljs-keyword">this</span>._validateIfNeeded();
       });
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (trigger = ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.trigger, <span class="hljs-string">'Parsley'</span>)) {
       $toBind.on(trigger, event =&gt; {
-        <span class="hljs-keyword">this</span>._eventValidate(event);
+        <span class="hljs-keyword">this</span>._validateIfNeeded(event);
       });
     }
   },
 
-  _eventValidate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
+  _validateIfNeeded: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -820,11 +820,15 @@ about success or failure have been displayed, always validate with this trigger 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/key|input/</span>.test(event.type))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (event &amp;&amp; <span class="hljs-regexp">/key|input/</span>.test(event.type))
       <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>._ui &amp;&amp; <span class="hljs-keyword">this</span>._ui.validationInformationVisible) &amp;&amp; <span class="hljs-keyword">this</span>.getValue().length &lt;= <span class="hljs-keyword">this</span>.options.validationThreshold)
         <span class="hljs-keyword">return</span>;
 
-    <span class="hljs-keyword">this</span>.validate();
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.debounce) {
+      <span class="hljs-built_in">window</span>.clearTimeout(<span class="hljs-keyword">this</span>._debounced);
+      <span class="hljs-keyword">this</span>._debounced = <span class="hljs-built_in">window</span>.setTimeout(() =&gt; <span class="hljs-keyword">this</span>.validate(), <span class="hljs-keyword">this</span>.options.debounce);
+    } <span class="hljs-keyword">else</span>
+      <span class="hljs-keyword">this</span>.validate();
   },
 
   _resetUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>

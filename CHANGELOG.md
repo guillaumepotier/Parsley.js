@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.5.0
+
 - New option `debounce` to minimize validation (#1103)
 
 ## 2.4.2
