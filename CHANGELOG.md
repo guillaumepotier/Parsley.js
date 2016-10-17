@@ -2,6 +2,9 @@
 
 ## master
 
+- An input with class 'required' will no longer be required; only having an attribute `'required'`
+  or `'data-parsley-required'` makes an input being required (#1138)
+
 ## 2.5.0
 
 - New option `debounce` to minimize validation (#1103)

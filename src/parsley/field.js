@@ -262,7 +262,7 @@ ParsleyField.prototype = {
   // Bind specific HTML5 constraints to be HTML5 compliant
   _bindHtml5Constraints: function () {
     // html5 required
-    if (this.$element.hasClass('required') || this.$element.attr('required'))
+    if (this.$element.attr('required'))
       this.addConstraint('required', true, undefined, true);
 
     // html5 pattern
