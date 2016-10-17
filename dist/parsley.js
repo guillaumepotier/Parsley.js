@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.5.0 - built Wed, Oct 5th 2016, 1:34 pm
+* Version 2.5.1 - built Mon, Oct 17th 2016, 10:02 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1680,7 +1680,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     // Bind specific HTML5 constraints to be HTML5 compliant
     _bindHtml5Constraints: function _bindHtml5Constraints() {
       // html5 required
-      if (this.$element.hasClass('required') || this.$element.attr('required')) this.addConstraint('required', true, undefined, true);
+      if (this.$element.attr('required')) this.addConstraint('required', true, undefined, true);
 
       // html5 pattern
       if ('string' === typeof this.$element.attr('pattern')) this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
@@ -1883,7 +1883,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.5.0';
+      this.__version__ = '2.5.1';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -2005,7 +2005,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.5.0'
+    version: '2.5.1'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract

@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.5.1
+
 - An input with class 'required' will no longer be required; only having an attribute `'required'`
   or `'data-parsley-required'` makes an input being required (#1138)
 
