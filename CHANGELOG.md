@@ -2,6 +2,10 @@
 
 ## master
 
+- While input with `type="number"` must have a default step of 1, the default for
+  `data-parsley-type="number"` has been changed to `'any'` as an hopeless attempt
+  to minimize the confusion around this validator. (#1129)
+
 ## 2.5.1
 
 - An input with class 'required' will no longer be required; only having an attribute `'required'`

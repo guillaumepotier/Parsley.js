@@ -233,7 +233,7 @@ ParsleyValidatorRegistry.prototype = {
       priority: 512
     },
     type: {
-      validateString: function(value, type, {step = '1', base = 0} = {}) {
+      validateString: function(value, type, {step = 'any', base = 0} = {}) {
         var regex = typeRegexes[type];
         if (!regex) {
           throw new Error('validator type `' + type + '` is not supported');

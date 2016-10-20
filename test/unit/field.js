@@ -147,6 +147,27 @@ describe('ParsleyField', () => {
   // commas are not accepted in the spec
   itShouldFollowSpecForNumber('any', '', '', '1,000', false);
 
+
+  var itShouldFollowSpecForNumber = (step, min, initial, value, valid) => {
+    var attrs = [
+      step ? `step="${step}" ` : '',
+      min  ? `min="${min}" ` : '',
+      initial ? `value="${initial}" ` : ''
+    ].join('');
+    it('should follow HTML5 spec to validate "number" type ' +
+    (attrs ? `with attributes ${attrs}` : '') +
+    `by ${valid ? 'accepting' : 'rejecting'} "${value}"`, () => {
+      var $input = $(`<input type="number" ${attrs}>`);
+      expect($input.parsley().isValid({value})).to.be(valid);
+    });
+  };
+
+  it('should have a default step of "any" for data-parsley-type="number"', () => {
+    var $input = $(`<input data-parsley-type="number" value="4.444">`);
+    expect($input.parsley().isValid()).to.be(true);
+    $input.attr('data-parsley-type-step', '1');
+    expect($input.parsley().isValid()).to.be(false);
+  });
   it('should valid simple validator', () => {
     $('body').append('<input type="text" id="element" value="" />');
     var parsleyField = $('#element').parsley()

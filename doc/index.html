@@ -568,7 +568,8 @@ if (false === instance.options.priorityEnabled)
                 </td>
                 <td><code>data-parsley-type="number"</code></td>
                 <td>Validates that a value is a valid number according to the given <code>step</code>, <code>min</code> and original <code>value</code>.
-                  <span class="label label-warning">Warning!</span> HTML5 <code>type="number"</code> can be counterintuitive. Moreover, for browsers that support it, the value accessible from javascript in case of invalid input is <code>""</code>, so you will never get an error (unless it is also <code>required</code>).</td>
+                  <br/>The default <code>step</code> for HTML5 is "1", which is so counterintuive that Parsley uses a default <code>step</code> of "any" for <code>data-parsley-type="number"</code>.
+                  <span class="label label-warning">Warning!</span> HTML5 <code>type="number"</code> can be counterintuitive. The default step of '1' is near useless. Moreover, for browsers that support it, the value accessible from javascript in case of invalid input is <code>""</code>, so you will never get an error (unless it is also <code>required</code>).</td>
               </tr>
               <tr>
                 <td>

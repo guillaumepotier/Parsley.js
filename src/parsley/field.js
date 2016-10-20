@@ -304,7 +304,7 @@ ParsleyField.prototype = {
     // Small special case here for HTML5 number: integer validator if step attribute is undefined or an integer value, number otherwise
     if ('number' === type) {
       return this.addConstraint('type', ['number', {
-        step: this.$element.attr('step'),
+        step: this.$element.attr('step') || '1',
         base: this.$element.attr('min') || this.$element.attr('value')
       }], undefined, true);
     // Regular other HTML5 supported types
