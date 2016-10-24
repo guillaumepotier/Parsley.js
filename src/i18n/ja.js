@@ -4,8 +4,8 @@ import Parsley from '../parsley';
 Parsley.addMessages('ja', {
   defaultMessage: "無効な値です。",
   type: {
-    email:        "メールアドレスを入力してください。",
-    url:          "URLを入力してください。",
+    email:        "有効なメールアドレスを入力してください。",
+    url:          "有効なURLを入力してください。",
     number:       "数値を入力してください。",
     integer:      "整数を入力してください。",
     digits:       "数字を入力してください。",
