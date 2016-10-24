@@ -1,7 +1,7 @@
 // Validation errors messages for Parsley
 import Parsley from '../parsley';
 
-Parsley.addMessages('en', {
+Parsley.addMessages('ja', {
   dateiso:  "有効な日付を入力してください。 (YYYY-MM-DD).",
   minwords: "語句が短すぎます。 %s 語以上で入力してください。",
   maxwords: "語句が長すぎます。 %s 語以内で入力してください。",
