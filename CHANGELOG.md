@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.6.0
+
 - While input with `type="number"` must have a default step of 1, the default for
   `data-parsley-type="number"` has been changed to `'any'` as an hopeless attempt
   to minimize the confusion around this validator. (#1129)

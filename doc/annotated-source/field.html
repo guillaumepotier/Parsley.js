@@ -921,7 +921,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'number'</span> === type) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, [<span class="hljs-string">'number'</span>, {
-        step: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'step'</span>),
+        step: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'step'</span>) || <span class="hljs-string">'1'</span>,
         base: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) || <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'value'</span>)
       }], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
