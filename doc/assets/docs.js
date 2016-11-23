@@ -11,13 +11,6 @@
       target: '.sidebar'
     });
 
-    // update window hash on scroll, based on scrollspy events, prefixed
-    $body.on('activate.bs.scrollspy', function (event) {
-      if (1 === event.target.childNodes.length) {
-        window.location.hash = 'psly-' + $(event.target.children[0]).attr('href').slice(1);
-      }
-    });
-
     // analyse prefixed hash on load and redirect to right anchor
     $window.on('load', function () {
       $body.scrollspy('refresh');
