@@ -271,15 +271,15 @@ ParsleyField.prototype = {
 
     // range
     if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
-      this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
+      this.addConstraint(this.$element.attr('type') == 'date' ? 'isodaterange' : 'range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
 
     // HTML5 min
     else if ('undefined' !== typeof this.$element.attr('min'))
-      this.addConstraint('min', this.$element.attr('min'), undefined, true);
+      this.addConstraint(this.$element.attr('type') == 'date' ? 'isodatemin' : 'min', this.$element.attr('min'), undefined, true);
 
     // HTML5 max
     else if ('undefined' !== typeof this.$element.attr('max'))
-      this.addConstraint('max', this.$element.attr('max'), undefined, true);
+      this.addConstraint(this.$element.attr('type') == 'date' ? 'isodatemax' : 'max', this.$element.attr('max'), undefined, true);
 
 
     // length
