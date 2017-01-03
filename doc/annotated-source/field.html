@@ -804,8 +804,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
               <p>range</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
+
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>) !== 'date' &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
       <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'range'</span>, [<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>)], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
@@ -820,8 +820,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
               <p>HTML5 min</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>))
+
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>) !== 'date' &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>))
       <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'min'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
@@ -836,8 +836,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
               <p>HTML5 max</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
+
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>) !== 'date' &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
       <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'max'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
