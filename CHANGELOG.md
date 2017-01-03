@@ -2,6 +2,10 @@
 
 ## master
 
+## 2.6.1
+
+- Avoid min/max/range validators for date type, until this is actually supported (#1158)
+
 ## 2.6.0
 
 - While input with `type="number"` must have a default step of 1, the default for
