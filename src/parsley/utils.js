@@ -102,6 +102,55 @@ var Utils = {
     return string.replace(/^\s+|\s+$/g, '');
   },
 
+  parse: {
+    string: function(string) {
+      return string;
+    },
+    integer: function(string) {
+      if (isNaN(string))
+        return null;
+      return parseInt(string, 10);
+    },
+    number: function(string) {
+      if (isNaN(string))
+        throw null;
+      return parseFloat(string);
+    },
+    'boolean': function _boolean(string) {
+      return !(/^\s*false\s*$/i.test(string));
+    },
+    object: function(string) {
+      return Utils.deserializeValue(string);
+    },
+    regexp: function(regexp) {
+      var flags = '';
+
+      // Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern
+      if (/^\/.*\/(?:[gimy]*)$/.test(regexp)) {
+        // Replace the regexp literal string with the first match group: ([gimy]*)
+        // If no flag is present, this will be a blank string
+        flags = regexp.replace(/.*\/([gimy]*)$/, '$1');
+        // Again, replace the regexp literal string with the first match group:
+        // everything excluding the opening and closing slashes and the flags
+        regexp = regexp.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+      } else {
+        // Anchor regexp:
+        regexp = '^' + regexp + '$';
+      }
+      return new RegExp(regexp, flags);
+    }
+  },
+
+  parseRequirement: function(requirementType, string) {
+    var converter = this.parse[requirementType || 'string'];
+    if (!converter)
+      throw 'Unknown requirement specification: "' + requirementType + '"';
+    let converted = converter(string);
+    if (converted === null)
+      throw `Requirement is not a ${requirementType}: "${string}"`;
+    return converter(string);
+  },
+
   namespaceEvents: function(events, namespace) {
     events = this.trimString(events || '').split(/\s+/);
     if (!events[0])
