@@ -103,6 +103,16 @@ var Utils = {
   },
 
   parse: {
+    date: function(string) {
+      let parsed = string.match(/^(\d{4,})-(\d\d)-(\d\d)$/);
+      if (!parsed)
+        return null;
+      let [_, year, month, day] = parsed.map(x => parseInt(x, 10));
+      let date = new Date(year, month - 1, day);
+      if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day)
+        return null;
+      return date;
+    },
     string: function(string) {
       return string;
     },
