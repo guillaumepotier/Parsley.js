@@ -48,6 +48,13 @@ Validator.prototype = {
         throw 'Validator `' + this.name + '` does not handle multiple values';
       return this.validateMultiple(...arguments);
     } else {
+      let instance = arguments[arguments.length - 1];
+      if (this.validateDate && instance._isDateInput()) {
+        arguments[0] = Utils.parse.date(arguments[0]);
+        if (arguments[0] === null)
+          return false;
+        return this.validateDate(...arguments);
+      }
       if (this.validateNumber) {
         if (isNaN(value))
           return false;

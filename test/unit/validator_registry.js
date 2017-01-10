@@ -6,12 +6,12 @@ import fr from '../../src/i18n/fr';
 
 describe('ValidatorRegistry', () => {
   var validatorRegistry = Parsley._validatorRegistry;
+  let instance = $('<input>').parsley();
 
   var expectValidation = function(value, name, requirements, extra = {}) {
     var validatorSpec = validatorRegistry.validators[name];
     var validator = new Validator(validatorSpec);
     var argList = validator.parseRequirements(requirements, key => { return extra[key]; });
-    let instance = null;
     return expect(validator.validate(value, ...argList, instance));
   };
 
@@ -51,6 +51,14 @@ describe('ValidatorRegistry', () => {
     expectValidation('foo+bar@bar.baz',     'type', 'email').to.be(true);
     expectValidation('foo.bar@bar.baz',     'type', 'email').to.be(true);
     expectValidation('foo.bar@bar.com.ext', 'type', 'email').to.be(true);
+  });
+  it('should have a type="date" validator', () => {
+    expectValidation('',                    'type', 'date').not.to.be(true);
+    expectValidation('foo',                 'type', 'date').not.to.be(true);
+    expectValidation('12',                  'type', 'date').not.to.be(true);
+    expectValidation('2001-01-30',          'type', 'date').to.be(true);
+    expectValidation('2001-02-30',          'type', 'date').not.to.be(true);
+    expectValidation('2001-30-01',          'type', 'date').not.to.be(true);
   });
   it('should have a min validator', () => {
     expectValidation('',    'min',6).not.to.be(true);

@@ -94,6 +94,23 @@ describe('Field', () => {
     expect(parsleyField.actualizeOptions().constraints.length).to.be(5);
   });
 
+  it('should properly bind HTML5 date inputs', () => {
+    // Uses RFC 3339/ISO 8601 format YYYY-MM-DD
+    $('body').append('<input type="date" id="element" max="2000-01-02" min="1999-01-02" value="1998-12-30" />');
+    var parsleyField = $('#element').parsley();
+    expect(parsleyField.constraints.length).to.be(2); // Type=Date, Range
+    expect(parsleyField.isValid()).to.be(false);
+    expect(parsleyField.isValid({value: '1999-02-03'})).to.be(true);
+    $('#element').removeAttr('min');
+    expect(parsleyField.isValid()).to.be(true);
+    expect(parsleyField.constraints.length).to.be(2); // Type=Date, Max
+    $('#element').val('2001-03-03');
+    expect(parsleyField.isValid()).to.be(false);
+    $('#element').val('2001/01/01').removeAttr('max');
+    expect(parsleyField.isValid()).to.be(false);      // Still invalid because of format
+    expect(parsleyField.constraints.length).to.be(1); // Type=Date
+  });
+
   var itShouldFollowSpecForNumber = (step, min, initial, value, valid) => {
     var attrs = [
       step ? `step="${step}" ` : '',

@@ -24,6 +24,10 @@ var typeTesters =  {
 
   alphanum: /^\w+$/i,
 
+  date: {
+    test: value => Utils.parse.date(value) !== null
+  },
+
   url: new RegExp(
       "^" +
         // protocol identifier
@@ -72,6 +76,23 @@ var decimalPlaces = num => {
        // Adjust for scientific notation.
        (match[2] ? +match[2] : 0));
 };
+
+// parseArguments('number', ['1', '2']) => [1, 2]
+let parseArguments = (type, args) => args.map(Utils.parse[type]);
+// operatorToValidator returns a validating function for an operator function, applied to the given type
+let operatorToValidator = (type, operator) => {
+  return (value, ...requirementsAndInput) => {
+    requirementsAndInput.pop(); // Get rid of `input` argument
+    return operator(value, ...parseArguments(type, requirementsAndInput));
+  };
+};
+
+let comparisonOperator = operator => ({
+  validateDate: operatorToValidator('date', operator),
+  validateNumber: operatorToValidator('number', operator),
+  requirementType: operator.length <= 2 ? 'string' : ['string', 'string'], // Support operators with a 1 or 2 requirement(s)
+  priority: 30
+});
 
 ValidatorRegistry.prototype = {
   init: function (validators, catalog) {
@@ -310,27 +331,9 @@ ValidatorRegistry.prototype = {
       requirementType: ['integer', 'integer'],
       priority: 30
     },
-    min: {
-      validateNumber: function (value, requirement) {
-        return value >= requirement;
-      },
-      requirementType: 'number',
-      priority: 30
-    },
-    max: {
-      validateNumber: function (value, requirement) {
-        return value <= requirement;
-      },
-      requirementType: 'number',
-      priority: 30
-    },
-    range: {
-      validateNumber: function (value, min, max) {
-        return value >= min && value <= max;
-      },
-      requirementType: ['number', 'number'],
-      priority: 30
-    },
+    min: comparisonOperator((value, requirement) => value >= requirement),
+    max: comparisonOperator((value, requirement) => value <= requirement),
+    range: comparisonOperator((value, min, max) => value >= min && value <= max),
     equalto: {
       validateString: function (value, refOrValue) {
         var $reference = $(refOrValue);
