@@ -1,4 +1,4 @@
-// Validation errors messages for Parsley
+// Extra validation errors messages for Parsley
 import Parsley from '../parsley';
 
 Parsley.addMessages('sr', {
