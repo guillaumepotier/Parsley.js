@@ -11,7 +11,8 @@ describe('ParsleyValidatorRegistry', () => {
     var validatorSpec = validatorRegistry.validators[name];
     var validator = new ParsleyValidator(validatorSpec);
     var argList = validator.parseRequirements(requirements, key => { return extra[key]; });
-    return expect(validator.validate(value, ...argList));
+    let instance = null;
+    return expect(validator.validate(value, ...argList, instance));
   };
 
   afterEach(() => {
