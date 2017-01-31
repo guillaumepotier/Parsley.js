@@ -148,7 +148,7 @@ var Utils = {
     let converted = converter(string);
     if (converted === null)
       throw `Requirement is not a ${requirementType}: "${string}"`;
-    return converter(string);
+    return converted;
   },
 
   namespaceEvents: function(events, namespace) {
