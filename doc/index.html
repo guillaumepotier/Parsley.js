@@ -1214,6 +1214,20 @@ window.Parsley.addAsyncValidator('mycustom', function (xhr) {
   }, 'http://mycustomapiurl.ext');
 &lt;/script&gt;
 </code></pre>
+
+        </p>
+
+        <h3 id="remote-validation">Combining Remote Validations with Groups</h3>
+        <p>If you need to trigger validate outside of form submission, such as with <code>data-parsley-group="group-name"</code>, you'll need to make use of the promises provided in <code>whenValidate({group, force})</code>. The <code>validate({group, force})</code> method that returns a <code>boolean</code> or <code>null</code> will always return <code>null</code> due to remote validation always returning open promises.
+<pre><code>&lt;script type="text/javascript">
+$("form").parsley().whenValidate({
+  group: 2
+}).done(function() {
+  // trigger step change
+});
+&lt;/script&gt;
+</code></pre>
+
         </p>
 
         <!-- ****************** Extras ****************** -->
