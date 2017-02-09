@@ -98,9 +98,7 @@ describe('ParsleyFactory', () => {
     expect(parsleyInstance.options.foo).to.be('bar');
   });
   it('should have a jquery API returning undefined if done on a non existing element', () => {
-    expectWarning(() => {
-      expect($('#foo').parsley()).to.be(undefined);
-    });
+    expect($('#foo').parsley()).to.be(undefined);
   });
   it('should have a jquery API that binds multiple selectors', () => {
     $('body').append('<div id="element">' +
