@@ -47,9 +47,7 @@ $.fn.parsley = $.fn.psly = function (options) {
   }
 
   // Return undefined if applied to non existing DOM element
-  if (!$(this).length) {
-    Utils.warn('You must bind Parsley on an existing element.');
-
+  if (this.length == 0) {
     return;
   }
 
