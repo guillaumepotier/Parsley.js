@@ -3,8 +3,8 @@
 
 Parsley.addMessages('es', {
   dateiso:  "Este valor debe ser una fecha válida (YYYY-MM-DD).",
-  minwords: "This value is too short. It should have %s words or more.",
-  maxwords: "Este valor es muy corto. La longitud máxima es de %s palabras.",,
+  minwords: "Este valor es muy corto. Debe tener %s palabras o más.",
+  maxwords: "Este valor es muy largo. Debe tener %s palabras o menos.",
   words:    "Este valor es inválido. Debe tener entre %s y %s palabras de longitud.",
   gt:       "Este valor debe ser mayor.",
   gte:      "Este valor debe ser mayor o igual.",
