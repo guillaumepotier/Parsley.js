@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version ${pkg.version} - built ${now.format('ddd, MMM Do YYYY, h:mm a')}
+* Version <%= pkg.version %> - built <%= now.format('ddd, MMM Do YYYY, h:mm a') %>
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
