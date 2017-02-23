@@ -95,26 +95,6 @@ ParsleyAbstract.prototype = {
     return true;
   },
 
-  // Destroy Parsley instance (+ UI)
-  destroy: function () {
-    // Field case: emit destroy event to clean UI and then destroy stored instance
-    this._destroyUI();
-    if ('ParsleyForm' !== this.__class__) {
-      this.$element.removeData('Parsley');
-      this.$element.removeData('ParsleyFieldMultiple');
-      this._trigger('destroy');
-
-      return;
-    }
-
-    // Form case: destroy all its fields and then destroy stored instance
-    for (var i = 0; i < this.fields.length; i++)
-      this.fields[i].destroy();
-
-    this.$element.removeData('Parsley');
-    this._trigger('destroy');
-  },
-
   asyncIsValid: function (group, force) {
     ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenValid instead");
     return this.whenValid({group, force});

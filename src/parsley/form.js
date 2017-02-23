@@ -145,6 +145,19 @@ ParsleyForm.prototype = {
     this._trigger('reset');
   },
 
+  // Destroy Parsley instance (+ UI)
+  destroy: function () {
+    // Field case: emit destroy event to clean UI and then destroy stored instance
+    this._destroyUI();
+
+    // Form case: destroy all its fields and then destroy stored instance
+    for (var i = 0; i < this.fields.length; i++)
+      this.fields[i].destroy();
+
+    this.$element.removeData('Parsley');
+    this._trigger('destroy');
+  },
+
   _refreshFields: function () {
     return this.actualizeOptions()._bindFields();
   },

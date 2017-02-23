@@ -191,6 +191,15 @@ ParsleyField.prototype = {
     return this._trigger('reset');
   },
 
+  // Destroy Parsley instance (+ UI)
+  destroy: function () {
+    // Field case: emit destroy event to clean UI and then destroy stored instance
+    this._destroyUI();
+    this.$element.removeData('Parsley');
+    this.$element.removeData('ParsleyFieldMultiple');
+    this._trigger('destroy');
+  },
+
   // Actualize options that could have change since previous validation
   // Re-bind accordingly constraints (could be some new, removed or updated)
   refreshConstraints: function () {
