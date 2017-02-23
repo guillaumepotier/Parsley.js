@@ -30,6 +30,18 @@ describe('ParsleyForm', () => {
     var parsleyForm = $('#element').parsley({excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]'});
     expect(parsleyForm.fields.length).to.be(2);
   });
+  it('should properly reset excluded', () => {
+    $('body').append(
+      '<form id="element">'                 +
+        '<input id="field" required class="foo"/>'  +
+      '</form>');
+    var parsleyForm = $('#element').parsley();
+    parsleyForm.validate();
+    expect($('.parsley-error').length).to.be(1);
+    parsleyForm.options.excluded = ".foo";
+    parsleyForm.validate();
+    expect($('.parsley-error').length).to.be(0);
+  });
   it('should properly bind options for form and children fields', () => {
     $('body').append(
       '<form id="element" data-parsley-trigger="change">'                 +

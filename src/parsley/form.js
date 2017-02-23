@@ -162,7 +162,7 @@ ParsleyForm.prototype = {
       });
 
       $.each(ParsleyUtils.difference(oldFields, this.fields), (_, field) => {
-        field._trigger('reset');
+        field.reset();
       });
     });
     return this;
