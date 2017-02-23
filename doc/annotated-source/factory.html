@@ -181,7 +181,7 @@
 };
 
 ParsleyFactory.prototype = {
-  init: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
+  <span class="hljs-attr">init</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Parsley'</span>;
     <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'@@version'</span>;
     <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();</pre></div></div>
@@ -233,7 +233,7 @@ ParsleyFactory.prototype = {
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.isMultiple() ? <span class="hljs-keyword">this</span>.handleMultiple() : <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyField'</span>);
   },
 
-  isMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">isMultiple</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>)) || (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'multiple'</span>));
   },</pre></div></div>
             
@@ -340,7 +340,7 @@ Maybe some refactoring would be appreciated here…</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> name) {
-      $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each((i, input) =&gt; {
+      $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function">(<span class="hljs-params">i, input</span>) =&gt;</span> {
         <span class="hljs-keyword">if</span> ($(input).is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>))
           $(input).attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
       });

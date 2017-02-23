@@ -110,32 +110,32 @@
 <span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
 <span class="hljs-keyword">var</span> requirementConverters = {
-  string: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+  <span class="hljs-attr">string</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">return</span> string;
   },
-  integer: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+  <span class="hljs-attr">integer</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(string))
       <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement is not an integer: "'</span> + string + <span class="hljs-string">'"'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(string, <span class="hljs-number">10</span>);
   },
-  number: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+  <span class="hljs-attr">number</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(string))
       <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement is not a number: "'</span> + string + <span class="hljs-string">'"'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(string);
   },
-  reference: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{ <span class="hljs-comment">// Unused for now</span>
+  <span class="hljs-attr">reference</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{ <span class="hljs-comment">// Unused for now</span>
     <span class="hljs-keyword">var</span> result = $(string);
     <span class="hljs-keyword">if</span> (result.length === <span class="hljs-number">0</span>)
       <span class="hljs-keyword">throw</span> <span class="hljs-string">'No such reference: "'</span> + string + <span class="hljs-string">'"'</span>;
     <span class="hljs-keyword">return</span> result;
   },
-  boolean: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+  <span class="hljs-attr">boolean</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">return</span> string !== <span class="hljs-string">'false'</span>;
   },
-  object: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+  <span class="hljs-attr">object</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">return</span> ParsleyUtils.deserializeValue(string);
   },
-  regexp: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">regexp</span>) </span>{
+  <span class="hljs-attr">regexp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">regexp</span>) </span>{
     <span class="hljs-keyword">var</span> flags = <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
@@ -276,7 +276,7 @@ ParsleyValidator.prototype = {</pre></div></div>
 
       <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">3</span>)  <span class="hljs-comment">// If more args then value, requirement, instance...</span>
         requirementFirstArg = [].slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>);  <span class="hljs-comment">// Skip first arg (value) and last (instance), combining the rest</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fn.call(<span class="hljs-keyword">this</span>, value, requirementFirstArg);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fn(value, requirementFirstArg);
     }
 
     <span class="hljs-keyword">if</span> ($.isArray(value)) {
@@ -358,7 +358,7 @@ but make sure we return an array</p>
             
             <div class="content"><div class='highlight'><pre>  requirementType: <span class="hljs-string">'string'</span>,
 
-  priority: <span class="hljs-number">2</span>
+  <span class="hljs-attr">priority</span>: <span class="hljs-number">2</span>
 
 };
 

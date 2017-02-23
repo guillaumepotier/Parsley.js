@@ -114,10 +114,10 @@
 };
 
 ParsleyAbstract.prototype = {
-  asyncSupport: <span class="hljs-literal">true</span>, <span class="hljs-comment">// Deprecated</span>
+  <span class="hljs-attr">asyncSupport</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// Deprecated</span>
 
   _pipeAccordingToValidationResult: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> pipe = () =&gt; {
+    <span class="hljs-keyword">var</span> pipe = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
       <span class="hljs-keyword">var</span> r = $.Deferred();
       <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== <span class="hljs-keyword">this</span>.validationResult)
         r.reject();
@@ -126,14 +126,14 @@ ParsleyAbstract.prototype = {
     <span class="hljs-keyword">return</span> [pipe, pipe];
   },
 
-  actualizeOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">actualizeOptions</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     ParsleyUtils.attr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-keyword">this</span>.domOptions);
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.parent &amp;&amp; <span class="hljs-keyword">this</span>.parent.actualizeOptions)
       <span class="hljs-keyword">this</span>.parent.actualizeOptions();
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   },
 
-  _resetOptions: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">initOptions</span>) </span>{
+  <span class="hljs-attr">_resetOptions</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">initOptions</span>) </span>{
     <span class="hljs-keyword">this</span>.domOptions = ParsleyUtils.objectCreate(<span class="hljs-keyword">this</span>.parent.options);
     <span class="hljs-keyword">this</span>.options = ParsleyUtils.objectCreate(<span class="hljs-keyword">this</span>.domOptions);</pre></div></div>
             
@@ -157,7 +157,7 @@ ParsleyAbstract.prototype = {
     <span class="hljs-keyword">this</span>.actualizeOptions();
   },
 
-  _listeners: <span class="hljs-literal">null</span>,</pre></div></div>
+  <span class="hljs-attr">_listeners</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -385,14 +385,14 @@ Returns false if execution was interrupted</p>
     <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'destroy'</span>);
   },
 
-  asyncIsValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{
+  <span class="hljs-attr">asyncIsValid</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{
     ParsleyUtils.warnOnce(<span class="hljs-string">"asyncIsValid is deprecated; please use whenValid instead"</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid({group, force});
   },
 
-  _findRelated: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_findRelated</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.multiple ?
-      <span class="hljs-keyword">this</span>.parent.$element.find(<span class="hljs-string">`[<span class="hljs-subst">${this.options.namespace}</span>multiple="<span class="hljs-subst">${this.options.multiple}</span>"]`</span>)
+      <span class="hljs-keyword">this</span>.parent.$element.find(<span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.options.namespace}</span>multiple="<span class="hljs-subst">${<span class="hljs-keyword">this</span>.options.multiple}</span>"]`</span>)
     : <span class="hljs-keyword">this</span>.$element;
   }
 };

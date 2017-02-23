@@ -171,15 +171,15 @@ returns object from dom attributes and values</p>
     <span class="hljs-keyword">return</span> obj;
   },
 
-  checkAttr: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$element, namespace, checkAttr</span>) </span>{
+  <span class="hljs-attr">checkAttr</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$element, namespace, checkAttr</span>) </span>{
     <span class="hljs-keyword">return</span> $element.is(<span class="hljs-string">'['</span> + namespace + checkAttr + <span class="hljs-string">']'</span>);
   },
 
-  setAttr: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$element, namespace, attr, value</span>) </span>{
+  <span class="hljs-attr">setAttr</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$element, namespace, attr, value</span>) </span>{
     $element[<span class="hljs-number">0</span>].setAttribute(<span class="hljs-keyword">this</span>.dasherize(namespace + attr), <span class="hljs-built_in">String</span>(value));
   },
 
-  generateID: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">generateID</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-string">''</span> + globalID++;
   },
 
@@ -253,34 +253,34 @@ returns object from dom attributes and values</p>
       .toLowerCase();
   },
 
-  warn: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">warn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.console &amp;&amp; <span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.console.warn)
       <span class="hljs-built_in">window</span>.console.warn(...arguments);
   },
 
-  warnOnce: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">msg</span>) </span>{
+  <span class="hljs-attr">warnOnce</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">msg</span>) </span>{
     <span class="hljs-keyword">if</span> (!pastWarnings[msg]) {
       pastWarnings[msg] = <span class="hljs-literal">true</span>;
       <span class="hljs-keyword">this</span>.warn(...arguments);
     }
   },
 
-  _resetWarnings: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_resetWarnings</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     pastWarnings = {};
   },
 
-  trimString: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+  <span class="hljs-attr">trimString</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">''</span>);
   },
 
-  namespaceEvents: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">events, namespace</span>) </span>{
+  <span class="hljs-attr">namespaceEvents</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">events, namespace</span>) </span>{
     events = <span class="hljs-keyword">this</span>.trimString(events || <span class="hljs-string">''</span>).split(<span class="hljs-regexp">/\s+/</span>);
     <span class="hljs-keyword">if</span> (!events[<span class="hljs-number">0</span>])
       <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     <span class="hljs-keyword">return</span> $.map(events, evt =&gt; <span class="hljs-string">`<span class="hljs-subst">${evt}</span>.<span class="hljs-subst">${namespace}</span>`</span>).join(<span class="hljs-string">' '</span>);
   },
 
-  difference: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">array, remove</span>) </span>{</pre></div></div>
+  <span class="hljs-attr">difference</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">array, remove</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -363,7 +363,7 @@ returns object from dom attributes and values</p>
     };
   })(),
 
-  _SubmitSelector: <span class="hljs-string">'input[type="submit"], button:submit'</span>
+  <span class="hljs-attr">_SubmitSelector</span>: <span class="hljs-string">'input[type="submit"], button:submit'</span>
 };
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyUtils;</pre></div></div>

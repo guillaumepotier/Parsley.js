@@ -139,11 +139,11 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Parsley = $.extend(<span class="hljs-keyword">new</span> ParsleyAbstract(), {
-    $element: $(<span class="hljs-built_in">document</span>),
-    actualizeOptions: <span class="hljs-literal">null</span>,
-    _resetOptions: <span class="hljs-literal">null</span>,
-    Factory: ParsleyFactory,
-    version: <span class="hljs-string">'@@version'</span>
+    <span class="hljs-attr">$element</span>: $(<span class="hljs-built_in">document</span>),
+    <span class="hljs-attr">actualizeOptions</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">_resetOptions</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">Factory</span>: ParsleyFactory,
+    <span class="hljs-attr">version</span>: <span class="hljs-string">'@@version'</span>
   });</pre></div></div>
             
         </li>
@@ -314,12 +314,12 @@ $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages ge
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.Parsley.UI = ParsleyUI;
 <span class="hljs-built_in">window</span>.ParsleyUI = {
-  removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, doNotUpdateClass</span>) </span>{
+  <span class="hljs-attr">removeError</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, doNotUpdateClass</span>) </span>{
     <span class="hljs-keyword">var</span> updateClass = <span class="hljs-literal">true</span> !== doNotUpdateClass;
     ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`</span>);
     <span class="hljs-keyword">return</span> instance.removeError(name, {updateClass});
   },
-  getErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance</span>) </span>{
+  <span class="hljs-attr">getErrorsMessages</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance</span>) </span>{
     ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'getErrorsMessages' on the instance directly.`</span>);
     <span class="hljs-keyword">return</span> instance.getErrorsMessages();
   }

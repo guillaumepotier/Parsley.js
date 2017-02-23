@@ -131,15 +131,15 @@
   }
 
   <span class="hljs-keyword">return</span> {
-    kept: kept,
-    added: added,
-    removed: !deep ? diffResults(oldResult, newResult, <span class="hljs-literal">true</span>).added : []
+    <span class="hljs-attr">kept</span>: kept,
+    <span class="hljs-attr">added</span>: added,
+    <span class="hljs-attr">removed</span>: !deep ? diffResults(oldResult, newResult, <span class="hljs-literal">true</span>).added : []
   };
 };
 
 ParsleyUI.Form = {
 
-  _actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_actualizeTriggers</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'submit.Parsley'</span>, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitValidate(evt); });
     <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'click.Parsley'</span>, ParsleyUtils._SubmitSelector, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitButton(evt); });</pre></div></div>
             
@@ -162,7 +162,7 @@ ParsleyUI.Form = {
     <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'novalidate'</span>, <span class="hljs-string">''</span>);
   },
 
-  focus: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">focus</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>._focusedField = <span class="hljs-literal">null</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.validationResult || <span class="hljs-string">'none'</span> === <span class="hljs-keyword">this</span>.options.focus)
@@ -183,7 +183,7 @@ ParsleyUI.Form = {
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._focusedField.focus();
   },
 
-  _destroyUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+  <span class="hljs-attr">_destroyUI</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -205,7 +205,7 @@ ParsleyUI.Form = {
 
 ParsleyUI.Field = {
 
-  _reflowUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_reflowUI</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>._buildUI();</pre></div></div>
             
         </li>
@@ -435,7 +435,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       <span class="hljs-keyword">this</span>._manageStatusClass();
   },
 
-  _manageStatusClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_manageStatusClass</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hasConstraints() &amp;&amp; <span class="hljs-keyword">this</span>.needsValidation() &amp;&amp; <span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.validationResult)
       <span class="hljs-keyword">this</span>._successClass();
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.validationResult.length &gt; <span class="hljs-number">0</span>)
@@ -444,7 +444,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       <span class="hljs-keyword">this</span>._resetClass();
   },
 
-  _manageErrorsMessages: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">diff</span>) </span>{
+  <span class="hljs-attr">_manageErrorsMessages</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">diff</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.errorsMessagesDisabled)
       <span class="hljs-keyword">return</span>;</pre></div></div>
             
@@ -501,14 +501,14 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       <span class="hljs-keyword">this</span>._removeError(diff.removed[i].assert.name);
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; diff.added.length; i++)
-      <span class="hljs-keyword">this</span>._addError(diff.added[i].assert.name, {message: diff.added[i].errorMessage, assert: diff.added[i].assert});
+      <span class="hljs-keyword">this</span>._addError(diff.added[i].assert.name, {<span class="hljs-attr">message</span>: diff.added[i].errorMessage, <span class="hljs-attr">assert</span>: diff.added[i].assert});
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; diff.kept.length; i++)
-      <span class="hljs-keyword">this</span>._updateError(diff.kept[i].assert.name, {message: diff.kept[i].errorMessage, assert: diff.kept[i].assert});
+      <span class="hljs-keyword">this</span>._updateError(diff.kept[i].assert.name, {<span class="hljs-attr">message</span>: diff.kept[i].errorMessage, <span class="hljs-attr">assert</span>: diff.kept[i].assert});
   },
 
 
-  _addError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert}</span>) </span>{
+  <span class="hljs-attr">_addError</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert}</span>) </span>{
     <span class="hljs-keyword">this</span>._insertErrorWrapper();
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .addClass(<span class="hljs-string">'filled'</span>)
@@ -519,21 +519,21 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       );
   },
 
-  _updateError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert}</span>) </span>{
+  <span class="hljs-attr">_updateError</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, {message, assert}</span>) </span>{
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .addClass(<span class="hljs-string">'filled'</span>)
       .find(<span class="hljs-string">'.parsley-'</span> + name)
       .html(message || <span class="hljs-keyword">this</span>._getErrorMessage(assert));
   },
 
-  _removeError: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
+  <span class="hljs-attr">_removeError</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .removeClass(<span class="hljs-string">'filled'</span>)
       .find(<span class="hljs-string">'.parsley-'</span> + name)
       .remove();
   },
 
-  _getErrorMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">constraint</span>) </span>{
+  <span class="hljs-attr">_getErrorMessage</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">constraint</span>) </span>{
     <span class="hljs-keyword">var</span> customConstraintErrorMessage = constraint.name + <span class="hljs-string">'Message'</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options[customConstraintErrorMessage])
@@ -542,7 +542,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.Parsley.getErrorMessage(constraint);
   },
 
-  _buildUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+  <span class="hljs-attr">_buildUI</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -707,7 +707,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._inputHolder();
   },
 
-  _inputHolder: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+  <span class="hljs-attr">_inputHolder</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -741,7 +741,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$element.parent();
   },
 
-  _insertErrorWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_insertErrorWrapper</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">var</span> $errorsContainer;</pre></div></div>
             
         </li>
@@ -774,7 +774,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._inputHolder().after(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
   },
 
-  _actualizeTriggers: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_actualizeTriggers</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">var</span> $toBind = <span class="hljs-keyword">this</span>._findRelated();
     <span class="hljs-keyword">var</span> trigger;</pre></div></div>
             
@@ -803,7 +803,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
     }
   },
 
-  _validateIfNeeded: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
+  <span class="hljs-attr">_validateIfNeeded</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -826,12 +826,12 @@ about success or failure have been displayed, always validate with this trigger 
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.debounce) {
       <span class="hljs-built_in">window</span>.clearTimeout(<span class="hljs-keyword">this</span>._debounced);
-      <span class="hljs-keyword">this</span>._debounced = <span class="hljs-built_in">window</span>.setTimeout(() =&gt; <span class="hljs-keyword">this</span>.validate(), <span class="hljs-keyword">this</span>.options.debounce);
+      <span class="hljs-keyword">this</span>._debounced = <span class="hljs-built_in">window</span>.setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>.validate(), <span class="hljs-keyword">this</span>.options.debounce);
     } <span class="hljs-keyword">else</span>
       <span class="hljs-keyword">this</span>.validate();
   },
 
-  _resetUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+  <span class="hljs-attr">_resetUI</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -915,7 +915,7 @@ about success or failure have been displayed, always validate with this trigger 
     <span class="hljs-keyword">this</span>._ui.validationInformationVisible = <span class="hljs-literal">false</span>;
   },
 
-  _destroyUI: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_destroyUI</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>._resetUI();
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>._ui)
@@ -924,15 +924,15 @@ about success or failure have been displayed, always validate with this trigger 
     <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>._ui;
   },
 
-  _successClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_successClass</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>._ui.validationInformationVisible = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>._ui.$errorClassHandler.removeClass(<span class="hljs-keyword">this</span>.options.errorClass).addClass(<span class="hljs-keyword">this</span>.options.successClass);
   },
-  _errorClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_errorClass</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>._ui.validationInformationVisible = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>._ui.$errorClassHandler.removeClass(<span class="hljs-keyword">this</span>.options.successClass).addClass(<span class="hljs-keyword">this</span>.options.errorClass);
   },
-  _resetClass: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_resetClass</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>._ui.$errorClassHandler.removeClass(<span class="hljs-keyword">this</span>.options.successClass).removeClass(<span class="hljs-keyword">this</span>.options.errorClass);
   }
 };

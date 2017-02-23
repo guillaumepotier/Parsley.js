@@ -111,9 +111,9 @@
 <span class="hljs-keyword">import</span> Parsley <span class="hljs-keyword">from</span> <span class="hljs-string">'./main'</span>;
 
 $.extend(<span class="hljs-literal">true</span>, Parsley, {
-  asyncValidators: {
+  <span class="hljs-attr">asyncValidators</span>: {
     <span class="hljs-string">'default'</span>: {
-      fn: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">xhr</span>) </span>{</pre></div></div>
+      <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">xhr</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -133,10 +133,10 @@ result in state() === ‘rejected’.</p>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> xhr.status &gt;= <span class="hljs-number">200</span> &amp;&amp; xhr.status &lt; <span class="hljs-number">300</span>;
       },
-      url: <span class="hljs-literal">false</span>
+      <span class="hljs-attr">url</span>: <span class="hljs-literal">false</span>
     },
-    reverse: {
-      fn: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">xhr</span>) </span>{</pre></div></div>
+    <span class="hljs-attr">reverse</span>: {
+      <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">xhr</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -153,15 +153,15 @@ result in state() === ‘rejected’.</p>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> xhr.status &lt; <span class="hljs-number">200</span> || xhr.status &gt;= <span class="hljs-number">300</span>;
       },
-      url: <span class="hljs-literal">false</span>
+      <span class="hljs-attr">url</span>: <span class="hljs-literal">false</span>
     }
   },
 
-  addAsyncValidator: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, fn, url, options</span>) </span>{
+  <span class="hljs-attr">addAsyncValidator</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, fn, url, options</span>) </span>{
     Parsley.asyncValidators[name] = {
-      fn: fn,
-      url: url || <span class="hljs-literal">false</span>,
-      options: options || {}
+      <span class="hljs-attr">fn</span>: fn,
+      <span class="hljs-attr">url</span>: url || <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">options</span>: options || {}
     };
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
@@ -170,14 +170,14 @@ result in state() === ‘rejected’.</p>
 });
 
 Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
-  requirementType: {
+  <span class="hljs-attr">requirementType</span>: {
     <span class="hljs-string">''</span>: <span class="hljs-string">'string'</span>,
     <span class="hljs-string">'validator'</span>: <span class="hljs-string">'string'</span>,
     <span class="hljs-string">'reverse'</span>: <span class="hljs-string">'boolean'</span>,
     <span class="hljs-string">'options'</span>: <span class="hljs-string">'object'</span>
   },
 
-  validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, url, options, instance</span>) </span>{
+  <span class="hljs-attr">validateString</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, url, options, instance</span>) </span>{
     <span class="hljs-keyword">var</span> data = {};
     <span class="hljs-keyword">var</span> ajaxOptions;
     <span class="hljs-keyword">var</span> csr;
@@ -236,9 +236,9 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
             </div>
             
             <div class="content"><div class='highlight'><pre>    ajaxOptions = $.extend(<span class="hljs-literal">true</span>, {}, {
-      url: url,
-      data: data,
-      type: <span class="hljs-string">'GET'</span>
+      <span class="hljs-attr">url</span>: url,
+      <span class="hljs-attr">data</span>: data,
+      <span class="hljs-attr">type</span>: <span class="hljs-string">'GET'</span>
     }, remoteOptions);</pre></div></div>
             
         </li>
@@ -299,7 +299,7 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
     <span class="hljs-keyword">return</span> xhr.then(handleXhr, handleXhr);
   },
 
-  priority: <span class="hljs-number">-1</span>
+  <span class="hljs-attr">priority</span>: <span class="hljs-number">-1</span>
 });
 
 Parsley.on(<span class="hljs-string">'form:submit'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{

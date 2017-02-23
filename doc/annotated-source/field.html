@@ -169,7 +169,7 @@
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">this</span>._bindConstraints();
 };
 
-<span class="hljs-keyword">var</span> statusMapping = {pending: <span class="hljs-literal">null</span>, resolved: <span class="hljs-literal">true</span>, rejected: <span class="hljs-literal">false</span>};
+<span class="hljs-keyword">var</span> statusMapping = {<span class="hljs-attr">pending</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">resolved</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">rejected</span>: <span class="hljs-literal">false</span>};
 
 ParsleyField.prototype = {</pre></div></div>
             
@@ -255,15 +255,15 @@ or <code>undefined</code> if field is not in the given <code>group</code>.</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validate'</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid({force, value: <span class="hljs-keyword">this</span>.value, _refreshed: <span class="hljs-literal">true</span>})
-      .always(() =&gt; { <span class="hljs-keyword">this</span>._reflowUI(); })
-      .done(() =&gt;   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
-      .fail(() =&gt;   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>); })
-      .always(() =&gt; { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validated'</span>); })
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid({force, <span class="hljs-attr">value</span>: <span class="hljs-keyword">this</span>.value, <span class="hljs-attr">_refreshed</span>: <span class="hljs-literal">true</span>})
+      .always(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { <span class="hljs-keyword">this</span>._reflowUI(); })
+      .done(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span>   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
+      .fail(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span>   { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'error'</span>); })
+      .always(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'validated'</span>); })
       .pipe(...this._pipeAccordingToValidationResult());
   },
 
-  hasConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">hasConstraints</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span> !== <span class="hljs-keyword">this</span>.constraints.length;
   },</pre></div></div>
             
@@ -304,7 +304,7 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
   },
 
-  _isInGroup: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group</span>) </span>{
+  <span class="hljs-attr">_isInGroup</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group</span>) </span>{
     <span class="hljs-keyword">if</span> ($.isArray(<span class="hljs-keyword">this</span>.options.group))
       <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span> !== $.inArray(group, <span class="hljs-keyword">this</span>.options.group);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.group === group;
@@ -499,12 +499,12 @@ and combine the promises together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> ParsleyUtils.all([result]).fail(errorMessage =&gt; {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> ParsleyUtils.all([result]).fail(<span class="hljs-function"><span class="hljs-params">errorMessage</span> =&gt;</span> {
       <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>.validationResult <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>))
         <span class="hljs-keyword">this</span>.validationResult = [];
       <span class="hljs-keyword">this</span>.validationResult.push({
-        assert: constraint,
-        errorMessage: <span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> errorMessage &amp;&amp; errorMessage
+        <span class="hljs-attr">assert</span>: constraint,
+        <span class="hljs-attr">errorMessage</span>: <span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> errorMessage &amp;&amp; errorMessage
       });
     });
   },</pre></div></div>
@@ -921,8 +921,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'number'</span> === type) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, [<span class="hljs-string">'number'</span>, {
-        step: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'step'</span>) || <span class="hljs-string">'1'</span>,
-        base: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) || <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'value'</span>)
+        <span class="hljs-attr">step</span>: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'step'</span>) || <span class="hljs-string">'1'</span>,
+        <span class="hljs-attr">base</span>: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) || <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'value'</span>)
       }], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
