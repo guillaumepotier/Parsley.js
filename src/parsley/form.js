@@ -136,6 +136,15 @@ ParsleyForm.prototype = {
     return ParsleyUtils.all(promises);
   },
 
+  // Reset UI
+  reset: function () {
+    // Form case: emit a reset event for each field
+    for (var i = 0; i < this.fields.length; i++)
+      this.fields[i].reset();
+
+    this._trigger('reset');
+  },
+
   _refreshFields: function () {
     return this.actualizeOptions()._bindFields();
   },

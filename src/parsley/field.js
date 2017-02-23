@@ -185,6 +185,12 @@ ParsleyField.prototype = {
     return this._handleWhitespace(value);
   },
 
+  // Reset UI
+  reset: function () {
+    this._resetUI();
+    return this._trigger('reset');
+  },
+
   // Actualize options that could have change since previous validation
   // Re-bind accordingly constraints (could be some new, removed or updated)
   refreshConstraints: function () {

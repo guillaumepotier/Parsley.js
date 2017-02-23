@@ -95,21 +95,6 @@ ParsleyAbstract.prototype = {
     return true;
   },
 
-  // Reset UI
-  reset: function () {
-    // Field case: just emit a reset event for UI
-    if ('ParsleyForm' !== this.__class__) {
-      this._resetUI();
-      return this._trigger('reset');
-    }
-
-    // Form case: emit a reset event for each field
-    for (var i = 0; i < this.fields.length; i++)
-      this.fields[i].reset();
-
-    this._trigger('reset');
-  },
-
   // Destroy Parsley instance (+ UI)
   destroy: function () {
     // Field case: emit destroy event to clean UI and then destroy stored instance
