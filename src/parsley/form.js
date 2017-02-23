@@ -176,11 +176,13 @@ ParsleyForm.prototype = {
         var fieldInstance = new window.Parsley.Factory(element, {}, this);
 
         // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
-        if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded))
-          if ('undefined' === typeof this.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
-            this.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
+        if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded)) {
+          let uniqueId = fieldInstance.__class__ + '-' + fieldInstance.__id__;
+          if ('undefined' === typeof this.fieldsMappedById[uniqueId]) {
+            this.fieldsMappedById[uniqueId] = fieldInstance;
             this.fields.push(fieldInstance);
           }
+        }
       });
 
       $.each(ParsleyUtils.difference(oldFields, this.fields), (_, field) => {
