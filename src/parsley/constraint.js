@@ -3,9 +3,6 @@ import ParsleyUtils from './utils';
 import ParsleyValidator from './validator';
 
 var Constraint = function (parsleyField, name, requirements, priority, isDomConstraint) {
-  if (!/ParsleyField/.test(parsleyField.__class__))
-    throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
-
   var validatorSpec = window.Parsley._validatorRegistry.validators[name];
   var validator = new ParsleyValidator(validatorSpec);
 
