@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ConstraintFactory from './factory/constraint';
+import Constraint from './constraint';
 import ParsleyUI from './ui';
 import ParsleyUtils from './utils';
 
@@ -202,7 +202,7 @@ ParsleyField.prototype = {
   addConstraint: function (name, requirements, priority, isDomConstraint) {
 
     if (window.Parsley._validatorRegistry.validators[name]) {
-      var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
+      var constraint = new Constraint(this, name, requirements, priority, isDomConstraint);
 
       // if constraint already exist, delete it and push new version
       if ('undefined' !== this.constraintsByName[constraint.name])

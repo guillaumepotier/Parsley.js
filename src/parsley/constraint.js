@@ -1,9 +1,8 @@
 import $ from 'jquery';
-import ParsleyUtils from '../utils';
-import ParsleyValidator from '../validator';
+import ParsleyUtils from './utils';
+import ParsleyValidator from './validator';
 
-
-var ConstraintFactory = function (parsleyField, name, requirements, priority, isDomConstraint) {
+var Constraint = function (parsleyField, name, requirements, priority, isDomConstraint) {
   if (!/ParsleyField/.test(parsleyField.__class__))
     throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
 
@@ -25,7 +24,7 @@ var capitalize = function(str) {
   return cap + str.slice(1);
 };
 
-ConstraintFactory.prototype = {
+Constraint.prototype = {
   validate: function(value, instance) {
     return this.validator.validate(value, ...this.requirementList, instance);
   },
@@ -37,5 +36,5 @@ ConstraintFactory.prototype = {
   }
 };
 
-export default ConstraintFactory;
+export default Constraint;
 
