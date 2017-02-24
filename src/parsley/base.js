@@ -1,11 +1,11 @@
 import $ from 'jquery';
 import Utils from './utils';
 
-var ParsleyAbstract = function () {
+var Base = function () {
   this.__id__ = Utils.generateID();
 };
 
-ParsleyAbstract.prototype = {
+Base.prototype = {
   asyncSupport: true, // Deprecated
 
   _pipeAccordingToValidationResult: function () {
@@ -107,4 +107,4 @@ ParsleyAbstract.prototype = {
   }
 };
 
-export default ParsleyAbstract;
+export default Base;

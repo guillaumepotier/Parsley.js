@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Utils from './utils';
 import ParsleyDefaults from './defaults';
-import ParsleyAbstract from './abstract';
+import Base from './base';
 import ParsleyValidatorRegistry from './validator_registry';
 import ParsleyUI from './ui';
 import ParsleyForm from './form';
@@ -17,7 +17,7 @@ if (!vernums.forEach) {
   Utils.warn('Parsley requires ES5 to run properly. Please include https://github.com/es-shims/es5-shim');
 }
 // Inherit `on`, `off` & `trigger` to Parsley:
-var Parsley = $.extend(new ParsleyAbstract(), {
+var Parsley = $.extend(new Base(), {
     $element: $(document),
     actualizeOptions: null,
     _resetOptions: null,
@@ -25,12 +25,12 @@ var Parsley = $.extend(new ParsleyAbstract(), {
     version: '@@version'
   });
 
-// Supplement ParsleyField and Form with ParsleyAbstract
+// Supplement ParsleyField and Form with Base
 // This way, the constructors will have access to those methods
-$.extend(ParsleyField.prototype, ParsleyUI.Field, ParsleyAbstract.prototype);
-$.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);
+$.extend(ParsleyField.prototype, ParsleyUI.Field, Base.prototype);
+$.extend(ParsleyForm.prototype, ParsleyUI.Form, Base.prototype);
 // Inherit actualizeOptions and _resetOptions:
-$.extend(ParsleyFactory.prototype, ParsleyAbstract.prototype);
+$.extend(ParsleyFactory.prototype, Base.prototype);
 
 // ### jQuery API
 // `$('.elem').parsley(options)` or `$('.elem').psly(options)`

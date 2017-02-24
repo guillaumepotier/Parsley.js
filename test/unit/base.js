@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyAbstract', () => {
+describe('Base', () => {
   it('should provide a actualizeOptions() method', () => {
     $('body').append('<input type="email" data-parsley-pattern="[A-F][0-9]{5}" data-parsley-required id="element" />');
     var parsleyField = $('#element').parsley({foo: 'bar'});

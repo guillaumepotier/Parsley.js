@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import Utils from './utils';
-import ParsleyAbstract from './abstract';
+import Base from './base';
 import ParsleyForm from './form';
 import ParsleyField from './field';
 import ParsleyMultiple from './multiple';
@@ -123,14 +123,14 @@ ParsleyFactory.prototype = {
       case 'parsleyForm':
         parsleyInstance = $.extend(
           new ParsleyForm(this.$element, this.domOptions, this.options),
-          new ParsleyAbstract(),
+          new Base(),
           window.ParsleyExtend
         )._bindFields();
         break;
       case 'parsleyField':
         parsleyInstance = $.extend(
           new ParsleyField(this.$element, this.domOptions, this.options, this.parent),
-          new ParsleyAbstract(),
+          new Base(),
           window.ParsleyExtend
         );
         break;
@@ -138,7 +138,7 @@ ParsleyFactory.prototype = {
         parsleyInstance = $.extend(
           new ParsleyField(this.$element, this.domOptions, this.options, this.parent),
           new ParsleyMultiple(),
-          new ParsleyAbstract(),
+          new Base(),
           window.ParsleyExtend
         )._init();
         break;
