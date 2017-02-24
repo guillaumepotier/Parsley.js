@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Utils from './utils';
 
-var ParsleyUI = {};
+var UI = {};
 
 var diffResults = function (newResult, oldResult, deep) {
   var added = [];
@@ -29,7 +29,7 @@ var diffResults = function (newResult, oldResult, deep) {
   };
 };
 
-ParsleyUI.Form = {
+UI.Form = {
 
   _actualizeTriggers: function () {
     this.$element.on('submit.Parsley', evt => { this.onSubmitValidate(evt); });
@@ -70,7 +70,7 @@ ParsleyUI.Form = {
 
 };
 
-ParsleyUI.Field = {
+UI.Field = {
 
   _reflowUI: function () {
     this._buildUI();
@@ -377,4 +377,4 @@ ParsleyUI.Field = {
   }
 };
 
-export default ParsleyUI;
+export default UI;

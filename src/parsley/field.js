@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import Constraint from './constraint';
-import ParsleyUI from './ui';
+import UI from './ui';
 import Utils from './utils';
 
 var Field = function (field, domOptions, options, parsleyFormInstance) {
@@ -29,7 +29,7 @@ var statusMapping = {pending: null, resolved: true, rejected: false};
 
 Field.prototype = {
   // # Public API
-  // Validate field and trigger some events for mainly `ParsleyUI`
+  // Validate field and trigger some events for mainly `UI`
   // @returns `true`, an array of the validators that failed, or
   // `null` if validation is not finished. Prefer using whenValidate
   validate: function (options) {
@@ -47,7 +47,7 @@ Field.prototype = {
     }
   },
 
-  // Validate field and trigger some events for mainly `ParsleyUI`
+  // Validate field and trigger some events for mainly `UI`
   // @returns a promise that succeeds only when all validations do
   // or `undefined` if field is not in the given `group`.
   whenValidate: function ({force, group} =  {}) {

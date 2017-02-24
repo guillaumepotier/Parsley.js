@@ -1,8 +1,8 @@
 import $ from 'jquery';
-import ParsleyUI from '../../src/parsley/ui';
+import UI from '../../src/parsley/ui';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyUI', () => {
+describe('UI', () => {
   before(() => {
     Parsley.setLocale('en');
   });

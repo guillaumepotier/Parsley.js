@@ -3,7 +3,7 @@ import Utils from './utils';
 import Defaults from './defaults';
 import Base from './base';
 import ValidatorRegistry from './validator_registry';
-import ParsleyUI from './ui';
+import UI from './ui';
 import Form from './form';
 import Field from './field';
 import Multiple from './multiple';
@@ -27,8 +27,8 @@ var Parsley = $.extend(new Base(), {
 
 // Supplement Field and Form with Base
 // This way, the constructors will have access to those methods
-$.extend(Field.prototype, ParsleyUI.Field, Base.prototype);
-$.extend(Form.prototype, ParsleyUI.Form, Base.prototype);
+$.extend(Field.prototype, UI.Field, Base.prototype);
+$.extend(Form.prototype, UI.Form, Base.prototype);
 // Inherit actualizeOptions and _resetOptions:
 $.extend(Factory.prototype, Base.prototype);
 
@@ -80,24 +80,24 @@ $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessag
   };
 });
 
-// ### ParsleyUI
+// ### UI
 // Deprecated global object
-window.Parsley.UI = ParsleyUI;
+window.Parsley.UI = UI;
 window.ParsleyUI = {
   removeError: function (instance, name, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
-    Utils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
+    Utils.warnOnce(`Accessing UI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
     return instance.removeError(name, {updateClass});
   },
   getErrorsMessages: function (instance) {
-    Utils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'getErrorsMessages' on the instance directly.`);
+    Utils.warnOnce(`Accessing UI is deprecated. Call 'getErrorsMessages' on the instance directly.`);
     return instance.getErrorsMessages();
   }
 };
 $.each('addError updateError'.split(' '), function (i, method) {
   window.ParsleyUI[method] = function (instance, name, message, assert, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
-    Utils.warnOnce(`Accessing ParsleyUI is deprecated. Call '${method}' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
+    Utils.warnOnce(`Accessing UI is deprecated. Call '${method}' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
     return instance[method](name, {message, assert, updateClass});
   };
 });
