@@ -81,11 +81,11 @@ var convertExtraOptionRequirement = function(requirementSpec, string, extraOptio
 
 // A Validator needs to implement the methods `validate` and `parseRequirements`
 
-var ParsleyValidator = function(spec) {
+var Validator = function(spec) {
   $.extend(true, this, spec);
 };
 
-ParsleyValidator.prototype = {
+Validator.prototype = {
   // Returns `true` iff the given `value` is valid according the given requirements.
   validate: function(value, requirementFirstArg) {
     if (this.fn) { // Legacy style validator
@@ -140,4 +140,4 @@ ParsleyValidator.prototype = {
 
 };
 
-export default ParsleyValidator;
+export default Validator;

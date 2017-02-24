@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import Utils from './utils';
-import ParsleyDefaults from './defaults';
+import Defaults from './defaults';
 import Base from './base';
-import ParsleyValidatorRegistry from './validator_registry';
+import ValidatorRegistry from './validator_registry';
 import ParsleyUI from './ui';
 import ParsleyForm from './form';
 import ParsleyField from './field';
@@ -62,7 +62,7 @@ if ('undefined' === typeof window.ParsleyExtend)
 
 // ### Parsley config
 // Inherit from ParsleyDefault, and copy over any existing values
-Parsley.options = $.extend(Utils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
+Parsley.options = $.extend(Utils.objectCreate(Defaults), window.ParsleyConfig);
 window.ParsleyConfig = Parsley.options; // Old way of accessing global options
 
 // ### Globals
@@ -70,12 +70,12 @@ window.Parsley = window.psly = Parsley;
 window.ParsleyUtils = Utils;
 
 // ### Define methods that forward to the registry, and deprecate all access except through window.Parsley
-var registry = window.Parsley._validatorRegistry = new ParsleyValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
+var registry = window.Parsley._validatorRegistry = new ValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
 window.ParsleyValidator = {};
 $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator'.split(' '), function (i, method) {
   window.Parsley[method] = $.proxy(registry, method);
   window.ParsleyValidator[method] = function () {
-    Utils.warnOnce(`Accessing the method '${method}' through ParsleyValidator is deprecated. Simply call 'window.Parsley.${method}(...)'`);
+    Utils.warnOnce(`Accessing the method '${method}' through Validator is deprecated. Simply call 'window.Parsley.${method}(...)'`);
     return window.Parsley[method](...arguments);
   };
 });

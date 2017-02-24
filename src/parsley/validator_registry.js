@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import Utils from './utils';
-import ParsleyDefaults from './defaults';
-import ParsleyValidator from './validator';
+import Defaults from './defaults';
+import Validator from './validator';
 
-var ParsleyValidatorRegistry = function (validators, catalog) {
-  this.__class__ = 'ParsleyValidatorRegistry';
+var ValidatorRegistry = function (validators, catalog) {
+  this.__class__ = 'ValidatorRegistry';
 
   // Default Parsley locale is en
   this.locale = 'en';
@@ -73,7 +73,7 @@ var decimalPlaces = num => {
        (match[2] ? +match[2] : 0));
 };
 
-ParsleyValidatorRegistry.prototype = {
+ValidatorRegistry.prototype = {
   init: function (validators, catalog) {
     this.catalog = catalog;
     // Copy prototype's validators:
@@ -141,7 +141,7 @@ ParsleyValidatorRegistry.prototype = {
   addValidator: function (name, arg1, arg2) {
     if (this.validators[name])
       Utils.warn('Validator "' + name + '" is already defined.');
-    else if (ParsleyDefaults.hasOwnProperty(name)) {
+    else if (Defaults.hasOwnProperty(name)) {
       Utils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
       return;
     }
@@ -174,7 +174,7 @@ ParsleyValidatorRegistry.prototype = {
       };
     }
     if (!validator.validate) {
-      validator = new ParsleyValidator(validator);
+      validator = new Validator(validator);
     }
     this.validators[name] = validator;
 
@@ -344,4 +344,4 @@ ParsleyValidatorRegistry.prototype = {
   }
 };
 
-export default ParsleyValidatorRegistry;
+export default ValidatorRegistry;

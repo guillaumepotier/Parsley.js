@@ -3,7 +3,7 @@
 // eg: `inputs` can be set in DOM using `data-parsley-inputs="input, textarea"`
 // eg: `data-parsley-stop-on-first-failing-constraint="false"`
 
-var ParsleyDefaults = {
+var Defaults = {
   // ### General
 
   // Default data-namespace for DOM API
@@ -63,4 +63,4 @@ var ParsleyDefaults = {
   errorTemplate: '<li></li>'
 };
 
-export default ParsleyDefaults;
+export default Defaults;

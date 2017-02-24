@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import Utils from './utils';
-import ParsleyValidator from './validator';
+import Validator from './validator';
 
 var Constraint = function (parsleyField, name, requirements, priority, isDomConstraint) {
   var validatorSpec = window.Parsley._validatorRegistry.validators[name];
-  var validator = new ParsleyValidator(validatorSpec);
+  var validator = new Validator(validatorSpec);
 
   $.extend(this, {
     validator: validator,

@@ -1,15 +1,15 @@
 import $ from 'jquery';
-import ParsleyValidator from '../../src/parsley/validator';
-import ParsleyValidatorRegistry from '../../src/parsley/validator_registry';
+import Validator from '../../src/parsley/validator';
+import ValidatorRegistry from '../../src/parsley/validator_registry';
 import Parsley from '../../src/parsley';
 import fr from '../../src/i18n/fr';
 
-describe('ParsleyValidatorRegistry', () => {
+describe('ValidatorRegistry', () => {
   var validatorRegistry = Parsley._validatorRegistry;
 
   var expectValidation = function(value, name, requirements, extra = {}) {
     var validatorSpec = validatorRegistry.validators[name];
-    var validator = new ParsleyValidator(validatorSpec);
+    var validator = new Validator(validatorSpec);
     var argList = validator.parseRequirements(requirements, key => { return extra[key]; });
     let instance = null;
     return expect(validator.validate(value, ...argList, instance));
@@ -20,7 +20,7 @@ describe('ParsleyValidatorRegistry', () => {
   });
 
   it('should be a function', () => {
-    expect(ParsleyValidatorRegistry).to.be.a('function');
+    expect(ValidatorRegistry).to.be.a('function');
   });
   it('should bind global config validators if given in constructor', () => {
     $.extend(true, Parsley.options, {
@@ -29,7 +29,7 @@ describe('ParsleyValidatorRegistry', () => {
         bar: {fn: () => {}, priority: 12}
       }
     });
-    var validator = new ParsleyValidatorRegistry(Parsley.options.validators);
+    var validator = new ValidatorRegistry(Parsley.options.validators);
     expect(validator.validators).to.have.key('foo');
     expect(validator.validators).to.have.key('bar');
     expect(validatorRegistry.validators).not.to.have.key('foo');
@@ -210,7 +210,7 @@ describe('ParsleyValidatorRegistry', () => {
     });
 
     expectWarning(() => {
-      var validatorRegistry = new ParsleyValidatorRegistry(Parsley.options.validators);
+      var validatorRegistry = new ValidatorRegistry(Parsley.options.validators);
     });
     delete Parsley.options.validators.excluded;
   });
@@ -236,7 +236,7 @@ describe('ParsleyValidatorRegistry', () => {
     });
   });
 
-  it('should provide deprecated access through ParsleyValidator for compatibility', () => {
+  it('should provide deprecated access through Validator for compatibility', () => {
     window.Parsley.formatMessage('foo', 'bar');
     expectWarning(() => {
       window.ParsleyValidator.formatMessage('foo', 'bar');

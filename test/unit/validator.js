@@ -1,9 +1,9 @@
-import ParsleyValidator from '../../src/parsley/validator';
+import Validator from '../../src/parsley/validator';
 
 describe('Validator', () => {
   var testParsing = function(type, input, output, extraOptions) {
     it(`parses ${type} requirements`, () => {
-      var c = new ParsleyValidator({requirementType: type});
+      var c = new Validator({requirementType: type});
       expect(c.parseRequirements(input, extraOptions)).to.eql(output);
     });
   };
