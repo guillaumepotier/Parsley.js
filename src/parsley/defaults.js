@@ -50,11 +50,11 @@ var Defaults = {
 
   // Return the `$element` that will receive these above success or error classes
   // Could also be (and given directly from DOM) a valid selector like `'#div'`
-  classHandler: function (ParsleyField) {},
+  classHandler: function (Field) {},
 
   // Return the `$element` where errors will be appended
   // Could also be (and given directly from DOM) a valid selector like `'#div'`
-  errorsContainer: function (ParsleyField) {},
+  errorsContainer: function (Field) {},
 
   // ul elem that would receive errors' list
   errorsWrapper: '<ul class="parsley-errors-list"></ul>',

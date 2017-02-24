@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ParsleyField from './field';
+import Field from './field';
 import ParsleyForm from './form';
 import Utils from './utils';
 
@@ -46,7 +46,7 @@ $.listen = function (name, callback) {
 
 $.listenTo = function (instance, name, fn) {
   deprecated();
-  if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
+  if (!(instance instanceof Field) && !(instance instanceof ParsleyForm))
     throw new Error('Must give Parsley instance');
 
   if ('string' !== typeof name || 'function' !== typeof fn)
@@ -64,7 +64,7 @@ $.unsubscribe = function (name, fn) {
 
 $.unsubscribeTo = function (instance, name) {
   deprecated();
-  if (!(instance instanceof ParsleyField) && !(instance instanceof ParsleyForm))
+  if (!(instance instanceof Field) && !(instance instanceof ParsleyForm))
     throw new Error('Must give Parsley instance');
   instance.off(eventName(name));
 };
@@ -83,7 +83,7 @@ $.unsubscribeAll = function (name) {
 // $.emit is deprecated. Use jQuery events instead.
 $.emit = function (name, instance) {
   deprecated();
-  var instanceGiven = (instance instanceof ParsleyField) || (instance instanceof ParsleyForm);
+  var instanceGiven = (instance instanceof Field) || (instance instanceof ParsleyForm);
   var args = Array.prototype.slice.call(arguments, instanceGiven ? 2 : 1);
   args.unshift(eventName(name));
   if (!instanceGiven) {

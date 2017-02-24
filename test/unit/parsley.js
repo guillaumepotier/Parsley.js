@@ -19,23 +19,23 @@ describe('ParsleyFactory', () => {
     expect(parsleyInstance).to.be.an('object');
     expect(parsleyInstance.__class__).to.be('ParsleyForm');
   });
-  it('should return ParsleyField instance if instantiated on a field', () => {
+  it('should return Field instance if instantiated on a field', () => {
     $('body').append('<input id="element" />');
     var parsleyInstance = new ParsleyFactory($('#element'));
     expect(parsleyInstance).to.be.an('object');
-    expect(parsleyInstance.__class__).to.be('ParsleyField');
+    expect(parsleyInstance.__class__).to.be('Field');
   });
-  it('should return ParsleyField even if instantiated on an unsupported element', () => {
+  it('should return Field even if instantiated on an unsupported element', () => {
     $('body').append('<div id="element"></div>');
     var parsleyInstance = new ParsleyFactory($('#element'));
     expect(parsleyInstance).to.be.an('object');
-    expect(parsleyInstance.__class__).to.be('ParsleyField');
+    expect(parsleyInstance.__class__).to.be('Field');
   });
-  it('should return ParsleyField instance even if instantiated on an excluded field type, and do not have an errors container', () => {
+  it('should return Field instance even if instantiated on an excluded field type, and do not have an errors container', () => {
     $('body').append('<input type="submit" id="element" />');
     var parsleyInstance = new ParsleyFactory($('#element'));
     expect(parsleyInstance).to.be.an('object');
-    expect(parsleyInstance.__class__).to.be('ParsleyField');
+    expect(parsleyInstance.__class__).to.be('Field');
   });
   it('should have excluded fields by default', () => {
     $('body').append(
@@ -93,7 +93,7 @@ describe('ParsleyFactory', () => {
   it('should have a jquery plugin API', () => {
     $('body').append('<input type="text" id="element" data-parsley-namespace="baz-"></div>');
     var parsleyInstance = $('#element').parsley({foo: 'bar'});
-    expect(parsleyInstance.__class__).to.be('ParsleyField');
+    expect(parsleyInstance.__class__).to.be('Field');
     expect(parsleyInstance.options.namespace).to.be('baz-');
     expect(parsleyInstance.options.foo).to.be('bar');
   });

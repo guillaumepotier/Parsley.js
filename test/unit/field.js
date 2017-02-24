@@ -1,13 +1,13 @@
 import $ from 'jquery';
-import ParsleyField from '../../src/parsley/field';
+import Field from '../../src/parsley/field';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyField', () => {
+describe('Field', () => {
   it('should be a function', () => {
-    expect(ParsleyField).to.be.a('function');
+    expect(Field).to.be.a('function');
   });
   it('should throw an error if no parsleyInstance given', () => {
-    expect(ParsleyField).to.throwException();
+    expect(Field).to.throwException();
   });
   it('should properly bind DOM constraints', () => {
     $('body').append('<input type="text" id="element" data-parsley-required />');

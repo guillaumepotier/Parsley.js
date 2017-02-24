@@ -112,7 +112,7 @@ describe('ParsleyMultiple', () => {
         '<option value="3">3</option>'  +
       '</select>');
     var parsleyField = $('#element').parsley();
-    expect(parsleyField.__class__).to.be('ParsleyFieldMultiple');
+    expect(parsleyField.__class__).to.be('FieldMultiple');
     expect(parsleyField.options.multiple).to.be('foo');
     expect(parsleyField.getValue()).to.be.eql([]);
     expect(parsleyField.isValid()).to.be(false);
@@ -140,21 +140,21 @@ describe('ParsleyMultiple', () => {
     expect(parsleyInstance.__class__).to.be('Parsley');
     $('input[type=radio]').attr('id', 'element');
     parsleyInstance = $('#element').parsley();
-    expect(parsleyInstance.__class__).to.be('ParsleyFieldMultiple');
+    expect(parsleyInstance.__class__).to.be('FieldMultiple');
     expect(parsleyInstance.options.multiple).to.be('element');
     $('#element').attr('name', 'element');
     parsleyInstance = $('input[name=element]').parsley();
-    expect(parsleyInstance.__class__).to.be('ParsleyFieldMultiple');
+    expect(parsleyInstance.__class__).to.be('FieldMultiple');
     expect(parsleyInstance.options.multiple).to.be('element');
     parsleyInstance.destroy();
     $('#element').attr('data-parsley-multiple', 'elementfoo');
     parsleyInstance = $('input[name=element]').parsley();
-    expect(parsleyInstance.__class__).to.be('ParsleyFieldMultiple');
+    expect(parsleyInstance.__class__).to.be('FieldMultiple');
     expect(parsleyInstance.options.multiple).to.be('elementfoo');
   });
   it('should bind select multiple input without a name or a multiple option', () => {
     $('body').append('<select multiple id="element"></select>');
-    expect($('#element').parsley().__class__).to.be('ParsleyFieldMultiple');
+    expect($('#element').parsley().__class__).to.be('FieldMultiple');
     expect($('#element').attr('data-parsley-multiple')).to.be('element');
   });
   it('should remove errors on change, whatever field is changed', () => {

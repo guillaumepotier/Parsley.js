@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 var ParsleyMultiple = function () {
-  this.__class__ = 'ParsleyFieldMultiple';
+  this.__class__ = 'FieldMultiple';
 };
 
 ParsleyMultiple.prototype = {
@@ -12,7 +12,7 @@ ParsleyMultiple.prototype = {
     return this;
   },
 
-  // See `ParsleyField.refreshConstraints()`
+  // See `Field.refreshConstraints()`
   refreshConstraints: function () {
     var fieldConstraints;
 
@@ -34,7 +34,7 @@ ParsleyMultiple.prototype = {
         continue;
       }
 
-      fieldConstraints = this.$elements[i].data('ParsleyFieldMultiple').refreshConstraints().constraints;
+      fieldConstraints = this.$elements[i].data('FieldMultiple').refreshConstraints().constraints;
 
       for (var j = 0; j < fieldConstraints.length; j++)
         this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
@@ -43,7 +43,7 @@ ParsleyMultiple.prototype = {
     return this;
   },
 
-  // See `ParsleyField.getValue()`
+  // See `Field.getValue()`
   getValue: function () {
     // Value could be overriden in DOM
     if ('function' === typeof this.options.value)

@@ -19,7 +19,7 @@ describe('PubSub', () => {
     });
     $.emit('foo', 'bar');
   });
-  it('listenTo() ParsleyField', done => {
+  it('listenTo() Field', done => {
     $('body').append('<input type="text" id="element" />');
     $('body').append('<input type="text" id="element2" />');
 

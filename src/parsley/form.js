@@ -175,8 +175,8 @@ ParsleyForm.prototype = {
       .each((_, element) => {
         var fieldInstance = new window.Parsley.Factory(element, {}, this);
 
-        // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
-        if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded)) {
+        // Only add valid and not excluded `Field` and `FieldMultiple` children
+        if (('Field' === fieldInstance.__class__ || 'FieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded)) {
           let uniqueId = fieldInstance.__class__ + '-' + fieldInstance.__id__;
           if ('undefined' === typeof this.fieldsMappedById[uniqueId]) {
             this.fieldsMappedById[uniqueId] = fieldInstance;

@@ -187,7 +187,7 @@ describe('ParsleyForm', () => {
     $('body').append('<form id="element" data-parsley-trigger="change"></form>');
     $('#element').append('<input type="email" id="email" required />');
     var fieldInstance = $('#email').psly();
-    expect(fieldInstance.__class__).to.be('ParsleyField');
+    expect(fieldInstance.__class__).to.be('Field');
     var formInstance = $('#element').psly();
     // form corectly have its field, and field have finaly its parent form
     expect(formInstance.fields[0].$element.attr('id')).to.be('email');

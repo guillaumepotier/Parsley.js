@@ -146,7 +146,7 @@ describe('ParsleyRemote', () => {
     var parsleyInstance = $('#element').parsley();
 
     window.Parsley.addAsyncValidator('mycustom', function (xhr) {
-      expect(this.__class__).to.be('ParsleyField');
+      expect(this.__class__).to.be('Field');
     }, 'http://foobar.baz');
 
     stubAjax(200);

@@ -49,7 +49,7 @@ describe('Base', () => {
     });
 
     expect($('#element').data('Parsley')).to.have.key('__class__');
-    expect($('#element').data('Parsley').__class__).to.be('ParsleyField');
+    expect($('#element').data('Parsley').__class__).to.be('Field');
     parsleyField.destroy();
     expect($('#element').data('Parsley')).to.be(undefined);
   });
@@ -79,7 +79,7 @@ describe('Base', () => {
     expect($('#element').data('Parsley')).to.have.key('__class__');
     expect($('#element').data('Parsley').__class__).to.be('ParsleyForm');
     expect($('#field1').data('Parsley')).to.have.key('__class__');
-    expect($('#field1').data('Parsley').__class__).to.be('ParsleyField');
+    expect($('#field1').data('Parsley').__class__).to.be('Field');
 
     parsleyForm.destroy();
 

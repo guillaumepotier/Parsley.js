@@ -3,8 +3,8 @@ import Constraint from './constraint';
 import ParsleyUI from './ui';
 import Utils from './utils';
 
-var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
-  this.__class__ = 'ParsleyField';
+var Field = function (field, domOptions, options, parsleyFormInstance) {
+  this.__class__ = 'Field';
 
   this.$element = $(field);
 
@@ -27,7 +27,7 @@ var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
 
 var statusMapping = {pending: null, resolved: true, rejected: false};
 
-ParsleyField.prototype = {
+Field.prototype = {
   // # Public API
   // Validate field and trigger some events for mainly `ParsleyUI`
   // @returns `true`, an array of the validators that failed, or
@@ -196,7 +196,7 @@ ParsleyField.prototype = {
     // Field case: emit destroy event to clean UI and then destroy stored instance
     this._destroyUI();
     this.$element.removeData('Parsley');
-    this.$element.removeData('ParsleyFieldMultiple');
+    this.$element.removeData('FieldMultiple');
     this._trigger('destroy');
   },
 
@@ -386,4 +386,4 @@ ParsleyField.prototype = {
 
 };
 
-export default ParsleyField;
+export default Field;

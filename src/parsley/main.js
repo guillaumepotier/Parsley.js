@@ -5,7 +5,7 @@ import Base from './base';
 import ValidatorRegistry from './validator_registry';
 import ParsleyUI from './ui';
 import ParsleyForm from './form';
-import ParsleyField from './field';
+import Field from './field';
 import ParsleyMultiple from './multiple';
 import ParsleyFactory from './factory';
 
@@ -25,9 +25,9 @@ var Parsley = $.extend(new Base(), {
     version: '@@version'
   });
 
-// Supplement ParsleyField and Form with Base
+// Supplement Field and Form with Base
 // This way, the constructors will have access to those methods
-$.extend(ParsleyField.prototype, ParsleyUI.Field, Base.prototype);
+$.extend(Field.prototype, ParsleyUI.Field, Base.prototype);
 $.extend(ParsleyForm.prototype, ParsleyUI.Form, Base.prototype);
 // Inherit actualizeOptions and _resetOptions:
 $.extend(ParsleyFactory.prototype, Base.prototype);
@@ -55,7 +55,7 @@ $.fn.parsley = $.fn.psly = function (options) {
   return new ParsleyFactory(this, options);
 };
 
-// ### ParsleyField and ParsleyForm extension
+// ### Field and ParsleyForm extension
 // Ensure the extension is now defined if it wasn't previously
 if ('undefined' === typeof window.ParsleyExtend)
   window.ParsleyExtend = {};
