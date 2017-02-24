@@ -1,10 +1,10 @@
 import $ from 'jquery';
-import ParsleyForm from '../../src/parsley/form';
+import Form from '../../src/parsley/form';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyForm', () => {
+describe('Form', () => {
   it('should be a function', () => {
-    expect(ParsleyForm).to.be.a('function');
+    expect(Form).to.be.a('function');
   });
   it('should bind parsleyFields children', () => {
     $('body').append(
@@ -22,7 +22,7 @@ describe('ParsleyForm', () => {
         '<input id="field1" type="text"/>'  +
         '<div id="field2"></div>'           +
         '<textarea id="field2"></textarea>' +
-        '<div data-parsley-validate></div>' + // ParsleyForm, not a valid child
+        '<div data-parsley-validate></div>' + // Form, not a valid child
         '<input id="field3" disabled />'    + // Disabled, excluded by custom options below
         '<input id="field-excluded" data-parsley-excluded="true" />'    + // Excluded with 'excluded' option
         '<input type="submit"/>'            + // Excluded field, not valid
@@ -191,7 +191,7 @@ describe('ParsleyForm', () => {
     var formInstance = $('#element').psly();
     // form corectly have its field, and field have finaly its parent form
     expect(formInstance.fields[0].$element.attr('id')).to.be('email');
-    expect(fieldInstance.parent.__class__).to.be('ParsleyForm');
+    expect(fieldInstance.parent.__class__).to.be('Form');
   });
   it('should fire the right callbacks in the right order', () => {
     var $form = $('<form id="element"><input type="string" required /><form>').appendTo($('body'));

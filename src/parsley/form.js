@@ -2,8 +2,8 @@ import $ from 'jquery';
 import Base from './base';
 import Utils from './utils';
 
-var ParsleyForm = function (element, domOptions, options) {
-  this.__class__ = 'ParsleyForm';
+var Form = function (element, domOptions, options) {
+  this.__class__ = 'Form';
 
   this.$element = $(element);
   this.domOptions = domOptions;
@@ -16,7 +16,7 @@ var ParsleyForm = function (element, domOptions, options) {
 
 var statusMapping = {pending: null, resolved: true, rejected: false};
 
-ParsleyForm.prototype = {
+Form.prototype = {
   onSubmitValidate: function (event) {
     // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
     if (true === event.parsley)
@@ -216,4 +216,4 @@ ParsleyForm.prototype = {
 
 };
 
-export default ParsleyForm;
+export default Form;

@@ -196,7 +196,7 @@ describe('ParsleyMultiple', () => {
     $('#element, #element-2').parsley();
     expect($('#check').parsley().$elements.length).to.be(2);
   });
-  it('should handle form namespace configuration inheritance and click events while multiple binding through ParsleyForm', () => {
+  it('should handle form namespace configuration inheritance and click events while multiple binding through Form', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="radio" name="radio" id="radio1" value="3" foo-bar-required />'  +

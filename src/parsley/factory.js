@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Utils from './utils';
 import Base from './base';
-import ParsleyForm from './form';
+import Form from './form';
 import Field from './field';
 import ParsleyMultiple from './multiple';
 
@@ -12,7 +12,7 @@ var ParsleyFactory = function (element, options, parsleyFormInstance) {
   var savedparsleyFormInstance = this.$element.data('Parsley');
   if (savedparsleyFormInstance) {
 
-    // If the saved instance has been bound without a ParsleyForm parent and there is one given in this call, add it
+    // If the saved instance has been bound without a Form parent and there is one given in this call, add it
     if ('undefined' !== typeof parsleyFormInstance && savedparsleyFormInstance.parent === window.Parsley) {
       savedparsleyFormInstance.parent = parsleyFormInstance;
       savedparsleyFormInstance._resetOptions(savedparsleyFormInstance.options);
@@ -29,8 +29,8 @@ var ParsleyFactory = function (element, options, parsleyFormInstance) {
   if (!this.$element.length)
     throw new Error('You must bind Parsley on an existing element.');
 
-  if ('undefined' !== typeof parsleyFormInstance && 'ParsleyForm' !== parsleyFormInstance.__class__)
-    throw new Error('Parent instance must be a ParsleyForm instance');
+  if ('undefined' !== typeof parsleyFormInstance && 'Form' !== parsleyFormInstance.__class__)
+    throw new Error('Parent instance must be a Form instance');
 
   this.parent = parsleyFormInstance || window.Parsley;
   return this.init(options);
@@ -45,7 +45,7 @@ ParsleyFactory.prototype = {
     // Pre-compute options
     this._resetOptions(options);
 
-    // A ParsleyForm instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
+    // A Form instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
     if (this.$element.is('form') || (Utils.checkAttr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
       return this.bind('parsleyForm');
 
@@ -115,14 +115,14 @@ ParsleyFactory.prototype = {
     return parsleyMultipleInstance || this.bind('parsleyFieldMultiple');
   },
 
-  // Return proper `ParsleyForm`, `Field` or `FieldMultiple`
+  // Return proper `Form`, `Field` or `FieldMultiple`
   bind: function (type, doNotStore) {
     var parsleyInstance;
 
     switch (type) {
       case 'parsleyForm':
         parsleyInstance = $.extend(
-          new ParsleyForm(this.$element, this.domOptions, this.options),
+          new Form(this.$element, this.domOptions, this.options),
           new Base(),
           window.ParsleyExtend
         )._bindFields();
@@ -158,7 +158,7 @@ ParsleyFactory.prototype = {
     // Store the freshly bound instance in a DOM element for later access using jQuery `data()`
     this.$element.data('Parsley', parsleyInstance);
 
-    // Tell the world we have a new ParsleyForm or Field instance!
+    // Tell the world we have a new Form or Field instance!
     parsleyInstance._actualizeTriggers();
     parsleyInstance._trigger('init');
 

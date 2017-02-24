@@ -13,11 +13,11 @@ describe('ParsleyFactory', () => {
   it('should throw an error if no element given', () => {
     expect(ParsleyFactory).to.throwException();
   });
-  it('should return ParsleyForm instance if instantiated on a form', () => {
+  it('should return Form instance if instantiated on a form', () => {
     $('body').append('<form id="element"></form>');
     var parsleyInstance = new ParsleyFactory($('#element'));
     expect(parsleyInstance).to.be.an('object');
-    expect(parsleyInstance.__class__).to.be('ParsleyForm');
+    expect(parsleyInstance.__class__).to.be('Form');
   });
   it('should return Field instance if instantiated on a field', () => {
     $('body').append('<input id="element" />');
@@ -48,11 +48,11 @@ describe('ParsleyFactory', () => {
     var parsleyInstance = $('#element').parsley();
     expect(parsleyInstance.fields.length).to.be(0);
   });
-  it('should return ParsleyForm if instantiated on an unsupported element with data-parsley-validate attribute', () => {
+  it('should return Form if instantiated on an unsupported element with data-parsley-validate attribute', () => {
     $('body').append('<div id="element" data-parsley-validate></div>');
     var parsleyInstance = new ParsleyFactory($('#element'));
     expect(parsleyInstance).to.be.an('object');
-    expect(parsleyInstance.__class__).to.be('ParsleyForm');
+    expect(parsleyInstance.__class__).to.be('Form');
   });
   it('should handle namespace configuration', () => {
     $('body').append('<div id="element"></div>');

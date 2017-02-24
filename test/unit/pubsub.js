@@ -34,7 +34,7 @@ describe('PubSub', () => {
     $.emit('foo', $('#element2').psly());
     $.emit('foo', instance);
   });
-  it('listenTo() ParsleyForm will listen to Form', done => {
+  it('listenTo() Form will listen to Form', done => {
     $('body').append(
       '<form id="element" data-parsley-trigger="change">'                 +
         '<input id="field1" type="text" data-parsley-required="true" />'  +

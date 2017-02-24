@@ -77,7 +77,7 @@ describe('Base', () => {
     });
 
     expect($('#element').data('Parsley')).to.have.key('__class__');
-    expect($('#element').data('Parsley').__class__).to.be('ParsleyForm');
+    expect($('#element').data('Parsley').__class__).to.be('Form');
     expect($('#field1').data('Parsley')).to.have.key('__class__');
     expect($('#field1').data('Parsley').__class__).to.be('Field');
 
