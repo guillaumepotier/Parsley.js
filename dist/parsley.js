@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.6.4 - built Thu, Feb 23rd 2017, 3:02 pm
+* Version 2.6.5 - built Fri, Feb 24th 2017, 3:50 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -310,39 +310,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return true;
     },
 
-    // Reset UI
-    reset: function reset() {
-      // Field case: just emit a reset event for UI
-      if ('ParsleyForm' !== this.__class__) {
-        this._resetUI();
-        return this._trigger('reset');
-      }
-
-      // Form case: emit a reset event for each field
-      for (var i = 0; i < this.fields.length; i++) this.fields[i].reset();
-
-      this._trigger('reset');
-    },
-
-    // Destroy Parsley instance (+ UI)
-    destroy: function destroy() {
-      // Field case: emit destroy event to clean UI and then destroy stored instance
-      this._destroyUI();
-      if ('ParsleyForm' !== this.__class__) {
-        this.$element.removeData('Parsley');
-        this.$element.removeData('ParsleyFieldMultiple');
-        this._trigger('destroy');
-
-        return;
-      }
-
-      // Form case: destroy all its fields and then destroy stored instance
-      for (var i = 0; i < this.fields.length; i++) this.fields[i].destroy();
-
-      this.$element.removeData('Parsley');
-      this._trigger('destroy');
-    },
-
     asyncIsValid: function asyncIsValid(group, force) {
       ParsleyUtils__default.warnOnce("asyncIsValid is deprecated; please use whenValid instead");
       return this.whenValid({ group: group, force: force });
@@ -371,7 +338,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       if (result.length === 0) throw 'No such reference: "' + string + '"';
       return result;
     },
-    boolean: function boolean(string) {
+    'boolean': function _boolean(string) {
       return string !== 'false';
     },
     object: function object(string) {
@@ -1320,6 +1287,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return ParsleyUtils__default.all(promises);
     },
 
+    // Reset UI
+    reset: function reset() {
+      // Form case: emit a reset event for each field
+      for (var i = 0; i < this.fields.length; i++) this.fields[i].reset();
+
+      this._trigger('reset');
+    },
+
+    // Destroy Parsley instance (+ UI)
+    destroy: function destroy() {
+      // Field case: emit destroy event to clean UI and then destroy stored instance
+      this._destroyUI();
+
+      // Form case: destroy all its fields and then destroy stored instance
+      for (var i = 0; i < this.fields.length; i++) this.fields[i].destroy();
+
+      this.$element.removeData('Parsley');
+      this._trigger('destroy');
+    },
+
     _refreshFields: function _refreshFields() {
       return this.actualizeOptions()._bindFields();
     },
@@ -1337,9 +1324,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var fieldInstance = new window.Parsley.Factory(element, {}, _this8);
 
           // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
-          if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && true !== fieldInstance.options.excluded) if ('undefined' === typeof _this8.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
-            _this8.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
-            _this8.fields.push(fieldInstance);
+          if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && true !== fieldInstance.options.excluded) {
+            var uniqueId = fieldInstance.__class__ + '-' + fieldInstance.__id__;
+            if ('undefined' === typeof _this8.fieldsMappedById[uniqueId]) {
+              _this8.fieldsMappedById[uniqueId] = fieldInstance;
+              _this8.fields.push(fieldInstance);
+            }
           }
         });
 
@@ -1376,9 +1366,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
   };
 
-  var ConstraintFactory = function ConstraintFactory(parsleyField, name, requirements, priority, isDomConstraint) {
-    if (!/ParsleyField/.test(parsleyField.__class__)) throw new Error('ParsleyField or ParsleyFieldMultiple instance expected');
-
+  var Constraint = function Constraint(parsleyField, name, requirements, priority, isDomConstraint) {
     var validatorSpec = window.Parsley._validatorRegistry.validators[name];
     var validator = new ParsleyValidator(validatorSpec);
 
@@ -1397,7 +1385,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     return cap + str.slice(1);
   };
 
-  ConstraintFactory.prototype = {
+  Constraint.prototype = {
     validate: function validate(value, instance) {
       var _validator;
 
@@ -1608,6 +1596,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return this._handleWhitespace(value);
     },
 
+    // Reset UI
+    reset: function reset() {
+      this._resetUI();
+      return this._trigger('reset');
+    },
+
+    // Destroy Parsley instance (+ UI)
+    destroy: function destroy() {
+      // Field case: emit destroy event to clean UI and then destroy stored instance
+      this._destroyUI();
+      this.$element.removeData('Parsley');
+      this.$element.removeData('ParsleyFieldMultiple');
+      this._trigger('destroy');
+    },
+
     // Actualize options that could have change since previous validation
     // Re-bind accordingly constraints (could be some new, removed or updated)
     refreshConstraints: function refreshConstraints() {
@@ -1625,7 +1628,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     addConstraint: function addConstraint(name, requirements, priority, isDomConstraint) {
 
       if (window.Parsley._validatorRegistry.validators[name]) {
-        var constraint = new ConstraintFactory(this, name, requirements, priority, isDomConstraint);
+        var constraint = new Constraint(this, name, requirements, priority, isDomConstraint);
 
         // if constraint already exist, delete it and push new version
         if ('undefined' !== this.constraintsByName[constraint.name]) this.removeConstraint(constraint.name);
@@ -1883,7 +1886,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   ParsleyFactory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.6.4';
+      this.__version__ = '2.6.5';
       this.__id__ = ParsleyUtils__default.generateID();
 
       // Pre-compute options
@@ -2005,7 +2008,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: ParsleyFactory,
-    version: '2.6.4'
+    version: '2.6.5'
   });
 
   // Supplement ParsleyField and Form with ParsleyAbstract

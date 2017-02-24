@@ -24,6 +24,11 @@
               </a>
             
               
+              <a class="source" href="constraint.html">
+                constraint.js
+              </a>
+            
+              
               <a class="source" href="defaults.html">
                 defaults.js
               </a>
@@ -274,115 +279,6 @@ Returns false if execution was interrupted</p>
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.parent.trigger(name, target, extraArg);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-  },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Reset UI</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  reset: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>Field case: just emit a reset event for UI</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> !== <span class="hljs-keyword">this</span>.__class__) {
-      <span class="hljs-keyword">this</span>._resetUI();
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'reset'</span>);
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>Form case: emit a reset event for each field</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++)
-      <span class="hljs-keyword">this</span>.fields[i].reset();
-
-    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'reset'</span>);
-  },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>Destroy Parsley instance (+ UI)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>Field case: emit destroy event to clean UI and then destroy stored instance</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._destroyUI();
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">'ParsleyForm'</span> !== <span class="hljs-keyword">this</span>.__class__) {
-      <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
-      <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'ParsleyFieldMultiple'</span>);
-      <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'destroy'</span>);
-
-      <span class="hljs-keyword">return</span>;
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p>Form case: destroy all its fields and then destroy stored instance</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++)
-      <span class="hljs-keyword">this</span>.fields[i].destroy();
-
-    <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
-    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'destroy'</span>);
   },
 
   <span class="hljs-attr">asyncIsValid</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{

@@ -24,6 +24,11 @@
               </a>
             
               
+              <a class="source" href="constraint.html">
+                constraint.js
+              </a>
+            
+              
               <a class="source" href="defaults.html">
                 defaults.js
               </a>
@@ -379,6 +384,90 @@ A validation that immediately fails will interrupt the validations.</p>
       <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, field =&gt; field.whenValid({group, force}));
     });
     <span class="hljs-keyword">return</span> ParsleyUtils.all(promises);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Reset UI</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  reset: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Form case: emit a reset event for each field</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++)
+      <span class="hljs-keyword">this</span>.fields[i].reset();
+
+    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'reset'</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Destroy Parsley instance (+ UI)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Field case: emit destroy event to clean UI and then destroy stored instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._destroyUI();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Form case: destroy all its fields and then destroy stored instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.fields.length; i++)
+      <span class="hljs-keyword">this</span>.fields[i].destroy();
+
+    <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
+    <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'destroy'</span>);
   },
 
   <span class="hljs-attr">_refreshFields</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -401,21 +490,23 @@ A validation that immediately fails will interrupt the validations.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Only add valid and not excluded <code>ParsleyField</code> and <code>ParsleyFieldMultiple</code> children</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ((<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__ || <span class="hljs-string">'ParsleyFieldMultiple'</span> === fieldInstance.__class__) &amp;&amp; (<span class="hljs-literal">true</span> !== fieldInstance.options.excluded))
-          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__]) {
-            <span class="hljs-keyword">this</span>.fieldsMappedById[fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__] = fieldInstance;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ((<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__ || <span class="hljs-string">'ParsleyFieldMultiple'</span> === fieldInstance.__class__) &amp;&amp; (<span class="hljs-literal">true</span> !== fieldInstance.options.excluded)) {
+          <span class="hljs-keyword">let</span> uniqueId = fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__;
+          <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.fieldsMappedById[uniqueId]) {
+            <span class="hljs-keyword">this</span>.fieldsMappedById[uniqueId] = fieldInstance;
             <span class="hljs-keyword">this</span>.fields.push(fieldInstance);
           }
+        }
       });
 
       $.each(ParsleyUtils.difference(oldFields, <span class="hljs-keyword">this</span>.fields), (_, field) =&gt; {
@@ -428,11 +519,11 @@ A validation that immediately fails will interrupt the validations.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Internal only.
 Looping on a form’s fields to do validation or similar
@@ -455,11 +546,11 @@ the method actualizeOptions on this form while <code>fn</code> is called.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Internal only.
 Shortcut to trigger an event
