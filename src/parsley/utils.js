@@ -3,7 +3,7 @@ import $ from 'jquery';
 var globalID = 1;
 var pastWarnings = {};
 
-var ParsleyUtils = {
+var Utils = {
   // Parsley DOM-API
   // returns object from dom attributes and values
   attr: function ($element, namespace, obj) {
@@ -145,4 +145,4 @@ var ParsleyUtils = {
   _SubmitSelector: 'input[type="submit"], button:submit'
 };
 
-export default ParsleyUtils;
+export default Utils;

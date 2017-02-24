@@ -101,6 +101,6 @@ Parsley.on('form:submit', function () {
 });
 
 window.ParsleyExtend.addAsyncValidator = function () {
-  ParsleyUtils.warnOnce('Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`');
+  Utils.warnOnce('Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`');
   return Parsley.addAsyncValidator(...arguments);
 };

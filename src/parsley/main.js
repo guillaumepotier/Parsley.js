@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 import ParsleyDefaults from './defaults';
 import ParsleyAbstract from './abstract';
 import ParsleyValidatorRegistry from './validator_registry';
@@ -14,7 +14,7 @@ if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
   throw "The loaded version of jQuery is too old. Please upgrade to 1.8.x or better.";
 }
 if (!vernums.forEach) {
-  ParsleyUtils.warn('Parsley requires ES5 to run properly. Please include https://github.com/es-shims/es5-shim');
+  Utils.warn('Parsley requires ES5 to run properly. Please include https://github.com/es-shims/es5-shim');
 }
 // Inherit `on`, `off` & `trigger` to Parsley:
 var Parsley = $.extend(new ParsleyAbstract(), {
@@ -47,7 +47,7 @@ $.fn.parsley = $.fn.psly = function (options) {
 
   // Return undefined if applied to non existing DOM element
   if (!$(this).length) {
-    ParsleyUtils.warn('You must bind Parsley on an existing element.');
+    Utils.warn('You must bind Parsley on an existing element.');
 
     return;
   }
@@ -62,12 +62,12 @@ if ('undefined' === typeof window.ParsleyExtend)
 
 // ### Parsley config
 // Inherit from ParsleyDefault, and copy over any existing values
-Parsley.options = $.extend(ParsleyUtils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
+Parsley.options = $.extend(Utils.objectCreate(ParsleyDefaults), window.ParsleyConfig);
 window.ParsleyConfig = Parsley.options; // Old way of accessing global options
 
 // ### Globals
 window.Parsley = window.psly = Parsley;
-window.ParsleyUtils = ParsleyUtils;
+window.ParsleyUtils = Utils;
 
 // ### Define methods that forward to the registry, and deprecate all access except through window.Parsley
 var registry = window.Parsley._validatorRegistry = new ParsleyValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
@@ -75,7 +75,7 @@ window.ParsleyValidator = {};
 $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator'.split(' '), function (i, method) {
   window.Parsley[method] = $.proxy(registry, method);
   window.ParsleyValidator[method] = function () {
-    ParsleyUtils.warnOnce(`Accessing the method '${method}' through ParsleyValidator is deprecated. Simply call 'window.Parsley.${method}(...)'`);
+    Utils.warnOnce(`Accessing the method '${method}' through ParsleyValidator is deprecated. Simply call 'window.Parsley.${method}(...)'`);
     return window.Parsley[method](...arguments);
   };
 });
@@ -86,18 +86,18 @@ window.Parsley.UI = ParsleyUI;
 window.ParsleyUI = {
   removeError: function (instance, name, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
+    Utils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
     return instance.removeError(name, {updateClass});
   },
   getErrorsMessages: function (instance) {
-    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'getErrorsMessages' on the instance directly.`);
+    Utils.warnOnce(`Accessing ParsleyUI is deprecated. Call 'getErrorsMessages' on the instance directly.`);
     return instance.getErrorsMessages();
   }
 };
 $.each('addError updateError'.split(' '), function (i, method) {
   window.ParsleyUI[method] = function (instance, name, message, assert, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(`Accessing ParsleyUI is deprecated. Call '${method}' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
+    Utils.warnOnce(`Accessing ParsleyUI is deprecated. Call '${method}' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
     return instance[method](name, {message, assert, updateClass});
   };
 });

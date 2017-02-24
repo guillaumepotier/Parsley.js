@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import ParsleyAbstract from './abstract';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 
 var ParsleyForm = function (element, domOptions, options) {
   this.__class__ = 'ParsleyForm';
@@ -23,7 +23,7 @@ ParsleyForm.prototype = {
       return;
 
     // If we didn't come here through a submit button, use the first one in the form
-    var $submitSource = this._$submitSource || this.$element.find(ParsleyUtils._SubmitSelector).first();
+    var $submitSource = this._$submitSource || this.$element.find(Utils._SubmitSelector).first();
     this._$submitSource = null;
     this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
     if ($submitSource.is('[formnovalidate]'))
@@ -73,7 +73,7 @@ ParsleyForm.prototype = {
   // Consider using `whenValidate` instead.
   validate: function (options) {
     if (arguments.length >= 1 && !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce('Calling validate on a parsley form without passing arguments as an object is deprecated.');
+      Utils.warnOnce('Calling validate on a parsley form without passing arguments as an object is deprecated.');
       var [group, force, event] = arguments;
       options = {group, force, event};
     }
@@ -84,7 +84,7 @@ ParsleyForm.prototype = {
     this.submitEvent = event;
     if (event) {
       this.submitEvent = $.extend({}, event, {preventDefault: () => {
-        ParsleyUtils.warnOnce("Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`");
+        Utils.warnOnce("Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`");
         this.validationResult = false;
       }});
     }
@@ -100,7 +100,7 @@ ParsleyForm.prototype = {
       return $.map(this.fields, field => field.whenValidate({force, group}));
     });
 
-    return ParsleyUtils.all(promises)
+    return Utils.all(promises)
       .done(  () => { this._trigger('success'); })
       .fail(  () => {
         this.validationResult = false;
@@ -117,7 +117,7 @@ ParsleyForm.prototype = {
   // Prefer using `whenValid` instead.
   isValid: function (options) {
     if (arguments.length >= 1 && !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce('Calling isValid on a parsley form without passing arguments as an object is deprecated.');
+      Utils.warnOnce('Calling isValid on a parsley form without passing arguments as an object is deprecated.');
       var [group, force] = arguments;
       options = {group, force};
     }
@@ -133,7 +133,7 @@ ParsleyForm.prototype = {
     var promises = this._withoutReactualizingFormOptions(() => {
       return $.map(this.fields, field => field.whenValid({group, force}));
     });
-    return ParsleyUtils.all(promises);
+    return Utils.all(promises);
   },
 
   // Reset UI
@@ -185,7 +185,7 @@ ParsleyForm.prototype = {
         }
       });
 
-      $.each(ParsleyUtils.difference(oldFields, this.fields), (_, field) => {
+      $.each(Utils.difference(oldFields, this.fields), (_, field) => {
         field.reset();
       });
     });

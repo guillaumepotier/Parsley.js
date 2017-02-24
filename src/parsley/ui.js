@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 
 var ParsleyUI = {};
 
@@ -33,7 +33,7 @@ ParsleyUI.Form = {
 
   _actualizeTriggers: function () {
     this.$element.on('submit.Parsley', evt => { this.onSubmitValidate(evt); });
-    this.$element.on('click.Parsley', ParsleyUtils._SubmitSelector, evt => { this.onSubmitButton(evt); });
+    this.$element.on('click.Parsley', Utils._SubmitSelector, evt => { this.onSubmitButton(evt); });
 
     // UI could be disabled
     if (false === this.options.uiEnabled)
@@ -290,7 +290,7 @@ ParsleyUI.Field = {
       if ($(this.options.errorsContainer).length)
         return $(this.options.errorsContainer).append(this._ui.$errorsWrapper);
       else
-        ParsleyUtils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM');
+        Utils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM');
     } else if ('function' === typeof this.options.errorsContainer)
       $errorsContainer = this.options.errorsContainer.call(this, this);
 
@@ -307,10 +307,10 @@ ParsleyUI.Field = {
     // Remove Parsley events already bound on this field
     $toBind.off('.Parsley');
     if (this._failedOnce)
-      $toBind.on(ParsleyUtils.namespaceEvents(this.options.triggerAfterFailure, 'Parsley'), () => {
+      $toBind.on(Utils.namespaceEvents(this.options.triggerAfterFailure, 'Parsley'), () => {
         this._validateIfNeeded();
       });
-    else if (trigger = ParsleyUtils.namespaceEvents(this.options.trigger, 'Parsley')) {
+    else if (trigger = Utils.namespaceEvents(this.options.trigger, 'Parsley')) {
       $toBind.on(trigger, event => {
         this._validateIfNeeded(event);
       });

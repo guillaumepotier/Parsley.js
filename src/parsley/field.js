@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Constraint from './constraint';
 import ParsleyUI from './ui';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 
 var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
   this.__class__ = 'ParsleyField';
@@ -34,7 +34,7 @@ ParsleyField.prototype = {
   // `null` if validation is not finished. Prefer using whenValidate
   validate: function (options) {
     if (arguments.length >= 1 && !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce('Calling validate on a parsley field without passing arguments as an object is deprecated.');
+      Utils.warnOnce('Calling validate on a parsley field without passing arguments as an object is deprecated.');
       options = {options};
     }
     var promise = this.whenValidate(options);
@@ -98,7 +98,7 @@ ParsleyField.prototype = {
   // See also `whenValid`.
   isValid: function (options) {
     if (arguments.length >= 1 && !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce('Calling isValid on a parsley field without passing arguments as an object is deprecated.');
+      Utils.warnOnce('Calling isValid on a parsley field without passing arguments as an object is deprecated.');
       var [force, value] = arguments;
       options = {force, value};
     }
@@ -139,14 +139,14 @@ ParsleyField.prototype = {
     $.each(groupedConstraints, (_, constraints) => {
       // Process one group of constraints at a time, we validate the constraints
       // and combine the promises together.
-      var promise = ParsleyUtils.all(
+      var promise = Utils.all(
         $.map(constraints, constraint => this._validateConstraint(value, constraint))
       );
       promises.push(promise);
       if (promise.state() === 'rejected')
         return false; // Interrupt processing if a group has already failed
     });
-    return ParsleyUtils.all(promises);
+    return Utils.all(promises);
   },
 
   // @returns a promise
@@ -156,7 +156,7 @@ ParsleyField.prototype = {
     if (false === result)
       result = $.Deferred().reject();
     // Make sure we return a promise and that we record failures
-    return ParsleyUtils.all([result]).fail(errorMessage => {
+    return Utils.all([result]).fail(errorMessage => {
       if (!(this.validationResult instanceof Array))
         this.validationResult = [];
       this.validationResult.push({
@@ -350,13 +350,13 @@ ParsleyField.prototype = {
   // Use `data-parsley-whitespace="trim"` to auto trim input value
   _handleWhitespace: function (value) {
     if (true === this.options.trimValue)
-      ParsleyUtils.warnOnce('data-parsley-trim-value="true" is deprecated, please use data-parsley-whitespace="trim"');
+      Utils.warnOnce('data-parsley-trim-value="true" is deprecated, please use data-parsley-whitespace="trim"');
 
     if ('squish' === this.options.whitespace)
       value = value.replace(/\s{2,}/g, ' ');
 
     if (('trim' === this.options.whitespace) || ('squish' === this.options.whitespace) || (true === this.options.trimValue))
-      value = ParsleyUtils.trimString(value);
+      value = Utils.trimString(value);
 
     return value;
   },

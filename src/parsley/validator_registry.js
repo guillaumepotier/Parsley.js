@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 import ParsleyDefaults from './defaults';
 import ParsleyValidator from './validator';
 
@@ -140,9 +140,9 @@ ParsleyValidatorRegistry.prototype = {
   //
   addValidator: function (name, arg1, arg2) {
     if (this.validators[name])
-      ParsleyUtils.warn('Validator "' + name + '" is already defined.');
+      Utils.warn('Validator "' + name + '" is already defined.');
     else if (ParsleyDefaults.hasOwnProperty(name)) {
-      ParsleyUtils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
+      Utils.warn('"' + name + '" is a restricted keyword and is not a valid validator name.');
       return;
     }
     return this._setValidator(...arguments);
@@ -150,7 +150,7 @@ ParsleyValidatorRegistry.prototype = {
 
   updateValidator: function (name, arg1, arg2) {
     if (!this.validators[name]) {
-      ParsleyUtils.warn('Validator "' + name + '" is not already defined.');
+      Utils.warn('Validator "' + name + '" is not already defined.');
       return this.addValidator(...arguments);
     }
     return this._setValidator(...arguments);
@@ -158,7 +158,7 @@ ParsleyValidatorRegistry.prototype = {
 
   removeValidator: function (name) {
     if (!this.validators[name])
-      ParsleyUtils.warn('Validator "' + name + '" is not defined.');
+      Utils.warn('Validator "' + name + '" is not defined.');
 
     delete this.validators[name];
 

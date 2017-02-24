@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 
 var requirementConverters = {
   string: function(string) {
@@ -25,7 +25,7 @@ var requirementConverters = {
     return string !== 'false';
   },
   object: function(string) {
-    return ParsleyUtils.deserializeValue(string);
+    return Utils.deserializeValue(string);
   },
   regexp: function(regexp) {
     var flags = '';
@@ -50,7 +50,7 @@ var convertArrayRequirement = function(string, length) {
   var m = string.match(/^\s*\[(.*)\]\s*$/);
   if (!m)
     throw 'Requirement is not an array: "' + string + '"';
-  var values = m[1].split(',').map(ParsleyUtils.trimString);
+  var values = m[1].split(',').map(Utils.trimString);
   if (values.length !== length)
     throw 'Requirement has ' + values.length + ' values when ' + length + ' are needed';
   return values;

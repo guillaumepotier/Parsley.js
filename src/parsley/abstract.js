@@ -1,8 +1,8 @@
 import $ from 'jquery';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 
 var ParsleyAbstract = function () {
-  this.__id__ = ParsleyUtils.generateID();
+  this.__id__ = Utils.generateID();
 };
 
 ParsleyAbstract.prototype = {
@@ -19,15 +19,15 @@ ParsleyAbstract.prototype = {
   },
 
   actualizeOptions: function () {
-    ParsleyUtils.attr(this.$element, this.options.namespace, this.domOptions);
+    Utils.attr(this.$element, this.options.namespace, this.domOptions);
     if (this.parent && this.parent.actualizeOptions)
       this.parent.actualizeOptions();
     return this;
   },
 
   _resetOptions: function (initOptions) {
-    this.domOptions = ParsleyUtils.objectCreate(this.parent.options);
-    this.options = ParsleyUtils.objectCreate(this.domOptions);
+    this.domOptions = Utils.objectCreate(this.parent.options);
+    this.options = Utils.objectCreate(this.domOptions);
     // Shallow copy of ownProperties of initOptions:
     for (var i in initOptions) {
       if (initOptions.hasOwnProperty(i))
@@ -96,7 +96,7 @@ ParsleyAbstract.prototype = {
   },
 
   asyncIsValid: function (group, force) {
-    ParsleyUtils.warnOnce("asyncIsValid is deprecated; please use whenValid instead");
+    Utils.warnOnce("asyncIsValid is deprecated; please use whenValid instead");
     return this.whenValid({group, force});
   },
 

@@ -1,11 +1,11 @@
 import $ from 'jquery';
 import ParsleyField from './field';
 import ParsleyForm from './form';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 
 var o = $({});
 var deprecated = function () {
-  ParsleyUtils.warnOnce("Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley");
+  Utils.warnOnce("Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley");
 };
 
 // Returns an event handler that calls `fn` with the arguments it expects

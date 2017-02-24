@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 import ParsleyValidator from './validator';
 
 var Constraint = function (parsleyField, name, requirements, priority, isDomConstraint) {

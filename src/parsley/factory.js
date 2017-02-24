@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import ParsleyUtils from './utils';
+import Utils from './utils';
 import ParsleyAbstract from './abstract';
 import ParsleyForm from './form';
 import ParsleyField from './field';
@@ -40,13 +40,13 @@ ParsleyFactory.prototype = {
   init: function (options) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
-    this.__id__ = ParsleyUtils.generateID();
+    this.__id__ = Utils.generateID();
 
     // Pre-compute options
     this._resetOptions(options);
 
     // A ParsleyForm instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
-    if (this.$element.is('form') || (ParsleyUtils.checkAttr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
+    if (this.$element.is('form') || (Utils.checkAttr(this.$element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
       return this.bind('parsleyForm');
 
     // Every other element is bound as a `ParsleyField` or `ParsleyFieldMultiple`
@@ -79,7 +79,7 @@ ParsleyFactory.prototype = {
 
     // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
     } else if (!this.options.multiple) {
-      ParsleyUtils.warn('To be bound by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
+      Utils.warn('To be bound by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
       return this;
     }
 
@@ -147,7 +147,7 @@ ParsleyFactory.prototype = {
     }
 
     if (this.options.multiple)
-      ParsleyUtils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
+      Utils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
 
     if ('undefined' !== typeof doNotStore) {
       this.$element.data('ParsleyFieldMultiple', parsleyInstance);
