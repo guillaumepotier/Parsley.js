@@ -1,10 +1,10 @@
 import $ from 'jquery';
 
-var ParsleyMultiple = function () {
+var Multiple = function () {
   this.__class__ = 'FieldMultiple';
 };
 
-ParsleyMultiple.prototype = {
+Multiple.prototype = {
   // Add new `$element` sibling for multiple field
   addElement: function ($element) {
     this.$elements.push($element);
@@ -81,4 +81,4 @@ ParsleyMultiple.prototype = {
   }
 };
 
-export default ParsleyMultiple;
+export default Multiple;

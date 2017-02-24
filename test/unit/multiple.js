@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Parsley from '../../src/parsley';
 
-describe('ParsleyMultiple', () => {
+describe('Multiple', () => {
   it('should not throw errors with multiple items with weird automated generated names', () => {
     $('body').append(
       '<form id="element">' +
@@ -15,7 +15,7 @@ describe('ParsleyMultiple', () => {
       $('#element').parsley();
     });
   });
-  it('should return same ParsleyMultiple instance for each field in same multiple group, and it should count as one field in form', () => {
+  it('should return same Multiple instance for each field in same multiple group, and it should count as one field in form', () => {
     $('body').append(
       '<form id="element" >' +
         '<input type="checkbox" name="check" id="check1" value="1" />'  +

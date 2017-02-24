@@ -6,7 +6,7 @@ import ValidatorRegistry from './validator_registry';
 import ParsleyUI from './ui';
 import Form from './form';
 import Field from './field';
-import ParsleyMultiple from './multiple';
+import Multiple from './multiple';
 import Factory from './factory';
 
 var vernums = $.fn.jquery.split('.');

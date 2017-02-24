@@ -3,7 +3,7 @@ import Utils from './utils';
 import Base from './base';
 import Form from './form';
 import Field from './field';
-import ParsleyMultiple from './multiple';
+import Multiple from './multiple';
 
 var Factory = function (element, options, parsleyFormInstance) {
   this.$element = $(element);
@@ -137,7 +137,7 @@ Factory.prototype = {
       case 'parsleyFieldMultiple':
         parsleyInstance = $.extend(
           new Field(this.$element, this.domOptions, this.options, this.parent),
-          new ParsleyMultiple(),
+          new Multiple(),
           new Base(),
           window.ParsleyExtend
         )._init();
