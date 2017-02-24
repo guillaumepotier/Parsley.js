@@ -5,7 +5,7 @@ import Form from './form';
 import Field from './field';
 import ParsleyMultiple from './multiple';
 
-var ParsleyFactory = function (element, options, parsleyFormInstance) {
+var Factory = function (element, options, parsleyFormInstance) {
   this.$element = $(element);
 
   // If the element has already been bound, returns its saved Parsley instance
@@ -36,7 +36,7 @@ var ParsleyFactory = function (element, options, parsleyFormInstance) {
   return this.init(options);
 };
 
-ParsleyFactory.prototype = {
+Factory.prototype = {
   init: function (options) {
     this.__class__ = 'Parsley';
     this.__version__ = '@@version';
@@ -166,4 +166,4 @@ ParsleyFactory.prototype = {
   }
 };
 
-export default ParsleyFactory;
+export default Factory;

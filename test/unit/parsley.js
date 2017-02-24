@@ -1,39 +1,39 @@
 import $ from 'jquery';
 import Parsley from '../../src/parsley';
-var ParsleyFactory = Parsley.Factory;
+var Factory = Parsley.Factory;
 
-describe('ParsleyFactory', () => {
+describe('Factory', () => {
   it('should be a function', () => {
-    expect(ParsleyFactory).to.be.a('function');
+    expect(Factory).to.be.a('function');
   });
   it('should register some window globals', () => {
     expect(window.ParsleyUtils).not.to.be(undefined);
     expect(window.ParsleyValidator).not.to.be(undefined);
   });
   it('should throw an error if no element given', () => {
-    expect(ParsleyFactory).to.throwException();
+    expect(Factory).to.throwException();
   });
   it('should return Form instance if instantiated on a form', () => {
     $('body').append('<form id="element"></form>');
-    var parsleyInstance = new ParsleyFactory($('#element'));
+    var parsleyInstance = new Factory($('#element'));
     expect(parsleyInstance).to.be.an('object');
     expect(parsleyInstance.__class__).to.be('Form');
   });
   it('should return Field instance if instantiated on a field', () => {
     $('body').append('<input id="element" />');
-    var parsleyInstance = new ParsleyFactory($('#element'));
+    var parsleyInstance = new Factory($('#element'));
     expect(parsleyInstance).to.be.an('object');
     expect(parsleyInstance.__class__).to.be('Field');
   });
   it('should return Field even if instantiated on an unsupported element', () => {
     $('body').append('<div id="element"></div>');
-    var parsleyInstance = new ParsleyFactory($('#element'));
+    var parsleyInstance = new Factory($('#element'));
     expect(parsleyInstance).to.be.an('object');
     expect(parsleyInstance.__class__).to.be('Field');
   });
   it('should return Field instance even if instantiated on an excluded field type, and do not have an errors container', () => {
     $('body').append('<input type="submit" id="element" />');
-    var parsleyInstance = new ParsleyFactory($('#element'));
+    var parsleyInstance = new Factory($('#element'));
     expect(parsleyInstance).to.be.an('object');
     expect(parsleyInstance.__class__).to.be('Field');
   });
@@ -50,7 +50,7 @@ describe('ParsleyFactory', () => {
   });
   it('should return Form if instantiated on an unsupported element with data-parsley-validate attribute', () => {
     $('body').append('<div id="element" data-parsley-validate></div>');
-    var parsleyInstance = new ParsleyFactory($('#element'));
+    var parsleyInstance = new Factory($('#element'));
     expect(parsleyInstance).to.be.an('object');
     expect(parsleyInstance.__class__).to.be('Form');
   });
@@ -58,23 +58,23 @@ describe('ParsleyFactory', () => {
     $('body').append('<div id="element"></div>');
 
     // default ParsleyOptions.namespace
-    expect(new ParsleyFactory($('#element')).options.namespace).to.be('data-parsley-');
+    expect(new Factory($('#element')).options.namespace).to.be('data-parsley-');
 
     // global JS config
     $('#element').parsley().destroy();
     window.ParsleyConfig.namespace = 'data-foo-';
-    expect(new ParsleyFactory($('#element')).options.namespace).to.be('data-foo-');
+    expect(new Factory($('#element')).options.namespace).to.be('data-foo-');
 
     // option on the go
     $('#element').parsley().destroy();
-    expect(new ParsleyFactory($('#element'), {
+    expect(new Factory($('#element'), {
       namespace: 'data-bar-'
     }).options.namespace).to.be('data-bar-');
 
     // data- DOM-API
     $('#element').parsley().destroy();
     $('#element').attr('data-parsley-namespace', 'data-baz-');
-    expect(new ParsleyFactory($('#element'), {
+    expect(new Factory($('#element'), {
       namespace: 'data-bar-'
     }).options.namespace).to.be('data-bar-');
     delete window.ParsleyConfig.namespace;
@@ -82,7 +82,7 @@ describe('ParsleyFactory', () => {
   it('should handle proper options management', () => {
     $('body').append('<form id="element" data-parsley-foo="bar" data-parsley-baz="baz"></form>');
     window.ParsleyConfig = $.extend(window.ParsleyConfig, {bar: 'baz', baz: 'qux'});
-    var parsleyInstance = new ParsleyFactory($('#element'), {qux: 'bux'});
+    var parsleyInstance = new Factory($('#element'), {qux: 'bux'});
     expect(parsleyInstance.options.foo).to.be('bar');
     expect(parsleyInstance.options.baz).to.be('baz');
     expect(parsleyInstance.options.bar).to.be('baz');

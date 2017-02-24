@@ -7,7 +7,7 @@ import ParsleyUI from './ui';
 import Form from './form';
 import Field from './field';
 import ParsleyMultiple from './multiple';
-import ParsleyFactory from './factory';
+import Factory from './factory';
 
 var vernums = $.fn.jquery.split('.');
 if (parseInt(vernums[0]) <= 1 && parseInt(vernums[1]) < 8) {
@@ -21,7 +21,7 @@ var Parsley = $.extend(new Base(), {
     $element: $(document),
     actualizeOptions: null,
     _resetOptions: null,
-    Factory: ParsleyFactory,
+    Factory: Factory,
     version: '@@version'
   });
 
@@ -30,7 +30,7 @@ var Parsley = $.extend(new Base(), {
 $.extend(Field.prototype, ParsleyUI.Field, Base.prototype);
 $.extend(Form.prototype, ParsleyUI.Form, Base.prototype);
 // Inherit actualizeOptions and _resetOptions:
-$.extend(ParsleyFactory.prototype, Base.prototype);
+$.extend(Factory.prototype, Base.prototype);
 
 // ### jQuery API
 // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
@@ -52,7 +52,7 @@ $.fn.parsley = $.fn.psly = function (options) {
     return;
   }
 
-  return new ParsleyFactory(this, options);
+  return new Factory(this, options);
 };
 
 // ### Field and Form extension
