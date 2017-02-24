@@ -21,7 +21,7 @@ var requirementConverters = {
       throw 'No such reference: "' + string + '"';
     return result;
   },
-  boolean: function(string) {
+  'boolean': function _boolean(string) {
     return string !== 'false';
   },
   object: function(string) {
