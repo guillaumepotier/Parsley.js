@@ -257,11 +257,17 @@ UI.Field = {
   // Determine which element will have `parsley-error` and `parsley-success` classes
   _manageClassHandler: function () {
     // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
-    if ('string' === typeof this.options.classHandler && $(this.options.classHandler).length)
+    if ('string' === typeof this.options.classHandler) {
+      if ($(this.options.classHandler).length === 0)
+        ParsleyUtils.warn('No elements found that match the selector `' + this.options.classHandler + '` set in options.classHandler or data-parsley-class-handler');
+
+      //return element or empty set
       return $(this.options.classHandler);
+    }
 
     // Class handled could also be determined by function given in Parsley options
-    var $handler = this.options.classHandler.call(this, this);
+    if ('function' === typeof this.options.classHandler)
+      var $handler = this.options.classHandler.call(this, this);
 
     // If this function returned a valid existing DOM element, go for it
     if ('undefined' !== typeof $handler && $handler.length)
