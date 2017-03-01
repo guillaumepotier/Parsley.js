@@ -20,19 +20,22 @@ describe('extra/plugin/bind', () => {
         '<input type="checkbox" name="sexe" value="female" />' +
       '</form>');
 
-    var parsleyInstance = $('#element').parsley({
-      fields: {
-        '[name="name"]': {
-          required: true,
-          length: [4, 20]
-        },
-        '#email': {
-          type: 'email'
-        },
-        '#sexe': {
-          required: true
+    var parsleyInstance;
+    expectWarning(() => {
+      parsleyInstance = $('#element').parsley({
+        fields: {
+          '[name="name"]': {
+            required: true,
+            length: [4, 20]
+          },
+          '#email': {
+            type: 'email'
+          },
+          '#sexe': {
+            required: true
+          }
         }
-      }
+      });
     });
     expect($('[name="name"]').parsley().constraints.length).to.be(2);
     expect($('#email').parsley().constraints.length).to.be(1);
