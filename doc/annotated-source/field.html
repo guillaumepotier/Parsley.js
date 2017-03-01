@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -113,11 +113,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 <span class="hljs-keyword">import</span> Constraint <span class="hljs-keyword">from</span> <span class="hljs-string">'./constraint'</span>;
-<span class="hljs-keyword">import</span> ParsleyUI <span class="hljs-keyword">from</span> <span class="hljs-string">'./ui'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> UI <span class="hljs-keyword">from</span> <span class="hljs-string">'./ui'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
-<span class="hljs-keyword">var</span> ParsleyField = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">field, domOptions, options, parsleyFormInstance</span>) </span>{
-  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyField'</span>;
+<span class="hljs-keyword">var</span> Field = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">field, domOptions, options, parsleyFormInstance</span>) </span>{
+  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Field'</span>;
 
   <span class="hljs-keyword">this</span>.$element = $(field);</pre></div></div>
             
@@ -176,7 +176,7 @@
 
 <span class="hljs-keyword">var</span> statusMapping = {<span class="hljs-attr">pending</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">resolved</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">rejected</span>: <span class="hljs-literal">false</span>};
 
-ParsleyField.prototype = {</pre></div></div>
+Field.prototype = {</pre></div></div>
             
         </li>
         
@@ -188,7 +188,7 @@ ParsleyField.prototype = {</pre></div></div>
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <h1 id="public-api">Public API</h1>
-<p>Validate field and trigger some events for mainly <code>ParsleyUI</code>
+<p>Validate field and trigger some events for mainly <code>UI</code>
 @returns <code>true</code>, an array of the validators that failed, or
 <code>null</code> if validation is not finished. Prefer using whenValidate</p>
 
@@ -196,7 +196,7 @@ ParsleyField.prototype = {</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>  validate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt;= <span class="hljs-number">1</span> &amp;&amp; !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce(<span class="hljs-string">'Calling validate on a parsley field without passing arguments as an object is deprecated.'</span>);
+      Utils.warnOnce(<span class="hljs-string">'Calling validate on a parsley field without passing arguments as an object is deprecated.'</span>);
       options = {options};
     }
     <span class="hljs-keyword">var</span> promise = <span class="hljs-keyword">this</span>.whenValidate(options);
@@ -218,7 +218,7 @@ ParsleyField.prototype = {</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Validate field and trigger some events for mainly <code>ParsleyUI</code>
+              <p>Validate field and trigger some events for mainly <code>UI</code>
 @returns a promise that succeeds only when all validations do
 or <code>undefined</code> if field is not in the given <code>group</code>.</p>
 
@@ -333,7 +333,7 @@ See also <code>whenValid</code>.</p>
             
             <div class="content"><div class='highlight'><pre>  isValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt;= <span class="hljs-number">1</span> &amp;&amp; !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce(<span class="hljs-string">'Calling isValid on a parsley field without passing arguments as an object is deprecated.'</span>);
+      Utils.warnOnce(<span class="hljs-string">'Calling isValid on a parsley field without passing arguments as an object is deprecated.'</span>);
       <span class="hljs-keyword">var</span> [force, value] = <span class="hljs-built_in">arguments</span>;
       options = {force, value};
     }
@@ -449,14 +449,14 @@ and combine the promises together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> promise = ParsleyUtils.all(
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> promise = Utils.all(
         $.map(constraints, constraint =&gt; <span class="hljs-keyword">this</span>._validateConstraint(value, constraint))
       );
       promises.push(promise);
       <span class="hljs-keyword">if</span> (promise.state() === <span class="hljs-string">'rejected'</span>)
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; <span class="hljs-comment">// Interrupt processing if a group has already failed</span>
     });
-    <span class="hljs-keyword">return</span> ParsleyUtils.all(promises);
+    <span class="hljs-keyword">return</span> Utils.all(promises);
   },</pre></div></div>
             
         </li>
@@ -504,7 +504,7 @@ and combine the promises together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> ParsleyUtils.all([result]).fail(<span class="hljs-function"><span class="hljs-params">errorMessage</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> Utils.all([result]).fail(<span class="hljs-function"><span class="hljs-params">errorMessage</span> =&gt;</span> {
       <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>.validationResult <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>))
         <span class="hljs-keyword">this</span>.validationResult = [];
       <span class="hljs-keyword">this</span>.validationResult.push({
@@ -617,7 +617,7 @@ and combine the promises together.</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._destroyUI();
     <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'Parsley'</span>);
-    <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'ParsleyFieldMultiple'</span>);
+    <span class="hljs-keyword">this</span>.$element.removeData(<span class="hljs-string">'FieldMultiple'</span>);
     <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'destroy'</span>);
   },</pre></div></div>
             
@@ -862,7 +862,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>) !== <span class="hljs-string">'date'</span> &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
       <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'range'</span>, [<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>)], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
@@ -878,7 +878,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>) !== <span class="hljs-string">'date'</span> &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>))
       <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'min'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
@@ -894,7 +894,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>) !== <span class="hljs-string">'date'</span> &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
       <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'max'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
@@ -995,7 +995,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^(email|url|range)$/i</span>.test(type)) {
+            <div class="content"><div class='highlight'><pre>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^(email|url|range|date)$/i</span>.test(type)) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, type, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
@@ -1058,15 +1058,20 @@ Use <code>data-parsley-whitespace=&quot;trim&quot;</code> to auto trim input val
             
             <div class="content"><div class='highlight'><pre>  _handleWhitespace: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.options.trimValue)
-      ParsleyUtils.warnOnce(<span class="hljs-string">'data-parsley-trim-value="true" is deprecated, please use data-parsley-whitespace="trim"'</span>);
+      Utils.warnOnce(<span class="hljs-string">'data-parsley-trim-value="true" is deprecated, please use data-parsley-whitespace="trim"'</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'squish'</span> === <span class="hljs-keyword">this</span>.options.whitespace)
       value = value.replace(<span class="hljs-regexp">/\s{2,}/g</span>, <span class="hljs-string">' '</span>);
 
     <span class="hljs-keyword">if</span> ((<span class="hljs-string">'trim'</span> === <span class="hljs-keyword">this</span>.options.whitespace) || (<span class="hljs-string">'squish'</span> === <span class="hljs-keyword">this</span>.options.whitespace) || (<span class="hljs-literal">true</span> === <span class="hljs-keyword">this</span>.options.trimValue))
-      value = ParsleyUtils.trimString(value);
+      value = Utils.trimString(value);
 
     <span class="hljs-keyword">return</span> value;
+  },
+
+  <span class="hljs-attr">_isDateInput</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">this</span>.constraintsByName.type;
+    <span class="hljs-keyword">return</span> c &amp;&amp; c.requirements === <span class="hljs-string">'date'</span>;
   },</pre></div></div>
             
         </li>
@@ -1131,7 +1136,7 @@ The result is thus an array of arrays of constraints.</p>
 
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyField;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Field;</pre></div></div>
             
         </li>
         

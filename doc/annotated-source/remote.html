@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -312,7 +312,7 @@ Parsley.on(<span class="hljs-string">'form:submit'</span>, <span class="hljs-fun
 });
 
 <span class="hljs-built_in">window</span>.ParsleyExtend.addAsyncValidator = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-  ParsleyUtils.warnOnce(<span class="hljs-string">'Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`'</span>);
+  Utils.warnOnce(<span class="hljs-string">'Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`'</span>);
   <span class="hljs-keyword">return</span> Parsley.addAsyncValidator(...arguments);
 };</pre></div></div>
             

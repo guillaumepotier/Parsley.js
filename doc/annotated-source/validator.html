@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -112,36 +112,33 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
-<span class="hljs-keyword">var</span> requirementConverters = {
-  <span class="hljs-attr">string</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string;
-  },
-  <span class="hljs-attr">integer</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(string))
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement is not an integer: "'</span> + string + <span class="hljs-string">'"'</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(string, <span class="hljs-number">10</span>);
-  },
-  <span class="hljs-attr">number</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(string))
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement is not a number: "'</span> + string + <span class="hljs-string">'"'</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(string);
-  },
-  <span class="hljs-attr">reference</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{ <span class="hljs-comment">// Unused for now</span>
-    <span class="hljs-keyword">var</span> result = $(string);
-    <span class="hljs-keyword">if</span> (result.length === <span class="hljs-number">0</span>)
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">'No such reference: "'</span> + string + <span class="hljs-string">'"'</span>;
-    <span class="hljs-keyword">return</span> result;
-  },
-  <span class="hljs-string">'boolean'</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_boolean</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> string !== <span class="hljs-string">'false'</span>;
-  },
-  <span class="hljs-attr">object</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
-    <span class="hljs-keyword">return</span> ParsleyUtils.deserializeValue(string);
-  },
-  <span class="hljs-attr">regexp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">regexp</span>) </span>{
-    <span class="hljs-keyword">var</span> flags = <span class="hljs-string">''</span>;</pre></div></div>
+<span class="hljs-keyword">var</span> convertArrayRequirement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string, length</span>) </span>{
+  <span class="hljs-keyword">var</span> m = string.match(<span class="hljs-regexp">/^\s*\[(.*)\]\s*$/</span>);
+  <span class="hljs-keyword">if</span> (!m)
+    <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement is not an array: "'</span> + string + <span class="hljs-string">'"'</span>;
+  <span class="hljs-keyword">var</span> values = m[<span class="hljs-number">1</span>].split(<span class="hljs-string">','</span>).map(Utils.trimString);
+  <span class="hljs-keyword">if</span> (values.length !== length)
+    <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement has '</span> + values.length + <span class="hljs-string">' values when '</span> + length + <span class="hljs-string">' are needed'</span>;
+  <span class="hljs-keyword">return</span> values;
+};
+
+<span class="hljs-keyword">var</span> convertExtraOptionRequirement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">requirementSpec, string, extraOptionReader</span>) </span>{
+  <span class="hljs-keyword">var</span> main = <span class="hljs-literal">null</span>;
+  <span class="hljs-keyword">var</span> extra = {};
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> requirementSpec) {
+    <span class="hljs-keyword">if</span> (key) {
+      <span class="hljs-keyword">var</span> value = extraOptionReader(key);
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> value)
+        value = Utils.parseRequirement(requirementSpec[key], value);
+      extra[key] = value;
+    } <span class="hljs-keyword">else</span> {
+      main = Utils.parseRequirement(requirementSpec[key], string);
+    }
+  }
+  <span class="hljs-keyword">return</span> [main, extra];
+};</pre></div></div>
             
         </li>
         
@@ -152,11 +149,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern</p>
+              <p>A Validator needs to implement the methods <code>validate</code> and <code>parseRequirements</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^\/.*\/(?:[gimy]*)$/</span>.test(regexp)) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> Validator = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">spec</span>) </span>{
+  $.extend(<span class="hljs-literal">true</span>, <span class="hljs-keyword">this</span>, spec);
+};
+
+Validator.prototype = {</pre></div></div>
             
         </li>
         
@@ -166,111 +168,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>Replace the regexp literal string with the first match group: ([gimy]*)
-If no flag is present, this will be a blank string</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      flags = regexp.replace(<span class="hljs-regexp">/.*\/([gimy]*)$/</span>, <span class="hljs-string">'$1'</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Again, replace the regexp literal string with the first match group:
-everything excluding the opening and closing slashes and the flags</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      regexp = regexp.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'^/(.*?)/'</span> + flags + <span class="hljs-string">'$'</span>), <span class="hljs-string">'$1'</span>);
-    } <span class="hljs-keyword">else</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Anchor regexp:</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      regexp = <span class="hljs-string">'^'</span> + regexp + <span class="hljs-string">'$'</span>;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(regexp, flags);
-  }
-};
-
-<span class="hljs-keyword">var</span> convertArrayRequirement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string, length</span>) </span>{
-  <span class="hljs-keyword">var</span> m = string.match(<span class="hljs-regexp">/^\s*\[(.*)\]\s*$/</span>);
-  <span class="hljs-keyword">if</span> (!m)
-    <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement is not an array: "'</span> + string + <span class="hljs-string">'"'</span>;
-  <span class="hljs-keyword">var</span> values = m[<span class="hljs-number">1</span>].split(<span class="hljs-string">','</span>).map(ParsleyUtils.trimString);
-  <span class="hljs-keyword">if</span> (values.length !== length)
-    <span class="hljs-keyword">throw</span> <span class="hljs-string">'Requirement has '</span> + values.length + <span class="hljs-string">' values when '</span> + length + <span class="hljs-string">' are needed'</span>;
-  <span class="hljs-keyword">return</span> values;
-};
-
-<span class="hljs-keyword">var</span> convertRequirement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">requirementType, string</span>) </span>{
-  <span class="hljs-keyword">var</span> converter = requirementConverters[requirementType || <span class="hljs-string">'string'</span>];
-  <span class="hljs-keyword">if</span> (!converter)
-    <span class="hljs-keyword">throw</span> <span class="hljs-string">'Unknown requirement specification: "'</span> + requirementType + <span class="hljs-string">'"'</span>;
-  <span class="hljs-keyword">return</span> converter(string);
-};
-
-<span class="hljs-keyword">var</span> convertExtraOptionRequirement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">requirementSpec, string, extraOptionReader</span>) </span>{
-  <span class="hljs-keyword">var</span> main = <span class="hljs-literal">null</span>;
-  <span class="hljs-keyword">var</span> extra = {};
-  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> requirementSpec) {
-    <span class="hljs-keyword">if</span> (key) {
-      <span class="hljs-keyword">var</span> value = extraOptionReader(key);
-      <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> value)
-        value = convertRequirement(requirementSpec[key], value);
-      extra[key] = value;
-    } <span class="hljs-keyword">else</span> {
-      main = convertRequirement(requirementSpec[key], string);
-    }
-  }
-  <span class="hljs-keyword">return</span> [main, extra];
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>A Validator needs to implement the methods <code>validate</code> and <code>parseRequirements</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">var</span> ParsleyValidator = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">spec</span>) </span>{
-  $.extend(<span class="hljs-literal">true</span>, <span class="hljs-keyword">this</span>, spec);
-};
-
-ParsleyValidator.prototype = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Returns <code>true</code> iff the given <code>value</code> is valid according the given requirements.</p>
 
@@ -289,6 +186,13 @@ ParsleyValidator.prototype = {</pre></div></div>
         <span class="hljs-keyword">throw</span> <span class="hljs-string">'Validator `'</span> + <span class="hljs-keyword">this</span>.name + <span class="hljs-string">'` does not handle multiple values'</span>;
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateMultiple(...arguments);
     } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">let</span> instance = <span class="hljs-built_in">arguments</span>[<span class="hljs-built_in">arguments</span>.length - <span class="hljs-number">1</span>];
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.validateDate &amp;&amp; instance._isDateInput()) {
+        <span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>] = Utils.parse.date(<span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>]);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>] === <span class="hljs-literal">null</span>)
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateDate(...arguments);
+      }
       <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.validateNumber) {
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(value))
           <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -305,11 +209,11 @@ ParsleyValidator.prototype = {</pre></div></div>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Parses <code>requirements</code> into an array of arguments,
 according to <code>this.requirementType</code></p>
@@ -322,11 +226,11 @@ according to <code>this.requirementType</code></p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Assume requirement already parsed
 but make sure we return an array</p>
@@ -339,23 +243,23 @@ but make sure we return an array</p>
     <span class="hljs-keyword">if</span> ($.isArray(type)) {
       <span class="hljs-keyword">var</span> values = convertArrayRequirement(requirements, type.length);
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; values.length; i++)
-        values[i] = convertRequirement(type[i], values[i]);
+        values[i] = Utils.parseRequirement(type[i], values[i]);
       <span class="hljs-keyword">return</span> values;
     } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($.isPlainObject(type)) {
       <span class="hljs-keyword">return</span> convertExtraOptionRequirement(type, requirements, extraOptionReader);
     } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">return</span> [convertRequirement(type, requirements)];
+      <span class="hljs-keyword">return</span> [Utils.parseRequirement(type, requirements)];
     }
   },</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Defaults:</p>
 
@@ -367,7 +271,7 @@ but make sure we return an array</p>
 
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyValidator;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Validator;</pre></div></div>
             
         </li>
         

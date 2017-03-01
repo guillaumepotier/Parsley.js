@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -112,13 +112,13 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
-<span class="hljs-keyword">import</span> ParsleyAbstract <span class="hljs-keyword">from</span> <span class="hljs-string">'./abstract'</span>;
-<span class="hljs-keyword">import</span> ParsleyForm <span class="hljs-keyword">from</span> <span class="hljs-string">'./form'</span>;
-<span class="hljs-keyword">import</span> ParsleyField <span class="hljs-keyword">from</span> <span class="hljs-string">'./field'</span>;
-<span class="hljs-keyword">import</span> ParsleyMultiple <span class="hljs-keyword">from</span> <span class="hljs-string">'./multiple'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Base <span class="hljs-keyword">from</span> <span class="hljs-string">'./base'</span>;
+<span class="hljs-keyword">import</span> Form <span class="hljs-keyword">from</span> <span class="hljs-string">'./form'</span>;
+<span class="hljs-keyword">import</span> Field <span class="hljs-keyword">from</span> <span class="hljs-string">'./field'</span>;
+<span class="hljs-keyword">import</span> Multiple <span class="hljs-keyword">from</span> <span class="hljs-string">'./multiple'</span>;
 
-<span class="hljs-keyword">var</span> ParsleyFactory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, options, parsleyFormInstance</span>) </span>{
+<span class="hljs-keyword">var</span> Factory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, options, parsleyFormInstance</span>) </span>{
   <span class="hljs-keyword">this</span>.$element = $(element);</pre></div></div>
             
         </li>
@@ -146,7 +146,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>If the saved instance has been bound without a ParsleyForm parent and there is one given in this call, add it</p>
+              <p>If the saved instance has been bound without a Form parent and there is one given in this call, add it</p>
 
             </div>
             
@@ -178,18 +178,18 @@
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.$element.length)
     <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'You must bind Parsley on an existing element.'</span>);
 
-  <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyFormInstance &amp;&amp; <span class="hljs-string">'ParsleyForm'</span> !== parsleyFormInstance.__class__)
-    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Parent instance must be a ParsleyForm instance'</span>);
+  <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyFormInstance &amp;&amp; <span class="hljs-string">'Form'</span> !== parsleyFormInstance.__class__)
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Parent instance must be a Form instance'</span>);
 
   <span class="hljs-keyword">this</span>.parent = parsleyFormInstance || <span class="hljs-built_in">window</span>.Parsley;
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.init(options);
 };
 
-ParsleyFactory.prototype = {
+Factory.prototype = {
   <span class="hljs-attr">init</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Parsley'</span>;
     <span class="hljs-keyword">this</span>.__version__ = <span class="hljs-string">'@@version'</span>;
-    <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();</pre></div></div>
+    <span class="hljs-keyword">this</span>.__id__ = Utils.generateID();</pre></div></div>
             
         </li>
         
@@ -215,11 +215,11 @@ ParsleyFactory.prototype = {
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>A ParsleyForm instance is obviously a <code>&lt;form&gt;</code> element but also every node that is not an input and has the <code>data-parsley-validate</code> attribute</p>
+              <p>A Form instance is obviously a <code>&lt;form&gt;</code> element but also every node that is not an input and has the <code>data-parsley-validate</code> attribute</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'form'</span>) || (ParsleyUtils.checkAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'validate'</span>) &amp;&amp; !<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-keyword">this</span>.options.inputs)))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'form'</span>) || (Utils.checkAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'validate'</span>) &amp;&amp; !<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-keyword">this</span>.options.inputs)))
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyForm'</span>);</pre></div></div>
             
         </li>
@@ -231,7 +231,7 @@ ParsleyFactory.prototype = {
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Every other element is bound as a <code>ParsleyField</code> or <code>ParsleyFieldMultiple</code></p>
+              <p>Every other element is bound as a <code>Field</code> or <code>FieldMultiple</code></p>
 
             </div>
             
@@ -312,7 +312,7 @@ Maybe some refactoring would be appreciated here…</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.options.multiple) {
-      ParsleyUtils.warn(<span class="hljs-string">'To be bound by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.'</span>, <span class="hljs-keyword">this</span>.$element);
+      Utils.warn(<span class="hljs-string">'To be bound by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.'</span>, <span class="hljs-keyword">this</span>.$element);
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
     }</pre></div></div>
             
@@ -369,7 +369,7 @@ Maybe some refactoring would be appreciated here…</p>
       parsleyMultipleInstance = $($previouslyRelated.get(i)).data(<span class="hljs-string">'Parsley'</span>);
       <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> parsleyMultipleInstance) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'ParsleyFieldMultiple'</span>)) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'FieldMultiple'</span>)) {
           parsleyMultipleInstance.addElement(<span class="hljs-keyword">this</span>.$element);
         }
 
@@ -386,8 +386,8 @@ Maybe some refactoring would be appreciated here…</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Create a secret ParsleyField instance for every multiple field. It will be stored in <code>data(&#39;ParsleyFieldMultiple&#39;)</code>
-And will be useful later to access classic <code>ParsleyField</code> stuff while being in a <code>ParsleyFieldMultiple</code> instance</p>
+              <p>Create a secret Field instance for every multiple field. It will be stored in <code>data(&#39;FieldMultiple&#39;)</code>
+And will be useful later to access classic <code>Field</code> stuff while being in a <code>FieldMultiple</code> instance</p>
 
             </div>
             
@@ -405,7 +405,7 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Return proper <code>ParsleyForm</code>, <code>ParsleyField</code> or <code>ParsleyFieldMultiple</code></p>
+              <p>Return proper <code>Form</code>, <code>Field</code> or <code>FieldMultiple</code></p>
 
             </div>
             
@@ -415,23 +415,23 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
     <span class="hljs-keyword">switch</span> (type) {
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyForm'</span>:
         parsleyInstance = $.extend(
-          <span class="hljs-keyword">new</span> ParsleyForm(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options),
-          <span class="hljs-keyword">new</span> ParsleyAbstract(),
+          <span class="hljs-keyword">new</span> Form(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options),
+          <span class="hljs-keyword">new</span> Base(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         )._bindFields();
         <span class="hljs-keyword">break</span>;
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyField'</span>:
         parsleyInstance = $.extend(
-          <span class="hljs-keyword">new</span> ParsleyField(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
-          <span class="hljs-keyword">new</span> ParsleyAbstract(),
+          <span class="hljs-keyword">new</span> Field(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
+          <span class="hljs-keyword">new</span> Base(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         );
         <span class="hljs-keyword">break</span>;
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyFieldMultiple'</span>:
         parsleyInstance = $.extend(
-          <span class="hljs-keyword">new</span> ParsleyField(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
-          <span class="hljs-keyword">new</span> ParsleyMultiple(),
-          <span class="hljs-keyword">new</span> ParsleyAbstract(),
+          <span class="hljs-keyword">new</span> Field(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
+          <span class="hljs-keyword">new</span> Multiple(),
+          <span class="hljs-keyword">new</span> Base(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         )._init();
         <span class="hljs-keyword">break</span>;
@@ -440,10 +440,10 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
     }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple)
-      ParsleyUtils.setAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
+      Utils.setAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> doNotStore) {
-      <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'ParsleyFieldMultiple'</span>, parsleyInstance);
+      <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'FieldMultiple'</span>, parsleyInstance);
 
       <span class="hljs-keyword">return</span> parsleyInstance;
     }</pre></div></div>
@@ -472,7 +472,7 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Tell the world we have a new ParsleyForm or ParsleyField instance!</p>
+              <p>Tell the world we have a new Form or Field instance!</p>
 
             </div>
             
@@ -483,7 +483,7 @@ And will be useful later to access classic <code>ParsleyField</code> stuff while
   }
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyFactory;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Factory;</pre></div></div>
             
         </li>
         

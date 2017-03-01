@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>abstract.js</title>
+  <title>base.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -96,7 +96,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>abstract.js</h1>
+                  <h1>base.js</h1>
               </div>
           </li>
         
@@ -112,13 +112,13 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
-<span class="hljs-keyword">var</span> ParsleyAbstract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">this</span>.__id__ = ParsleyUtils.generateID();
+<span class="hljs-keyword">var</span> Base = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">this</span>.__id__ = Utils.generateID();
 };
 
-ParsleyAbstract.prototype = {
+Base.prototype = {
   <span class="hljs-attr">asyncSupport</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// Deprecated</span>
 
   _pipeAccordingToValidationResult: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -132,15 +132,15 @@ ParsleyAbstract.prototype = {
   },
 
   <span class="hljs-attr">actualizeOptions</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    ParsleyUtils.attr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-keyword">this</span>.domOptions);
+    Utils.attr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-keyword">this</span>.domOptions);
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.parent &amp;&amp; <span class="hljs-keyword">this</span>.parent.actualizeOptions)
       <span class="hljs-keyword">this</span>.parent.actualizeOptions();
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   },
 
   <span class="hljs-attr">_resetOptions</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">initOptions</span>) </span>{
-    <span class="hljs-keyword">this</span>.domOptions = ParsleyUtils.objectCreate(<span class="hljs-keyword">this</span>.parent.options);
-    <span class="hljs-keyword">this</span>.options = ParsleyUtils.objectCreate(<span class="hljs-keyword">this</span>.domOptions);</pre></div></div>
+    <span class="hljs-keyword">this</span>.domOptions = Utils.objectCreate(<span class="hljs-keyword">this</span>.parent.options);
+    <span class="hljs-keyword">this</span>.options = Utils.objectCreate(<span class="hljs-keyword">this</span>.domOptions);</pre></div></div>
             
         </li>
         
@@ -282,7 +282,7 @@ Returns false if execution was interrupted</p>
   },
 
   <span class="hljs-attr">asyncIsValid</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group, force</span>) </span>{
-    ParsleyUtils.warnOnce(<span class="hljs-string">"asyncIsValid is deprecated; please use whenValid instead"</span>);
+    Utils.warnOnce(<span class="hljs-string">"asyncIsValid is deprecated; please use whenValid instead"</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.whenValid({group, force});
   },
 
@@ -293,7 +293,7 @@ Returns false if execution was interrupted</p>
   }
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyAbstract;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Base;</pre></div></div>
             
         </li>
         

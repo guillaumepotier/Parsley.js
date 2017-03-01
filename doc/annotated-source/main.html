@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -112,22 +112,22 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
-<span class="hljs-keyword">import</span> ParsleyDefaults <span class="hljs-keyword">from</span> <span class="hljs-string">'./defaults'</span>;
-<span class="hljs-keyword">import</span> ParsleyAbstract <span class="hljs-keyword">from</span> <span class="hljs-string">'./abstract'</span>;
-<span class="hljs-keyword">import</span> ParsleyValidatorRegistry <span class="hljs-keyword">from</span> <span class="hljs-string">'./validator_registry'</span>;
-<span class="hljs-keyword">import</span> ParsleyUI <span class="hljs-keyword">from</span> <span class="hljs-string">'./ui'</span>;
-<span class="hljs-keyword">import</span> ParsleyForm <span class="hljs-keyword">from</span> <span class="hljs-string">'./form'</span>;
-<span class="hljs-keyword">import</span> ParsleyField <span class="hljs-keyword">from</span> <span class="hljs-string">'./field'</span>;
-<span class="hljs-keyword">import</span> ParsleyMultiple <span class="hljs-keyword">from</span> <span class="hljs-string">'./multiple'</span>;
-<span class="hljs-keyword">import</span> ParsleyFactory <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Defaults <span class="hljs-keyword">from</span> <span class="hljs-string">'./defaults'</span>;
+<span class="hljs-keyword">import</span> Base <span class="hljs-keyword">from</span> <span class="hljs-string">'./base'</span>;
+<span class="hljs-keyword">import</span> ValidatorRegistry <span class="hljs-keyword">from</span> <span class="hljs-string">'./validator_registry'</span>;
+<span class="hljs-keyword">import</span> UI <span class="hljs-keyword">from</span> <span class="hljs-string">'./ui'</span>;
+<span class="hljs-keyword">import</span> Form <span class="hljs-keyword">from</span> <span class="hljs-string">'./form'</span>;
+<span class="hljs-keyword">import</span> Field <span class="hljs-keyword">from</span> <span class="hljs-string">'./field'</span>;
+<span class="hljs-keyword">import</span> Multiple <span class="hljs-keyword">from</span> <span class="hljs-string">'./multiple'</span>;
+<span class="hljs-keyword">import</span> Factory <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory'</span>;
 
 <span class="hljs-keyword">var</span> vernums = $.fn.jquery.split(<span class="hljs-string">'.'</span>);
 <span class="hljs-keyword">if</span> (<span class="hljs-built_in">parseInt</span>(vernums[<span class="hljs-number">0</span>]) &lt;= <span class="hljs-number">1</span> &amp;&amp; <span class="hljs-built_in">parseInt</span>(vernums[<span class="hljs-number">1</span>]) &lt; <span class="hljs-number">8</span>) {
   <span class="hljs-keyword">throw</span> <span class="hljs-string">"The loaded version of jQuery is too old. Please upgrade to 1.8.x or better."</span>;
 }
 <span class="hljs-keyword">if</span> (!vernums.forEach) {
-  ParsleyUtils.warn(<span class="hljs-string">'Parsley requires ES5 to run properly. Please include https://github.com/es-shims/es5-shim'</span>);
+  Utils.warn(<span class="hljs-string">'Parsley requires ES5 to run properly. Please include https://github.com/es-shims/es5-shim'</span>);
 }</pre></div></div>
             
         </li>
@@ -143,11 +143,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Parsley = $.extend(<span class="hljs-keyword">new</span> ParsleyAbstract(), {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Parsley = $.extend(<span class="hljs-keyword">new</span> Base(), {
     <span class="hljs-attr">$element</span>: $(<span class="hljs-built_in">document</span>),
     <span class="hljs-attr">actualizeOptions</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">_resetOptions</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">Factory</span>: ParsleyFactory,
+    <span class="hljs-attr">Factory</span>: Factory,
     <span class="hljs-attr">version</span>: <span class="hljs-string">'@@version'</span>
   });</pre></div></div>
             
@@ -160,13 +160,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Supplement ParsleyField and Form with ParsleyAbstract
+              <p>Supplement Field and Form with Base
 This way, the constructors will have access to those methods</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$.extend(ParsleyField.prototype, ParsleyUI.Field, ParsleyAbstract.prototype);
-$.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>$.extend(Field.prototype, UI.Field, Base.prototype);
+$.extend(Form.prototype, UI.Form, Base.prototype);</pre></div></div>
             
         </li>
         
@@ -181,7 +181,7 @@ $.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$.extend(ParsleyFactory.prototype, ParsleyAbstract.prototype);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>$.extend(Factory.prototype, Base.prototype);</pre></div></div>
             
         </li>
         
@@ -222,12 +222,12 @@ $.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (!$(<span class="hljs-keyword">this</span>).length) {
-    ParsleyUtils.warn(<span class="hljs-string">'You must bind Parsley on an existing element.'</span>);
+    Utils.warn(<span class="hljs-string">'You must bind Parsley on an existing element.'</span>);
 
     <span class="hljs-keyword">return</span>;
   }
 
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ParsleyFactory(<span class="hljs-keyword">this</span>, options);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Factory(<span class="hljs-keyword">this</span>, options);
 };</pre></div></div>
             
         </li>
@@ -239,7 +239,7 @@ $.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h3 id="parsleyfield-and-parsleyform-extension">ParsleyField and ParsleyForm extension</h3>
+              <h3 id="field-and-form-extension">Field and Form extension</h3>
 <p>Ensure the extension is now defined if it wasn’t previously</p>
 
             </div>
@@ -261,7 +261,7 @@ $.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Parsley.options = $.extend(ParsleyUtils.objectCreate(ParsleyDefaults), <span class="hljs-built_in">window</span>.ParsleyConfig);
+            <div class="content"><div class='highlight'><pre>Parsley.options = $.extend(Utils.objectCreate(Defaults), <span class="hljs-built_in">window</span>.ParsleyConfig);
 <span class="hljs-built_in">window</span>.ParsleyConfig = Parsley.options; <span class="hljs-comment">// Old way of accessing global options</span></pre></div></div>
             
         </li>
@@ -278,7 +278,16 @@ $.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.Parsley = <span class="hljs-built_in">window</span>.psly = Parsley;
-<span class="hljs-built_in">window</span>.ParsleyUtils = ParsleyUtils;</pre></div></div>
+Parsley.Utils = Utils;
+<span class="hljs-built_in">window</span>.ParsleyUtils = {};
+$.each(Utils, (key, value) =&gt; {
+  <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> value) {
+    <span class="hljs-built_in">window</span>.ParsleyUtils[key] = <span class="hljs-function">(<span class="hljs-params">...args</span>) =&gt;</span> {
+      Utils.warnOnce(<span class="hljs-string">'Accessing `window.ParsleyUtils` is deprecated. Use `window.Parsley.Utils` instead.'</span>);
+      <span class="hljs-keyword">return</span> Utils[key](...args);
+    };
+  }
+});</pre></div></div>
             
         </li>
         
@@ -293,12 +302,12 @@ $.extend(ParsleyForm.prototype, ParsleyUI.Form, ParsleyAbstract.prototype);</pre
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> registry = <span class="hljs-built_in">window</span>.Parsley._validatorRegistry = <span class="hljs-keyword">new</span> ParsleyValidatorRegistry(<span class="hljs-built_in">window</span>.ParsleyConfig.validators, <span class="hljs-built_in">window</span>.ParsleyConfig.i18n);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> registry = <span class="hljs-built_in">window</span>.Parsley._validatorRegistry = <span class="hljs-keyword">new</span> ValidatorRegistry(<span class="hljs-built_in">window</span>.ParsleyConfig.validators, <span class="hljs-built_in">window</span>.ParsleyConfig.i18n);
 <span class="hljs-built_in">window</span>.ParsleyValidator = {};
 $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator'</span>.split(<span class="hljs-string">' '</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i, method</span>) </span>{
   <span class="hljs-built_in">window</span>.Parsley[method] = $.proxy(registry, method);
   <span class="hljs-built_in">window</span>.ParsleyValidator[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing the method '<span class="hljs-subst">${method}</span>' through ParsleyValidator is deprecated. Simply call 'window.Parsley.<span class="hljs-subst">${method}</span>(...)'`</span>);
+    Utils.warnOnce(<span class="hljs-string">`Accessing the method '<span class="hljs-subst">${method}</span>' through Validator is deprecated. Simply call 'window.Parsley.<span class="hljs-subst">${method}</span>(...)'`</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.Parsley[method](...arguments);
   };
 });</pre></div></div>
@@ -312,27 +321,27 @@ $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages ge
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h3 id="parsleyui">ParsleyUI</h3>
+              <h3 id="ui">UI</h3>
 <p>Deprecated global object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.Parsley.UI = ParsleyUI;
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.Parsley.UI = UI;
 <span class="hljs-built_in">window</span>.ParsleyUI = {
   <span class="hljs-attr">removeError</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, doNotUpdateClass</span>) </span>{
     <span class="hljs-keyword">var</span> updateClass = <span class="hljs-literal">true</span> !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`</span>);
+    Utils.warnOnce(<span class="hljs-string">`Accessing UI is deprecated. Call 'removeError' on the instance directly. Please comment in issue 1073 as to your need to call this method.`</span>);
     <span class="hljs-keyword">return</span> instance.removeError(name, {updateClass});
   },
   <span class="hljs-attr">getErrorsMessages</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance</span>) </span>{
-    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call 'getErrorsMessages' on the instance directly.`</span>);
+    Utils.warnOnce(<span class="hljs-string">`Accessing UI is deprecated. Call 'getErrorsMessages' on the instance directly.`</span>);
     <span class="hljs-keyword">return</span> instance.getErrorsMessages();
   }
 };
 $.each(<span class="hljs-string">'addError updateError'</span>.split(<span class="hljs-string">' '</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i, method</span>) </span>{
   <span class="hljs-built_in">window</span>.ParsleyUI[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, message, assert, doNotUpdateClass</span>) </span>{
     <span class="hljs-keyword">var</span> updateClass = <span class="hljs-literal">true</span> !== doNotUpdateClass;
-    ParsleyUtils.warnOnce(<span class="hljs-string">`Accessing ParsleyUI is deprecated. Call '<span class="hljs-subst">${method}</span>' on the instance directly. Please comment in issue 1073 as to your need to call this method.`</span>);
+    Utils.warnOnce(<span class="hljs-string">`Accessing UI is deprecated. Call '<span class="hljs-subst">${method}</span>' on the instance directly. Please comment in issue 1073 as to your need to call this method.`</span>);
     <span class="hljs-keyword">return</span> instance[method](name, {message, assert, updateClass});
   };
 });</pre></div></div>

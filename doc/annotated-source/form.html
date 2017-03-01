@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -112,11 +112,11 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyAbstract <span class="hljs-keyword">from</span> <span class="hljs-string">'./abstract'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Base <span class="hljs-keyword">from</span> <span class="hljs-string">'./base'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
-<span class="hljs-keyword">var</span> ParsleyForm = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, domOptions, options</span>) </span>{
-  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyForm'</span>;
+<span class="hljs-keyword">var</span> Form = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, domOptions, options</span>) </span>{
+  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Form'</span>;
 
   <span class="hljs-keyword">this</span>.$element = $(element);
   <span class="hljs-keyword">this</span>.domOptions = domOptions;
@@ -129,7 +129,7 @@
 
 <span class="hljs-keyword">var</span> statusMapping = {<span class="hljs-attr">pending</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">resolved</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">rejected</span>: <span class="hljs-literal">false</span>};
 
-ParsleyForm.prototype = {
+Form.prototype = {
   <span class="hljs-attr">onSubmitValidate</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{</pre></div></div>
             
         </li>
@@ -161,7 +161,7 @@ ParsleyForm.prototype = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(ParsleyUtils._SubmitSelector).first();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(Utils._SubmitSelector).first();
     <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley-synthetic-submit-button'</span>).prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-literal">true</span>);
     <span class="hljs-keyword">if</span> ($submitSource.is(<span class="hljs-string">'[formnovalidate]'</span>))
@@ -275,7 +275,7 @@ Consider using <code>whenValidate</code> instead.</p>
             
             <div class="content"><div class='highlight'><pre>  validate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt;= <span class="hljs-number">1</span> &amp;&amp; !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce(<span class="hljs-string">'Calling validate on a parsley form without passing arguments as an object is deprecated.'</span>);
+      Utils.warnOnce(<span class="hljs-string">'Calling validate on a parsley form without passing arguments as an object is deprecated.'</span>);
       <span class="hljs-keyword">var</span> [group, force, event] = <span class="hljs-built_in">arguments</span>;
       options = {group, force, event};
     }
@@ -286,7 +286,7 @@ Consider using <code>whenValidate</code> instead.</p>
     <span class="hljs-keyword">this</span>.submitEvent = event;
     <span class="hljs-keyword">if</span> (event) {
       <span class="hljs-keyword">this</span>.submitEvent = $.extend({}, event, {<span class="hljs-attr">preventDefault</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        ParsleyUtils.warnOnce(<span class="hljs-string">"Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`"</span>);
+        Utils.warnOnce(<span class="hljs-string">"Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`"</span>);
         <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>;
       }});
     }
@@ -326,7 +326,7 @@ Consider using <code>whenValidate</code> instead.</p>
       <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, field =&gt; field.whenValidate({force, group}));
     });
 
-    <span class="hljs-keyword">return</span> ParsleyUtils.all(promises)
+    <span class="hljs-keyword">return</span> Utils.all(promises)
       .done(  <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'success'</span>); })
       .fail(  <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
         <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>;
@@ -355,7 +355,7 @@ Prefer using <code>whenValid</code> instead.</p>
             
             <div class="content"><div class='highlight'><pre>  isValid: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt;= <span class="hljs-number">1</span> &amp;&amp; !$.isPlainObject(options)) {
-      ParsleyUtils.warnOnce(<span class="hljs-string">'Calling isValid on a parsley form without passing arguments as an object is deprecated.'</span>);
+      Utils.warnOnce(<span class="hljs-string">'Calling isValid on a parsley form without passing arguments as an object is deprecated.'</span>);
       <span class="hljs-keyword">var</span> [group, force] = <span class="hljs-built_in">arguments</span>;
       options = {group, force};
     }
@@ -383,7 +383,7 @@ A validation that immediately fails will interrupt the validations.</p>
     <span class="hljs-keyword">var</span> promises = <span class="hljs-keyword">this</span>._withoutReactualizingFormOptions(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
       <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, field =&gt; field.whenValid({group, force}));
     });
-    <span class="hljs-keyword">return</span> ParsleyUtils.all(promises);
+    <span class="hljs-keyword">return</span> Utils.all(promises);
   },</pre></div></div>
             
         </li>
@@ -496,11 +496,11 @@ A validation that immediately fails will interrupt the validations.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Only add valid and not excluded <code>ParsleyField</code> and <code>ParsleyFieldMultiple</code> children</p>
+              <p>Only add valid and not excluded <code>Field</code> and <code>FieldMultiple</code> children</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ((<span class="hljs-string">'ParsleyField'</span> === fieldInstance.__class__ || <span class="hljs-string">'ParsleyFieldMultiple'</span> === fieldInstance.__class__) &amp;&amp; (<span class="hljs-literal">true</span> !== fieldInstance.options.excluded)) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ((<span class="hljs-string">'Field'</span> === fieldInstance.__class__ || <span class="hljs-string">'FieldMultiple'</span> === fieldInstance.__class__) &amp;&amp; (<span class="hljs-literal">true</span> !== fieldInstance.options.excluded)) {
           <span class="hljs-keyword">let</span> uniqueId = fieldInstance.__class__ + <span class="hljs-string">'-'</span> + fieldInstance.__id__;
           <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.fieldsMappedById[uniqueId]) {
             <span class="hljs-keyword">this</span>.fieldsMappedById[uniqueId] = fieldInstance;
@@ -509,7 +509,7 @@ A validation that immediately fails will interrupt the validations.</p>
         }
       });
 
-      $.each(ParsleyUtils.difference(oldFields, <span class="hljs-keyword">this</span>.fields), (_, field) =&gt; {
+      $.each(Utils.difference(oldFields, <span class="hljs-keyword">this</span>.fields), (_, field) =&gt; {
         field.reset();
       });
     });
@@ -564,7 +564,7 @@ Returns true iff event is not interrupted and default not prevented.</p>
 
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyForm;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Form;</pre></div></div>
             
         </li>
         

@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -112,12 +112,12 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
-<span class="hljs-keyword">import</span> ParsleyValidator <span class="hljs-keyword">from</span> <span class="hljs-string">'./validator'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Validator <span class="hljs-keyword">from</span> <span class="hljs-string">'./validator'</span>;
 
 <span class="hljs-keyword">var</span> Constraint = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parsleyField, name, requirements, priority, isDomConstraint</span>) </span>{
   <span class="hljs-keyword">var</span> validatorSpec = <span class="hljs-built_in">window</span>.Parsley._validatorRegistry.validators[name];
-  <span class="hljs-keyword">var</span> validator = <span class="hljs-keyword">new</span> ParsleyValidator(validatorSpec);
+  <span class="hljs-keyword">var</span> validator = <span class="hljs-keyword">new</span> Validator(validatorSpec);
 
   $.extend(<span class="hljs-keyword">this</span>, {
     <span class="hljs-attr">validator</span>: validator,

@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -116,7 +116,7 @@
 <span class="hljs-keyword">var</span> globalID = <span class="hljs-number">1</span>;
 <span class="hljs-keyword">var</span> pastWarnings = {};
 
-<span class="hljs-keyword">var</span> ParsleyUtils = {</pre></div></div>
+<span class="hljs-keyword">var</span> Utils = {</pre></div></div>
             
         </li>
         
@@ -278,6 +278,116 @@ returns object from dom attributes and values</p>
     <span class="hljs-keyword">return</span> string.replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">''</span>);
   },
 
+  <span class="hljs-attr">parse</span>: {
+    <span class="hljs-attr">date</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+      <span class="hljs-keyword">let</span> parsed = string.match(<span class="hljs-regexp">/^(\d{4,})-(\d\d)-(\d\d)$/</span>);
+      <span class="hljs-keyword">if</span> (!parsed)
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">let</span> [_, year, month, day] = parsed.map(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(x, <span class="hljs-number">10</span>));
+      <span class="hljs-keyword">let</span> date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(year, month - <span class="hljs-number">1</span>, day);
+      <span class="hljs-keyword">if</span> (date.getFullYear() !== year || date.getMonth() + <span class="hljs-number">1</span> !== month || date.getDate() !== day)
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">return</span> date;
+    },
+    <span class="hljs-attr">string</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+      <span class="hljs-keyword">return</span> string;
+    },
+    <span class="hljs-attr">integer</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(string))
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(string, <span class="hljs-number">10</span>);
+    },
+    <span class="hljs-attr">number</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(string))
+        <span class="hljs-keyword">throw</span> <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(string);
+    },
+    <span class="hljs-string">'boolean'</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_boolean</span>(<span class="hljs-params">string</span>) </span>{
+      <span class="hljs-keyword">return</span> !(<span class="hljs-regexp">/^\s*false\s*$/i</span>.test(string));
+    },
+    <span class="hljs-attr">object</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+      <span class="hljs-keyword">return</span> Utils.deserializeValue(string);
+    },
+    <span class="hljs-attr">regexp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">regexp</span>) </span>{
+      <span class="hljs-keyword">var</span> flags = <span class="hljs-string">''</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Test if RegExp is literal, if not, nothing to be done, otherwise, we need to isolate flags and pattern</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^\/.*\/(?:[gimy]*)$/</span>.test(regexp)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Replace the regexp literal string with the first match group: ([gimy]*)
+If no flag is present, this will be a blank string</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        flags = regexp.replace(<span class="hljs-regexp">/.*\/([gimy]*)$/</span>, <span class="hljs-string">'$1'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Again, replace the regexp literal string with the first match group:
+everything excluding the opening and closing slashes and the flags</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        regexp = regexp.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'^/(.*?)/'</span> + flags + <span class="hljs-string">'$'</span>), <span class="hljs-string">'$1'</span>);
+      } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Anchor regexp:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        regexp = <span class="hljs-string">'^'</span> + regexp + <span class="hljs-string">'$'</span>;
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(regexp, flags);
+    }
+  },
+
+  <span class="hljs-attr">parseRequirement</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">requirementType, string</span>) </span>{
+    <span class="hljs-keyword">var</span> converter = <span class="hljs-keyword">this</span>.parse[requirementType || <span class="hljs-string">'string'</span>];
+    <span class="hljs-keyword">if</span> (!converter)
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">'Unknown requirement specification: "'</span> + requirementType + <span class="hljs-string">'"'</span>;
+    <span class="hljs-keyword">let</span> converted = converter(string);
+    <span class="hljs-keyword">if</span> (converted === <span class="hljs-literal">null</span>)
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">`Requirement is not a <span class="hljs-subst">${requirementType}</span>: "<span class="hljs-subst">${string}</span>"`</span>;
+    <span class="hljs-keyword">return</span> converted;
+  },
+
   <span class="hljs-attr">namespaceEvents</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">events, namespace</span>) </span>{
     events = <span class="hljs-keyword">this</span>.trimString(events || <span class="hljs-string">''</span>).split(<span class="hljs-regexp">/\s+/</span>);
     <span class="hljs-keyword">if</span> (!events[<span class="hljs-number">0</span>])
@@ -290,11 +400,11 @@ returns object from dom attributes and values</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>This is O(N^2), should be optimized</p>
 
@@ -311,11 +421,11 @@ returns object from dom attributes and values</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Alter-ego to native Promise.all, but for jQuery</p>
 
@@ -326,11 +436,11 @@ returns object from dom attributes and values</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>jQuery treats $.when() and $.when(singlePromise) differently; let’s avoid that and add spurious elements</p>
 
@@ -342,11 +452,11 @@ returns object from dom attributes and values</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Object.create polyfill, see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Polyfill</a></p>
 
@@ -371,7 +481,7 @@ returns object from dom attributes and values</p>
   <span class="hljs-attr">_SubmitSelector</span>: <span class="hljs-string">'input[type="submit"], button:submit'</span>
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyUtils;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Utils;</pre></div></div>
             
         </li>
         

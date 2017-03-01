@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -113,11 +113,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
 
-<span class="hljs-keyword">var</span> ParsleyMultiple = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'ParsleyFieldMultiple'</span>;
+<span class="hljs-keyword">var</span> Multiple = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'FieldMultiple'</span>;
 };
 
-ParsleyMultiple.prototype = {</pre></div></div>
+Multiple.prototype = {</pre></div></div>
             
         </li>
         
@@ -147,7 +147,7 @@ ParsleyMultiple.prototype = {</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>See <code>ParsleyField.refreshConstraints()</code></p>
+              <p>See <code>Field.refreshConstraints()</code></p>
 
             </div>
             
@@ -208,7 +208,7 @@ ParsleyMultiple.prototype = {</pre></div></div>
         <span class="hljs-keyword">continue</span>;
       }
 
-      fieldConstraints = <span class="hljs-keyword">this</span>.$elements[i].data(<span class="hljs-string">'ParsleyFieldMultiple'</span>).refreshConstraints().constraints;
+      fieldConstraints = <span class="hljs-keyword">this</span>.$elements[i].data(<span class="hljs-string">'FieldMultiple'</span>).refreshConstraints().constraints;
 
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; fieldConstraints.length; j++)
         <span class="hljs-keyword">this</span>.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
@@ -226,7 +226,7 @@ ParsleyMultiple.prototype = {</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>See <code>ParsleyField.getValue()</code></p>
+              <p>See <code>Field.getValue()</code></p>
 
             </div>
             
@@ -328,7 +328,7 @@ ParsleyMultiple.prototype = {</pre></div></div>
   }
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyMultiple;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Multiple;</pre></div></div>
             
         </li>
         

@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -112,9 +112,9 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
-<span class="hljs-keyword">var</span> ParsleyUI = {};
+<span class="hljs-keyword">var</span> UI = {};
 
 <span class="hljs-keyword">var</span> diffResults = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">newResult, oldResult, deep</span>) </span>{
   <span class="hljs-keyword">var</span> added = [];
@@ -142,11 +142,11 @@
   };
 };
 
-ParsleyUI.Form = {
+UI.Form = {
 
   <span class="hljs-attr">_actualizeTriggers</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'submit.Parsley'</span>, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitValidate(evt); });
-    <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'click.Parsley'</span>, ParsleyUtils._SubmitSelector, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitButton(evt); });</pre></div></div>
+    <span class="hljs-keyword">this</span>.$element.on(<span class="hljs-string">'click.Parsley'</span>, Utils._SubmitSelector, evt =&gt; { <span class="hljs-keyword">this</span>.onSubmitButton(evt); });</pre></div></div>
             
         </li>
         
@@ -208,7 +208,7 @@ ParsleyUI.Form = {
 
 };
 
-ParsleyUI.Field = {
+UI.Field = {
 
   <span class="hljs-attr">_reflowUI</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">this</span>._buildUI();</pre></div></div>
@@ -769,7 +769,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       <span class="hljs-keyword">if</span> ($(<span class="hljs-keyword">this</span>.options.errorsContainer).length)
         <span class="hljs-keyword">return</span> $(<span class="hljs-keyword">this</span>.options.errorsContainer).append(<span class="hljs-keyword">this</span>._ui.$errorsWrapper);
       <span class="hljs-keyword">else</span>
-        ParsleyUtils.warn(<span class="hljs-string">'The errors container `'</span> + <span class="hljs-keyword">this</span>.options.errorsContainer + <span class="hljs-string">'` does not exist in DOM'</span>);
+        Utils.warn(<span class="hljs-string">'The errors container `'</span> + <span class="hljs-keyword">this</span>.options.errorsContainer + <span class="hljs-string">'` does not exist in DOM'</span>);
     } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.errorsContainer)
       $errorsContainer = <span class="hljs-keyword">this</span>.options.errorsContainer.call(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>);
 
@@ -798,10 +798,10 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
             
             <div class="content"><div class='highlight'><pre>    $toBind.off(<span class="hljs-string">'.Parsley'</span>);
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._failedOnce)
-      $toBind.on(ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.triggerAfterFailure, <span class="hljs-string">'Parsley'</span>), () =&gt; {
+      $toBind.on(Utils.namespaceEvents(<span class="hljs-keyword">this</span>.options.triggerAfterFailure, <span class="hljs-string">'Parsley'</span>), () =&gt; {
         <span class="hljs-keyword">this</span>._validateIfNeeded();
       });
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (trigger = ParsleyUtils.namespaceEvents(<span class="hljs-keyword">this</span>.options.trigger, <span class="hljs-string">'Parsley'</span>)) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (trigger = Utils.namespaceEvents(<span class="hljs-keyword">this</span>.options.trigger, <span class="hljs-string">'Parsley'</span>)) {
       $toBind.on(trigger, event =&gt; {
         <span class="hljs-keyword">this</span>._validateIfNeeded(event);
       });
@@ -942,7 +942,7 @@ about success or failure have been displayed, always validate with this trigger 
   }
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ParsleyUI;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> UI;</pre></div></div>
             
         </li>
         

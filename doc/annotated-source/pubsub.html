@@ -19,8 +19,8 @@
           <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
             
               
-              <a class="source" href="abstract.html">
-                abstract.js
+              <a class="source" href="base.html">
+                base.js
               </a>
             
               
@@ -112,13 +112,13 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> ParsleyField <span class="hljs-keyword">from</span> <span class="hljs-string">'./field'</span>;
-<span class="hljs-keyword">import</span> ParsleyForm <span class="hljs-keyword">from</span> <span class="hljs-string">'./form'</span>;
-<span class="hljs-keyword">import</span> ParsleyUtils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Field <span class="hljs-keyword">from</span> <span class="hljs-string">'./field'</span>;
+<span class="hljs-keyword">import</span> Form <span class="hljs-keyword">from</span> <span class="hljs-string">'./form'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
 <span class="hljs-keyword">var</span> o = $({});
 <span class="hljs-keyword">var</span> deprecated = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-  ParsleyUtils.warnOnce(<span class="hljs-string">"Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley"</span>);
+  Utils.warnOnce(<span class="hljs-string">"Parsley's pubsub module is deprecated; use the 'on' and 'off' methods on parsley instances or window.Parsley"</span>);
 };</pre></div></div>
             
         </li>
@@ -209,7 +209,7 @@
 
 $.listenTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name, fn</span>) </span>{
   deprecated();
-  <span class="hljs-keyword">if</span> (!(instance <span class="hljs-keyword">instanceof</span> ParsleyField) &amp;&amp; !(instance <span class="hljs-keyword">instanceof</span> ParsleyForm))
+  <span class="hljs-keyword">if</span> (!(instance <span class="hljs-keyword">instanceof</span> Field) &amp;&amp; !(instance <span class="hljs-keyword">instanceof</span> Form))
     <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Must give Parsley instance'</span>);
 
   <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> !== <span class="hljs-keyword">typeof</span> name || <span class="hljs-string">'function'</span> !== <span class="hljs-keyword">typeof</span> fn)
@@ -227,7 +227,7 @@ $.unsubscribe = <span class="hljs-function"><span class="hljs-keyword">function<
 
 $.unsubscribeTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">instance, name</span>) </span>{
   deprecated();
-  <span class="hljs-keyword">if</span> (!(instance <span class="hljs-keyword">instanceof</span> ParsleyField) &amp;&amp; !(instance <span class="hljs-keyword">instanceof</span> ParsleyForm))
+  <span class="hljs-keyword">if</span> (!(instance <span class="hljs-keyword">instanceof</span> Field) &amp;&amp; !(instance <span class="hljs-keyword">instanceof</span> Form))
     <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Must give Parsley instance'</span>);
   instance.off(eventName(name));
 };
@@ -258,7 +258,7 @@ $.unsubscribeAll = <span class="hljs-function"><span class="hljs-keyword">functi
             
             <div class="content"><div class='highlight'><pre>$.emit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, instance</span>) </span>{
   deprecated();
-  <span class="hljs-keyword">var</span> instanceGiven = (instance <span class="hljs-keyword">instanceof</span> ParsleyField) || (instance <span class="hljs-keyword">instanceof</span> ParsleyForm);
+  <span class="hljs-keyword">var</span> instanceGiven = (instance <span class="hljs-keyword">instanceof</span> Field) || (instance <span class="hljs-keyword">instanceof</span> Form);
   <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, instanceGiven ? <span class="hljs-number">2</span> : <span class="hljs-number">1</span>);
   args.unshift(eventName(name));
   <span class="hljs-keyword">if</span> (!instanceGiven) {
