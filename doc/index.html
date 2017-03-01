@@ -684,7 +684,7 @@ if (false === instance.options.priorityEnabled)
                     </tr>
                   </table>
                 </td>
-                <td>Validates that a given number is greater than or equal to some minimum number.</td>
+                <td>Validates that a given input (number or date) or date is greater than or equal to some minimum (number or date.)</td>
               </tr>
               <tr>
                 <td>
@@ -703,7 +703,7 @@ if (false === instance.options.priorityEnabled)
                     </tr>
                   </table>
                 </td>
-                <td>Validates that a given number is less than or equal to some maximum number.</td>
+                <td>Validates that the given input (number or date) is less than or equal to some maximum value (number or date).</td>
               </tr>
               <tr>
                 <td>
@@ -722,7 +722,7 @@ if (false === instance.options.priorityEnabled)
                     </tr>
                   </table>
                 </td>
-                <td>Validates that a given number is between some minimum and maximum number.</td>
+                <td>Validates that a given value (number or date) is between some minimum and maximum values (numbers or dates).</td>
               </tr>
               <tr>
                 <td>
@@ -828,6 +828,10 @@ window.Parsley
                 <td>Use this instead of <code>validateString</code> when only numeric values are acceptable. Parsley will parse the input's value and pass the number, or reject the value if it's not an acceptable number</td>
               </tr>
               <tr>
+                <td><code>validateDate</code></td>
+                <td>Define this to treate date values. Parsley will parse the input's value and pass the date, or reject the value if it's not an acceptable date. The format used must be that [of the standard](https://html.spec.whatwg.org/multipage/infrastructure.html#valid-date-string), e.g. "2017-02-28". </td>
+              </tr>
+              <tr>
                 <td><code>validateMultiple</code></td>
                 <td>Is passed an array of values, in the case of checkboxes.</td>
               </tr>
@@ -862,6 +866,10 @@ window.Parsley
               <tr>
                 <td><code>'number'</code></td>
                 <td>To be used when decimal numbers are acceptable</td>
+              </tr>
+              <tr>
+                <td><code>'date'</code></td>
+                <td>To be used for dates. The format used must be that [of the standard](https://html.spec.whatwg.org/multipage/infrastructure.html#valid-date-string), e.g. <code>"2017-02-28"</code>.</td>
               </tr>
               <tr>
                 <td><code>'regexp'</code></td>
