@@ -246,7 +246,7 @@ function gitPushPages() {
 }
 
 function gitTag() {
-  $.git.tag(manifest.version, {quiet: false}, err => { if (err) throw err });
+  $.git.tag(manifest.version, '', {quiet: false}, err => { if (err) throw err });
 }
 
 gulp.task('release-git-clean', gitClean);
