@@ -13,6 +13,7 @@ import jQuery from 'jquery'; // Remove this line in ES3
     // { '#selector' : { constraintName1: value, constraintName2: value2 }, #selector2: { constraintName: value } }
     // { '#selector' : { constraintName1: { requirements: value, priority: value }, constraintName2: value2 } }
     _bindFields: function () {
+      window.Parsley.Utils.warnOnce("Parsley's extra/bind is deprecated. Please see https://github.com/guillaumepotier/Parsley.js/issues/1180");
       if ('Form' !== this.__class__)
         throw new Error('`_bindFields` must be called on a form instance');
 
