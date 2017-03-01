@@ -67,7 +67,16 @@ window.ParsleyConfig = Parsley.options; // Old way of accessing global options
 
 // ### Globals
 window.Parsley = window.psly = Parsley;
-window.ParsleyUtils = Utils;
+Parsley.Utils = Utils;
+window.ParsleyUtils = {};
+$.each(Utils, (key, value) => {
+  if ('function' === typeof value) {
+    window.ParsleyUtils[key] = (...args) => {
+      Utils.warnOnce('Accessing `window.ParsleyUtils` is deprecated. Use `window.Parsley.Utils` instead.');
+      return Utils[key](...args);
+    };
+  }
+});
 
 // ### Define methods that forward to the registry, and deprecate all access except through window.Parsley
 var registry = window.Parsley._validatorRegistry = new ValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);

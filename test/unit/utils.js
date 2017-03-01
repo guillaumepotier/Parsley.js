@@ -2,6 +2,11 @@ import $ from 'jquery';
 import Utils from '../../src/parsley/utils';
 
 describe('Utils', () => {
+  it('should warn when using the old global ParsleyUtils', () => {
+    expectWarning(() => {
+      expect(window.ParsleyUtils.deserializeValue('true')).to.be(true);
+    });
+  });
   it('should have a proper deserializeValue() function', () => {
     expect(Utils.deserializeValue('true')).to.be(true);
     expect(Utils.deserializeValue('1')).to.be(1);
