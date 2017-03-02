@@ -286,16 +286,18 @@ Field.prototype = {
       this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
 
     // range
-    if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max'))
-      this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
+    let min = this.$element.attr('min');
+    let max = this.$element.attr('max');
+    if ('undefined' !== typeof min && 'undefined' !== typeof max)
+      this.addConstraint('range', [min, max], undefined, true);
 
     // HTML5 min
-    else if ('undefined' !== typeof this.$element.attr('min'))
-      this.addConstraint('min', this.$element.attr('min'), undefined, true);
+    else if ('undefined' !== typeof min)
+      this.addConstraint('min', min, undefined, true);
 
     // HTML5 max
-    else if ('undefined' !== typeof this.$element.attr('max'))
-      this.addConstraint('max', this.$element.attr('max'), undefined, true);
+    else if ('undefined' !== typeof max)
+      this.addConstraint('max', max, undefined, true);
 
 
     // length
@@ -321,7 +323,7 @@ Field.prototype = {
     if ('number' === type) {
       return this.addConstraint('type', ['number', {
         step: this.$element.attr('step') || '1',
-        base: this.$element.attr('min') || this.$element.attr('value')
+        base: min || this.$element.attr('value')
       }], undefined, true);
     // Regular other HTML5 supported types
     } else if (/^(email|url|range|date)$/i.test(type)) {
