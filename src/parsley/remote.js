@@ -58,7 +58,7 @@ Parsley.addValidator('remote', {
     if (url.indexOf('{value}') > -1) {
       url = url.replace('{value}', encodeURIComponent(value));
     } else {
-      data[instance.$element.attr('name') || instance.$element.attr('id')] = value;
+      data[instance.element.getAttribute('name') || instance.element.getAttribute('id')] = value;
     }
 
     // Merge options passed in from the function with the ones in the attribute

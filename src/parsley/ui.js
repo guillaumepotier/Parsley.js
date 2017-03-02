@@ -39,7 +39,7 @@ UI.Form = {
     if (false === this.options.uiEnabled)
       return;
 
-    this.$element.attr('novalidate', '');
+    this.element.setAttribute('novalidate', '');
   },
 
   focus: function () {
@@ -236,7 +236,7 @@ UI.Field = {
     var _ui = {};
 
     // Give field its Parsley id in DOM
-    this.$element.attr(this.options.namespace + 'id', this.__id__);
+    this.element.setAttribute(this.options.namespace + 'id', this.__id__);
 
     /** Generate important UI elements and store them in this **/
     // $errorClassHandler is the $element that woul have parsley-error and parsley-success classes

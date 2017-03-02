@@ -278,52 +278,52 @@ Field.prototype = {
   // Bind specific HTML5 constraints to be HTML5 compliant
   _bindHtml5Constraints: function () {
     // html5 required
-    if (this.$element.attr('required'))
+    if (null !== this.element.getAttribute('required'))
       this.addConstraint('required', true, undefined, true);
 
     // html5 pattern
-    if ('string' === typeof this.$element.attr('pattern'))
-      this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
+    if (null !== this.element.getAttribute('pattern'))
+      this.addConstraint('pattern', this.element.getAttribute('pattern'), undefined, true);
 
     // range
-    let min = this.$element.attr('min');
-    let max = this.$element.attr('max');
-    if ('undefined' !== typeof min && 'undefined' !== typeof max)
+    let min = this.element.getAttribute('min');
+    let max = this.element.getAttribute('max');
+    if (null !== min && null !== max)
       this.addConstraint('range', [min, max], undefined, true);
 
     // HTML5 min
-    else if ('undefined' !== typeof min)
+    else if (null !== min)
       this.addConstraint('min', min, undefined, true);
 
     // HTML5 max
-    else if ('undefined' !== typeof max)
+    else if (null !== max)
       this.addConstraint('max', max, undefined, true);
 
 
     // length
-    if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
-      this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);
+    if (null !== this.element.getAttribute('minlength') && null !== this.element.getAttribute('maxlength'))
+      this.addConstraint('length', [this.element.getAttribute('minlength'), this.element.getAttribute('maxlength')], undefined, true);
 
     // HTML5 minlength
-    else if ('undefined' !== typeof this.$element.attr('minlength'))
-      this.addConstraint('minlength', this.$element.attr('minlength'), undefined, true);
+    else if (null !== this.element.getAttribute('minlength'))
+      this.addConstraint('minlength', this.element.getAttribute('minlength'), undefined, true);
 
     // HTML5 maxlength
-    else if ('undefined' !== typeof this.$element.attr('maxlength'))
-      this.addConstraint('maxlength', this.$element.attr('maxlength'), undefined, true);
+    else if (null !== this.element.getAttribute('maxlength'))
+      this.addConstraint('maxlength', this.element.getAttribute('maxlength'), undefined, true);
 
 
     // html5 types
-    var type = this.$element.attr('type');
+    var type = this.element.getAttribute('type');
 
-    if ('undefined' === typeof type)
+    if (null === type)
       return this;
 
     // Small special case here for HTML5 number: integer validator if step attribute is undefined or an integer value, number otherwise
     if ('number' === type) {
       return this.addConstraint('type', ['number', {
-        step: this.$element.attr('step') || '1',
-        base: min || this.$element.attr('value')
+        step: this.element.getAttribute('step') || '1',
+        base: min || this.element.getAttribute('value')
       }], undefined, true);
     // Regular other HTML5 supported types
     } else if (/^(email|url|range|date)$/i.test(type)) {

@@ -55,7 +55,7 @@ Factory.prototype = {
   },
 
   isMultiple: function () {
-    return (this.$element.is('input[type=radio], input[type=checkbox]')) || (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple'));
+    return (this.$element.is('input[type=radio], input[type=checkbox]')) || (this.$element.is('select') && null !== this.element.getAttribute('multiple'));
   },
 
   // Multiples fields are a real nightmare :(
@@ -67,11 +67,11 @@ Factory.prototype = {
 
     // Handle multiple name
     this.options.multiple = this.options.multiple ||
-      (name = this.$element.attr('name')) ||
-      this.$element.attr('id');
+      (name = this.element.getAttribute('name')) ||
+      this.element.getAttribute('id');
 
     // Special select multiple input
-    if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
+    if (this.$element.is('select') && null !== this.element.getAttribute('multiple')) {
       this.options.multiple = this.options.multiple || this.__id__;
       return this.bind('parsleyFieldMultiple');
 
@@ -88,7 +88,7 @@ Factory.prototype = {
     if (name) {
       $('input[name="' + name + '"]').each((i, input) => {
         if ($(input).is('input[type=radio], input[type=checkbox]'))
-          $(input).attr(this.options.namespace + 'multiple', this.options.multiple);
+          input.setAttribute(this.options.namespace + 'multiple', this.options.multiple);
       });
     }
 
