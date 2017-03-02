@@ -5,6 +5,7 @@ import Utils from './utils';
 var Form = function (element, domOptions, options) {
   this.__class__ = 'Form';
 
+  this.element = element;
   this.$element = $(element);
   this.domOptions = domOptions;
   this.options = options;

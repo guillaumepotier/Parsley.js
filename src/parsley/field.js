@@ -6,6 +6,7 @@ import Utils from './utils';
 var Field = function (field, domOptions, options, parsleyFormInstance) {
   this.__class__ = 'Field';
 
+  this.element = field;
   this.$element = $(field);
 
   // Set parent if we have one

@@ -52,7 +52,7 @@ $.fn.parsley = $.fn.psly = function (options) {
     return;
   }
 
-  return new Factory(this, options);
+  return new Factory(this[0], options);
 };
 
 // ### Field and Form extension

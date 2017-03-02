@@ -6,6 +6,7 @@ import Field from './field';
 import Multiple from './multiple';
 
 var Factory = function (element, options, parsleyFormInstance) {
+  this.element = element;
   this.$element = $(element);
 
   // If the element has already been bound, returns its saved Parsley instance
@@ -119,21 +120,21 @@ Factory.prototype = {
     switch (type) {
       case 'parsleyForm':
         parsleyInstance = $.extend(
-          new Form(this.$element, this.domOptions, this.options),
+          new Form(this.element, this.domOptions, this.options),
           new Base(),
           window.ParsleyExtend
         )._bindFields();
         break;
       case 'parsleyField':
         parsleyInstance = $.extend(
-          new Field(this.$element, this.domOptions, this.options, this.parent),
+          new Field(this.element, this.domOptions, this.options, this.parent),
           new Base(),
           window.ParsleyExtend
         );
         break;
       case 'parsleyFieldMultiple':
         parsleyInstance = $.extend(
-          new Field(this.$element, this.domOptions, this.options, this.parent),
+          new Field(this.element, this.domOptions, this.options, this.parent),
           new Multiple(),
           new Base(),
           window.ParsleyExtend
