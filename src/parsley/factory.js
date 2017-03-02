@@ -65,12 +65,9 @@ Factory.prototype = {
     var parsleyMultipleInstance;
 
     // Handle multiple name
-    if (this.options.multiple)
-      ; // We already have our 'multiple' identifier
-    else if ('undefined' !== typeof this.$element.attr('name') && this.$element.attr('name').length)
-      this.options.multiple = name = this.$element.attr('name');
-    else if ('undefined' !== typeof this.$element.attr('id') && this.$element.attr('id').length)
-      this.options.multiple = this.$element.attr('id');
+    this.options.multiple = this.options.multiple ||
+      (name = this.$element.attr('name')) ||
+      this.$element.attr('id');
 
     // Special select multiple input
     if (this.$element.is('select') && 'undefined' !== typeof this.$element.attr('multiple')) {
@@ -87,7 +84,7 @@ Factory.prototype = {
     this.options.multiple = this.options.multiple.replace(/(:|\.|\[|\]|\{|\}|\$)/g, '');
 
     // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
-    if ('undefined' !== typeof name) {
+    if (name) {
       $('input[name="' + name + '"]').each((i, input) => {
         if ($(input).is('input[type=radio], input[type=checkbox]'))
           $(input).attr(this.options.namespace + 'multiple', this.options.multiple);
