@@ -41,8 +41,8 @@ var Utils = {
     return $element.is('[' + namespace + checkAttr + ']');
   },
 
-  setAttr: function ($element, namespace, attr, value) {
-    $element[0].setAttribute(this.dasherize(namespace + attr), String(value));
+  setAttr: function (element, namespace, attr, value) {
+    element.setAttribute(this.dasherize(namespace + attr), String(value));
   },
 
   generateID: function () {

@@ -145,7 +145,7 @@ Factory.prototype = {
     }
 
     if (this.options.multiple)
-      Utils.setAttr(this.$element, this.options.namespace, 'multiple', this.options.multiple);
+      Utils.setAttr(this.element, this.options.namespace, 'multiple', this.options.multiple);
 
     if ('undefined' !== typeof doNotStore) {
       this.$element.data('FieldMultiple', parsleyInstance);
