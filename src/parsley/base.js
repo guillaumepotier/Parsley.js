@@ -19,7 +19,7 @@ Base.prototype = {
   },
 
   actualizeOptions: function () {
-    Utils.attr(this.$element, this.options.namespace, this.domOptions);
+    Utils.attr(this.element, this.options.namespace, this.domOptions);
     if (this.parent && this.parent.actualizeOptions)
       this.parent.actualizeOptions();
     return this;

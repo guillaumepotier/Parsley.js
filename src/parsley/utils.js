@@ -6,7 +6,7 @@ var pastWarnings = {};
 var Utils = {
   // Parsley DOM-API
   // returns object from dom attributes and values
-  attr: function ($element, namespace, obj) {
+  attr: function (element, namespace, obj) {
     var i;
     var attribute;
     var attributes;
@@ -22,10 +22,10 @@ var Utils = {
       }
     }
 
-    if ('undefined' === typeof $element || 'undefined' === typeof $element[0])
+    if (!element)
       return obj;
 
-    attributes = $element[0].attributes;
+    attributes = element.attributes;
     for (i = attributes.length; i--; ) {
       attribute = attributes[i];
 

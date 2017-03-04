@@ -24,7 +24,7 @@ describe('Utils', () => {
     expect(Utils.dasherize('fooBArBaz')).to.be('foo-b-ar-baz');
   });
   it('should have a proper attr() function', () => {
-    var element = [{
+    var element = {
       attributes: [
         {
           specified: true,
@@ -50,7 +50,7 @@ describe('Utils', () => {
           foo: "bar"
         }
       ]
-    }];
+    };
     var attr = Utils.attr(element, 'data-parsley-');
 
     expect(attr).to.eql({'foo': 'bar', 'bar': [0, 42]});
@@ -60,7 +60,7 @@ describe('Utils', () => {
     obj.deleteMe = 'please';
     var $element = $('<b data-parsley-foo="a" data-parsley-bar="[0, 42]" parsley-baz="baz">');
 
-    Utils.attr($element, 'data-parsley-', obj);
+    Utils.attr($element[0], 'data-parsley-', obj);
 
     expect(obj).to.eql({foo: "a", bar: [0, 42]});
     expect(obj.fox).to.eql('trot');
