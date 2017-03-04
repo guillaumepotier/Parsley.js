@@ -67,10 +67,10 @@ describe('Utils', () => {
   });
 
   it('should have a checkAttr feature', () => {
-    var $element = $('<span data-parsley-required-message="foo" data-parsley-validate="true">');
-    expect(Utils.checkAttr($element, 'data-parsley-', 'required')).to.be(false);
-    expect(Utils.checkAttr($element, 'data-parsley-', 'required-message')).to.be(true);
-    expect(Utils.checkAttr($element, 'data-parsley-', 'validate')).to.be(true);
+    var element = $('<span data-parsley-required-message="foo" data-parsley-validate="true">')[0];
+    expect(Utils.checkAttr(element, 'data-parsley-', 'required')).to.be(false);
+    expect(Utils.checkAttr(element, 'data-parsley-', 'required-message')).to.be(true);
+    expect(Utils.checkAttr(element, 'data-parsley-', 'validate')).to.be(true);
   });
 
   describe('namespaceEvents', () => {

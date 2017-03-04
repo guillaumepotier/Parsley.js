@@ -37,8 +37,8 @@ var Utils = {
     return obj;
   },
 
-  checkAttr: function ($element, namespace, checkAttr) {
-    return $element.is('[' + namespace + checkAttr + ']');
+  checkAttr: function (element, namespace, checkAttr) {
+    return element.hasAttribute(namespace + checkAttr);
   },
 
   setAttr: function (element, namespace, attr, value) {
