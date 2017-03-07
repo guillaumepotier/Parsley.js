@@ -24,10 +24,10 @@ Form.prototype = {
       return;
 
     // If we didn't come here through a submit button, use the first one in the form
-    var $submitSource = this._$submitSource || this.$element.find(Utils._SubmitSelector).first();
-    this._$submitSource = null;
+    var submitSource = this._submitSource || this.$element.find(Utils._SubmitSelector)[0];
+    this._submitSource = null;
     this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
-    if ($submitSource.is('[formnovalidate]'))
+    if (submitSource && null !== submitSource.getAttribute('formnovalidate'))
       return;
 
     var promise = this.whenValidate({event});
@@ -40,27 +40,27 @@ Form.prototype = {
       event.stopImmediatePropagation();
       event.preventDefault();
       if ('pending' === promise.state())
-        promise.done(() => { this._submit($submitSource); });
+        promise.done(() => { this._submit(submitSource); });
     }
   },
 
   onSubmitButton: function(event) {
-    this._$submitSource = $(event.currentTarget);
+    this._submitSource = event.currentTarget;
   },
   // internal
   // _submit submits the form, this time without going through the validations.
   // Care must be taken to "fake" the actual submit button being clicked.
-  _submit: function ($submitSource) {
+  _submit: function (submitSource) {
     if (false === this._trigger('submit'))
       return;
     // Add submit button's data
-    if ($submitSource) {
+    if (submitSource) {
       var $synthetic = this.$element.find('.parsley-synthetic-submit-button').prop('disabled', false);
       if (0 === $synthetic.length)
         $synthetic = $('<input class="parsley-synthetic-submit-button" type="hidden">').appendTo(this.$element);
       $synthetic.attr({
-        name: $submitSource.attr('name'),
-        value: $submitSource.attr('value')
+        name: submitSource.getAttribute('name'),
+        value: submitSource.getAttribute('value')
       });
     }
 
