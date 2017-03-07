@@ -19,7 +19,7 @@ Multiple.prototype = {
     this.constraints = [];
 
     // Select multiple special treatment
-    if (this.$element.is('select')) {
+    if (this.element.nodeName === 'SELECT') {
       this.actualizeOptions()._bindConstraints();
 
       return this;
@@ -52,22 +52,24 @@ Multiple.prototype = {
       return this.options.value;
 
     // Radio input case
-    if (this.$element.is('input[type=radio]'))
-      return this._findRelated().filter(':checked').val() || '';
+    if (this.element.nodeName === 'INPUT') {
+      if (this.element.type === 'radio')
+        return this._findRelated().filter(':checked').val() || '';
 
-    // checkbox input case
-    if (this.$element.is('input[type=checkbox]')) {
-      var values = [];
+      // checkbox input case
+      if (this.element.type === 'checkbox') {
+        var values = [];
 
-      this._findRelated().filter(':checked').each(function () {
-        values.push($(this).val());
-      });
+        this._findRelated().filter(':checked').each(function () {
+          values.push($(this).val());
+        });
 
-      return values;
+        return values;
+      }
     }
 
     // Select multiple case
-    if (this.$element.is('select') && null === this.$element.val())
+    if (this.element.nodeName === 'SELECT' && null === this.$element.val())
       return [];
 
     // Default case that should never happen

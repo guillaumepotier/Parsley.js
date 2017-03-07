@@ -47,7 +47,7 @@ Factory.prototype = {
     this._resetOptions(options);
 
     // A Form instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
-    if (this.$element.is('form') || (Utils.checkAttr(this.element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
+    if (this.element.nodeName === 'FORM' || (Utils.checkAttr(this.element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
       return this.bind('parsleyForm');
 
     // Every other element is bound as a `Field` or `FieldMultiple`
@@ -55,7 +55,8 @@ Factory.prototype = {
   },
 
   isMultiple: function () {
-    return (this.$element.is('input[type=radio], input[type=checkbox]')) || (this.$element.is('select') && null !== this.element.getAttribute('multiple'));
+    return ((this.element.type === 'radio' || this.element.type === 'checkbox') ||
+      (this.element.nodeName === 'SELECT' && null !== this.element.getAttribute('multiple')));
   },
 
   // Multiples fields are a real nightmare :(
@@ -71,7 +72,7 @@ Factory.prototype = {
       this.element.getAttribute('id');
 
     // Special select multiple input
-    if (this.$element.is('select') && null !== this.element.getAttribute('multiple')) {
+    if (this.element.nodeName === 'SELECT' && null !== this.element.getAttribute('multiple')) {
       this.options.multiple = this.options.multiple || this.__id__;
       return this.bind('parsleyFieldMultiple');
 
@@ -87,7 +88,7 @@ Factory.prototype = {
     // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
     if (name) {
       $('input[name="' + name + '"]').each((i, input) => {
-        if ($(input).is('input[type=radio], input[type=checkbox]'))
+        if ((input.type === 'radio' || input.type === 'checkbox'))
           input.setAttribute(this.options.namespace + 'multiple', this.options.multiple);
       });
     }

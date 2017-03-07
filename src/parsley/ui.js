@@ -272,7 +272,7 @@ UI.Field = {
 
   _inputHolder: function() {
     // if simple element (input, texatrea, select...) it will perfectly host the classes and precede the error container
-    if (!this.options.multiple || this.$element.is('select'))
+    if (!this.options.multiple || this.element.nodeName === 'SELECT')
       return this.$element;
 
     // But if multiple element (radio, checkbox), that would be their parent
