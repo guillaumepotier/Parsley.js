@@ -102,7 +102,7 @@ Base.prototype = {
 
   _findRelated: function () {
     return this.options.multiple ?
-      this.parent.$element.find(`[${this.options.namespace}multiple="${this.options.multiple}"]`)
+      $(this.parent.element.querySelectorAll(`[${this.options.namespace}multiple="${this.options.multiple}"]`))
     : this.$element;
   }
 };
