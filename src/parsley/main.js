@@ -18,6 +18,7 @@ if (!vernums.forEach) {
 }
 // Inherit `on`, `off` & `trigger` to Parsley:
 var Parsley = $.extend(new Base(), {
+    element: document,
     $element: $(document),
     actualizeOptions: null,
     _resetOptions: null,
