@@ -17,6 +17,10 @@ See `index.html` and `doc/`
 [jQuery](https://jquery.com/) >= 1.8 (compatible with 2.x and 3.0)
 [es5-shim](https://github.com/es-shims/es5-shim) if you want need to support IE8
 
+## Questions?
+
+Please ask questions on [StackOverflow](http://stackoverflow.com/questions/ask) and be sure to include the `parsley.js` tag. Please **provide an example**, starting for example from [this jsfiddle](http://jsfiddle.net/marcandre/58vnaqur/)
+
 ## Contributing
 
 See the [`CONTRIBUTING.md` file](https://github.com/guillaumepotier/Parsley.js/blob/master/CONTRIBUTING.md)
@@ -30,7 +34,7 @@ Some integrations are
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
 * [OSSCDN by MaxCDN](http://osscdn.com/#/parsleyjs)
-* [Drupal] (https://www.drupal.org/project/parsley)
+* [Drupal](https://www.drupal.org/project/parsley)
 
 ## Install dev environment and running tests
 
