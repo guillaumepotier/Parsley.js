@@ -1,23 +1,24 @@
-import $ from 'jquery';
 import Utils from './utils';
 import Validator from './validator';
 
-var Constraint = function (parsleyField, name, requirements, priority, isDomConstraint) {
-  var validatorSpec = window.Parsley._validatorRegistry.validators[name];
-  var validator = new Validator(validatorSpec);
+const Constraint = function(parsleyField, name, requirements, priority, isDomConstraint) {
+  const validatorSpec = window.Parsley._validatorRegistry.validators[name];
+  const validator = new Validator(validatorSpec);
+  priority = priority || parsleyField.options[name + 'Priority'] || validator.priority;
+  isDomConstraint = (true === isDomConstraint);
 
-  $.extend(this, {
-    validator: validator,
-    name: name,
-    requirements: requirements,
-    priority: priority || parsleyField.options[name + 'Priority'] || validator.priority,
-    isDomConstraint: true === isDomConstraint
+  Object.assign(this, {
+    validator,
+    name,
+    requirements,
+    priority,
+    isDomConstraint
   });
   this._parseRequirements(parsleyField.options);
 };
 
-var capitalize = function(str) {
-  var cap = str[0].toUpperCase();
+const capitalize = function(str) {
+  const cap = str[0].toUpperCase();
   return cap + str.slice(1);
 };
 
@@ -34,4 +35,3 @@ Constraint.prototype = {
 };
 
 export default Constraint;
-
