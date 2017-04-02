@@ -64,8 +64,7 @@
       <!-- Jumbotron -->
       <div class="jumbotron">
         <h1>Download <em>Parsley</em> <small class="parsley-version">v2.7.0</small></h1>
-          <hr></hr>
-
+          <hr>
           <div class="col-md-12"><h2>Whole project..</h2></div>
 
           <div class="col-md-12"><code>$ bower install --save parsleyjs</code></div>
@@ -88,8 +87,8 @@
       </div>
     </div>
 
-    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript">
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script>
       $(document).ready(function () {
         $('.download').on('click', function (event) {
           _gaq.push(['_trackEvent','download', 'download ' + $(this).data('version'), $(this).data('version')]);
@@ -97,7 +96,7 @@
         });
       });
     </script>
-    <script type="text/javascript">
+    <script>
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-37229467-1']);
       _gaq.push(['_trackPageview']);

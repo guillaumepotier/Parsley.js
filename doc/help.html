@@ -10,9 +10,6 @@
 
     <title>Parsley - Find the help you need</title>
 
-    <!-- Mochat tests css -->
-    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
-
     <!-- Bootstrap core CSS -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -63,43 +60,43 @@
           <li><a href="about.html">About</a></li>
         </ul>
 
-
-      <!-- Jumbotron -->
-      <div class="jumbotron">
-        <h1>Help: bugs & community</h1>
-        <small>You're not alone..</small>
-        <hr></hr>
-      </div>
-      <div class="col-md-6">
-        <div class="bs-callout bs-callout-info">
-          <h4>StackOverflow: need a hand, not sure how to do something?</h4>
-          <p>
-            Parsley ships with a lot of easy to use built-in stuff, be <a href="index.html">sure to read the doc!</a>. In some cases, you'll need to work more deeply with listeners, internals.. If you're stuck, have a look at <a href="http://stackoverflow.com/questions/tagged/parsley.js">StackOverflow's great Parsley questions and answers</a>.
-          </p>
+        <!-- Jumbotron -->
+        <div class="jumbotron">
+          <h1>Help: bugs & community</h1>
+          <small>You're not alone..</small>
+          <hr></hr>
         </div>
-        <div id="stack" class="uwidget" data-height="400px" data-width="100%"></div>
-      </div>
-      <div class="col-md-6">
-        <div class="bs-callout bs-callout-warning">
-          <h4>GitHub: found a bug or want to contribute?</h4>
-          <p>
-            If you are either pretty sure that you spotted a vicious bug, or have a great feature implementation / idea, be sure to go to <a href="https://github.com/guillaumepotier/Parsley.js">GitHub</a> and open an issue or a pull request.
-          </p>
+        <div class="col-md-6">
+          <div class="bs-callout bs-callout-info">
+            <h4>StackOverflow: need a hand, not sure how to do something?</h4>
+            <p>
+              Parsley ships with a lot of easy to use built-in stuff, be <a href="index.html">sure to read the doc!</a>. In some cases, you'll need to work more deeply with listeners, internals.. If you're stuck, have a look at <a href="http://stackoverflow.com/questions/tagged/parsley.js">StackOverflow's great Parsley questions and answers</a>.
+            </p>
+          </div>
+          <div id="stack" class="uwidget" data-height="400px" data-width="100%"></div>
         </div>
-        <div id="gh" class="uwidget" data-height="400px" data-width="100%"></div>
-      </div>
-      <div class="clearfix"></div>
+        <div class="col-md-6">
+          <div class="bs-callout bs-callout-warning">
+            <h4>GitHub: found a bug or want to contribute?</h4>
+            <p>
+              If you are either pretty sure that you spotted a vicious bug, or have a great feature implementation / idea, be sure to go to <a href="https://github.com/guillaumepotier/Parsley.js">GitHub</a> and open an issue or a pull request.
+            </p>
+          </div>
+          <div id="gh" class="uwidget" data-height="400px" data-width="100%"></div>
+        </div>
+        <div class="clearfix"></div>
 
         <!-- Site footer -->
         <div class="footer">
           <p>&copy; <a href="https://twitter.com/guillaumepotier" title="Guillaume Potier on Twitter">Guillaume Potier</a> 2014 - <a href="http://wisembly.com">@Wisembly</a></p>
         </div>
       </div>
+    </div>
 
-    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../bower_components/uwidget/uwidget.js"></script>
 
-    <script type="text/javascript">
+    <script>
     $(document).ready(function () {
       $('#gh').UWidget({
         url: 'https://api.github.com/repos/guillaumepotier/Parsley.js/issues',
@@ -147,29 +144,29 @@
         }
       });
     });
-  </script>
-  <script type="text/html" id="gh_tmpl">
-    <li>
-      <span class="gh-issue-comments">
-        <%= comments %> <%= comments > 1 ? "comments" : "commment" %>
-      </span>
-      <span class="gh-issue-title">
-        <a href="<%= html_url %>"><%= title %></a>
-      </span>
-    </li>
-  </script>
-  <script type="text/html" id="stack_tmpl">
-    <li>
-      <span class="stack-question-answers">
-        <%= answer_count %> <%= answer_count > 1 ? "answers" : "answer" %>
-      </span>
-      <span class="stack-question-title">
-        <a href="<%= link %>"><%= title %></a>
-      </span>
-    </li>
-  </script>
+    </script>
+    <script type="text/html" id="gh_tmpl">
+      <li>
+        <span class="gh-issue-comments">
+          <%= comments %> <%= comments > 1 ? "comments" : "commment" %>
+        </span>
+        <span class="gh-issue-title">
+          <a href="<%= html_url %>"><%= title %></a>
+        </span>
+      </li>
+    </script>
+    <script type="text/html" id="stack_tmpl">
+      <li>
+        <span class="stack-question-answers">
+          <%= answer_count %> <%= answer_count > 1 ? "answers" : "answer" %>
+        </span>
+        <span class="stack-question-title">
+          <a href="<%= link %>"><%= title %></a>
+        </span>
+      </li>
+    </script>
 
-    <script type="text/javascript">
+    <script>
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-37229467-1']);
       _gaq.push(['_trackPageview']);
@@ -180,5 +177,5 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    </body>
+  </body>
 </html>

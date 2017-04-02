@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -117,12 +118,12 @@
             Finally, add <code>data-parsley-validate</code> to each <code>&lt;form></code> you want to be validated.
           </p>
           <p>That would look pretty much like this:
-<pre><code>&lt;script src="jquery.js">&lt;/script>
-&lt;script src="parsley.min.js">&lt;/script>
+<pre><code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
+&lt;script src="parsley.min.js"&gt;&lt;/script&gt;
 
-&lt;form data-parsley-validate>
+&lt;form data-parsley-validate&gt;
 ...
-&lt;/form>
+&lt;/form&gt;
 </code></pre>
           </p>
 
@@ -135,16 +136,16 @@
           <p>Like for <a href="#installation-basic">Basic installation</a>, first include <strong>jQuery</strong> and Parsley. Then, simply use <code>$('#form').parsley(options);</code> or <code>new Parsley('#form', options);</code> (where <code>options</code> is an optional configuration object) to manually bind Parsley to your forms.</p>
 
           <p>That would look pretty much like this:
-<pre><code>&lt;script src="jquery.js">&lt;/script>
-&lt;script src="parsley.min.js">&lt;/script>
+<pre><code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
+&lt;script src="parsley.min.js"&gt;&lt;/script&gt;
 
-&lt;form id="form">
+&lt;form id="form"&gt;
 ...
-&lt;/form>
+&lt;/form&gt;
 
-&lt;script type="text/javascript">
+&lt;script&gt;
   $('#form').parsley();
-&lt;/script>
+&lt;/script&gt;
 </code></pre>
 
           <div class="bs-callout bs-callout-danger">
@@ -162,14 +163,12 @@
           </p>
           <p>
             To load a different locale and its messages, include them after Parsley:
-<pre><code>&lt;script src="jquery.js">&lt;/script>
-&lt;script src="parsley.min.js">&lt;/script>
-&lt;script src="i18n/fr.js">&lt;/script>
-&lt;script src="i18n/it.js">&lt;/script>
+<pre><code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
+&lt;script src="parsley.min.js"&gt;&lt;/script&gt;
+&lt;script src="i18n/fr.js"&gt;&lt;/script&gt;
+&lt;script src="i18n/it.js"&gt;&lt;/script&gt;
 </code></pre>
                 The last loaded file will automatically set the messages locale for Parsley. In the example above, we load both French and Italian translations, and use Italian.
-            </li>
-            </ul>
           </p>
 
           <h3 id="installation-plugins">Plugins</h3>
@@ -314,7 +313,7 @@ if (false === instance.options.priorityEnabled)
                   <code>textarea,</code><br/>
                   <code>select</code></td>
                 <td>When looking for fields within a form, Parsley uses this selector.
-                  The fields found will then be filtered using the <code>excluded<code> option below.</td>
+                  The fields found will then be filtered using the <code>excluded</code> option below.</td>
               </tr>
               <tr>
                 <td><code>data-parsley-excluded</code> <version>#2.0</version></td>
@@ -475,9 +474,10 @@ if (false === instance.options.priorityEnabled)
                 </td>
                 <td>Validate Field. <strong>Fires <a href="#events">events</a> and affects UI.</strong> If <code>force</code> is set, force validate even non required fields (<a href="examples/events.html">See example</a>)</td>
               </tr>
-              <td>Get errors messages <version>#2.0</version></td>
-                <td><code>getErrorsMessages();</code></td>
-                <td>Returns an array of the field errors messages displayed once validated.</td>
+              <tr>
+                <td><code>getErrorsMessages()</code> <version>#2.0</version></td>
+                <td><code>array</code></td>
+                <td>Returns an array of field's error messages</td>
               </tr>
               <tr>
                 <td><code>reset()</code> <version>#2.0</version></td>
@@ -785,15 +785,16 @@ if (false === instance.options.priorityEnabled)
             These validators are shipped in <code>parsley.js</code>. Have a look at <a href="#extras">Parsley Extras</a> for more validators.
           </p>
 
-          <h1 id="custom">Custom Validators</h3>
+          <!-- ****************** CUSTOM VALIDATORS ****************** -->
+          <h1 id="custom" class="page-header">Custom Validators</h1>
           <h3 id="custom-intro">Craft yours</h3>
           <p>Of course, Parsley built-in validators are commonly used validators, and you'll need some more that fit your specific forms and validations. That's why Parsley lets you easily create your own validators.</p>
           <p>
           <p>The preferred way to register them (after <code>parsley.js</code> is loaded) looks like:
 
-<pre><code>&lt;input type="text" data-parsley-multiple-of="3" />
+<pre><code>&lt;input type="text" data-parsley-multiple-of="3" /&gt;
 [...]
-&lt;script type="text/javascript">
+&lt;script&gt;
 window.Parsley
   .addValidator('multipleOf', {
     requirementType: 'integer',
@@ -805,7 +806,7 @@ window.Parsley
       fr: 'Cette valeur doit être un multiple de %s'
     }
   });
-&lt;/script>
+&lt;/script&gt;
 </code></pre>
           </p>
           <p>The following sections go over the details on how to define a custom validator</p>
@@ -932,7 +933,7 @@ window.Parsley
             <tr>
               <td>Focus <version>#2.0</version></td>
               <td><code>data-parsley-focus="first"</code></td>
-              <td>Focus failing field on form validation. Possible values: <code>'first' | 'last' | 'none'<code></td>
+              <td>Focus failing field on form validation. Possible values: <code>'first' | 'last' | 'none'</code></td>
             </tr>
           </tbody>
         </table>
@@ -953,11 +954,12 @@ window.Parsley
               <td>Specify one or many javascript events that will trigger item validation, before any failure. To set multiple events, separate them with a space <code>data-parsley-trigger="focusin focusout"</code>. Default is <code>null</code>. <a href="http://api.jquery.com/category/events/" target="_blank">See the various events supported by jQuery.</a></td>
             </tr>
             <tr>
-              <td>Trigger After Failure<version>#2.0</version></td>
+              <td>Trigger After Failure <version>#2.0</version></td>
               <td><code>data-parsley-trigger-after-failure="focusout"</code></td>
               <td>Specify one or many javascript events that will trigger item validation, after the first failure. Default is <a href="https://developer.mozilla.org/en-US/docs/Web/Events/input"><code>'input'</code></a>.</td>
             </tr>
-            <td>No focus <version>#2.0</version></td>
+            <tr>
+              <td>No focus <version>#2.0</version></td>
               <td><code>data-parsley-no-focus</code></td>
               <td>If this field fails, do not focus on it (if <code>first</code> focus strategy is on, next field would be focused, if <code>last</code> strategy is on, previous field would be focused)</td>
             </tr>
@@ -1008,16 +1010,19 @@ window.Parsley
               <td><code>addError(name, {message: , assert: , updateClass: true});</code></td>
               <td>Add an error message.</td>
             </tr>
-            <td>Update error <version>#2.0</version></td>
+            <tr>
+              <td>Update error <version>#2.0</version></td>
               <td><code>updateError(name, {message: , assert: , updateClass: true});</code></td>
               <td>Update an already added error message error.</td>
             </tr>
-            <td>Remove error <version>#2.0</version></td>
+            <tr>
+              <td>Remove error <version>#2.0</version></td>
               <td><code>removeError(name, {updateClass: true});</code></td>
               <td>Remove an already present error.</td>
             </tr>
           </tbody>
         </table>
+
         <!-- ****************** Events ****************** -->
         <h1 id="events" class="page-header">Events</h1>
         <h3 id="events-overview">Overview</h3>
@@ -1122,7 +1127,7 @@ window.Parsley
           Parsley <a href="annotated-source/remote.html" target="_blank">remote</a> is an easy to use <strong>ajax asynchronous validator</strong>.
         </p>
 
-        <h3>Options</h3>
+        <h3 id="remote-options">Options</h3>
         <table class="table table-stripped table-bordered">
           <thead>
             <tr>
@@ -1196,30 +1201,27 @@ window.Parsley
           </tbody>
         </table>
 
-        <a name="remote-custom"></a>
-        <h3>Custom remote validators</h3>
+        <h3 id="remote-custom">Custom remote validators</h3>
         <p>If you need some custom processing of Ajax responses, configure your custom remote as follows:
-<pre><code>&lt;input name="q" type="text" data-parsley-remote data-parsley-remote-validator='mycustom' value="foo" />
+<pre><code>&lt;input name="q" type="text" data-parsley-remote data-parsley-remote-validator='mycustom' value="foo" /&gt;
 [...]
-&lt;script href="parsley.remote.js">&lt;/script>
-&lt;script type="text/javascript">
+&lt;script href="parsley.remote.js"&gt;&lt;/script&gt;
+&lt;script&gt;
 window.Parsley.addAsyncValidator('mycustom', function (xhr) {
     console.log(this.$element); // jQuery Object[ input[name="q"] ]
 
     return 404 === xhr.status;
   }, 'http://mycustomapiurl.ext');
-&lt;/script>
+&lt;/script&gt;
 </code></pre>
-            </li>
-          </ul>
         </p>
 
-        <!-- ****************** Extra ****************** -->
+        <!-- ****************** Extras ****************** -->
         <h1 id="extras" class="page-header">Parsley Extras</h1>
         <p>
           You'll find in the <code>src/extra/</code> directory in Parsley .zip or Github projects many more or less useful validators crafted by the community. A doc here is coming.
         </p>
-        <h3 id="validators-list">Validators list</h3>
+        <h3 id="extras-validators-list">Validators list</h3>
         <table class="table table-stripped table-bordered">
           <thead>
            <tr>
@@ -1418,9 +1420,18 @@ window.Parsley.addAsyncValidator('mycustom', function (xhr) {
               </li>
               <li>
                 <a href="#remote">Parsley Remote</a>
+                <ul class="nav">
+                  <li><a href="#remote-options">Options</a></li>
+                  <li><a href="#remote-events">Events</a></li>
+                  <li><a href="#remote-methods">Methods</a></li>
+                  <li><a href="#remote-custom">Custom remote validators</a></li>
+                </ul>
               </li>
               <li>
                 <a href="#extras">Parsley Extras</a>
+                <ul class="nav">
+                  <li><a href="#extras-validators-list">Validators list</a></li>
+                </ul>
               </li>
           </ul>
           <a class="back-to-top" href="#top">
@@ -1429,8 +1440,8 @@ window.Parsley.addAsyncValidator('mycustom', function (xhr) {
 
           <div id="mailing-list">
             <!-- Begin MailChimp Signup Form -->
-            <link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
-            <style type="text/css">
+            <link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet">
+            <style>
               #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
               /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
                  We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
@@ -1458,15 +1469,14 @@ window.Parsley.addAsyncValidator('mycustom', function (xhr) {
       </div>
     </div>
 
-    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="../bower_components/bootstrap/js/affix.js"></script>
-    <script type="text/javascript" src="../bower_components/bootstrap/js/scrollspy.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
-    <script type="text/javascript" src="assets/docs.js"></script>
-    <script type="text/javascript" src="../dist/parsley.min.js"></script>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/bootstrap/js/affix.js"></script>
+    <script src="../bower_components/bootstrap/js/scrollspy.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
+    <script src="assets/docs.js"></script>
+    <script src="../dist/parsley.min.js"></script>
 
-    <script type="text/javascript">
-
+    <script>
       try {
         hljs.initHighlightingOnLoad();
       } catch ( err ) {}
