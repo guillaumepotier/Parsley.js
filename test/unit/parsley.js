@@ -81,7 +81,7 @@ describe('Factory', () => {
   });
   it('should handle proper options management', () => {
     $('body').append('<form id="element" data-parsley-foo="bar" data-parsley-baz="baz"></form>');
-    window.ParsleyConfig = $.extend(window.ParsleyConfig, {bar: 'baz', baz: 'qux'});
+    window.ParsleyConfig = Object.assign(window.ParsleyConfig, {bar: 'baz', baz: 'qux'});
     var parsleyInstance = new Factory($('#element')[0], {qux: 'bux'});
     expect(parsleyInstance.options.foo).to.be('bar');
     expect(parsleyInstance.options.baz).to.be('baz');

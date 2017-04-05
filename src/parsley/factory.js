@@ -20,7 +20,7 @@ var Factory = function (element, options, parsleyFormInstance) {
     }
 
     if ('object' === typeof options) {
-      $.extend(savedparsleyFormInstance.options, options);
+      Object.assign(savedparsleyFormInstance.options, options);
     }
 
     return savedparsleyFormInstance;

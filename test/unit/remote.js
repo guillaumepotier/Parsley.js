@@ -7,7 +7,7 @@ describe('ParsleyRemote', () => {
   var stubAjax = status => {
     restoreAjax();
     var deferred = $.Deferred();
-    var xhr = $.extend(deferred.promise(), {status: status});
+    var xhr = Object.assign(deferred.promise(), {status: status});
     if (status === 200) {
       deferred.resolve({}, 'success', 'xhr');
     } else {

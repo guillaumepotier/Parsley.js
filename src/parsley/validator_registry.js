@@ -98,7 +98,7 @@ ValidatorRegistry.prototype = {
   init: function (validators, catalog) {
     this.catalog = catalog;
     // Copy prototype's validators:
-    this.validators = $.extend({}, this.validators);
+    this.validators = Object.assign({}, this.validators);
 
     for (var name in validators)
       this.addValidator(name, validators[name].fn, validators[name].priority);

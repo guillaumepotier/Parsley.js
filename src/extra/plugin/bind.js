@@ -9,7 +9,7 @@ import jQuery from 'jquery'; // Remove this line in ES3
   window.ParsleyConfig = $.extend(true, window.ParsleyConfig, {autoBind: false});
   window.ParsleyExtend = window.ParsleyExtend || {};
 
-  window.ParsleyExtend = $.extend(window.ParsleyExtend, {
+  window.ParsleyExtend = Object.assign(window.ParsleyExtend, {
     // { '#selector' : { constraintName1: value, constraintName2: value2 }, #selector2: { constraintName: value } }
     // { '#selector' : { constraintName1: { requirements: value, priority: value }, constraintName2: value2 } }
     _bindFields: function () {

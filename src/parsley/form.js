@@ -64,7 +64,7 @@ Form.prototype = {
       });
     }
 
-    this.$element.trigger($.extend($.Event('submit'), {parsley: true}));
+    this.$element.trigger(Object.assign($.Event('submit'), {parsley: true}));
   },
 
   // Performs validation on fields while triggering events.
@@ -84,7 +84,7 @@ Form.prototype = {
   whenValidate: function ({group, force, event} = {}) {
     this.submitEvent = event;
     if (event) {
-      this.submitEvent = $.extend({}, event, {preventDefault: () => {
+      this.submitEvent = Object.assign({}, event, {preventDefault: () => {
         Utils.warnOnce("Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`");
         this.validationResult = false;
       }});

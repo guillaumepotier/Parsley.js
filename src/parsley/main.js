@@ -17,7 +17,7 @@ if (!vernums.forEach) {
   Utils.warn('Parsley requires ES5 to run properly. Please include https://github.com/es-shims/es5-shim');
 }
 // Inherit `on`, `off` & `trigger` to Parsley:
-var Parsley = $.extend(new Base(), {
+var Parsley = Object.assign(new Base(), {
     element: document,
     $element: $(document),
     actualizeOptions: null,
@@ -28,10 +28,10 @@ var Parsley = $.extend(new Base(), {
 
 // Supplement Field and Form with Base
 // This way, the constructors will have access to those methods
-$.extend(Field.prototype, UI.Field, Base.prototype);
-$.extend(Form.prototype, UI.Form, Base.prototype);
+Object.assign(Field.prototype, UI.Field, Base.prototype);
+Object.assign(Form.prototype, UI.Form, Base.prototype);
 // Inherit actualizeOptions and _resetOptions:
-$.extend(Factory.prototype, Base.prototype);
+Object.assign(Factory.prototype, Base.prototype);
 
 // ### jQuery API
 // `$('.elem').parsley(options)` or `$('.elem').psly(options)`
@@ -63,7 +63,7 @@ if ('undefined' === typeof window.ParsleyExtend)
 
 // ### Parsley config
 // Inherit from ParsleyDefault, and copy over any existing values
-Parsley.options = $.extend(Utils.objectCreate(Defaults), window.ParsleyConfig);
+Parsley.options = Object.assign(Utils.objectCreate(Defaults), window.ParsleyConfig);
 window.ParsleyConfig = Parsley.options; // Old way of accessing global options
 
 // ### Globals
