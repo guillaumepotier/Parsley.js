@@ -39,6 +39,7 @@
   "devDependencies": {
     "babel-core": "^5.2.17",
     "babel-eslint": "^4.0.5",
+    "babel-plugin-object-assign": "^1.2.1",
     "babelify": "^6.0.0",
     "browserify": "^11.0.1",
     "expect.js": "*",
