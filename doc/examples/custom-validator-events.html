@@ -89,7 +89,7 @@
           </small>
           <span class="clearfix"></span>
 
-          <hr></hr>
+          <hr>
           <div class="form-group example">
 <h4>Correctly fill at least one of these blocks</h4>
 <form class="demo-form">
@@ -102,7 +102,7 @@
       <input type="text" class="form-control" name="lastname" data-parsley-length="[4, 20]" data-parsley-group="block-1" />
     </div>
 
-    <hr></hr>
+    <hr>
 
     <div class="second">
       <label for="fullname">Fullname:</label>
@@ -113,9 +113,9 @@
 </form>
           </div>
           <div class="explanation">
-            <p>This example uses a trick. It uses a <tt>&lt;div></tt> tag like if it was an input. That input uses a custom validator that succeeds only if one of the groups (here <tt>"block-1"</tt> and <tt>"block-2"</tt>) validate with the <tt>force</tt> option set.
+            <p>This example uses a trick. It uses a <code>&lt;div&gt;</code> tag like if it was an input. That input uses a custom validator that succeeds only if one of the groups (here <code>"block-1"</code> and <code>"block-2"</code>) validate with the <code>force</code> option set.
             </p>
-            <p>Note that the <tt>&lt;div></tt> contains the fields in question. This way, events like <tt>change</tt> or <tt>input</tt> generated when the user fills in these fields will bubble up to the div and revalidate the custom field.
+            <p>Note that the <code>&lt;div&gt;</code> contains the fields in question. This way, events like <code>change</code> or <code>input</code> generated when the user fills in these fields will bubble up to the div and revalidate the custom field.
             </p>
           </div>
         </div>
