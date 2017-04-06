@@ -106,7 +106,7 @@
           <h1 id="installation" class="page-header">Installation</h1>
           <h3 id="installation-basic">Basic installation</h3>
           <p>
-            Parsley relies on <strong><a href="http://jquery.com/" target="_blank">jQuery</a> (>= 1.8)</strong>, and it will need to be included before including Parsley.
+            Parsley relies on <strong><a href="http://jquery.com/" target="_blank">jQuery</a> (&gt;= 1.8)</strong>, and it will need to be included before including Parsley.
           </p>
           <p>
             You will also need to include <strong><a href="https://github.com/es-shims/es5-shim" target="_blank">es5-shim</a></strong> if you want need to support IE8.
@@ -115,7 +115,7 @@
             Then, you can either use <code>parsley.js</code> unminified file or <code>parsley.min.js</code> minified one. These files and <a href="#extras">extras</a> are <a href="download.html">available here</a>.
           </p>
           <p>
-            Finally, add <code>data-parsley-validate</code> to each <code>&lt;form></code> you want to be validated.
+            Finally, add <code>data-parsley-validate</code> to each <code>&lt;form&gt;</code> you want to be validated.
           </p>
           <p>That would look pretty much like this:
 <pre><code>&lt;script src="jquery.js"&gt;&lt;/script&gt;
@@ -380,7 +380,7 @@ if (false === instance.options.priorityEnabled)
 
           <h3 id="usage-field">Field</h3>
           <p>
-            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;input id="target"></code> element (or <code>&lt;textarea></code>, <code>&lt;select></code>), it will bind the field and return a <code>ParsleyField</code> instance. Except for input types radio and checkbox that don't have a <code>name</code> attribute or a <code>data-parsley-multiple</code> attribute, they won't be bound (ignored) and will eventually raise a warning in the console.
+            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;input id="target"&gt;</code> element (or <code>&lt;textarea&gt;</code>, <code>&lt;select&gt;</code>), it will bind the field and return a <code>ParsleyField</code> instance. Except for input types radio and checkbox that don't have a <code>name</code> attribute or a <code>data-parsley-multiple</code> attribute, they won't be bound (ignored) and will eventually raise a warning in the console.
           </p>
 
           <h4>Options</h4>
@@ -790,7 +790,7 @@ if (false === instance.options.priorityEnabled)
           <h3 id="custom-intro">Craft yours</h3>
           <p>Of course, Parsley built-in validators are commonly used validators, and you'll need some more that fit your specific forms and validations. That's why Parsley lets you easily create your own validators.</p>
           <p>
-          <p>The preferred way to register them (after <code>parsley.js</code> is loaded) looks like:
+          <p>The preferred way to register them (after <code>parsley.js</code> is loaded) looks like:</p>
 
 <pre><code>&lt;input type="text" data-parsley-multiple-of="3" /&gt;
 [...]
@@ -811,7 +811,7 @@ window.Parsley
           </p>
           <p>The following sections go over the details on how to define a custom validator</p>
           <h3 id="custom-function">Validating function</h3>
-          <p>There are many ways a validator can specify how to validate data:
+          <p>There are many ways a validator can specify how to validate data:</p>
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
@@ -847,7 +847,7 @@ window.Parsley
 
           <h3 id="custom-requirement">Requirement parameters</h3>
 
-          <p>You can specify what kind of requirement parameter your custom validator is expecting:
+          <p>You can specify what kind of requirement parameter your custom validator is expecting:</p>
           <table class="table table-stripped table-bordered">
             <thead>
               <tr>
