@@ -309,8 +309,8 @@ if (false === instance.options.priorityEnabled)
               <tr>
                 <td><code>data-parsley-inputs</code> <version>#2.0</version></td>
                 <td>
-                  <code>input,</code><br/>
-                  <code>textarea,</code><br/>
+                  <code>input,</code><br>
+                  <code>textarea,</code><br>
                   <code>select</code></td>
                 <td>When looking for fields within a form, Parsley uses this selector.
                   The fields found will then be filtered using the <code>excluded</code> option below.</td>
@@ -318,9 +318,9 @@ if (false === instance.options.priorityEnabled)
               <tr>
                 <td><code>data-parsley-excluded</code> <version>#2.0</version></td>
                 <td>
-                  <code>input[type=button],</code><br/>
-                  <code>input[type=submit],</code><br/>
-                  <code>input[type=reset],</code><br/>
+                  <code>input[type=button],</code><br>
+                  <code>input[type=submit],</code><br>
+                  <code>input[type=reset],</code><br>
                   <code>input[type=hidden]</code></td>
                 <td>Form fields that won't be validated by Parsley.  For example, if you want to add <code>disabled</code> and hidden fields to the existing list, use: <pre>data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], input[type=hidden], [disabled], :hidden"</pre></td>
               </tr>
@@ -395,12 +395,12 @@ if (false === instance.options.priorityEnabled)
               <tr>
                 <td><code>data-parsley-value</code> <version>#2.0</version></td>
                 <td>Set a specific field value for Parsley validation, dissociated from the real one. eg: <code>data-parsley-value="foo"</code>
-                  <br/>
+                  <br>
                 The JavaScript API allows one to pass a function to be called. eg:
                 <code>
-                  $('&lt;input type="text"&gt;').appendTo($('form')).<br/>
-                  parsley({<br/>
-                  &nbsp;&nbsp;value: function(parsley) { return 'foo'; }<br/>
+                  $('&lt;input type="text"&gt;').appendTo($('form')).<br>
+                  parsley({<br>
+                  &nbsp;&nbsp;value: function(parsley) { return 'foo'; }<br>
                   });
                 </code></td>
               </tr>
@@ -459,8 +459,8 @@ if (false === instance.options.priorityEnabled)
               <tr>
                 <td><code>isValid({force})</code> <version>#2.0</version></td>
                 <td>
-                  <code>true</code> if all ok<br/>
-                  <code>null</code> if some validations are still pending<br/>
+                  <code>true</code> if all ok<br>
+                  <code>null</code> if some validations are still pending<br>
                   <code>[Violation, ...]]</code> if fails
                 </td>
                 <td>Returns if the field is valid or not. <strong>Does not affect UI nor fires <a href="#events">events</a>.</strong> If <code>force</code> is set, it forces validation even on non-required fields (<a href="examples/events.html">See example</a>)</td>
@@ -468,8 +468,8 @@ if (false === instance.options.priorityEnabled)
               <tr>
                 <td><code>validate({force, group})</code> <version>#2.0</version></td>
                 <td>
-                  <code>true</code> if all ok<br/>
-                  <code>null</code> if some validations are still pending<br/>
+                  <code>true</code> if all ok<br>
+                  <code>null</code> if some validations are still pending<br>
                   <code>[Violation, ...]]</code> if fails
                 </td>
                 <td>Validate Field. <strong>Fires <a href="#events">events</a> and affects UI.</strong> If <code>force</code> is set, force validate even non required fields (<a href="examples/events.html">See example</a>)</td>
@@ -568,7 +568,7 @@ if (false === instance.options.priorityEnabled)
                 </td>
                 <td><code>data-parsley-type="number"</code></td>
                 <td>Validates that a value is a valid number according to the given <code>step</code>, <code>min</code> and original <code>value</code>.
-                  <br/>The default <code>step</code> for HTML5 is "1", which is so counterintuive that Parsley uses a default <code>step</code> of "any" for <code>data-parsley-type="number"</code>.
+                  <br>The default <code>step</code> for HTML5 is "1", which is so counterintuive that Parsley uses a default <code>step</code> of "any" for <code>data-parsley-type="number"</code>.
                   <span class="label label-warning">Warning!</span> HTML5 <code>type="number"</code> can be counterintuitive. The default step of '1' is near useless. Moreover, for browsers that support it, the value accessible from javascript in case of invalid input is <code>""</code>, so you will never get an error (unless it is also <code>required</code>).</td>
               </tr>
               <tr>
@@ -742,8 +742,8 @@ if (false === instance.options.priorityEnabled)
                   </table>
                 </td>
                 <td>Validates that a value matches a specific regular expression (regex).
-                  <br/>Note that patterns are anchored, i.e. must match the whole string.
-                  <br/>Parsley deviates from the standard for patterns looking like <code>/<i>pattern</i>/<i>{flag}</i></code>; these are interpreted as literal regexp and are not anchored.
+                  <br>Note that patterns are anchored, i.e. must match the whole string.
+                  <br>Parsley deviates from the standard for patterns looking like <code>/<i>pattern</i>/<i>{flag}</i></code>; these are interpreted as literal regexp and are not anchored.
                 </td>
               </tr>
               <tr>
@@ -1085,7 +1085,7 @@ window.Parsley
               <td><code>form:submit</code> <version>#2.2</version></td>
               <td><code>ParsleyForm</code></td>
               <td><code>submit()</code></td>
-              <td>Triggered when after a form validation succeeds and before the form is actually submitted.<br/>
+              <td>Triggered when after a form validation succeeds and before the form is actually submitted.<br>
                 Return `false` to interrupt submission.</td>
             </tr>
             <tr>
@@ -1141,7 +1141,7 @@ window.Parsley
               <td>Remote validator</td>
               <td><code>data-parsley-remote</code> <version>#2.0</version></td>
               <td>Define the url that will be called to validate the entered content. e.g. <code>data-parsley-remote="http://url.ext"</code>.
-                <br/>If the url contains the string <code>"{value}"</code>, the value will replace it in the URL (typical of RESTful APIs),
+                <br>If the url contains the string <code>"{value}"</code>, the value will replace it in the URL (typical of RESTful APIs),
                 otherwise the value will be passed as a data parameter, with the key being the input's name or ID.</td>
             </tr>
             <tr>

@@ -98,13 +98,13 @@
       </div>
     </div>
 
-    <script type="text/javascript" src="../../bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="../../bower_components/bootstrap/js/affix.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../bower_components/bootstrap/js/affix.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 
-    <script type="text/javascript" src="../../dist/parsley.js"></script>
+    <script src="../../dist/parsley.js"></script>
 
-    <script type="text/javascript" class="example">
+    <script class="example">
 window.Parsley.addValidator('palindrome', {
   validateString: function(value) {
     return value.split('').reverse().join('') === value;
@@ -138,11 +138,11 @@ window.Parsley.addValidator('maxFileSize', {
   requirementType: 'integer',
   messages: {
     en: 'This file should not be larger than %s Kb',
-    fr: "Ce fichier est plus grand que %s Kb."
+    fr: 'Ce fichier est plus grand que %s Kb.'
   }
 });
 
     </script>
-    <script type="text/javascript" src="../assets/example.js"></script>
+    <script src="../assets/example.js"></script>
   </body>
 </html>
