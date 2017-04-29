@@ -109,12 +109,12 @@ p.parsley-error {
 
   <label for="hobbies">Hobbies (Optional, but 2 minimum):</label>
   <p>
-    Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" /><br/>
-    Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" /><br/>
-    Eating <input type="checkbox" name="hobbies[]" id="hobby3" value="eat" /><br/>
-    Sleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" /><br/>
-    Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" /><br/>
-    Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" /><br/>
+    Skiing <input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" /><br>
+    Running <input type="checkbox" name="hobbies[]" id="hobby2" value="run" /><br>
+    Eating <input type="checkbox" name="hobbies[]" id="hobby3" value="eat" /><br>
+    Sleeping <input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" /><br>
+    Reading <input type="checkbox" name="hobbies[]" id="hobby5" value="read" /><br>
+    Coding <input type="checkbox" name="hobbies[]" id="hobby6" value="code" /><br>
   </p>
 
   <p>
@@ -130,10 +130,10 @@ p.parsley-error {
 
   <p>
   <label for="message">Message (20 chars min, 100 max) :</label>
-  <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message = "Come on! You need to enter at least a 20 character comment.." data-parsley-validation-threshold="10"></textarea>
+  <textarea id="message" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message="Come on! You need to enter at least a 20 character comment.." data-parsley-validation-threshold="10"></textarea>
   </p>
 
-  <br/>
+  <br>
   <input type="submit" class="btn btn-default" value="validate"/>
 
   <p><small>* Please, note that this demo form is not a perfect example of UX-awareness. The aim here is to show a quick overview of parsley-API and Parsley customizable behavior.</small></p>
@@ -156,12 +156,12 @@ p.parsley-error {
       </div>
     </div>
 
-    <script type="text/javascript" src="../../bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="../../bower_components/bootstrap/js/affix.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../bower_components/bootstrap/js/affix.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 
-    <script type="text/javascript" src="../../dist/parsley.js"></script>
-    <script type="text/javascript" class="example">
+    <script src="../../dist/parsley.js"></script>
+    <script class="example">
 $(function () {
   $('#demo-form').parsley().on('field:validated', function() {
     var ok = $('.parsley-error').length === 0;
@@ -173,7 +173,7 @@ $(function () {
   });
 });
     </script>
-    <script type="text/javascript" src="../assets/example.js"></script>
+    <script src="../assets/example.js"></script>
 
   </body>
 </html>

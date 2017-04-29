@@ -128,12 +128,12 @@
       </div>
     </div>
 
-    <script type="text/javascript" src="../../bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="../../bower_components/bootstrap/js/affix.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../bower_components/bootstrap/js/affix.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 
-    <script type="text/javascript" src="../../dist/parsley.js"></script>
-    <script type="text/javascript" class="example">
+    <script src="../../dist/parsley.js"></script>
+    <script class="example">
 $(function () {
   $('.demo-form').parsley().on('form:validate', function (formInstance) {
     var ok = formInstance.isValid({group: 'block1', force: true}) || formInstance.isValid({group: 'block2', force: true});
@@ -145,6 +145,6 @@ $(function () {
   });
 });
     </script>
-    <script type="text/javascript" src="../assets/example.js"></script>
+    <script src="../assets/example.js"></script>
   </body>
 </html>
