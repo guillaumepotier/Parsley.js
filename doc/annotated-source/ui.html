@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -164,7 +164,7 @@ UI.Form = {
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>.options.uiEnabled)
       <span class="hljs-keyword">return</span>;
 
-    <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'novalidate'</span>, <span class="hljs-string">''</span>);
+    <span class="hljs-keyword">this</span>.element.setAttribute(<span class="hljs-string">'novalidate'</span>, <span class="hljs-string">''</span>);
   },
 
   <span class="hljs-attr">focus</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -580,7 +580,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'id'</span>, <span class="hljs-keyword">this</span>.__id__);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.element.setAttribute(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'id'</span>, <span class="hljs-keyword">this</span>.__id__);
 
     <span class="hljs-comment">/** Generate important UI elements and store them in this **/</span></pre></div></div>
             
@@ -727,7 +727,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.options.multiple || <span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.options.multiple || <span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'SELECT'</span>)
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$element;</pre></div></div>
             
         </li>
@@ -948,5 +948,5 @@ about success or failure have been displayed, always validate with this trigger 
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

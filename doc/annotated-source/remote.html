@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -112,6 +112,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+<span class="hljs-keyword">import</span> Base <span class="hljs-keyword">from</span> <span class="hljs-string">'./base'</span>;
 
 <span class="hljs-keyword">import</span> Parsley <span class="hljs-keyword">from</span> <span class="hljs-string">'./main'</span>;
 
@@ -209,7 +211,7 @@ Parsley.addValidator(<span class="hljs-string">'remote'</span>, {
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (url.indexOf(<span class="hljs-string">'{value}'</span>) &gt; <span class="hljs-number">-1</span>) {
       url = url.replace(<span class="hljs-string">'{value}'</span>, <span class="hljs-built_in">encodeURIComponent</span>(value));
     } <span class="hljs-keyword">else</span> {
-      data[instance.$element.attr(<span class="hljs-string">'name'</span>) || instance.$element.attr(<span class="hljs-string">'id'</span>)] = value;
+      data[instance.element.getAttribute(<span class="hljs-string">'name'</span>) || instance.element.getAttribute(<span class="hljs-string">'id'</span>)] = value;
     }</pre></div></div>
             
         </li>
@@ -311,7 +313,7 @@ Parsley.on(<span class="hljs-string">'form:submit'</span>, <span class="hljs-fun
   Parsley._remoteCache = {};
 });
 
-<span class="hljs-built_in">window</span>.ParsleyExtend.addAsyncValidator = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+Base.prototype.addAsyncValidator = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
   Utils.warnOnce(<span class="hljs-string">'Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`'</span>);
   <span class="hljs-keyword">return</span> Parsley.addAsyncValidator(...arguments);
 };</pre></div></div>
@@ -320,5 +322,5 @@ Parsley.on(<span class="hljs-string">'form:submit'</span>, <span class="hljs-fun
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -119,6 +119,7 @@
 <span class="hljs-keyword">import</span> Multiple <span class="hljs-keyword">from</span> <span class="hljs-string">'./multiple'</span>;
 
 <span class="hljs-keyword">var</span> Factory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, options, parsleyFormInstance</span>) </span>{
+  <span class="hljs-keyword">this</span>.element = element;
   <span class="hljs-keyword">this</span>.$element = $(element);</pre></div></div>
             
         </li>
@@ -156,7 +157,7 @@
     }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'object'</span> === <span class="hljs-keyword">typeof</span> options) {
-      $.extend(savedparsleyFormInstance.options, options);
+      <span class="hljs-built_in">Object</span>.assign(savedparsleyFormInstance.options, options);
     }
 
     <span class="hljs-keyword">return</span> savedparsleyFormInstance;
@@ -219,7 +220,7 @@ Factory.prototype = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'form'</span>) || (Utils.checkAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'validate'</span>) &amp;&amp; !<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-keyword">this</span>.options.inputs)))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'FORM'</span> || (Utils.checkAttr(<span class="hljs-keyword">this</span>.element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'validate'</span>) &amp;&amp; !<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-keyword">this</span>.options.inputs)))
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyForm'</span>);</pre></div></div>
             
         </li>
@@ -239,7 +240,8 @@ Factory.prototype = {
   },
 
   <span class="hljs-attr">isMultiple</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>)) || (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'multiple'</span>));
+    <span class="hljs-keyword">return</span> ((<span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'radio'</span> || <span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'checkbox'</span>) ||
+      (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'SELECT'</span> &amp;&amp; <span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'multiple'</span>)));
   },</pre></div></div>
             
         </li>
@@ -274,12 +276,9 @@ Maybe some refactoring would be appreciated here…</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple)
-      ; <span class="hljs-comment">// We already have our 'multiple' identifier</span>
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>).length)
-      <span class="hljs-keyword">this</span>.options.multiple = name = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'name'</span>);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>) &amp;&amp; <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>).length)
-      <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'id'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.options.multiple ||
+      (name = <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'name'</span>)) ||
+      <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'id'</span>);</pre></div></div>
             
         </li>
         
@@ -294,7 +293,7 @@ Maybe some refactoring would be appreciated here…</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'multiple'</span>)) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'SELECT'</span> &amp;&amp; <span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'multiple'</span>)) {
       <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.options.multiple || <span class="hljs-keyword">this</span>.__id__;
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.bind(<span class="hljs-string">'parsleyFieldMultiple'</span>);</pre></div></div>
             
@@ -344,10 +343,10 @@ Maybe some refactoring would be appreciated here…</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> name) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (name) {
       $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function">(<span class="hljs-params">i, input</span>) =&gt;</span> {
-        <span class="hljs-keyword">if</span> ($(input).is(<span class="hljs-string">'input[type=radio], input[type=checkbox]'</span>))
-          $(input).attr(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
+        <span class="hljs-keyword">if</span> ((input.type === <span class="hljs-string">'radio'</span> || input.type === <span class="hljs-string">'checkbox'</span>))
+          input.setAttribute(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
       });
     }</pre></div></div>
             
@@ -415,21 +414,21 @@ And will be useful later to access classic <code>Field</code> stuff while being 
     <span class="hljs-keyword">switch</span> (type) {
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyForm'</span>:
         parsleyInstance = $.extend(
-          <span class="hljs-keyword">new</span> Form(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options),
+          <span class="hljs-keyword">new</span> Form(<span class="hljs-keyword">this</span>.element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options),
           <span class="hljs-keyword">new</span> Base(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         )._bindFields();
         <span class="hljs-keyword">break</span>;
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyField'</span>:
         parsleyInstance = $.extend(
-          <span class="hljs-keyword">new</span> Field(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
+          <span class="hljs-keyword">new</span> Field(<span class="hljs-keyword">this</span>.element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
           <span class="hljs-keyword">new</span> Base(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
         );
         <span class="hljs-keyword">break</span>;
       <span class="hljs-keyword">case</span> <span class="hljs-string">'parsleyFieldMultiple'</span>:
         parsleyInstance = $.extend(
-          <span class="hljs-keyword">new</span> Field(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
+          <span class="hljs-keyword">new</span> Field(<span class="hljs-keyword">this</span>.element, <span class="hljs-keyword">this</span>.domOptions, <span class="hljs-keyword">this</span>.options, <span class="hljs-keyword">this</span>.parent),
           <span class="hljs-keyword">new</span> Multiple(),
           <span class="hljs-keyword">new</span> Base(),
           <span class="hljs-built_in">window</span>.ParsleyExtend
@@ -440,7 +439,7 @@ And will be useful later to access classic <code>Field</code> stuff while being 
     }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.multiple)
-      Utils.setAttr(<span class="hljs-keyword">this</span>.$element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
+      Utils.setAttr(<span class="hljs-keyword">this</span>.element, <span class="hljs-keyword">this</span>.options.namespace, <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> doNotStore) {
       <span class="hljs-keyword">this</span>.$element.data(<span class="hljs-string">'FieldMultiple'</span>, parsleyInstance);
@@ -489,5 +488,5 @@ And will be useful later to access classic <code>Field</code> stuff while being 
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

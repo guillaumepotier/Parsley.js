@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -143,7 +143,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Parsley = $.extend(<span class="hljs-keyword">new</span> Base(), {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Parsley = <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">new</span> Base(), {
+    <span class="hljs-attr">element</span>: <span class="hljs-built_in">document</span>,
     <span class="hljs-attr">$element</span>: $(<span class="hljs-built_in">document</span>),
     <span class="hljs-attr">actualizeOptions</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">_resetOptions</span>: <span class="hljs-literal">null</span>,
@@ -165,8 +166,8 @@ This way, the constructors will have access to those methods</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$.extend(Field.prototype, UI.Field, Base.prototype);
-$.extend(Form.prototype, UI.Form, Base.prototype);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">Object</span>.assign(Field.prototype, UI.Field, Base.prototype);
+<span class="hljs-built_in">Object</span>.assign(Form.prototype, UI.Form, Base.prototype);</pre></div></div>
             
         </li>
         
@@ -181,7 +182,7 @@ $.extend(Form.prototype, UI.Form, Base.prototype);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$.extend(Factory.prototype, Base.prototype);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">Object</span>.assign(Factory.prototype, Base.prototype);</pre></div></div>
             
         </li>
         
@@ -227,7 +228,7 @@ $.extend(Form.prototype, UI.Form, Base.prototype);</pre></div></div>
     <span class="hljs-keyword">return</span>;
   }
 
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Factory(<span class="hljs-keyword">this</span>, options);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Factory(<span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>], options);
 };</pre></div></div>
             
         </li>
@@ -261,7 +262,7 @@ $.extend(Form.prototype, UI.Form, Base.prototype);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Parsley.options = $.extend(Utils.objectCreate(Defaults), <span class="hljs-built_in">window</span>.ParsleyConfig);
+            <div class="content"><div class='highlight'><pre>Parsley.options = <span class="hljs-built_in">Object</span>.assign(Utils.objectCreate(Defaults), <span class="hljs-built_in">window</span>.ParsleyConfig);
 <span class="hljs-built_in">window</span>.ParsleyConfig = Parsley.options; <span class="hljs-comment">// Old way of accessing global options</span></pre></div></div>
             
         </li>
@@ -305,7 +306,7 @@ $.each(Utils, (key, value) =&gt; {
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> registry = <span class="hljs-built_in">window</span>.Parsley._validatorRegistry = <span class="hljs-keyword">new</span> ValidatorRegistry(<span class="hljs-built_in">window</span>.ParsleyConfig.validators, <span class="hljs-built_in">window</span>.ParsleyConfig.i18n);
 <span class="hljs-built_in">window</span>.ParsleyValidator = {};
 $.each(<span class="hljs-string">'setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator'</span>.split(<span class="hljs-string">' '</span>), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i, method</span>) </span>{
-  <span class="hljs-built_in">window</span>.Parsley[method] = $.proxy(registry, method);
+  <span class="hljs-built_in">window</span>.Parsley[method] = <span class="hljs-function">(<span class="hljs-params">...args</span>) =&gt;</span> registry[method](...args);
   <span class="hljs-built_in">window</span>.ParsleyValidator[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     Utils.warnOnce(<span class="hljs-string">`Accessing the method '<span class="hljs-subst">${method}</span>' through Validator is deprecated. Simply call 'window.Parsley.<span class="hljs-subst">${method}</span>(...)'`</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">window</span>.Parsley[method](...arguments);
@@ -387,5 +388,5 @@ $.each(<span class="hljs-string">'addError updateError'</span>.split(<span class
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

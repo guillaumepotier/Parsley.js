@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -118,6 +118,7 @@
 <span class="hljs-keyword">var</span> Form = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, domOptions, options</span>) </span>{
   <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Form'</span>;
 
+  <span class="hljs-keyword">this</span>.element = element;
   <span class="hljs-keyword">this</span>.$element = $(element);
   <span class="hljs-keyword">this</span>.domOptions = domOptions;
   <span class="hljs-keyword">this</span>.options = options;
@@ -161,10 +162,10 @@ Form.prototype = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $submitSource = <span class="hljs-keyword">this</span>._$submitSource || <span class="hljs-keyword">this</span>.$element.find(Utils._SubmitSelector).first();
-    <span class="hljs-keyword">this</span>._$submitSource = <span class="hljs-literal">null</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> submitSource = <span class="hljs-keyword">this</span>._submitSource || <span class="hljs-keyword">this</span>.$element.find(Utils._SubmitSelector)[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">this</span>._submitSource = <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley-synthetic-submit-button'</span>).prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-literal">true</span>);
-    <span class="hljs-keyword">if</span> ($submitSource.is(<span class="hljs-string">'[formnovalidate]'</span>))
+    <span class="hljs-keyword">if</span> (submitSource &amp;&amp; <span class="hljs-literal">null</span> !== submitSource.getAttribute(<span class="hljs-string">'formnovalidate'</span>))
       <span class="hljs-keyword">return</span>;
 
     <span class="hljs-keyword">var</span> promise = <span class="hljs-keyword">this</span>.whenValidate({event});
@@ -203,12 +204,12 @@ differ in their handling of <code>submit</code> being called from inside a submi
             <div class="content"><div class='highlight'><pre>      event.stopImmediatePropagation();
       event.preventDefault();
       <span class="hljs-keyword">if</span> (<span class="hljs-string">'pending'</span> === promise.state())
-        promise.done(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { <span class="hljs-keyword">this</span>._submit($submitSource); });
+        promise.done(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { <span class="hljs-keyword">this</span>._submit(submitSource); });
     }
   },
 
   <span class="hljs-attr">onSubmitButton</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-    <span class="hljs-keyword">this</span>._$submitSource = $(event.currentTarget);
+    <span class="hljs-keyword">this</span>._submitSource = event.currentTarget;
   },</pre></div></div>
             
         </li>
@@ -226,7 +227,7 @@ Care must be taken to “fake” the actual submit button being clicked.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _submit: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$submitSource</span>) </span>{
+            <div class="content"><div class='highlight'><pre>  _submit: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">submitSource</span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === <span class="hljs-keyword">this</span>._trigger(<span class="hljs-string">'submit'</span>))
       <span class="hljs-keyword">return</span>;</pre></div></div>
             
@@ -243,17 +244,17 @@ Care must be taken to “fake” the actual submit button being clicked.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ($submitSource) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (submitSource) {
       <span class="hljs-keyword">var</span> $synthetic = <span class="hljs-keyword">this</span>.$element.find(<span class="hljs-string">'.parsley-synthetic-submit-button'</span>).prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-literal">false</span>);
       <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> === $synthetic.length)
         $synthetic = $(<span class="hljs-string">'&lt;input class="parsley-synthetic-submit-button" type="hidden"&gt;'</span>).appendTo(<span class="hljs-keyword">this</span>.$element);
       $synthetic.attr({
-        <span class="hljs-attr">name</span>: $submitSource.attr(<span class="hljs-string">'name'</span>),
-        <span class="hljs-attr">value</span>: $submitSource.attr(<span class="hljs-string">'value'</span>)
+        <span class="hljs-attr">name</span>: submitSource.getAttribute(<span class="hljs-string">'name'</span>),
+        <span class="hljs-attr">value</span>: submitSource.getAttribute(<span class="hljs-string">'value'</span>)
       });
     }
 
-    <span class="hljs-keyword">this</span>.$element.trigger($.extend($.Event(<span class="hljs-string">'submit'</span>), {<span class="hljs-attr">parsley</span>: <span class="hljs-literal">true</span>}));
+    <span class="hljs-keyword">this</span>.$element.trigger(<span class="hljs-built_in">Object</span>.assign($.Event(<span class="hljs-string">'submit'</span>), {<span class="hljs-attr">parsley</span>: <span class="hljs-literal">true</span>}));
   },</pre></div></div>
             
         </li>
@@ -285,7 +286,7 @@ Consider using <code>whenValidate</code> instead.</p>
   <span class="hljs-attr">whenValidate</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">{group, force, event} = {}</span>) </span>{
     <span class="hljs-keyword">this</span>.submitEvent = event;
     <span class="hljs-keyword">if</span> (event) {
-      <span class="hljs-keyword">this</span>.submitEvent = $.extend({}, event, {<span class="hljs-attr">preventDefault</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-keyword">this</span>.submitEvent = <span class="hljs-built_in">Object</span>.assign({}, event, {<span class="hljs-attr">preventDefault</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
         Utils.warnOnce(<span class="hljs-string">"Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`"</span>);
         <span class="hljs-keyword">this</span>.validationResult = <span class="hljs-literal">false</span>;
       }});
@@ -570,5 +571,5 @@ Returns true iff event is not interrupted and default not prevented.</p>
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

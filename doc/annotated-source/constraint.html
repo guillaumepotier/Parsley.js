@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -111,26 +111,27 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
-<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 <span class="hljs-keyword">import</span> Validator <span class="hljs-keyword">from</span> <span class="hljs-string">'./validator'</span>;
 
-<span class="hljs-keyword">var</span> Constraint = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parsleyField, name, requirements, priority, isDomConstraint</span>) </span>{
-  <span class="hljs-keyword">var</span> validatorSpec = <span class="hljs-built_in">window</span>.Parsley._validatorRegistry.validators[name];
-  <span class="hljs-keyword">var</span> validator = <span class="hljs-keyword">new</span> Validator(validatorSpec);
+<span class="hljs-keyword">const</span> Constraint = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">parsleyField, name, requirements, priority, isDomConstraint</span>) </span>{
+  <span class="hljs-keyword">const</span> validatorSpec = <span class="hljs-built_in">window</span>.Parsley._validatorRegistry.validators[name];
+  <span class="hljs-keyword">const</span> validator = <span class="hljs-keyword">new</span> Validator(validatorSpec);
+  priority = priority || parsleyField.options[name + <span class="hljs-string">'Priority'</span>] || validator.priority;
+  isDomConstraint = (<span class="hljs-literal">true</span> === isDomConstraint);
 
-  $.extend(<span class="hljs-keyword">this</span>, {
-    <span class="hljs-attr">validator</span>: validator,
-    <span class="hljs-attr">name</span>: name,
-    <span class="hljs-attr">requirements</span>: requirements,
-    <span class="hljs-attr">priority</span>: priority || parsleyField.options[name + <span class="hljs-string">'Priority'</span>] || validator.priority,
-    <span class="hljs-attr">isDomConstraint</span>: <span class="hljs-literal">true</span> === isDomConstraint
+  <span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">this</span>, {
+    validator,
+    name,
+    requirements,
+    priority,
+    isDomConstraint
   });
   <span class="hljs-keyword">this</span>._parseRequirements(parsleyField.options);
 };
 
-<span class="hljs-keyword">var</span> capitalize = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">str</span>) </span>{
-  <span class="hljs-keyword">var</span> cap = str[<span class="hljs-number">0</span>].toUpperCase();
+<span class="hljs-keyword">const</span> capitalize = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">str</span>) </span>{
+  <span class="hljs-keyword">const</span> cap = str[<span class="hljs-number">0</span>].toUpperCase();
   <span class="hljs-keyword">return</span> cap + str.slice(<span class="hljs-number">1</span>);
 };
 
@@ -152,5 +153,5 @@ Constraint.prototype = {
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -119,6 +119,7 @@
 <span class="hljs-keyword">var</span> Field = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">field, domOptions, options, parsleyFormInstance</span>) </span>{
   <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'Field'</span>;
 
+  <span class="hljs-keyword">this</span>.element = field;
   <span class="hljs-keyword">this</span>.$element = $(field);</pre></div></div>
             
         </li>
@@ -830,7 +831,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'required'</span>))
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'required'</span>))
       <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'required'</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
@@ -846,8 +847,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'pattern'</span>))
-      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'pattern'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'pattern'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'pattern'</span>))
+      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'pattern'</span>, <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'pattern'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -862,8 +863,10 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
-      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'range'</span>, [<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>)], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> min = <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'min'</span>);
+    <span class="hljs-keyword">let</span> max = <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'max'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== min &amp;&amp; <span class="hljs-literal">null</span> !== max)
+      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'range'</span>, [min, max], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -878,8 +881,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>))
-      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'min'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== min)
+      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'min'</span>, min, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -894,8 +897,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>))
-      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'max'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'max'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== max)
+      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'max'</span>, max, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -910,8 +913,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'minlength'</span>) &amp;&amp; <span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'maxlength'</span>))
-      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'length'</span>, [<span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'minlength'</span>), <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'maxlength'</span>)], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'minlength'</span>) &amp;&amp; <span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'maxlength'</span>))
+      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'length'</span>, [<span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'minlength'</span>), <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'maxlength'</span>)], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -926,8 +929,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'minlength'</span>))
-      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'minlength'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'minlength'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'minlength'</span>))
+      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'minlength'</span>, <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'minlength'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -942,8 +945,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> !== <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'maxlength'</span>))
-      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'maxlength'</span>, <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'maxlength'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'maxlength'</span>))
+      <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'maxlength'</span>, <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'maxlength'</span>), <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -958,10 +961,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> type = <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'type'</span>);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> type)
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> type = <span class="hljs-keyword">this</span>.element.type;</pre></div></div>
             
         </li>
         
@@ -978,8 +978,8 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'number'</span> === type) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.addConstraint(<span class="hljs-string">'type'</span>, [<span class="hljs-string">'number'</span>, {
-        <span class="hljs-attr">step</span>: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'step'</span>) || <span class="hljs-string">'1'</span>,
-        <span class="hljs-attr">base</span>: <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'min'</span>) || <span class="hljs-keyword">this</span>.$element.attr(<span class="hljs-string">'value'</span>)
+        <span class="hljs-attr">step</span>: <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'step'</span>) || <span class="hljs-string">'1'</span>,
+        <span class="hljs-attr">base</span>: min || <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'value'</span>)
       }], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
@@ -1142,5 +1142,5 @@ The result is thus an array of arrays of constraints.</p>
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

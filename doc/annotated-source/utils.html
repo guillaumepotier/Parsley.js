@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -132,7 +132,7 @@ returns object from dom attributes and values</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  attr: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$element, namespace, obj</span>) </span>{
+            <div class="content"><div class='highlight'><pre>  attr: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, namespace, obj</span>) </span>{
     <span class="hljs-keyword">var</span> i;
     <span class="hljs-keyword">var</span> attribute;
     <span class="hljs-keyword">var</span> attributes;
@@ -161,10 +161,10 @@ returns object from dom attributes and values</p>
       }
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> $element || <span class="hljs-string">'undefined'</span> === <span class="hljs-keyword">typeof</span> $element[<span class="hljs-number">0</span>])
+    <span class="hljs-keyword">if</span> (!element)
       <span class="hljs-keyword">return</span> obj;
 
-    attributes = $element[<span class="hljs-number">0</span>].attributes;
+    attributes = element.attributes;
     <span class="hljs-keyword">for</span> (i = attributes.length; i--; ) {
       attribute = attributes[i];
 
@@ -176,12 +176,12 @@ returns object from dom attributes and values</p>
     <span class="hljs-keyword">return</span> obj;
   },
 
-  <span class="hljs-attr">checkAttr</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$element, namespace, checkAttr</span>) </span>{
-    <span class="hljs-keyword">return</span> $element.is(<span class="hljs-string">'['</span> + namespace + checkAttr + <span class="hljs-string">']'</span>);
+  <span class="hljs-attr">checkAttr</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, namespace, checkAttr</span>) </span>{
+    <span class="hljs-keyword">return</span> element.hasAttribute(namespace + checkAttr);
   },
 
-  <span class="hljs-attr">setAttr</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$element, namespace, attr, value</span>) </span>{
-    $element[<span class="hljs-number">0</span>].setAttribute(<span class="hljs-keyword">this</span>.dasherize(namespace + attr), <span class="hljs-built_in">String</span>(value));
+  <span class="hljs-attr">setAttr</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element, namespace, attr, value</span>) </span>{
+    element.setAttribute(<span class="hljs-keyword">this</span>.dasherize(namespace + attr), <span class="hljs-built_in">String</span>(value));
   },
 
   <span class="hljs-attr">generateID</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -487,5 +487,5 @@ everything excluding the opening and closing slashes and the flags</p>
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>

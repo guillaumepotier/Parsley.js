@@ -16,7 +16,7 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>
+          <div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>
             
               
               <a class="source" href="base.html">
@@ -169,7 +169,7 @@ Multiple.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>)) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'SELECT'</span>) {
       <span class="hljs-keyword">this</span>.actualizeOptions()._bindConstraints();
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
@@ -263,8 +263,9 @@ Multiple.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=radio]'</span>))
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).val() || <span class="hljs-string">''</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'INPUT'</span>) {
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'radio'</span>)
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).val() || <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
         
@@ -279,14 +280,15 @@ Multiple.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'input[type=checkbox]'</span>)) {
-      <span class="hljs-keyword">var</span> values = [];
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'checkbox'</span>) {
+        <span class="hljs-keyword">var</span> values = [];
 
-      <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        values.push($(<span class="hljs-keyword">this</span>).val());
-      });
+        <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+          values.push($(<span class="hljs-keyword">this</span>).val());
+        });
 
-      <span class="hljs-keyword">return</span> values;
+        <span class="hljs-keyword">return</span> values;
+      }
     }</pre></div></div>
             
         </li>
@@ -302,7 +304,7 @@ Multiple.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.$element.is(<span class="hljs-string">'select'</span>) &amp;&amp; <span class="hljs-literal">null</span> === <span class="hljs-keyword">this</span>.$element.val())
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'SELECT'</span> &amp;&amp; <span class="hljs-literal">null</span> === <span class="hljs-keyword">this</span>.$element.val())
       <span class="hljs-keyword">return</span> [];</pre></div></div>
             
         </li>
@@ -334,5 +336,5 @@ Multiple.prototype = {</pre></div></div>
         
     </ul>
   </div>
-<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
+<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>
 </html>
