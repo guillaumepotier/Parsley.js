@@ -157,6 +157,15 @@ describe('ParsleyRemote', () => {
       });
   });
 
+  it('should handle deprecated call to addAsyncValidator using an instance', () => {
+    $('body').append('<input type="text" data-parsley-remote id="element" data-parsley-remote-validator="mycustom" required name="element" value="foobar" />');
+
+    expectWarning(() => {
+      $('input').parsley().addAsyncValidator('instancetest', $.noop, '');
+    });
+    expect(Parsley.asyncValidators.instancetest).not.to.be(undefined);
+  });
+
   it('should clear the cache when submitting a form', () => {
     var parsleyInstance =
       $('<form id="element"><input type="text" required></form>')

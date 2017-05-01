@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Utils from './utils';
 
 import Parsley from './main';
 
