@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import Utils from './utils';
+import Base from './base';
 
 import Parsley from './main';
 
@@ -101,7 +102,7 @@ Parsley.on('form:submit', function () {
   Parsley._remoteCache = {};
 });
 
-window.ParsleyExtend.addAsyncValidator = function () {
+Base.prototype.addAsyncValidator = function () {
   Utils.warnOnce('Accessing the method `addAsyncValidator` through an instance is deprecated. Simply call `Parsley.addAsyncValidator(...)`');
   return Parsley.addAsyncValidator(...arguments);
 };
