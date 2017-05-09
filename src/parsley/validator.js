@@ -43,7 +43,7 @@ Validator.prototype = {
       return this.fn(value, requirementFirstArg);
     }
 
-    if ($.isArray(value)) {
+    if (Array.isArray(value)) {
       if (!this.validateMultiple)
         throw 'Validator `' + this.name + '` does not handle multiple values';
       return this.validateMultiple(...arguments);
@@ -74,10 +74,10 @@ Validator.prototype = {
     if ('string' !== typeof requirements) {
       // Assume requirement already parsed
       // but make sure we return an array
-      return $.isArray(requirements) ? requirements : [requirements];
+      return Array.isArray(requirements) ? requirements : [requirements];
     }
     var type = this.requirementType;
-    if ($.isArray(type)) {
+    if (Array.isArray(type)) {
       var values = convertArrayRequirement(requirements, type.length);
       for (var i = 0; i < values.length; i++)
         values[i] = Utils.parseRequirement(type[i], values[i]);

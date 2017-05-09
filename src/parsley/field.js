@@ -88,7 +88,7 @@ Field.prototype = {
   },
 
   _isInGroup: function (group) {
-    if ($.isArray(this.options.group))
+    if (Array.isArray(this.options.group))
       return -1 !== $.inArray(group, this.options.group);
     return this.options.group === group;
   },
