@@ -166,7 +166,7 @@ describe('ParsleyRemote', () => {
     expect(Parsley.asyncValidators.instancetest).not.to.be(undefined);
   });
 
-  it('should clear the cache when submitting a form', () => {
+  it('should clear the cache before and after submitting a form', () => {
     var parsleyInstance =
       $('<form id="element"><input type="text" required></form>')
       .appendTo('body')
@@ -174,6 +174,8 @@ describe('ParsleyRemote', () => {
       .parsley();
     window.Parsley._remoteCache = {dummy: 42};
     $('#element').submit();
+    expect(window.Parsley._remoteCache.dummy).to.be(undefined);
+    window.Parsley._remoteCache = {dummy: 42};
     $('#element input').val('hello');
     parsleyInstance.validate();
     expect(window.Parsley._remoteCache.dummy).to.be(42);
