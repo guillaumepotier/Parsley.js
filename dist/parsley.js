@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.7.1 - built Mon, May 1st 2017, 11:19 am
+* Version 2.7.2 - built Tue, May 9th 2017, 11:21 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -426,7 +426,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return this.fn(value, requirementFirstArg);
       }
 
-      if ($.isArray(value)) {
+      if (Array.isArray(value)) {
         if (!this.validateMultiple) throw 'Validator `' + this.name + '` does not handle multiple values';
         return this.validateMultiple.apply(this, arguments);
       } else {
@@ -454,10 +454,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       if ('string' !== typeof requirements) {
         // Assume requirement already parsed
         // but make sure we return an array
-        return $.isArray(requirements) ? requirements : [requirements];
+        return Array.isArray(requirements) ? requirements : [requirements];
       }
       var type = this.requirementType;
-      if ($.isArray(type)) {
+      if (Array.isArray(type)) {
         var values = convertArrayRequirement(requirements, type.length);
         for (var i = 0; i < values.length; i++) values[i] = Utils.parseRequirement(type[i], values[i]);
         return values;
@@ -1058,10 +1058,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     // Determine which element will have `parsley-error` and `parsley-success` classes
     _manageClassHandler: function _manageClassHandler() {
       // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
-      if ('string' === typeof this.options.classHandler && $(this.options.classHandler).length) return $(this.options.classHandler);
+      if ('string' === typeof this.options.classHandler) {
+        if ($(this.options.classHandler).length === 0) ParsleyUtils.warn('No elements found that match the selector `' + this.options.classHandler + '` set in options.classHandler or data-parsley-class-handler');
+
+        //return element or empty set
+        return $(this.options.classHandler);
+      }
 
       // Class handled could also be determined by function given in Parsley options
-      var $handler = this.options.classHandler.call(this, this);
+      if ('function' === typeof this.options.classHandler) var $handler = this.options.classHandler.call(this, this);
 
       // If this function returned a valid existing DOM element, go for it
       if ('undefined' !== typeof $handler && $handler.length) return $handler;
@@ -1192,6 +1197,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       this._submitSource = null;
       this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
       if (submitSource && null !== submitSource.getAttribute('formnovalidate')) return;
+
+      window.Parsley._remoteCache = {};
 
       var promise = this.whenValidate({ event: event });
 
@@ -1542,7 +1549,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     _isInGroup: function _isInGroup(group) {
-      if ($.isArray(this.options.group)) return -1 !== $.inArray(group, this.options.group);
+      if (Array.isArray(this.options.group)) return -1 !== $.inArray(group, this.options.group);
       return this.options.group === group;
     },
 
@@ -1940,7 +1947,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Factory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.7.1';
+      this.__version__ = '2.7.2';
       this.__id__ = Utils.generateID();
 
       // Pre-compute options
@@ -2062,7 +2069,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '2.7.1'
+    version: '2.7.2'
   });
 
   // Supplement Field and Form with Base

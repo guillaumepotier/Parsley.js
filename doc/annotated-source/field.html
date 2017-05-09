@@ -311,7 +311,7 @@ Except if <code>data-parsley-validate-if-empty</code> explicitely added, useful 
   },
 
   <span class="hljs-attr">_isInGroup</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">group</span>) </span>{
-    <span class="hljs-keyword">if</span> ($.isArray(<span class="hljs-keyword">this</span>.options.group))
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-keyword">this</span>.options.group))
       <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span> !== $.inArray(group, <span class="hljs-keyword">this</span>.options.group);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.group === group;
   },</pre></div></div>

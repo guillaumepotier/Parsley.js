@@ -181,7 +181,7 @@ Validator.prototype = {</pre></div></div>
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fn(value, requirementFirstArg);
     }
 
-    <span class="hljs-keyword">if</span> ($.isArray(value)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(value)) {
       <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.validateMultiple)
         <span class="hljs-keyword">throw</span> <span class="hljs-string">'Validator `'</span> + <span class="hljs-keyword">this</span>.name + <span class="hljs-string">'` does not handle multiple values'</span>;
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateMultiple(...arguments);
@@ -237,10 +237,10 @@ but make sure we return an array</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> $.isArray(requirements) ? requirements : [requirements];
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(requirements) ? requirements : [requirements];
     }
     <span class="hljs-keyword">var</span> type = <span class="hljs-keyword">this</span>.requirementType;
-    <span class="hljs-keyword">if</span> ($.isArray(type)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(type)) {
       <span class="hljs-keyword">var</span> values = convertArrayRequirement(requirements, type.length);
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; values.length; i++)
         values[i] = Utils.parseRequirement(type[i], values[i]);

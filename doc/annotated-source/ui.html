@@ -675,8 +675,9 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.classHandler &amp;&amp; $(<span class="hljs-keyword">this</span>.options.classHandler).length)
-      <span class="hljs-keyword">return</span> $(<span class="hljs-keyword">this</span>.options.classHandler);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.classHandler) {
+      <span class="hljs-keyword">if</span> ($(<span class="hljs-keyword">this</span>.options.classHandler).length === <span class="hljs-number">0</span>)
+        ParsleyUtils.warn(<span class="hljs-string">'No elements found that match the selector `'</span> + <span class="hljs-keyword">this</span>.options.classHandler + <span class="hljs-string">'` set in options.classHandler or data-parsley-class-handler'</span>);</pre></div></div>
             
         </li>
         
@@ -687,11 +688,12 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Class handled could also be determined by function given in Parsley options</p>
+              <p>return element or empty set</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> $handler = <span class="hljs-keyword">this</span>.options.classHandler.call(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> $(<span class="hljs-keyword">this</span>.options.classHandler);
+    }</pre></div></div>
             
         </li>
         
@@ -701,6 +703,22 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Class handled could also be determined by function given in Parsley options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> === <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.options.classHandler)
+      <span class="hljs-keyword">var</span> $handler = <span class="hljs-keyword">this</span>.options.classHandler.call(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>If this function returned a valid existing DOM element, go for it</p>
 
@@ -717,11 +735,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>if simple element (input, texatrea, select…) it will perfectly host the classes and precede the error container</p>
 
@@ -733,11 +751,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>But if multiple element (radio, checkbox), that would be their parent</p>
 
@@ -752,11 +770,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Nothing to do if already inserted</p>
 
@@ -786,11 +804,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Remove Parsley events already bound on this field</p>
 
@@ -813,11 +831,11 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>For keyup, keypress, keydown, input… events that could be a little bit obstrusive
 do not validate if val length &lt; min threshold on first validation. Once field have been validated once and info
@@ -841,11 +859,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Reset all event listeners</p>
 
@@ -857,11 +875,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Nothing to do if UI never initialized for this field</p>
 
@@ -873,11 +891,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Reset all errors’ li</p>
 
@@ -891,11 +909,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Reset validation class</p>
 
@@ -906,11 +924,11 @@ about success or failure have been displayed, always validate with this trigger 
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Reset validation flags and last validation result</p>
 
