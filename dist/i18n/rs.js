@@ -1,7 +1,7 @@
 // Validation errors messages for Parsley
 // Load this after Parsley
 
-Parsley.addMessages('sr', {
+Parsley.addMessages('rs', {
   defaultMessage: "Uneta vrednost nije validna.",
   type: {
     email:        "Unesite pravilnu email adresu.",
@@ -26,4 +26,4 @@ Parsley.addMessages('sr', {
   equalto:        "Unos mora biti jednak."
 });
 
-Parsley.setLocale('sr');
+Parsley.setLocale('rs');
