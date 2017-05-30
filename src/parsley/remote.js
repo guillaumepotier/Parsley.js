@@ -64,7 +64,13 @@ Parsley.addValidator('remote', {
     }
 
     // Merge options passed in from the function with the ones in the attribute
-    var remoteOptions = $.extend(true, options.options || {} , Parsley.asyncValidators[validator].options);
+    var remoteOptions = $.extend(
+      true,
+      options.options || {},
+      (typeof Parsley.asyncValidators[validator].options === 'function' ?
+          Parsley.asyncValidators[validator].options() :
+          Parsley.asyncValidators[validator].options)
+    );
 
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
