@@ -16,6 +16,7 @@ describe('extra/validator/dateiso', () => {
     expectValidation('',           'dateiso').not.to.be(true);
     expectValidation('foo',        'dateiso').not.to.be(true);
     expectValidation('1986-30-01', 'dateiso').not.to.be(true);
+    expectValidation('2015-02-29', 'dateiso').not.to.be(true);
     expectValidation('1986-12-45', 'dateiso').not.to.be(true);
     expectValidation('1986-12-01', 'dateiso').to.be(true);
   });
