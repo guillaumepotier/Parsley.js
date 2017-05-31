@@ -35,5 +35,8 @@
     "url": "http://guillaumepotier.com/"
   },
   "license": "MIT",
-  "main": "dist/parsley.js"
+  "main": [
+    "dist/parsley.js",
+    "dist/parsley.js.map"
+  ]
 }
