@@ -33,7 +33,7 @@
 
     var $input = $('<input type="hidden" name="data">')
       .val(JSON.stringify(data));
-    var $form = $('<form action="http://codepen.io/pen/define?editors=101" method="POST" target="_blank">')
+    var $form = $('<form action="https://codepen.io/pen/define?editors=101" method="POST" target="_blank">')
       .append($input)
       .appendTo($('body')) // Required to work on Firefox...
       .submit();
