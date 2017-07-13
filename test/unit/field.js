@@ -106,9 +106,6 @@ describe('Field', () => {
     expect(parsleyField.constraints.length).to.be(2); // Type=Date, Max
     $('#element').val('2001-03-03');
     expect(parsleyField.isValid()).to.be(false);
-    $('#element').val('2001/01/01').removeAttr('max');
-    expect(parsleyField.isValid()).to.be(false);      // Still invalid because of format
-    expect(parsleyField.constraints.length).to.be(1); // Type=Date
   });
 
   var itShouldFollowSpecForNumber = (step, min, initial, value, valid) => {
