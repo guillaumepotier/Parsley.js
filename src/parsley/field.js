@@ -314,7 +314,7 @@ Field.prototype = {
 
 
     // html5 types
-    var type = this.element.type;
+    var type = this.element.getAttribute('type');
 
     // Small special case here for HTML5 number: integer validator if step attribute is undefined or an integer value, number otherwise
     if ('number' === type) {
