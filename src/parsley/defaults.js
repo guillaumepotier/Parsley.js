@@ -15,6 +15,9 @@ var Defaults = {
   // Excluded inputs by default
   excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
 
+  // The field is excluded from validation, if it has at least one of the specified combinations of an attribute and field's value
+  excludeIfAttributeAndValue: {},
+
   // Stop validating field on highest priority failing constraint
   priorityEnabled: true,
 
