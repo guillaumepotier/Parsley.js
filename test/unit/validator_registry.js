@@ -51,6 +51,7 @@ describe('ValidatorRegistry', () => {
     expectValidation('foo+bar@bar.baz',     'type', 'email').to.be(true);
     expectValidation('foo.bar@bar.baz',     'type', 'email').to.be(true);
     expectValidation('foo.bar@bar.com.ext', 'type', 'email').to.be(true);
+    expectValidation('foo@bar..tt.com',     'type', 'email').to.be(false);
   });
   it('should have a type="date" validator', () => {
     expectValidation('',                    'type', 'date').not.to.be(true);
