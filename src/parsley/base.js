@@ -89,7 +89,7 @@ Base.prototype = {
         if (result === false) return result;
       }
     }
-    if (this.parent) {
+    if (this.parent && typeof this.parent !== "function" ) {
       return this.parent.trigger(name, target, extraArg);
     }
     return true;
