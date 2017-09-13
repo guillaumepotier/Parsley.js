@@ -139,6 +139,11 @@ Form.prototype = {
     return Utils.all(promises);
   },
 
+  refresh: function() {
+    this._refreshFields();
+    return this;
+  },
+
   // Reset UI
   reset: function () {
     // Form case: emit a reset event for each field

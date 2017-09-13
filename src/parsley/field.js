@@ -201,8 +201,12 @@ Field.prototype = {
     this._trigger('destroy');
   },
 
-  // Actualize options that could have change since previous validation
-  // Re-bind accordingly constraints (could be some new, removed or updated)
+  // Actualize options and rebind constraints
+  refresh: function () {
+    this.refreshConstraints();
+    return this;
+  },
+
   refreshConstraints: function () {
     return this.actualizeOptions()._bindConstraints();
   },

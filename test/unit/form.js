@@ -382,6 +382,19 @@ describe('Form', () => {
 
   });
 
+  it('should refresh', () => {
+    $('body').append(
+      '<form id="element">'                                                                        +
+        '<input required />'  +
+      '</form>');
+    var parsleyForm = $('#element').parsley();
+    parsleyForm.validate();
+    expect($('.parsley-error').length).to.be(1);
+    parsleyForm.options.excluded = "input";
+    parsleyForm.refresh();
+    expect($('.parsley-error').length).to.be(0);
+  });
+
   afterEach(() => {
     $('#element').remove();
   });
