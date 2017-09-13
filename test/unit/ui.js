@@ -49,7 +49,7 @@ describe('UI', () => {
       return $('#container2');
     };
     $('#element').psly().validate();
-    expect($('#container .parsley-errors-list').length).to.be(1);
+    expect($('#container2 .parsley-errors-list').length).to.be(1);
     delete window.parsleyContainerFunction;
   });
   it('should handle wrong errors-container option', () => {
