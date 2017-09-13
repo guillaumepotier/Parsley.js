@@ -268,4 +268,10 @@ describe('ValidatorRegistry', () => {
     expect(window.Parsley.getErrorMessage({name: 'testMessage'})).to.eql('Muy malo');
     window.Parsley.setLocale('en');
   });
+
+  it('can return the existence of a validator', () => {
+    expect(window.Parsley.hasValidator('required')).to.be(true);
+    expect(window.Parsley.hasValidator('deriuqer')).to.be(false);
+  });
+
 });

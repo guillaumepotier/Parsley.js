@@ -169,6 +169,10 @@ ValidatorRegistry.prototype = {
     return this._setValidator(...arguments);
   },
 
+  hasValidator: function (name) {
+    return !!this.validators[name];
+  },
+
   updateValidator: function (name, arg1, arg2) {
     if (!this.validators[name]) {
       Utils.warn('Validator "' + name + '" is not already defined.');
