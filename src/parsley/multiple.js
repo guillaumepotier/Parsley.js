@@ -13,8 +13,8 @@ Multiple.prototype = {
     return this;
   },
 
-  // See `Field.refreshConstraints()`
-  refreshConstraints: function () {
+  // See `Field._refreshConstraints()`
+  _refreshConstraints: function () {
     var fieldConstraints;
 
     this.constraints = [];
@@ -35,7 +35,7 @@ Multiple.prototype = {
         continue;
       }
 
-      fieldConstraints = this.$elements[i].data('FieldMultiple').refreshConstraints().constraints;
+      fieldConstraints = this.$elements[i].data('FieldMultiple')._refreshConstraints().constraints;
 
       for (var j = 0; j < fieldConstraints.length; j++)
         this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);

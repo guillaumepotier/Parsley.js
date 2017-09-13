@@ -53,7 +53,7 @@ Field.prototype = {
   // or `undefined` if field is not in the given `group`.
   whenValidate: function ({force, group} =  {}) {
     // do not validate a field if not the same as given validation group
-    this.refreshConstraints();
+    this.refresh();
     if (group && !this._isInGroup(group))
       return;
 
@@ -117,7 +117,7 @@ Field.prototype = {
   whenValid: function ({force = false, value, group, _refreshed} = {}) {
     // Recompute options and rebind constraints to have latest changes
     if (!_refreshed)
-      this.refreshConstraints();
+      this.refresh();
     // do not validate a field if not the same as given validation group
     if (group && !this._isInGroup(group))
       return;
@@ -203,12 +203,17 @@ Field.prototype = {
 
   // Actualize options and rebind constraints
   refresh: function () {
-    this.refreshConstraints();
+    this._refreshConstraints();
     return this;
   },
 
-  refreshConstraints: function () {
+  _refreshConstraints: function () {
     return this.actualizeOptions()._bindConstraints();
+  },
+
+  refreshConstraints: function() {
+    Utils.warnOnce("Parsley's refreshConstraints is deprecated. Please use refresh");
+    return this.refresh();
   },
 
   /**

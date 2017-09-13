@@ -240,14 +240,14 @@ describe('Field', () => {
     var parsleyField = $('#element').parsley()
       .addConstraint('ismultiple', 4)
       .addConstraint('foobazer', true);
-    parsleyField.refreshConstraints();
+    parsleyField.refresh();
     expect(parsleyField.constraints.length).to.be(4);
     $('#element').removeAttr('data-parsley-required');
-    parsleyField.refreshConstraints();
+    parsleyField.refresh();
     expect(parsleyField.constraints.length).to.be(3);
     parsleyField
       .removeConstraint('ismultiple')
-      .refreshConstraints();
+      .refresh();
     expect(parsleyField.constraints.length).to.be(2);
     window.Parsley.removeValidator('foobazer');
     window.Parsley.removeValidator('ismultiple');
