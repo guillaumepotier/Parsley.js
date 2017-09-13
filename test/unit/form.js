@@ -183,6 +183,19 @@ describe('Form', () => {
       expect($('#element').parsley().validate(undefined, true)).to.be(false);
     });
   });
+  it('should have an excludeIfAttributeAndValue option', () => {
+    $('body').append('<form id="element" data-parsley-required>' +
+      '<input type="text" id="field1" value="baz" data-parsley-minlength="5"/></form>');
+    var form = $('#element');
+    expect(form.parsley().isValid()).to.be(false);
+    $('#element').attr('data-parsley-exclude-if-attribute-and-value', '{"foo":"bar"}');
+    $('#field1').attr('foo','');
+    expect(form.parsley().isValid()).to.be(false);
+    form.parsley().destroy();
+    form.parsley();
+    $('#field1').val('bar');
+    expect(form.parsley().isValid()).to.be(true);
+  });
   it('should properly bind dynamically added fields', () => {
     $('body').append('<form id="element" data-parsley-trigger="change"></form>');
     $('#element').append('<input type="email" id="email" required />');

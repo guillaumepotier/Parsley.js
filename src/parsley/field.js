@@ -76,13 +76,26 @@ Field.prototype = {
 
   // An empty optional field does not need validation
   needsValidation: function (value) {
+    var skipValidation = false;
+
     if ('undefined' === typeof value)
       value = this.getValue();
 
+    // Determine if the field is to be excluded from validation based on its attribute and value
+    if ('undefined' !== typeof this.options.excludeIfAttributeAndValue) {
+      var thisElement = this.$element;
+      $.each( this.options.excludeIfAttributeAndValue, function( key, val ) {
+        var attr = thisElement.attr(key);
+        if (typeof undefined !== typeof attr && false !== attr && val === value)
+          skipValidation = true;
+      });
+    }
+
     // If a field is empty and not required, it is valid
     // Except if `data-parsley-validate-if-empty` explicitely added, useful for some custom validators
-    if (!value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty)
+    if ( (!value.length && !this._isRequired() && 'undefined' === typeof this.options.validateIfEmpty) || skipValidation ) {
       return false;
+    }
 
     return true;
   },
