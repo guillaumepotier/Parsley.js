@@ -160,8 +160,11 @@ $(function () {
 
   // Next button goes forward iff current block validates
   $('.form-navigation .next').click(function() {
-    if ($('.demo-form').parsley().validate({group: 'block-' + curIndex()}))
+    $('.demo-form').parsley().whenValidate({
+      group: 'block-' + curIndex()
+    }).done(function() {
       navigateTo(curIndex() + 1);
+    });
   });
 
   // Prepare sections by setting the `data-parsley-group` attribute to 'block-0', 'block-1', etc.
