@@ -55,7 +55,8 @@ Factory.prototype = {
   },
 
   isMultiple: function () {
-    return ((this.element.type === 'radio' || this.element.type === 'checkbox') ||
+    var type = Utils.getType(this.element);
+    return ((type === 'radio' || type === 'checkbox') ||
       (this.element.nodeName === 'SELECT' && null !== this.element.getAttribute('multiple')));
   },
 
@@ -88,7 +89,8 @@ Factory.prototype = {
     // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
     if (name) {
       $('input[name="' + name + '"]').each((i, input) => {
-        if ((input.type === 'radio' || input.type === 'checkbox'))
+        var type = Utils.getType(input);
+        if ((type === 'radio' || type === 'checkbox'))
           input.setAttribute(this.options.namespace + 'multiple', this.options.multiple);
       });
     }

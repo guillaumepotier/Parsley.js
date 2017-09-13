@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Utils from './utils';
 
 var Multiple = function () {
   this.__class__ = 'FieldMultiple';
@@ -53,11 +54,12 @@ Multiple.prototype = {
 
     // Radio input case
     if (this.element.nodeName === 'INPUT') {
-      if (this.element.type === 'radio')
+      var type = Utils.getType(this.element);
+      if (type === 'radio')
         return this._findRelated().filter(':checked').val() || '';
 
       // checkbox input case
-      if (this.element.type === 'checkbox') {
+      if (type === 'checkbox') {
         var values = [];
 
         this._findRelated().filter(':checked').each(function () {

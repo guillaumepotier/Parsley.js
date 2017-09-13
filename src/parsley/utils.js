@@ -45,6 +45,10 @@ var Utils = {
     element.setAttribute(this.dasherize(namespace + attr), String(value));
   },
 
+  getType: function(element) {
+    return element.getAttribute('type') || 'text';
+  },
+
   generateID: function () {
     return '' + globalID++;
   },
