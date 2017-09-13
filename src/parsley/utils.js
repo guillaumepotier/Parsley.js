@@ -50,7 +50,6 @@ var Utils = {
   },
 
   /** Third party functions **/
-  // Zepto deserialize function
   deserializeValue: function (value) {
     var num;
 
@@ -60,7 +59,7 @@ var Utils = {
         (value == "false" ? false :
         value == "null" ? null :
         !isNaN(num = Number(value)) ? num :
-        /^[\[\{]/.test(value) ? $.parseJSON(value) :
+        /^[\[\{]/.test(value) ? JSON.parse(value) :
         value)
         : value;
     } catch (e) { return value; }
