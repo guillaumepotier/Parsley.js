@@ -87,6 +87,12 @@
       "expectWarning"
     ]
   },
+  "jspm": {
+    "main": "dist/parsley.js",
+    "dependencies": {
+      "jquery": "npm:jquery"
+    }
+  },
   "spm": {
     "main": "dist/parsley.js",
     "ignore": [
