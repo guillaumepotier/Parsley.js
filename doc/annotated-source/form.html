@@ -387,6 +387,11 @@ A validation that immediately fails will interrupt the validations.</p>
       <span class="hljs-keyword">return</span> $.map(<span class="hljs-keyword">this</span>.fields, field =&gt; field.whenValid({group, force}));
     });
     <span class="hljs-keyword">return</span> Utils.all(promises);
+  },
+
+  <span class="hljs-attr">refresh</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>._refreshFields();
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   },</pre></div></div>
             
         </li>

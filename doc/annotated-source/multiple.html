@@ -112,6 +112,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
+<span class="hljs-keyword">import</span> Utils <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>;
 
 <span class="hljs-keyword">var</span> Multiple = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">this</span>.__class__ = <span class="hljs-string">'FieldMultiple'</span>;
@@ -147,11 +148,11 @@ Multiple.prototype = {</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>See <code>Field.refreshConstraints()</code></p>
+              <p>See <code>Field._refreshConstraints()</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  refreshConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>  _refreshConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">var</span> fieldConstraints;
 
     <span class="hljs-keyword">this</span>.constraints = [];</pre></div></div>
@@ -208,7 +209,7 @@ Multiple.prototype = {</pre></div></div>
         <span class="hljs-keyword">continue</span>;
       }
 
-      fieldConstraints = <span class="hljs-keyword">this</span>.$elements[i].data(<span class="hljs-string">'FieldMultiple'</span>).refreshConstraints().constraints;
+      fieldConstraints = <span class="hljs-keyword">this</span>.$elements[i].data(<span class="hljs-string">'FieldMultiple'</span>)._refreshConstraints().constraints;
 
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; fieldConstraints.length; j++)
         <span class="hljs-keyword">this</span>.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
@@ -264,7 +265,8 @@ Multiple.prototype = {</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'INPUT'</span>) {
-      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'radio'</span>)
+      <span class="hljs-keyword">var</span> type = Utils.getType(<span class="hljs-keyword">this</span>.element);
+      <span class="hljs-keyword">if</span> (type === <span class="hljs-string">'radio'</span>)
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).val() || <span class="hljs-string">''</span>;</pre></div></div>
             
         </li>
@@ -280,7 +282,7 @@ Multiple.prototype = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'checkbox'</span>) {
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (type === <span class="hljs-string">'checkbox'</span>) {
         <span class="hljs-keyword">var</span> values = [];
 
         <span class="hljs-keyword">this</span>._findRelated().filter(<span class="hljs-string">':checked'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{

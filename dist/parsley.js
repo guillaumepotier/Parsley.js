@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.7.2 - built Tue, May 9th 2017, 11:21 am
+* Version 2.8.0 - built Wed, Sep 13th 2017, 11:04 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -64,17 +64,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       element.setAttribute(this.dasherize(namespace + attr), String(value));
     },
 
+    getType: function getType(element) {
+      return element.getAttribute('type') || 'text';
+    },
+
     generateID: function generateID() {
       return '' + globalID++;
     },
 
     /** Third party functions **/
-    // Zepto deserialize function
     deserializeValue: function deserializeValue(value) {
       var num;
 
       try {
-        return value ? value == "true" || (value == "false" ? false : value == "null" ? null : !isNaN(num = Number(value)) ? num : /^[\[\{]/.test(value) ? $.parseJSON(value) : value) : value;
+        return value ? value == "true" || (value == "false" ? false : value == "null" ? null : !isNaN(num = Number(value)) ? num : /^[\[\{]/.test(value) ? JSON.parse(value) : value) : value;
       } catch (e) {
         return value;
       }
@@ -484,7 +487,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   };
 
   var typeTesters = {
-    email: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
+    email: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
 
     // Follow https://www.w3.org/TR/html5/infrastructure.html#floating-point-numbers
     number: /^-?(\d*\.)?\d+(e[-+]?\d+)?$/i,
@@ -633,6 +636,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return;
       }
       return this._setValidator.apply(this, arguments);
+    },
+
+    hasValidator: function hasValidator(name) {
+      return !!this.validators[name];
     },
 
     updateValidator: function updateValidator(name, arg1, arg2) {
@@ -1057,19 +1064,25 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     // Determine which element will have `parsley-error` and `parsley-success` classes
     _manageClassHandler: function _manageClassHandler() {
-      // An element selector could be passed through DOM with `data-parsley-class-handler=#foo`
-      if ('string' === typeof this.options.classHandler) {
-        if ($(this.options.classHandler).length === 0) ParsleyUtils.warn('No elements found that match the selector `' + this.options.classHandler + '` set in options.classHandler or data-parsley-class-handler');
-
-        //return element or empty set
-        return $(this.options.classHandler);
-      }
+      // Class handled could also be determined by function given in Parsley options
+      if ('string' === typeof this.options.classHandler && $(this.options.classHandler).length) return $(this.options.classHandler);
 
       // Class handled could also be determined by function given in Parsley options
-      if ('function' === typeof this.options.classHandler) var $handler = this.options.classHandler.call(this, this);
+      var $handlerFunction = this.options.classHandler;
 
-      // If this function returned a valid existing DOM element, go for it
-      if ('undefined' !== typeof $handler && $handler.length) return $handler;
+      // It might also be the function name of a global function
+      if ('string' === typeof this.options.classHandler && 'function' === typeof window[this.options.classHandler]) $handlerFunction = window[this.options.classHandler];
+
+      if ('function' === typeof $handlerFunction) {
+        var $handler = $handlerFunction.call(this, this);
+
+        // If this function returned a valid existing DOM element, go for it
+        if ('undefined' !== typeof $handler && $handler.length) return $handler;
+      } else if ('object' === typeof $handlerFunction && $handlerFunction instanceof jQuery && $handlerFunction.length) {
+        return $handlerFunction;
+      } else if ($handlerFunction) {
+        Utils.warn('The class handler `' + $handlerFunction + '` does not exist in DOM nor as a global JS function');
+      }
 
       return this._inputHolder();
     },
@@ -1083,16 +1096,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     _insertErrorWrapper: function _insertErrorWrapper() {
-      var $errorsContainer;
+      var $errorsContainer = this.options.errorsContainer;
 
       // Nothing to do if already inserted
       if (0 !== this._ui.$errorsWrapper.parent().length) return this._ui.$errorsWrapper.parent();
 
-      if ('string' === typeof this.options.errorsContainer) {
-        if ($(this.options.errorsContainer).length) return $(this.options.errorsContainer).append(this._ui.$errorsWrapper);else Utils.warn('The errors container `' + this.options.errorsContainer + '` does not exist in DOM');
-      } else if ('function' === typeof this.options.errorsContainer) $errorsContainer = this.options.errorsContainer.call(this, this);
+      if ('string' === typeof $errorsContainer) {
+        if ($($errorsContainer).length) return $($errorsContainer).append(this._ui.$errorsWrapper);else if ('function' === typeof window[$errorsContainer]) $errorsContainer = window[$errorsContainer];else Utils.warn('The errors container `' + $errorsContainer + '` does not exist in DOM nor as a global JS function');
+      }
 
-      if ('undefined' !== typeof $errorsContainer && $errorsContainer.length) return $errorsContainer.append(this._ui.$errorsWrapper);
+      if ('function' === typeof $errorsContainer) $errorsContainer = $errorsContainer.call(this, this);
+
+      if ('object' === typeof $errorsContainer && $errorsContainer.length) return $errorsContainer.append(this._ui.$errorsWrapper);
 
       return this._inputHolder().after(this._ui.$errorsWrapper);
     },
@@ -1337,6 +1352,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return Utils.all(promises);
     },
 
+    refresh: function refresh() {
+      this._refreshFields();
+      return this;
+    },
+
     // Reset UI
     reset: function reset() {
       // Form case: emit a reset event for each field
@@ -1514,7 +1534,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var group = _ref9.group;
 
       // do not validate a field if not the same as given validation group
-      this.refreshConstraints();
+      this.refresh();
       if (group && !this._isInGroup(group)) return;
 
       this.value = this.getValue();
@@ -1591,7 +1611,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _refreshed = _ref10._refreshed;
 
       // Recompute options and rebind constraints to have latest changes
-      if (!_refreshed) this.refreshConstraints();
+      if (!_refreshed) this.refresh();
       // do not validate a field if not the same as given validation group
       if (group && !this._isInGroup(group)) return;
 
@@ -1664,10 +1684,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       this._trigger('destroy');
     },
 
-    // Actualize options that could have change since previous validation
-    // Re-bind accordingly constraints (could be some new, removed or updated)
-    refreshConstraints: function refreshConstraints() {
+    // Actualize options and rebind constraints
+    refresh: function refresh() {
+      this._refreshConstraints();
+      return this;
+    },
+
+    _refreshConstraints: function _refreshConstraints() {
       return this.actualizeOptions()._bindConstraints();
+    },
+
+    refreshConstraints: function refreshConstraints() {
+      Utils.warnOnce("Parsley's refreshConstraints is deprecated. Please use refresh");
+      return this.refresh();
     },
 
     /**
@@ -1762,7 +1791,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         else if (null !== this.element.getAttribute('maxlength')) this.addConstraint('maxlength', this.element.getAttribute('maxlength'), undefined, true);
 
       // html5 types
-      var type = this.element.type;
+      var type = Utils.getType(this.element);
 
       // Small special case here for HTML5 number: integer validator if step attribute is undefined or an integer value, number otherwise
       if ('number' === type) {
@@ -1849,8 +1878,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return this;
     },
 
-    // See `Field.refreshConstraints()`
-    refreshConstraints: function refreshConstraints() {
+    // See `Field._refreshConstraints()`
+    _refreshConstraints: function _refreshConstraints() {
       var fieldConstraints;
 
       this.constraints = [];
@@ -1871,7 +1900,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           continue;
         }
 
-        fieldConstraints = this.$elements[i].data('FieldMultiple').refreshConstraints().constraints;
+        fieldConstraints = this.$elements[i].data('FieldMultiple')._refreshConstraints().constraints;
 
         for (var j = 0; j < fieldConstraints.length; j++) this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
       }
@@ -1886,10 +1915,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       // Radio input case
       if (this.element.nodeName === 'INPUT') {
-        if (this.element.type === 'radio') return this._findRelated().filter(':checked').val() || '';
+        var type = Utils.getType(this.element);
+        if (type === 'radio') return this._findRelated().filter(':checked').val() || '';
 
         // checkbox input case
-        if (this.element.type === 'checkbox') {
+        if (type === 'checkbox') {
           var values = [];
 
           this._findRelated().filter(':checked').each(function () {
@@ -1947,7 +1977,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Factory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.7.2';
+      this.__version__ = '2.8.0';
       this.__id__ = Utils.generateID();
 
       // Pre-compute options
@@ -1961,7 +1991,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     isMultiple: function isMultiple() {
-      return this.element.type === 'radio' || this.element.type === 'checkbox' || this.element.nodeName === 'SELECT' && null !== this.element.getAttribute('multiple');
+      var type = Utils.getType(this.element);
+      return type === 'radio' || type === 'checkbox' || this.element.nodeName === 'SELECT' && null !== this.element.getAttribute('multiple');
     },
 
     // Multiples fields are a real nightmare :(
@@ -1993,7 +2024,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
       if (name) {
         $('input[name="' + name + '"]').each(function (i, input) {
-          if (input.type === 'radio' || input.type === 'checkbox') input.setAttribute(_this13.options.namespace + 'multiple', _this13.options.multiple);
+          var type = Utils.getType(input);
+          if (type === 'radio' || type === 'checkbox') input.setAttribute(_this13.options.namespace + 'multiple', _this13.options.multiple);
         });
       }
 
@@ -2069,7 +2101,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '2.7.2'
+    version: '2.8.0'
   });
 
   // Supplement Field and Form with Base
@@ -2093,9 +2125,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     // Return undefined if applied to non existing DOM element
-    if (!$(this).length) {
-      Utils.warn('You must bind Parsley on an existing element.');
-
+    if (this.length == 0) {
       return;
     }
 
@@ -2127,7 +2157,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   // ### Define methods that forward to the registry, and deprecate all access except through window.Parsley
   var registry = window.Parsley._validatorRegistry = new ValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
   window.ParsleyValidator = {};
-  $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator'.split(' '), function (i, method) {
+  $.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator hasValidator'.split(' '), function (i, method) {
     window.Parsley[method] = function () {
       return registry[method].apply(registry, arguments);
     };

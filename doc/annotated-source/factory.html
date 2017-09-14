@@ -240,7 +240,8 @@ Factory.prototype = {
   },
 
   <span class="hljs-attr">isMultiple</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> ((<span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'radio'</span> || <span class="hljs-keyword">this</span>.element.type === <span class="hljs-string">'checkbox'</span>) ||
+    <span class="hljs-keyword">var</span> type = Utils.getType(<span class="hljs-keyword">this</span>.element);
+    <span class="hljs-keyword">return</span> ((type === <span class="hljs-string">'radio'</span> || type === <span class="hljs-string">'checkbox'</span>) ||
       (<span class="hljs-keyword">this</span>.element.nodeName === <span class="hljs-string">'SELECT'</span> &amp;&amp; <span class="hljs-literal">null</span> !== <span class="hljs-keyword">this</span>.element.getAttribute(<span class="hljs-string">'multiple'</span>)));
   },</pre></div></div>
             
@@ -345,7 +346,8 @@ Maybe some refactoring would be appreciated here…</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (name) {
       $(<span class="hljs-string">'input[name="'</span> + name + <span class="hljs-string">'"]'</span>).each(<span class="hljs-function">(<span class="hljs-params">i, input</span>) =&gt;</span> {
-        <span class="hljs-keyword">if</span> ((input.type === <span class="hljs-string">'radio'</span> || input.type === <span class="hljs-string">'checkbox'</span>))
+        <span class="hljs-keyword">var</span> type = Utils.getType(input);
+        <span class="hljs-keyword">if</span> ((type === <span class="hljs-string">'radio'</span> || type === <span class="hljs-string">'checkbox'</span>))
           input.setAttribute(<span class="hljs-keyword">this</span>.options.namespace + <span class="hljs-string">'multiple'</span>, <span class="hljs-keyword">this</span>.options.multiple);
       });
     }</pre></div></div>

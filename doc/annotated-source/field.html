@@ -240,7 +240,7 @@ or <code>undefined</code> if field is not in the given <code>group</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.refreshConstraints();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.refresh();
     <span class="hljs-keyword">if</span> (group &amp;&amp; !<span class="hljs-keyword">this</span>._isInGroup(group))
       <span class="hljs-keyword">return</span>;
 
@@ -377,7 +377,7 @@ If a <code>value</code> is given, it will be validated instead of the value of t
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!_refreshed)
-      <span class="hljs-keyword">this</span>.refreshConstraints();</pre></div></div>
+      <span class="hljs-keyword">this</span>.refresh();</pre></div></div>
             
         </li>
         
@@ -631,13 +631,22 @@ and combine the promises together.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Actualize options that could have change since previous validation
-Re-bind accordingly constraints (could be some new, removed or updated)</p>
+              <p>Actualize options and rebind constraints</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  refreshConstraints: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>  refresh: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>._refreshConstraints();
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },
+
+  <span class="hljs-attr">_refreshConstraints</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.actualizeOptions()._bindConstraints();
+  },
+
+  <span class="hljs-attr">refreshConstraints</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    Utils.warnOnce(<span class="hljs-string">"Parsley's refreshConstraints is deprecated. Please use refresh"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.refresh();
   },
 
   <span class="hljs-comment">/**
@@ -961,7 +970,7 @@ Bind specific HTML5 constraints to be HTML5 compliant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> type = <span class="hljs-keyword">this</span>.element.type;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> type = Utils.getType(<span class="hljs-keyword">this</span>.element);</pre></div></div>
             
         </li>
         
