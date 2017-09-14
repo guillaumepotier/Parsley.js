@@ -1,6 +1,16 @@
 # Parsley 2.x changelog
 
-## master
+## 2.8
+
+- Added `refresh` method. Parsley automatically refreshes before validating, but `refresh` is there if one needs to insure that some fields are rebound/unbound, or triggers are updated, etc...
+
+- `Parsley.hasValidator` makes it easy to check if a validator exists or not [#1216]
+
+- `classHandler` now supports global functions, `errorWrapper` too. [#1101]
+
+- Bug fixes...
+
+## 2.7
 
 - Support for Date type (#1158)
 
