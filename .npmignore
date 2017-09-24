@@ -1,0 +1,10 @@
+/.github/
+/bower_components/
+/doc/
+/test/
+
+/CONTRIBUTING.md
+/gulpfile.babel.js
+/CNAME
+/yarn.lock
+/index.html
