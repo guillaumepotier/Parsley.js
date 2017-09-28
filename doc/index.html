@@ -362,6 +362,11 @@ if (false === instance.options.priorityEnabled)
                 <td>Same as <code>whenValidate</code> except it returns <code>true</code> if the promise is already fulfilled, <code>false</code> if already rejected, and <code>null</code> if the validation is still pending.</td>
               </tr>
               <tr>
+                <td><code>refresh()</code> <version>#2.8</version></td>
+                <td></td>
+                <td>Forces a refresh of the form and its field. Parsley always refreshes before validation, but this may be helpful for dynamic changes that need to be applied immediately (e.g. dynamically adding an input with a trigger, changing the `inputs` or `excluded` options, etc.).</td>
+              </tr>
+              <tr>
                 <td><code>reset()</code> <version>#2.0</version></td>
                 <td></td>
                 <td>Reset UI for this form and for its fields.</td>
