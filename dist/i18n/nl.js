@@ -4,7 +4,7 @@
 Parsley.addMessages('nl', {
   defaultMessage: "Deze waarde lijkt onjuist.",
   type: {
-    email:        "Dit lijkt geen geldig e-mail adres te zijn.",
+    email:        "Dit lijkt geen geldig e-mailadres te zijn.",
     url:          "Dit lijkt geen geldige URL te zijn.",
     number:       "Deze waarde moet een nummer zijn.",
     integer:      "Deze waarde moet een nummer zijn.",
