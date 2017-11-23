@@ -92,13 +92,5 @@
     "dependencies": {
       "jquery": "npm:jquery"
     }
-  },
-  "spm": {
-    "main": "dist/parsley.js",
-    "ignore": [
-      "doc",
-      "test",
-      "src"
-    ]
   }
 }
