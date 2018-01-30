@@ -196,6 +196,8 @@ UI.Field = {
 
   _addError: function (name, {message, assert}) {
     this._insertErrorWrapper();
+    this._ui.$errorClassHandler
+      .attr('aria-describedby', this._ui.errorsWrapperId);
     this._ui.$errorsWrapper
       .addClass('filled')
       .append(
@@ -213,6 +215,8 @@ UI.Field = {
   },
 
   _removeError: function (name) {
+    this._ui.$errorClassHandler
+      .removeAttr('aria-describedby');
     this._ui.$errorsWrapper
       .removeClass('filled')
       .find('.parsley-' + name)
