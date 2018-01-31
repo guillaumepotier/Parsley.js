@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.8.0 - built Wed, Sep 13th 2017, 11:04 pm
+* Version 2.8.0 - built Wed, Jan 31st 2018, 9:26 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1015,6 +1015,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var assert = _ref5.assert;
 
       this._insertErrorWrapper();
+      this._ui.$errorClassHandler.attr('aria-describedby', this._ui.errorsWrapperId);
       this._ui.$errorsWrapper.addClass('filled').append($(this.options.errorTemplate).addClass('parsley-' + name).html(message || this._getErrorMessage(assert)));
     },
 
@@ -1026,6 +1027,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     _removeError: function _removeError(name) {
+      this._ui.$errorClassHandler.removeAttr('aria-describedby');
       this._ui.$errorsWrapper.removeClass('filled').find('.parsley-' + name).remove();
     },
 
