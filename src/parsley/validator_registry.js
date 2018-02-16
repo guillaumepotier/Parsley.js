@@ -83,6 +83,8 @@ let parseArguments = (type, args) => args.map(Utils.parse[type]);
 let operatorToValidator = (type, operator) => {
   return (value, ...requirementsAndInput) => {
     requirementsAndInput.pop(); // Get rid of `input` argument
+    if (!value)
+      return true;  // Builtin validators all accept empty strings, except `required` of course
     return operator(value, ...parseArguments(type, requirementsAndInput));
   };
 };
@@ -263,6 +265,8 @@ ValidatorRegistry.prototype = {
         if (!tester) {
           throw new Error('validator type `' + type + '` is not supported');
         }
+        if (!value)
+          return true;  // Builtin validators all accept empty strings, except `required` of course
         if (!tester.test(value))
           return false;
         if ('number' === type) {
@@ -288,6 +292,8 @@ ValidatorRegistry.prototype = {
     },
     pattern: {
       validateString: function(value, regexp) {
+        if (!value)
+          return true;  // Builtin validators all accept empty strings, except `required` of course
         return regexp.test(value);
       },
       requirementType: 'regexp',
@@ -295,6 +301,8 @@ ValidatorRegistry.prototype = {
     },
     minlength: {
       validateString: function (value, requirement) {
+        if (!value)
+          return true;  // Builtin validators all accept empty strings, except `required` of course
         return value.length >= requirement;
       },
       requirementType: 'integer',
@@ -309,6 +317,8 @@ ValidatorRegistry.prototype = {
     },
     length: {
       validateString: function (value, min, max) {
+        if (!value)
+          return true;  // Builtin validators all accept empty strings, except `required` of course
         return value.length >= min && value.length <= max;
       },
       requirementType: ['integer', 'integer'],
@@ -340,6 +350,8 @@ ValidatorRegistry.prototype = {
     range: comparisonOperator((value, min, max) => value >= min && value <= max),
     equalto: {
       validateString: function (value, refOrValue) {
+        if (!value)
+          return true;  // Builtin validators all accept empty strings, except `required` of course
         var $reference = $(refOrValue);
         if ($reference.length)
           return value === $reference.val();

@@ -268,10 +268,10 @@ describe('Field', () => {
     expect(parsleyField.validationResult[0].assert.name).to.be('pattern');
   });
   it('should handle all violations if `priorityEnabled` is set to false', () => {
-    $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
+    $('body').append('<input type="email" pattern="[A-F][0-9]{5}" value="x" id="element" />');
     var parsleyField = $('#element').parsley({priorityEnabled: false});
     expect(parsleyField.isValid()).to.be(false);
-    expect(parsleyField.validationResult.length).to.be(3);
+    expect(parsleyField.validationResult.length).to.be(2);
   });
   it('should trigger field:validate event', done => {
     $('body').append('<input type="email" pattern="[A-F][0-9]{5}" required id="element" />');
@@ -334,12 +334,6 @@ describe('Field', () => {
     expect(submitted).to.be(true);
   });
 
-  it('should have validateIfEmpty option', () => {
-    $('body').append('<input type="email" data-parsley-rangelength="[5, 10]" id="element" />');
-    expect($('#element').psly().isValid()).to.be.eql(true);
-    $('#element').attr('data-parsley-validate-if-empty', '');
-    expect($('#element').psly().isValid()).to.be.eql(false);
-  });
   it('should allow `this.value` alteration with field:validate.parsley event', () => {
     $('body').append('<input type="email" required id="element" value="foo@bar.baz" />');
     expect($('#element').parsley().validate()).to.be(true);
@@ -350,20 +344,31 @@ describe('Field', () => {
 
     expect($('#element').parsley().validate()).not.to.be(true);
   });
-  it('should have an optional force option for validate and isValid methods', () => {
-    $('body').append('<input type="email" id="element" />');
-    expect($('#element').parsley().isValid()).to.be.eql(true);
-    expect($('#element').parsley().validate()).to.be.eql(true);
-    expect($('#element').parsley().isValid({force: true})).to.be(false);
-    expect($('#element').parsley().validate({force: true}).length).to.be(1);
-    expect($('#element').parsley().isValid({value: 'not an email'})).to.be(false);
-    expect($('#element').parsley().isValid({value: 'foo@example.com'})).to.be(true);
+  it('should have validateIfEmpty / force:true to validate empty fields', () => {
+    var calls = [];
+    window.Parsley.addValidator('checkevenwhenempty', value => {
+      calls.push(value);
+      return 'foo@bar.com' === value;
+    }, 2);
+
+    $('body').append('<input type="email" data-parsley-checkevenwhenempty id="element" />');
+    expect($('#element').psly().isValid()).to.be.eql(true);
+    expect(calls).to.be.eql([]);
+    expect($('#element').psly().isValid({force: true})).to.be.eql(false);
+    expect(calls).to.be.eql(['']);
+    $('#element').attr('data-parsley-validate-if-empty', '');
+    expect($('#element').psly().isValid()).to.be.eql(false);
+    expect(calls).to.be.eql(['', '']);
+    $('#element').val('foo@bar.com');
+    expect($('#element').psly().isValid()).to.be.eql(true);
+    expect(calls).to.be.eql(['', '', 'foo@bar.com']);
+    window.Parsley.removeValidator('checkevenwhenempty');
   });
   it('should allow passing a specific value to `isValid` method', () => {
     expect($('<input type="email" value="foo">').parsley().isValid()).to.be(false);
     expect($('<input type="email" value="foo">').parsley().isValid({value: ''})).to.be(true);
     expectWarning(() => {
-      expect($('<input type="email" value="foo">').parsley().isValid(true, '')).to.be(false);
+      expect($('<input type="email" value="foo">').parsley().isValid(true, '')).to.be(true);
     });
   });
   it('should have a whitespace="squish" option', () => {

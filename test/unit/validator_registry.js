@@ -45,7 +45,7 @@ describe('ValidatorRegistry', () => {
     expectValidation('foo', 'notblank').to.be(true);
   });
   it('should have a type="email" validator', () => {
-    expectValidation('',                    'type', 'email').not.to.be(true);
+    expectValidation('',                    'type', 'email').to.be(true);
     expectValidation('foo',                 'type', 'email').not.to.be(true);
     expectValidation('foo@bar.baz',         'type', 'email').to.be(true);
     expectValidation('foo+bar@bar.baz',     'type', 'email').to.be(true);
@@ -54,7 +54,7 @@ describe('ValidatorRegistry', () => {
     expectValidation('foo@bar..tt.com',     'type', 'email').to.be(false);
   });
   it('should have a type="date" validator', () => {
-    expectValidation('',                    'type', 'date').not.to.be(true);
+    expectValidation('',                    'type', 'date').to.be(true);
     expectValidation('foo',                 'type', 'date').not.to.be(true);
     expectValidation('12',                  'type', 'date').not.to.be(true);
     expectValidation('2001-01-30',          'type', 'date').to.be(true);
@@ -62,7 +62,7 @@ describe('ValidatorRegistry', () => {
     expectValidation('2001-30-01',          'type', 'date').not.to.be(true);
   });
   it('should have a min validator', () => {
-    expectValidation('',    'min',6).not.to.be(true);
+    expectValidation('',    'min',6).to.be(true);
     expectValidation('foo', 'min',6).not.to.be(true);
     expectValidation('1',   'min',6).not.to.be(true);
     expectValidation('6',   'min',6).to.be(true);
@@ -71,7 +71,7 @@ describe('ValidatorRegistry', () => {
     expect($('#element').parsley().isValid()).to.be(true);
   });
   it('should have a max validator', () => {
-    expectValidation('',    'max', 10).not.to.be(true);
+    expectValidation('',    'max', 10).to.be(true);
     expectValidation('foo', 'max', 10).not.to.be(true);
     expectValidation('1',   'max', 10).to.be(true);
     expectValidation('1',   'max', '10').to.be(true);
@@ -180,7 +180,7 @@ describe('ValidatorRegistry', () => {
     expectValidation(['foo', 'bar', 'baz', 'qux'], 'maxcheck', 3).not.to.be(true);
   });
   it('should have an equalto validator', () => {
-    expectValidation('',    'equalto', 'foo').not.to.be(true);
+    expectValidation('',    'equalto', 'foo').to.be(true);
     expectValidation('bar', 'equalto', 'foo').not.to.be(true);
     expectValidation('foo', 'equalto', 'foo').to.be(true);
     $('body').append('<input type="text" id="element" data-parsley-equalto="#equalto" required /><input type="text" id="equalto" value="foo" />');

@@ -150,18 +150,6 @@ describe('UI', () => {
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
     expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
   });
-  it('should show all errors message if priority enabled set to false', () => {
-    $('body').append('<input type="email" id="element" required data-parsley-priority-enabled="false"/>');
-    var parsleyField = $('#element').psly();
-    parsleyField.validate();
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(2);
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').eq(0).hasClass('parsley-required')).to.be(true);
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').eq(1).hasClass('parsley-type')).to.be(true);
-
-    $('#element').val('foo').psly().validate();
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').length).to.be(1);
-    expect($('ul#parsley-id-' + parsleyField.__id__ + ' li').hasClass('parsley-type')).to.be(true);
-  });
   it('should show custom error message by validator', () => {
     $('body').append('<input type="email" id="element" required data-parsley-required-message="foo" data-parsley-type-message="bar"/>');
     var parsleyField = $('#element').psly();
