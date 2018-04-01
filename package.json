@@ -31,7 +31,6 @@
   "bugs": {
     "url": "https://github.com/guillaumepotier/Parsley.js/issues"
   },
-  "homepage": "https://github.com/guillaumepotier/Parsley.js",
   "dependencies": {
     "jquery": ">=1.8.0"
   },
