@@ -261,7 +261,6 @@ Maybe some refactoring would be appreciated here…</p>
             
             <div class="content"><div class='highlight'><pre>  handleMultiple: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">var</span> name;
-    <span class="hljs-keyword">var</span> multiple;
     <span class="hljs-keyword">var</span> parsleyMultipleInstance;</pre></div></div>
             
         </li>
@@ -325,11 +324,13 @@ Maybe some refactoring would be appreciated here…</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Remove special chars</p>
+              <p>Reflect names that are numbers - the removing of special chars fails for numbers</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.options.multiple.replace(<span class="hljs-regexp">/(:|\.|\[|\]|\{|\}|\$)/g</span>, <span class="hljs-string">''</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span>(<span class="hljs-keyword">this</span>.options.multiple) === <span class="hljs-string">'number'</span>) {
+      <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.options.multiple.toString();
+    }</pre></div></div>
             
         </li>
         
@@ -339,6 +340,21 @@ Maybe some refactoring would be appreciated here…</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Remove special chars</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.options.multiple = <span class="hljs-keyword">this</span>.options.multiple.replace(<span class="hljs-regexp">/(:|\.|\[|\]|\{|\}|\$)/g</span>, <span class="hljs-string">''</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Add proper <code>data-parsley-multiple</code> to siblings if we have a valid multiple name</p>
 
@@ -355,11 +371,11 @@ Maybe some refactoring would be appreciated here…</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Check here if we don’t already have a related multiple instance saved</p>
 
@@ -381,11 +397,11 @@ Maybe some refactoring would be appreciated here…</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Create a secret Field instance for every multiple field. It will be stored in <code>data(&#39;FieldMultiple&#39;)</code>
 And will be useful later to access classic <code>Field</code> stuff while being in a <code>FieldMultiple</code> instance</p>
@@ -400,11 +416,11 @@ And will be useful later to access classic <code>Field</code> stuff while being 
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Return proper <code>Form</code>, <code>Field</code> or <code>FieldMultiple</code></p>
 
@@ -452,11 +468,11 @@ And will be useful later to access classic <code>Field</code> stuff while being 
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Store the freshly bound instance in a DOM element for later access using jQuery <code>data()</code></p>
 
@@ -467,11 +483,11 @@ And will be useful later to access classic <code>Field</code> stuff while being 
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Tell the world we have a new Form or Field instance!</p>
 

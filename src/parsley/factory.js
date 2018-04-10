@@ -64,7 +64,6 @@ Factory.prototype = {
   // Maybe some refactoring would be appreciated here...
   handleMultiple: function () {
     var name;
-    var multiple;
     var parsleyMultipleInstance;
 
     // Handle multiple name
@@ -81,6 +80,11 @@ Factory.prototype = {
     } else if (!this.options.multiple) {
       Utils.warn('To be bound by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
       return this;
+    }
+
+    // Reflect names that are numbers - the removing of special chars fails for numbers
+    if(typeof(this.options.multiple) === 'number') {
+      this.options.multiple = this.options.multiple.toString();
     }
 
     // Remove special chars
