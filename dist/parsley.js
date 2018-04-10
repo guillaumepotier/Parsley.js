@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.8.1 - built Tue, Apr 10th 2018, 8:43 pm
+* Version 2.8.2 - built Tue, Apr 10th 2018, 8:47 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -1985,7 +1985,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Factory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.8.1';
+      this.__version__ = '2.8.2';
       this.__id__ = Utils.generateID();
 
       // Pre-compute options
@@ -2113,7 +2113,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '2.8.1'
+    version: '2.8.2'
   });
 
   // Supplement Field and Form with Base

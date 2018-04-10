@@ -83,7 +83,7 @@ Factory.prototype = {
     }
 
     // Reflect names that are numbers - the removing of special chars fails for numbers
-    if(typeof(this.options.multiple) === 'number') {
+    if (typeof(this.options.multiple) === 'number') {
       this.options.multiple = this.options.multiple.toString();
     }
 
