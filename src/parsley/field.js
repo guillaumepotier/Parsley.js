@@ -67,7 +67,7 @@ Field.prototype = {
       .done(() =>   { this._trigger('success'); })
       .fail(() =>   { this._trigger('error'); })
       .always(() => { this._trigger('validated'); })
-      .pipe(...this._pipeAccordingToValidationResult());
+      .then(...this._pipeAccordingToValidationResult());
   },
 
   hasConstraints: function () {
