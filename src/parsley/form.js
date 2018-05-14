@@ -111,7 +111,7 @@ Form.prototype = {
         this._trigger('error');
       })
       .always(() => { this._trigger('validated'); })
-      .pipe(...this._pipeAccordingToValidationResult());
+      .then(...this._pipeAccordingToValidationResult());
   },
 
   // Iterate over refreshed fields, and stop on first failure.
