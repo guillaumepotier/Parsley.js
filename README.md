@@ -19,7 +19,7 @@ See `index.html` and `doc/`
 
 ## Questions?
 
-Please ask questions on [StackOverflow](http://stackoverflow.com/questions/ask) and be sure to include the `parsley.js` tag. Please **provide an example**, starting for example from [this jsfiddle](http://jsfiddle.net/marcandre/58vnaqur/)
+Please ask questions on [StackOverflow](https://stackoverflow.com/questions/ask) and be sure to include the `parsley.js` tag. Please **provide an example**, starting for example from [this jsfiddle](https://jsfiddle.net/marcandre/58vnaqur/)
 
 ## Contributing
 
@@ -33,7 +33,7 @@ Some integrations are
 * [CakePHP](https://github.com/Codaxis/parsley-helper)
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
-* [OSSCDN by MaxCDN](http://osscdn.com/#/parsleyjs)
+* [OSSCDN by MaxCDN](https://osscdn.com/#/parsleyjs)
 * [Drupal](https://www.drupal.org/project/parsley)
 
 ## Install dev environment and running tests
