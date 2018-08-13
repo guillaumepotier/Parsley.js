@@ -1,4 +1,3 @@
 {
-  "blacklist": ["useStrict"],
-  "plugins": ["object-assign"]
+  "presets": ["env"]
 }
