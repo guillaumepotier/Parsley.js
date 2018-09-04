@@ -1,4 +1,4 @@
-module.exports = function() {
+export default function () {
   beforeEach(function() {
     sinon.spy(window.console, 'warn');
     window.console.warn.expectedCallCount = 0;
@@ -16,4 +16,4 @@ module.exports = function() {
     expect(w.callCount).to.be(w.expectedCallCount);
     return result;
   };
-};
+}
