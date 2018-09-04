@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "6"
 sudo: false
-script: "gulp coverage"
+script: "gulp test"
 env:
   - JQUERY=1.11
   - JQUERY=1.12
@@ -13,9 +13,6 @@ env:
 install:
   - npm install
   - npm install jquery@$JQUERY
-after_success:
-  - npm install -g codeclimate-test-reporter
-  - codeclimate-test-reporter < coverage/lcov.info
 matrix:
   allow_failures:
     - env: JQUERY=3.0.0-beta1

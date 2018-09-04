@@ -2,7 +2,7 @@ import $ from 'jquery';
 import Validator from '../../src/parsley/validator';
 import ValidatorRegistry from '../../src/parsley/validator_registry';
 import Parsley from '../../src/parsley';
-import fr from '../../src/i18n/fr';
+import '../../src/i18n/fr';
 
 describe('ValidatorRegistry', () => {
   var validatorRegistry = Parsley._validatorRegistry;

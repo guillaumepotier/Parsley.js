@@ -1,4 +1,8 @@
-module.exports = function() {
+import setup_ew from './expect_warning';
+import setup_dlc from './dom_leak_check';
+
+
+export default function() {
   beforeEach(function() {
     this.sandbox = global.sinon.sandbox.create();
     global.stub = this.sandbox.stub.bind(this.sandbox);
@@ -11,6 +15,6 @@ module.exports = function() {
     this.sandbox.restore();
   });
 
-  require('./expect_warning')();
-  require('./dom_leak_check');
-};
+  setup_ew();
+  setup_dlc();
+}
