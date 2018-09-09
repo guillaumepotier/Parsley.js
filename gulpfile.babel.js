@@ -49,7 +49,6 @@ function _jscsNotify(file) {
 // Lint a set of files
 function lint(files) {
   return gulp.src(files)
-    .pipe($.plumber())
     .pipe($.eslint())
     .pipe($.eslint.format())
     .pipe($.eslint.failOnError())
@@ -79,7 +78,6 @@ function build(done) {
     const head = fs.readFileSync('src/header.js', 'utf8');
 
     $.file(exportFileName + '.js', res.code, { src: true })
-      .pipe($.plumber())
       .pipe($.replace('@@version', manifest.version))
       .pipe($.sourcemaps.init({ loadMaps: true }))
       .pipe($.babel())
@@ -137,7 +135,6 @@ function _runBrowserifyBundle(bundler, dest) {
       console.log(err.message);
       this.emit('end');
     })
-    .pipe($.plumber())
     .pipe(source(dest || './tmp/__spec-build.js'))
     .pipe(buffer())
     .pipe(gulp.dest(''))
