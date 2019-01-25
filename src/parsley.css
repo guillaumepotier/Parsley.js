@@ -21,6 +21,7 @@ textarea.parsley-error {
   font-size: 0.9em;
   line-height: 0.9em;
   opacity: 0;
+  color: #B94A48;
 
   transition: all .3s ease-in;
   -o-transition: all .3s ease-in;
