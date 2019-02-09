@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.8.1 - built Sat, Feb 3rd 2018, 2:27 pm
+* Version 2.8.1 - built Sun, Nov 4th 2018, 6:50 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -558,6 +558,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
 
       requirementsAndInput.pop(); // Get rid of `input` argument
+      if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
       return operator.apply(undefined, [value].concat(_toConsumableArray(ValidatorRegistry__parseArguments(type, requirementsAndInput))));
     };
   };
@@ -737,6 +738,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           if (!tester) {
             throw new Error('validator type `' + type + '` is not supported');
           }
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           if (!tester.test(value)) return false;
           if ('number' === type) {
             if (!/^any$/i.test(step || '')) {
@@ -762,6 +764,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
       pattern: {
         validateString: function validateString(value, regexp) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           return regexp.test(value);
         },
         requirementType: 'regexp',
@@ -769,6 +772,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
       minlength: {
         validateString: function validateString(value, requirement) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           return value.length >= requirement;
         },
         requirementType: 'integer',
@@ -783,6 +787,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
       length: {
         validateString: function validateString(value, min, max) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           return value.length >= min && value.length <= max;
         },
         requirementType: ['integer', 'integer'],
@@ -820,6 +825,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }),
       equalto: {
         validateString: function validateString(value, refOrValue) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           var $reference = $(refOrValue);
           if ($reference.length) return value === $reference.val();else return value === refOrValue;
         },
@@ -2393,28 +2399,28 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   // This is included with the Parsley library itself,
   // thus there is no use in adding it to your project.
   Parsley.addMessages('en', {
-    defaultMessage: "This value seems to be invalid.",
+    defaultMessage: "شائد یہ قیمت غلط ہے۔",
     type: {
-      email: "This value should be a valid email.",
-      url: "This value should be a valid url.",
-      number: "This value should be a valid number.",
-      integer: "This value should be a valid integer.",
-      digits: "This value should be digits.",
-      alphanum: "This value should be alphanumeric."
+      email: "یہ قیمت ایک درست ای میل ہونی چاہیے۔",
+      url: "یہ قیمت ایک درست یو آر ایل ہونا چاہیے۔ ",
+      number: "یہ قیمت ایک درست نمبر ہونا چاہیے۔",
+      integer: "یہ قیمت ایک عدد صحیح ہونا چاہیے۔",
+      digits: "یہ قیمت اعداد ہونے چاہیے۔",
+      alphanum: "یہ قیمت حرفی ہندسی میں سے ہونا چاہیے۔"
     },
-    notblank: "This value should not be blank.",
-    required: "This value is required.",
-    pattern: "This value seems to be invalid.",
-    min: "This value should be greater than or equal to %s.",
-    max: "This value should be lower than or equal to %s.",
-    range: "This value should be between %s and %s.",
-    minlength: "This value is too short. It should have %s characters or more.",
-    maxlength: "This value is too long. It should have %s characters or fewer.",
-    length: "This value length is invalid. It should be between %s and %s characters long.",
-    mincheck: "You must select at least %s choices.",
-    maxcheck: "You must select %s choices or fewer.",
-    check: "You must select between %s and %s choices.",
-    equalto: "This value should be the same."
+    notblank: "یہ قیمت خالی نہیں ہونی چاہیے۔",
+    required: "یہ قیمت ضروری ہے۔ ",
+    pattern: "شائد یہ قیمت غلط ہے۔",
+    min: "یہ قیمت %s سے بڑی یا اسکے برابر ہونی چاہیے۔",
+    max: "یہ قیمت %sسے چھوٹی یا اسکے برابر ہونی چاہیے۔",
+    range: "یہ قیمت %sاور %s کے درمیان ہونی چاہیے۔",
+    minlength: "یہ قیمت بہت کم احراف پر مشتمل ہے۔ یہ %sاحراف یا اس سے زیادہ ہونے چاہیے۔",
+    maxlength: "یہ قیمت بہت زیادہ احراف پر مشتمل ہے۔ یہ %sاحراف یا اس سے کم ہونے چاہیے۔",
+    length: "اس قیت کا طول غلط ہے۔ یہ %s اور %s احراف پر مشتمل ہونی چاہیے۔",
+    mincheck: "آپکو کم سے کم %s قیمتوں کا انتخاب کرنا ہوگا۔",
+    maxcheck: "آپکو %s یا اس سے کم قیمتوں کا انتخاب کرنا ہوگا۔",
+    check: "آپکو %s اور %s کے درمیان کسی قیمت کا انتخاب کرنا ہوگا۔",
+    equalto: "یہ قیت جیسی ہے ویسی ہی رہنی چاہیے۔ "
   });
 
   Parsley.setLocale('en');
