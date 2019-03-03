@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.8.1 - built Sat, Feb 3rd 2018, 2:27 pm
+* Version 2.8.2 - built Tue, Apr 10th 2018, 8:47 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -558,6 +558,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
 
       requirementsAndInput.pop(); // Get rid of `input` argument
+      if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
       return operator.apply(undefined, [value].concat(_toConsumableArray(ValidatorRegistry__parseArguments(type, requirementsAndInput))));
     };
   };
@@ -737,6 +738,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           if (!tester) {
             throw new Error('validator type `' + type + '` is not supported');
           }
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           if (!tester.test(value)) return false;
           if ('number' === type) {
             if (!/^any$/i.test(step || '')) {
@@ -762,6 +764,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
       pattern: {
         validateString: function validateString(value, regexp) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           return regexp.test(value);
         },
         requirementType: 'regexp',
@@ -769,6 +772,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
       minlength: {
         validateString: function validateString(value, requirement) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           return value.length >= requirement;
         },
         requirementType: 'integer',
@@ -783,6 +787,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
       length: {
         validateString: function validateString(value, min, max) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           return value.length >= min && value.length <= max;
         },
         requirementType: ['integer', 'integer'],
@@ -820,6 +825,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }),
       equalto: {
         validateString: function validateString(value, refOrValue) {
+          if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
           var $reference = $(refOrValue);
           if ($reference.length) return value === $reference.val();else return value === refOrValue;
         },
@@ -1979,7 +1985,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Factory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.8.1';
+      this.__version__ = '2.8.2';
       this.__id__ = Utils.generateID();
 
       // Pre-compute options
@@ -2003,7 +2009,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _this13 = this;
 
       var name;
-      var multiple;
       var parsleyMultipleInstance;
 
       // Handle multiple name
@@ -2019,6 +2024,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           Utils.warn('To be bound by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
           return this;
         }
+
+      // Reflect names that are numbers - the removing of special chars fails for numbers
+      if (typeof this.options.multiple === 'number') {
+        this.options.multiple = this.options.multiple.toString();
+      }
 
       // Remove special chars
       this.options.multiple = this.options.multiple.replace(/(:|\.|\[|\]|\{|\}|\$)/g, '');
@@ -2103,7 +2113,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '2.8.1'
+    version: '2.8.2'
   });
 
   // Supplement Field and Form with Base
