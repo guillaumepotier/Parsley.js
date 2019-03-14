@@ -330,7 +330,7 @@ UI.Field = {
       $toBind.on(Utils.namespaceEvents(this.options.triggerAfterFailure, 'Parsley'), () => {
         this._validateIfNeeded();
       });
-    else if (trigger = Utils.namespaceEvents(this.options.trigger, 'Parsley')) {
+    if (trigger = Utils.namespaceEvents(this.options.trigger, 'Parsley')) {
       $toBind.on(trigger, event => {
         this._validateIfNeeded(event);
       });
