@@ -359,7 +359,13 @@ ValidatorRegistry.prototype = {
           return value === refOrValue;
       },
       priority: 256
-    }
+    },
+    euvatin: {
+      validateString: function(value) {
+        var re = /^[A-Z][A-Z][A-Za-z0-9 -]{2,}/;
+        return re.test(value);
+      },
+    },
   }
 };
 
