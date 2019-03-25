@@ -29,6 +29,7 @@ describe('Form', () => {
       '</form>');
     var parsleyForm = $('#element').parsley({excluded: '[disabled], input[type=button], input[type=submit], input[type=reset]'});
     expect(parsleyForm.fields.length).to.be(2);
+    expect($('#field-excluded').data('Parsley')).to.be(undefined);
   });
   it('should properly reset excluded', () => {
     $('body').append(

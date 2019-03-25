@@ -180,11 +180,12 @@ Form.prototype = {
       this.$element
       .find(this.options.inputs)
       .not(this.options.excluded)
+      .not(`[${this.options.namespace}excluded=true]`)
       .each((_, element) => {
         var fieldInstance = new window.Parsley.Factory(element, {}, this);
 
         // Only add valid and not excluded `Field` and `FieldMultiple` children
-        if (('Field' === fieldInstance.__class__ || 'FieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded)) {
+        if ('Field' === fieldInstance.__class__ || 'FieldMultiple' === fieldInstance.__class__) {
           let uniqueId = fieldInstance.__class__ + '-' + fieldInstance.__id__;
           if ('undefined' === typeof this.fieldsMappedById[uniqueId]) {
             this.fieldsMappedById[uniqueId] = fieldInstance;
