@@ -47,7 +47,7 @@
     "gulp": "^3.9.0",
     "gulp-cli": "^2.0.0",
     "gulp-eslint": "*",
-    "gulp-git": "^1.7.0",
+    "gulp-git": "*",
     "gulp-load-plugins": "^0.10.0",
     "gulp-mocha": "*",
     "gulp-replace": "*",
