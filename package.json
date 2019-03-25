@@ -44,6 +44,7 @@
     "expect.js": "*",
     "glob": "^5.0.14",
     "gulp": "^3.9.0",
+    "gulp-cli": "^2.0.0",
     "gulp-eslint": "*",
     "gulp-git": "^1.7.0",
     "gulp-load-plugins": "^0.10.0",
