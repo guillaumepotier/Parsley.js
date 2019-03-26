@@ -23,6 +23,8 @@ var typeTesters =  {
   digits: /^\d+$/,
 
   alphanum: /^\w+$/i,
+  
+  euvatin: /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/;
 
   date: {
     test: value => Utils.parse.date(value) !== null
@@ -359,15 +361,6 @@ ValidatorRegistry.prototype = {
           return value === refOrValue;
       },
       priority: 256
-    },
-    euvatin: {
-      validateString: function(value) {
-        if (! value) {
-          return true;
-        }
-        var re = /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/;
-        return re.test(value);
-      },
     },
   }
 };
