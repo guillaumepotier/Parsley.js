@@ -360,7 +360,7 @@ ValidatorRegistry.prototype = {
       },
       priority: 256
     },
-    equalto: {
+    euvatin: {
       validateString: function (value, refOrValue) {
         if (!value) {
           return true;  // Builtin validators all accept empty strings, except `required` of course
