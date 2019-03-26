@@ -362,6 +362,9 @@ ValidatorRegistry.prototype = {
     },
     euvatin: {
       validateString: function(value) {
+        if (! value) {
+          return true;
+        }
         var re = /^[A-Z][A-Z][A-Za-z0-9 -]{2,}/;
         return re.test(value);
       },
