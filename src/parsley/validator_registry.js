@@ -23,8 +23,6 @@ var typeTesters =  {
   digits: /^\d+$/,
 
   alphanum: /^\w+$/i,
-  
-  euvatin: /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/,
 
   date: {
     test: value => Utils.parse.date(value) !== null
@@ -361,6 +359,17 @@ ValidatorRegistry.prototype = {
           return value === refOrValue;
       },
       priority: 256
+    },
+    equalto: {
+      validateString: function (value, refOrValue) {
+        if (!value) {
+          return true;  // Builtin validators all accept empty strings, except `required` of course
+        }
+        
+        var re = /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/;
+        return re.test(value);
+      },
+      priority: 30,
     },
   }
 };
