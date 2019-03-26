@@ -24,7 +24,7 @@ var typeTesters =  {
 
   alphanum: /^\w+$/i,
   
-  euvatin: /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/;
+  euvatin: /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/,
 
   date: {
     test: value => Utils.parse.date(value) !== null
