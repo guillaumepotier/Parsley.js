@@ -10,5 +10,8 @@ Parsley.addMessages('en', {
   gte:      "This value should be greater or equal.",
   lt:       "This value should be less.",
   lte:      "This value should be less or equal.",
-  notequalto: "This value should be different."
+  notequalto: "This value should be different.",
+  date: "It must be a valid date with format %s",
+  datebeforenow: "Date must be before now",
+  dateafternow: "Date must be after now",
 });
