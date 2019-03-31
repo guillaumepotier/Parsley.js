@@ -192,7 +192,6 @@ describe('ValidatorRegistry', () => {
     $('#equalto').remove();
   });
   it('should have a euvatin validator', () => {
-    expectValidation('',    'euvatin').to.be(true);
     expectValidation('foo', 'euvatin').not.to.be(true);
     expectValidation('AA1',   'euvatin').not.to.be(true);
     expectValidation('AA12',   'euvatin').to.be(true);
