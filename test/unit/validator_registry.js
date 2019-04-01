@@ -191,6 +191,14 @@ describe('ValidatorRegistry', () => {
     expect($('#element').psly().isValid()).to.be(true);
     $('#equalto').remove();
   });
+  it('should have a euvatin validator', () => {
+    expectValidation('foo', 'euvatin').not.to.be(true);
+    expectValidation('AA1',   'euvatin').not.to.be(true);
+    expectValidation('AA12',   'euvatin').to.be(true);
+    expectValidation('AA12-34',  'euvatin').to.be(true);
+    expectValidation('AA12 3X',  'euvatin').to.be(true);
+    expectValidation('AA12.3X',  'euvatin').not.to.be(true);
+  });
   it('should handle proper error message for validators', () => {
     expect(validatorRegistry.getErrorMessage({name: 'length', requirements: [3, 6]})).to.be('This value length is invalid. It should be between 3 and 6 characters long.');
     expect(validatorRegistry.getErrorMessage({name: 'notexisting'})).to.be('This value seems to be invalid.');

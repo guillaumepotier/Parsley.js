@@ -359,7 +359,18 @@ ValidatorRegistry.prototype = {
           return value === refOrValue;
       },
       priority: 256
-    }
+    },
+    euvatin: {
+      validateString: function (value, refOrValue) {
+        if (!value) {
+          return true;  // Builtin validators all accept empty strings, except `required` of course
+        }
+
+        var re = /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/;
+        return re.test(value);
+      },
+      priority: 30,
+    },
   }
 };
 
