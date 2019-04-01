@@ -1,5 +1,9 @@
 window.Parsley.addValidator('date', {
     validateString: function(value, format) {
+        if (! value) {
+            return true;
+        }
+      
         var date = moment(value, format, true);
         return date.isValid();
     },
@@ -8,6 +12,10 @@ window.Parsley.addValidator('date', {
 
 window.Parsley.addValidator('datebeforenow', {
     validateString: function(value, format) {
+        if (! value) {
+            return true;
+        }
+        
         var date = moment(value, format, true);
         
         // Trick to collaborate with date validator
@@ -22,6 +30,10 @@ window.Parsley.addValidator('datebeforenow', {
 
 window.Parsley.addValidator('dateafternow', {
     validateString: function(value, format) {
+        if (! value) {
+            return true;
+        }
+        
         var date = moment(value, format, true);
         
         // Trick to collaborate with date validator
