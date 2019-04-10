@@ -23,7 +23,7 @@ var Parsley = Object.assign(new Base(), {
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '@@version'
+    version: 'VERSION'
   });
 
 // Supplement Field and Form with Base

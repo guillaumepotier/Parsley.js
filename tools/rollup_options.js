@@ -7,8 +7,8 @@ import moment  from 'moment';
 const project = 'parsley';
 
 const banner = fs.readFileSync('src/header.js', 'utf8')
-  .replace('@@version', manifest.version)
-  .replace('@@now', moment().format('ddd, MMM Do YYYY, h:mm a'));
+  .replace('VERSION', manifest.version)
+  .replace('NOW', moment().format('ddd, MMM Do YYYY, h:mm a'));
 
 function rollupOptions({
   input=`./src/${project}.js`,
@@ -20,7 +20,7 @@ function rollupOptions({
     input,
     external: ['jquery'],
     plugins: [
-      replace({ '@@version': manifest.version }),
+      replace({ VERSION: manifest.version }),
       babel(),
       ...extraPlugins
     ],

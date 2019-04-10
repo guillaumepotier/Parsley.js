@@ -40,7 +40,7 @@ var Factory = function (element, options, parsleyFormInstance) {
 Factory.prototype = {
   init: function (options) {
     this.__class__ = 'Parsley';
-    this.__version__ = '@@version';
+    this.__version__ = 'VERSION';
     this.__id__ = Utils.generateID();
 
     // Pre-compute options

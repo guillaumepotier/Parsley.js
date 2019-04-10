@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version @@version - built @@now
+* Version VERSION - built NOW
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
