@@ -796,7 +796,18 @@ Alternatively, a validator can be a function that returns such an object</li>
           <span class="hljs-keyword">return</span> value === refOrValue;
       },
       <span class="hljs-attr">priority</span>: <span class="hljs-number">256</span>
-    }
+    },
+    <span class="hljs-attr">euvatin</span>: {
+      <span class="hljs-attr">validateString</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, refOrValue</span>) </span>{
+        <span class="hljs-keyword">if</span> (!value) {
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;  <span class="hljs-comment">// Builtin validators all accept empty strings, except `required` of course</span>
+        }
+
+        <span class="hljs-keyword">var</span> re = <span class="hljs-regexp">/^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/</span>;
+        <span class="hljs-keyword">return</span> re.test(value);
+      },
+      <span class="hljs-attr">priority</span>: <span class="hljs-number">30</span>,
+    },
   }
 };
 

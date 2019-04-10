@@ -2,6 +2,10 @@
 
 Parsley follows [semver](https://semver.org/). This lists new features only. For bug fixes and small changes, check the commit list.
 
+## 2.9
+
+- Added `euvatin` (European Union Value Added Tax Identification Number) validator.
+
 ## 2.8
 
 - Added `refresh` method. Parsley automatically refreshes before validating, but `refresh` is there if one needs to insure that some fields are rebound/unbound, or triggers are updated, etc...

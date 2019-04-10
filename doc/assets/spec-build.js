@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.8.2 - built Mon, Mar 25th 2019, 12:48 am
+* Version 2.9.0 - built Wed, Apr 10th 2019, 4:18 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -926,6 +926,17 @@
           if ($reference.length) return value === $reference.val();else return value === refOrValue;
         },
         priority: 256
+      },
+      euvatin: {
+        validateString: function validateString(value, refOrValue) {
+          if (!value) {
+            return true; // Builtin validators all accept empty strings, except `required` of course
+          }
+
+          var re = /^[A-Z][A-Z][A-Za-z0-9 -]{2,}$/;
+          return re.test(value);
+        },
+        priority: 30
       }
     }
   };
@@ -2023,7 +2034,7 @@
   Factory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '@@version';
+      this.__version__ = '2.9.0';
       this.__id__ = Utils.generateID(); // Pre-compute options
 
       this._resetOptions(options); // A Form instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
@@ -2141,7 +2152,7 @@
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '@@version'
+    version: '2.9.0'
   }); // Supplement Field and Form with Base
   // This way, the constructors will have access to those methods
 
@@ -2440,7 +2451,8 @@
     mincheck: "You must select at least %s choices.",
     maxcheck: "You must select %s choices or fewer.",
     check: "You must select between %s and %s choices.",
-    equalto: "This value should be the same."
+    equalto: "This value should be the same.",
+    euvatin: "It's not a valid VAT Identification Number."
   });
   Parsley.setLocale('en');
 
@@ -4590,6 +4602,14 @@
       $('#element').val('foo');
       expect($('#element').psly().isValid()).to.be(true);
       $('#equalto').remove();
+    });
+    it('should have a euvatin validator', () => {
+      expectValidation('foo', 'euvatin').not.to.be(true);
+      expectValidation('AA1', 'euvatin').not.to.be(true);
+      expectValidation('AA12', 'euvatin').to.be(true);
+      expectValidation('AA12-34', 'euvatin').to.be(true);
+      expectValidation('AA12 3X', 'euvatin').to.be(true);
+      expectValidation('AA12.3X', 'euvatin').not.to.be(true);
     });
     it('should handle proper error message for validators', () => {
       expect(validatorRegistry.getErrorMessage({
