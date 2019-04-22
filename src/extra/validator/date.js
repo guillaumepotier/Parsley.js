@@ -16,9 +16,7 @@ window.Parsley.addValidator('datebeforenow', {
             return true;
         }
         
-        var valid_date = Parsley._validatorRegistry.validators.date.validateString(value, format);
-        
-        if (! valid_date) {
+        if (! date.isValid()) {
             return true;
         }
         
@@ -35,9 +33,7 @@ window.Parsley.addValidator('dateafternow', {
             return true;
         }
         
-        var valid_date = Parsley._validatorRegistry.validators.date.validateString(value, format);
-        
-        if (! valid_date) {
+        if (! date.isValid()) {
             return true;
         }
         
