@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.9.0 - built Wed, Apr 10th 2019, 4:18 pm
+* Version 2.9.1 - built Tue, Apr 30th 2019, 1:56 am
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -546,6 +546,8 @@
         }
 
         if (this.validateNumber) {
+          if (!value) // Builtin validators all accept empty strings, except `required` of course
+            return true;
           if (isNaN(value)) return false;
           arguments[0] = parseFloat(arguments[0]);
           return this.validateNumber.apply(this, arguments);
@@ -654,8 +656,6 @@
       }
 
       requirementsAndInput.pop(); // Get rid of `input` argument
-
-      if (!value) return true; // Builtin validators all accept empty strings, except `required` of course
 
       return operator.apply(void 0, [value].concat(_toConsumableArray(parseArguments(type, requirementsAndInput))));
     };
@@ -2034,7 +2034,7 @@
   Factory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.9.0';
+      this.__version__ = '2.9.1';
       this.__id__ = Utils.generateID(); // Pre-compute options
 
       this._resetOptions(options); // A Form instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
@@ -2152,7 +2152,7 @@
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '2.9.0'
+    version: '2.9.1'
   }); // Supplement Field and Form with Base
   // This way, the constructors will have access to those methods
 
@@ -4466,6 +4466,7 @@
     });
     it('should have a min validator', () => {
       expectValidation('', 'min', 6).to.be(true);
+      expectValidation('0', 'min', 6).not.to.be(true);
       expectValidation('foo', 'min', 6).not.to.be(true);
       expectValidation('1', 'min', 6).not.to.be(true);
       expectValidation('6', 'min', 6).to.be(true);
@@ -4475,6 +4476,7 @@
     });
     it('should have a max validator', () => {
       expectValidation('', 'max', 10).to.be(true);
+      expectValidation('0', 'max', -3).not.to.be(true);
       expectValidation('foo', 'max', 10).not.to.be(true);
       expectValidation('1', 'max', 10).to.be(true);
       expectValidation('1', 'max', '10').to.be(true);

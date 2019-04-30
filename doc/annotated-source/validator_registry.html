@@ -387,8 +387,6 @@ typeTesters.range = typeTesters.number;</pre></div></div>
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> operatorToValidator = <span class="hljs-function">(<span class="hljs-params">type, operator</span>) =&gt;</span> {
   <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">value, ...requirementsAndInput</span>) =&gt;</span> {
     requirementsAndInput.pop(); <span class="hljs-comment">// Get rid of `input` argument</span>
-    <span class="hljs-keyword">if</span> (!value)
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;  <span class="hljs-comment">// Builtin validators all accept empty strings, except `required` of course</span>
     <span class="hljs-keyword">return</span> operator(value, ...parseArguments(type, requirementsAndInput));
   };
 };

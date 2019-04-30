@@ -194,6 +194,8 @@ Validator.prototype = {</pre></div></div>
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validateDate(...arguments);
       }
       <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.validateNumber) {
+        <span class="hljs-keyword">if</span> (!value) <span class="hljs-comment">// Builtin validators all accept empty strings, except `required` of course</span>
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(value))
           <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
         <span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>] = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>]);
