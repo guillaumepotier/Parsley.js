@@ -83,8 +83,6 @@ let parseArguments = (type, args) => args.map(Utils.parse[type]);
 let operatorToValidator = (type, operator) => {
   return (value, ...requirementsAndInput) => {
     requirementsAndInput.pop(); // Get rid of `input` argument
-    if (!value)
-      return true;  // Builtin validators all accept empty strings, except `required` of course
     return operator(value, ...parseArguments(type, requirementsAndInput));
   };
 };

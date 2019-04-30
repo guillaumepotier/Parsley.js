@@ -56,6 +56,8 @@ Validator.prototype = {
         return this.validateDate(...arguments);
       }
       if (this.validateNumber) {
+        if (!value) // Builtin validators all accept empty strings, except `required` of course
+          return true;
         if (isNaN(value))
           return false;
         arguments[0] = parseFloat(arguments[0]);

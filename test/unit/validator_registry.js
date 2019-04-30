@@ -63,6 +63,7 @@ describe('ValidatorRegistry', () => {
   });
   it('should have a min validator', () => {
     expectValidation('',    'min',6).to.be(true);
+    expectValidation('0',   'min',6).not.to.be(true);
     expectValidation('foo', 'min',6).not.to.be(true);
     expectValidation('1',   'min',6).not.to.be(true);
     expectValidation('6',   'min',6).to.be(true);
@@ -72,6 +73,7 @@ describe('ValidatorRegistry', () => {
   });
   it('should have a max validator', () => {
     expectValidation('',    'max', 10).to.be(true);
+    expectValidation('0',   'max', -3).not.to.be(true);
     expectValidation('foo', 'max', 10).not.to.be(true);
     expectValidation('1',   'max', 10).to.be(true);
     expectValidation('1',   'max', '10').to.be(true);
