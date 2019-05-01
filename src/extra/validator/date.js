@@ -7,7 +7,7 @@ window.Parsley.addValidator('date', {
         var date = moment(value, format, true);
         return date.isValid();
     },
-    priority: 256,
+    priority: 255,
 });
 
 window.Parsley.addValidator('datebeforenow', {
@@ -17,7 +17,7 @@ window.Parsley.addValidator('datebeforenow', {
         }
         
         if (! date.isValid()) {
-            return true;
+            return false;
         }
         
         var date = moment(value, format, true);
@@ -34,7 +34,7 @@ window.Parsley.addValidator('dateafternow', {
         }
         
         if (! date.isValid()) {
-            return true;
+            return false;
         }
         
         var date = moment(value, format, true);
