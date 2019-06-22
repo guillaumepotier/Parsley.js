@@ -16,11 +16,11 @@ window.Parsley.addValidator('datebeforenow', {
             return true;
         }
 
+        var date = moment(value, format, true);
+
         if (! date.isValid()) {
             return false;
         }
-
-        var date = moment(value, format, true);
 
         return date.isBefore(moment());
     },
@@ -33,11 +33,11 @@ window.Parsley.addValidator('dateafternow', {
             return true;
         }
 
+        var date = moment(value, format, true);
+
         if (! date.isValid()) {
             return false;
         }
-
-        var date = moment(value, format, true);
 
         return date.isAfter(moment());
     },
