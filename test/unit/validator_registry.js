@@ -47,6 +47,8 @@ describe('ValidatorRegistry', () => {
   it('should have a type="email" validator', () => {
     expectValidation('',                    'type', 'email').to.be(true);
     expectValidation('foo',                 'type', 'email').not.to.be(true);
+    expectValidation('foo@bar.y',           'type', 'email').not.to.be(true);
+    expectValidation('foo@bar.y.zz',        'type', 'email').to.be(true);
     expectValidation('foo@bar.baz',         'type', 'email').to.be(true);
     expectValidation('foo+bar@bar.baz',     'type', 'email').to.be(true);
     expectValidation('foo.bar@bar.baz',     'type', 'email').to.be(true);
