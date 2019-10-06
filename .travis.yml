@@ -11,6 +11,8 @@ env:
   - JQUERY=3.0.0
   - JQUERY=3.1.1
 install:
+  - npm install --save-dev gulp@>=4
+  - npm install --save-dev "rollup@>=0.66.0 <2"
   - npm install
   - npm install jquery@$JQUERY
 matrix:
