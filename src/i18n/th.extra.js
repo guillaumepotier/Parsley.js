@@ -1,7 +1,7 @@
 // Validation errors messages for Parsley
 import Parsley from '../parsley';
 
-Parsley.addMessages('en', {
+Parsley.addMessages('th', {
   dateiso:  "วันที่ต้องถูกต้องตามรูปแบบ YYYY-MM-DD",
   date:     "วันที่ไม่ถูกต้องตามรูปแบบ %s",
   datebeforenow: "วันที่ต้องถูกต้องตามรูปแบบ %s และเป็นวันที่ก่อนวันปัจจุบัน",
