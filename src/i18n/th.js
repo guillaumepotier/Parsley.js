@@ -4,8 +4,8 @@ import Parsley from '../parsley';
 Parsley.addMessages('th', {
   defaultMessage: "ค่านี้ดูเหมือนว่าจะไม่ถูกต้อง",
   type: {
-    email:        "กรุณากรอกอีเมลที่ถูกต้อง",
-    url:          "กรุณากรอก url ที่ถูกต้อง",
+    email:        "กรุณากรอกอีเมลให้ถูกต้อง",
+    url:          "กรุณากรอก url ให้ถูกต้อง",
     number:       "กรุณากรอกตัวเลข",
     integer:      "กรุณากรอกจำนวนเต็ม",
     digits:       "กรุณากรอกเลขทศนิยม",
