@@ -204,7 +204,11 @@ var Utils = {
     };
   })(),
 
-  _SubmitSelector: 'input[type="submit"], button:submit'
+  _SubmitSelector: 'input[type="submit"], button:submit',
+
+  isPlainObject: function(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]';
+  }
 };
 
 export default Utils;

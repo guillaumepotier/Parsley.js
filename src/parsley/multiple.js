@@ -25,12 +25,13 @@ Multiple.prototype = {
 
       return this;
     }
+    console.log(this.$elements);
 
     // Gather all constraints for each input in the multiple group
     for (var i = 0; i < this.$elements.length; i++) {
 
       // Check if element have not been dynamically removed since last binding
-      if (!$('html').has(this.$elements[i]).length) {
+      if (!document.body.contains(this.$elements[i]).length) {
         this.$elements.splice(i, 1);
         continue;
       }

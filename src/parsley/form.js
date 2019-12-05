@@ -75,7 +75,7 @@ Form.prototype = {
   // if dependant on a promise.
   // Consider using `whenValidate` instead.
   validate: function (options) {
-    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+    if (arguments.length >= 1 && !Utils.isPlainObject(options)) {
       Utils.warnOnce('Calling validate on a parsley form without passing arguments as an object is deprecated.');
       var [group, force, event] = arguments;
       options = {group, force, event};
@@ -119,7 +119,7 @@ Form.prototype = {
   // or `null` if the result depends on an unresolved promise.
   // Prefer using `whenValid` instead.
   isValid: function (options) {
-    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+    if (arguments.length >= 1 && !Utils.isPlainObject(options)) {
       Utils.warnOnce('Calling isValid on a parsley form without passing arguments as an object is deprecated.');
       var [group, force] = arguments;
       options = {group, force};
@@ -134,7 +134,7 @@ Form.prototype = {
     this._refreshFields();
 
     var promises = this._withoutReactualizingFormOptions(() => {
-      return $.map(this.fields, field => field.whenValid({group, force}));
+      return this.fields.map(field => field.whenValid({group, force}));
     });
     return Utils.all(promises);
   },
@@ -193,10 +193,9 @@ Form.prototype = {
           }
         }
       });
-
-      $.each(Utils.difference(oldFields, this.fields), (_, field) => {
+      Utils.difference(oldFields, this.fields).forEach((field) => {
         field.reset();
-      });
+      })
     });
     return this;
   },

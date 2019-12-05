@@ -102,7 +102,7 @@ window.ParsleyUI = {
     return instance.getErrorsMessages();
   }
 };
-$.each('addError updateError'.split(' '), function (i, method) {
+'addError updateError'.split(' ').forEach(function (method) {
   window.ParsleyUI[method] = function (instance, name, message, assert, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
     Utils.warnOnce(`Accessing UI is deprecated. Call '${method}' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
@@ -113,11 +113,10 @@ $.each('addError updateError'.split(' '), function (i, method) {
 // ### PARSLEY auto-binding
 // Prevent it by setting `ParsleyConfig.autoBind` to `false`
 if (false !== window.ParsleyConfig.autoBind) {
-  $(function () {
-    // Works only on `data-parsley-validate`.
-    if ($('[data-parsley-validate]').length)
-      $('[data-parsley-validate]').parsley();
-  });
+  const parsleyValidateNodes = document.querySelectorAll('[data-parsley-validate]');
+  // Works only on `data-parsley-validate`.
+  if (parsleyValidateNodes.length)
+    $(parsleyValidateNodes).parsley();
 }
 
 export default Parsley;
