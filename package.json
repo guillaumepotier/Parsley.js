@@ -44,7 +44,7 @@
     "docco": "~0.6.3",
     "expect.js": "*",
     "glob": "^5.0.14",
-    "gulp": "~3.9.0",
+    "gulp": "~4.0.0",
     "gulp-cli": "^2.0.0",
     "gulp-eslint": "*",
     "gulp-git": "*",

@@ -3,7 +3,6 @@ import loadPlugins from 'gulp-load-plugins';
 import del  from 'del';
 import glob  from 'glob';
 import path  from 'path';
-import runSequence  from 'run-sequence';
 import docco  from 'docco';
 import {spawn} from 'child_process';
 import manifest  from './package.json';
@@ -122,9 +121,9 @@ gulp.task('release-git-push', gitPush);
 gulp.task('release-git-push-pages', gitPushPages);
 gulp.task('release-git-tag', gitTag);
 
-gulp.task('release', () => {
-  runSequence('release-git-clean', 'release-git-tag', 'release-git-push', 'release-git-push-pages', 'release-npm-publish');
-});
+gulp.task('release',
+  gulp.series('release-git-clean', 'release-git-tag', 'release-git-push', 'release-git-push-pages', 'release-npm-publish')
+);
 // Remove the built files
 gulp.task('clean', (done) => clean(destinationFolder, done));
 
@@ -137,11 +136,14 @@ gulp.task('lint-src', () => lint('src/**/*.js'));
 // Lint our test code
 gulp.task('lint-test', () => lint('test/**/*.js'));
 
-// Build two versions of the library
-gulp.task('build-src', ['lint-src', 'clean', 'build-i18n'], () => build(...defaultRollupOptions));
-
 // Build the i18n translations
-gulp.task('build-i18n', ['clean'], copyI18n);
+gulp.task('build-i18n', gulp.series('clean', copyI18n));
+
+// Build two versions of the library
+gulp.task('build-src', gulp.series(
+  gulp.parallel('lint-src', 'clean', 'build-i18n'),
+  () => build(...defaultRollupOptions)
+));
 
 // Build the annotated documentation
 gulp.task('build-doc', buildDoc);
@@ -151,13 +153,16 @@ gulp.task('build-doc-test', buildDocTest);
 
 gulp.task('write-version', writeVersion);
 
-gulp.task('build', ['build-src', 'build-i18n', 'build-doc', 'build-doc-test', 'write-version']);
+gulp.task('build', gulp.series(
+  gulp.parallel('build-src', 'build-i18n', 'build-doc', 'build-doc-test'),
+  'write-version')
+);
 
 // Lint and run our tests
-gulp.task('test', ['lint-src', 'lint-test'], test);
+gulp.task('test', gulp.series(gulp.parallel('lint-src', 'lint-test'), test));
 
 // Build for our spec runner `test/runner.html`
 gulp.task('test-browser', testBrowser);
 
 // An alias of test
-gulp.task('default', ['test']);
+gulp.task('default', gulp.series('test'));
