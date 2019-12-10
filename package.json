@@ -55,7 +55,7 @@
     "jsdom": "^9.2",
     "mocha": "*",
     "moment": "*",
-    "rollup": "~0.65.2",
+    "rollup": "*",
     "rollup-plugin-babel": "*",
     "rollup-plugin-replace": "*",
     "rollup-plugin-uglify": "*",
