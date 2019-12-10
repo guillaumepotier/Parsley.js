@@ -92,10 +92,11 @@ function testBrowser() {
   }));
 }
 
-function gitClean() {
+function gitClean(done) {
   $.git.status({args : '--porcelain'}, (err, stdout) => {
     if (err) throw err;
     if (/^ ?M/.test(stdout)) throw 'You have uncommitted changes!'
+    done();
   });
 }
 
@@ -103,16 +104,16 @@ function npmPublish(done) {
   spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', done);
 }
 
-function gitPush() {
-  $.git.push('origin', 'master', {args: '--follow-tags'}, err => { if (err) throw err });
+function gitPush(done) {
+  $.git.push('origin', 'master', {args: '--follow-tags'}, err => { if (err) throw err; done() });
 }
 
-function gitPushPages() {
-  $.git.push('origin', 'master:gh-pages', err => { if (err) throw err });
+function gitPushPages(done) {
+  $.git.push('origin', 'master:gh-pages', err => { if (err) throw err; done() });
 }
 
-function gitTag() {
-  $.git.tag(manifest.version, '', {quiet: false}, err => { if (err) throw err });
+function gitTag(done) {
+  $.git.tag(manifest.version, '', {quiet: false}, err => { if (err) throw err; done() });
 }
 
 gulp.task('release-git-clean', gitClean);
