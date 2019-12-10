@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.9.1 - built Tue, Apr 30th 2019, 1:56 am
+* Version 2.9.2 - built Tue, Dec 10th 2019, 6:18 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -14,7 +14,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery')) :
   typeof define === 'function' && define.amd ? define(['jquery'], factory) :
-  (global.parsley = factory(global.jQuery));
+  (global = global || self, global.parsley = factory(global.jQuery));
 }(this, (function ($) { 'use strict';
 
   function _typeof(obj) {
@@ -74,6 +74,10 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
+    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
+      return;
+    }
+
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -541,7 +545,7 @@
   };
 
   var typeTesters = {
-    email: /^((([a-zA-Z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-zA-Z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/,
+    email: /^((([a-zA-Z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-zA-Z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-zA-Z]|\d|-|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-zA-Z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))$/,
     // Follow https://www.w3.org/TR/html5/infrastructure.html#floating-point-numbers
     number: /^-?(\d*\.)?\d+(e[-+]?\d+)?$/i,
     integer: /^-?\d+$/,
@@ -1042,10 +1046,15 @@
           this._insertErrorWrapper();
 
           if (0 === this._ui.$errorsWrapper.find('.parsley-custom-error-message').length) this._ui.$errorsWrapper.append($(this.options.errorTemplate).addClass('parsley-custom-error-message'));
-          return this._ui.$errorsWrapper.addClass('filled').find('.parsley-custom-error-message').html(this.options.errorMessage);
+
+          this._ui.$errorClassHandler.attr('aria-describedby', this._ui.errorsWrapperId);
+
+          return this._ui.$errorsWrapper.addClass('filled').attr('aria-hidden', 'false').find('.parsley-custom-error-message').html(this.options.errorMessage);
         }
 
-        return this._ui.$errorsWrapper.removeClass('filled').find('.parsley-custom-error-message').remove();
+        this._ui.$errorClassHandler.removeAttr('aria-describedby');
+
+        return this._ui.$errorsWrapper.removeClass('filled').attr('aria-hidden', 'true').find('.parsley-custom-error-message').remove();
       } // Show, hide, update failing constraints messages
 
 
@@ -1075,7 +1084,7 @@
 
       this._ui.$errorClassHandler.attr('aria-describedby', this._ui.errorsWrapperId);
 
-      this._ui.$errorsWrapper.addClass('filled').append($(this.options.errorTemplate).addClass('parsley-' + name).html(message || this._getErrorMessage(assert)));
+      this._ui.$errorsWrapper.addClass('filled').attr('aria-hidden', 'false').append($(this.options.errorTemplate).addClass('parsley-' + name).html(message || this._getErrorMessage(assert)));
     },
     _updateError: function _updateError(name, _ref5) {
       var message = _ref5.message,
@@ -1086,7 +1095,7 @@
     _removeError: function _removeError(name) {
       this._ui.$errorClassHandler.removeAttr('aria-describedby');
 
-      this._ui.$errorsWrapper.removeClass('filled').find('.parsley-' + name).remove();
+      this._ui.$errorsWrapper.removeClass('filled').attr('aria-hidden', 'true').find('.parsley-' + name).remove();
     },
     _getErrorMessage: function _getErrorMessage(constraint) {
       var customConstraintErrorMessage = constraint.name + 'Message';
@@ -1977,7 +1986,7 @@
   Factory.prototype = {
     init: function init(options) {
       this.__class__ = 'Parsley';
-      this.__version__ = '2.9.1';
+      this.__version__ = '2.9.2';
       this.__id__ = Utils.generateID(); // Pre-compute options
 
       this._resetOptions(options); // A Form instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
@@ -2095,7 +2104,7 @@
     actualizeOptions: null,
     _resetOptions: null,
     Factory: Factory,
-    version: '2.9.1'
+    version: '2.9.2'
   }); // Supplement Field and Form with Base
   // This way, the constructors will have access to those methods
 
@@ -2437,9 +2446,8 @@
         }
 
         globals.inputEventPatched = '0.0.3';
-        var _arr = ['select', 'input[type="checkbox"]', 'input[type="radio"]', 'input[type="file"]'];
 
-        for (var _i = 0; _i < _arr.length; _i++) {
+        for (var _i = 0, _arr = ['select', 'input[type="checkbox"]', 'input[type="radio"]', 'input[type="file"]']; _i < _arr.length; _i++) {
           var selector = _arr[_i];
           $(document).on('input.inputevent', selector, {
             selector: selector

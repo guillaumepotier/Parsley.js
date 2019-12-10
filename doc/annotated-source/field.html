@@ -657,7 +657,7 @@ and combine the promises together.</p>
   * @param {Number}   priority          optional
   * @param {Boolean}  isDomConstraint   optional
   */</span>
-  addConstraint: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, requirements, priority, isDomConstraint</span>) </span>{
+  <span class="hljs-attr">addConstraint</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, requirements, priority, isDomConstraint</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.Parsley._validatorRegistry.validators[name]) {
       <span class="hljs-keyword">var</span> constraint = <span class="hljs-keyword">new</span> Constraint(<span class="hljs-keyword">this</span>, name, requirements, priority, isDomConstraint);</pre></div></div>
