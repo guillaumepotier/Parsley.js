@@ -35,7 +35,7 @@ Multiple.prototype = {
         continue;
       }
 
-      fieldConstraints = this.$elements[i].data('FieldMultiple')._refreshConstraints().constraints;
+      fieldConstraints = Utils.getData(this.$elements[i][0],'FieldMultiple')._refreshConstraints().constraints;
 
       for (var j = 0; j < fieldConstraints.length; j++)
         this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);

@@ -10,7 +10,7 @@ var Factory = function (element, options, parsleyFormInstance) {
   this.$element = $(element);
 
   // If the element has already been bound, returns its saved Parsley instance
-  var savedparsleyFormInstance = this.$element.data('Parsley');
+  var savedparsleyFormInstance = Utils.getData(this.element, 'Parsley');
   if (savedparsleyFormInstance) {
 
     // If the saved instance has been bound without a Form parent and there is one given in this call, add it
@@ -99,10 +99,10 @@ Factory.prototype = {
     // Check here if we don't already have a related multiple instance saved
     var $previouslyRelated = this._findRelated();
     for (var i = 0; i < $previouslyRelated.length; i++) {
-      parsleyMultipleInstance = $($previouslyRelated.get(i)).data('Parsley');
+      parsleyMultipleInstance = Utils.getData($previouslyRelated.get(i), 'Parsley');
       if ('undefined' !== typeof parsleyMultipleInstance) {
 
-        if (!this.$element.data('FieldMultiple')) {
+        if (!Utils.getData(this.element, 'FieldMultiple')) {
           parsleyMultipleInstance.addElement(this.$element);
         }
 
@@ -159,13 +159,13 @@ Factory.prototype = {
       Utils.setAttr(this.element, this.options.namespace, 'multiple', this.options.multiple);
 
     if ('undefined' !== typeof doNotStore) {
-      this.$element.data('FieldMultiple', parsleyInstance);
+      Utils.setData(this.element, 'FieldMultiple', parsleyInstance);
 
       return parsleyInstance;
     }
 
     // Store the freshly bound instance in a DOM element for later access using jQuery `data()`
-    this.$element.data('Parsley', parsleyInstance);
+    Utils.setData(this.element, 'Parsley', parsleyInstance);
 
     // Tell the world we have a new Form or Field instance!
     parsleyInstance._actualizeTriggers();

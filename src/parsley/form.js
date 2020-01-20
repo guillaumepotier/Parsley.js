@@ -162,7 +162,7 @@ Form.prototype = {
     for (var i = 0; i < this.fields.length; i++)
       this.fields[i].destroy();
 
-    this.$element.removeData('Parsley');
+    Utils.removeData(this.element, 'Parsley');
     this._trigger('destroy');
   },
 

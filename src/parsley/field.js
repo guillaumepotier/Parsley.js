@@ -196,8 +196,8 @@ Field.prototype = {
   destroy: function () {
     // Field case: emit destroy event to clean UI and then destroy stored instance
     this._destroyUI();
-    this.$element.removeData('Parsley');
-    this.$element.removeData('FieldMultiple');
+    Utils.removeData(this.element, 'Parsley');
+    Utils.removeData(this.element, 'FieldMultiple');
     this._trigger('destroy');
   },
 

@@ -208,6 +208,20 @@ var Utils = {
 
   isPlainObject: function(obj) {
     return Object.prototype.toString.call(obj) === '[object Object]';
+  },
+
+  setData: function(DomElement, name, data) {
+    DomElement.parsleyData = DomElement.parsleyData || {};
+    DomElement.parsleyData[name] = data;
+  },
+
+  getData: function(DomElement, name) {
+    DomElement.parsleyData = DomElement.parsleyData || {};
+    return DomElement.parsleyData[name];
+  },
+
+  removeData: function(DomElement, name) {
+    delete DomElement.parsleyData[name];
   }
 };
 
