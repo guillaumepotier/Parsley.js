@@ -115,10 +115,12 @@ window.ParsleyUI = {
 // ### PARSLEY auto-binding
 // Prevent it by setting `ParsleyConfig.autoBind` to `false`
 if (false !== window.ParsleyConfig.autoBind) {
-  const parsleyValidateNodes = document.querySelectorAll('[data-parsley-validate]');
-  // Works only on `data-parsley-validate`.
-  if (parsleyValidateNodes.length)
-    $(parsleyValidateNodes).parsley();
+  $(function () {
+    const parsleyValidateNodes = document.querySelectorAll('[data-parsley-validate]');
+    // Works only on `data-parsley-validate`.
+    if (parsleyValidateNodes.length)
+      $(parsleyValidateNodes).parsley();
+  });
 }
 
 export default Parsley;
