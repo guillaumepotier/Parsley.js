@@ -47,7 +47,9 @@ Factory.prototype = {
     this._resetOptions(options);
 
     // A Form instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
-    if (this.element.nodeName === 'FORM' || (Utils.checkAttr(this.element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
+    if (this.element.nodeName === 'FORM'
+      || (Utils.checkAttr(this.element, this.options.namespace, 'validate')
+        && !this.options.inputs.split(',').some(input => input.trim() === this.element.tagName.toLowerCase())))
       return this.bind('parsleyForm');
 
     // Every other element is bound as a `Field` or `FieldMultiple`

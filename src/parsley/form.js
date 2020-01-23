@@ -26,7 +26,9 @@ Form.prototype = {
     // If we didn't come here through a submit button, use the first one in the form
     var submitSource = this._submitSource || this.$element.find(Utils._SubmitSelector)[0];
     this._submitSource = null;
-    this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
+    var submitButtons = this.element.querySelectorAll('.parsley-synthetic-submit-button');
+    [...submitButtons].forEach(btn => btn.disabled = true);
+
     if (submitSource && null !== submitSource.getAttribute('formnovalidate'))
       return;
 
