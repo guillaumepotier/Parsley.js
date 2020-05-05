@@ -1,4 +1,4 @@
-import gulp  from 'gulp';
+import {src, dest, series, parallel}  from 'gulp';
 import loadPlugins from 'gulp-load-plugins';
 import del  from 'del';
 import glob  from 'glob';
@@ -20,150 +20,147 @@ const mainFile = manifest.main;
 const destinationFolder = path.dirname(mainFile);
 const exportFileName = path.basename(mainFile, path.extname(mainFile));
 
-// Remove a directory
-function clean(dir, done) {
-  del([dir], done);
-}
-
 // Lint a set of files
 function lint(files) {
-  return gulp.src(files)
+  return src(files)
     .pipe($.eslint())
     .pipe($.eslint.format())
     .pipe($.eslint.failOnError());
 }
 
-async function build(...rules) {
+async function buildRollup(...rules) {
   rules.forEach(async opt => {
     const bundle = await rollup(opt);
     await bundle.write(opt.output);
   });
 }
 
-function buildDoc(done) {
+// Build the annotated documentation
+export function buildDoc(done) {
   var dest = 'doc/annotated-source/';
   var sources = glob.sync('src/parsley/*.js');
-  del.sync([dest + '*']);
-  docco.document({
+  var doccoOpts = {
     layout: 'parallel',
     output: dest,
     args: sources
-  }, function() {
-      gulp.src(dest + '*.html', { base: "./" })
+  };
+
+  // This pattern usually isn't recommended but this would need a lot more refactoring otherwise
+  series(
+    () => del(dest + '*'),
+    (cb) = docco.document(doccoOpts, cb),
+    () => src(dest + '*.html', { base: "./" })
       .pipe($.replace('<div id="jump_page">', '<div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>'))
       .pipe($.replace('</body>', '<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>'))
-      .pipe(gulp.dest('.'))
-      .on('end', done);
-  });
+      .pipe(dest('.'))
+  )(done)
 }
+buildDoc.displayName = 'build-doc';
 
-function copyI18n(done) {
-  gulp.src(['src/i18n/*.js'])
+function copyI18n() {
+  return src(['src/i18n/*.js'])
     .pipe($.replace("import Parsley from '../parsley';", "// Load this after Parsley"))  // Quick hack
     .pipe($.replace("import Parsley from '../parsley/main';", ""))  // en uses special import
-    .pipe(gulp.dest('dist/i18n/'))
-    .on('end', done);
+    .pipe(dest('dist/i18n/'))
 }
 
-function writeVersion() {
-  return gulp.src(['index.html', 'doc/download.html', 'README.md'], { base: "./" })
+export function writeVersion() {
+  return src(['index.html', 'doc/download.html', 'README.md'], { base: "./" })
     .pipe($.replace(/class="parsley-version">[^<]*</, `class="parsley-version">v${manifest.version}<`))
     .pipe($.replace(/releases\/tag\/[^"]*/, `releases/tag/${manifest.version}`))
     .pipe($.replace(/## Version\n\n\S+\n\n/, `## Version\n\n${manifest.version}\n\n`))
-    .pipe(gulp.dest('.'))
+    .pipe(dest('.'))
 }
+writeVersion.displayName = 'write-version';
 
-function buildDocTest() {
+// Build the annotated documentation
+export function buildDocTest() {
   return build(rollupOptions({
     input: 'test/setup/browser.js',
     file: './doc/assets/spec-build.js',
   }));
 }
+buildDocTest.displayName = 'build-doc-test';
 
-function test() {
-  return gulp.src(['test/setup/node.js', 'test/unit/index.js'], {read: false})
+function runTests() {
+  return src(['test/setup/node.js', 'test/unit/index.js'], {read: false})
     .pipe($.mocha({reporter: 'dot', globals: mocha.globals, require: ['@babel/register']}));
 }
+runTests.displayName = 'test';
 
-function testBrowser() {
-  build(rollupOptions({
+// Build for our spec runner `test/runner.html`
+export function testBrowser() {
+  buildRollup(rollupOptions({
     input: 'test/setup/browser.js',
     file: './tmp/__spec-build.js',
   }));
 }
+testBrowser.displayName = 'test-browser';
 
-function gitClean(done) {
+export function gitClean(done) {
   $.git.status({args : '--porcelain'}, (err, stdout) => {
     if (err) throw err;
     if (/^ ?M/.test(stdout)) throw 'You have uncommitted changes!'
     done();
   });
 }
+gitClean.displayName = 'release-git-clean';
 
-function npmPublish(done) {
-  spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', done);
+export function npmPublish() {
+  return spawn('npm', ['publish'], { stdio: 'inherit' });
 }
+npmPublish.displayName = 'release-npm-publish';
 
-function gitPush(done) {
-  $.git.push('origin', 'master', {args: '--follow-tags'}, err => { if (err) throw err; done() });
+export function gitPush() {
+  return $.git.push('origin', 'master', {args: '--follow-tags'});
 }
+gitPush.displayName = 'release-git-push';
 
-function gitPushPages(done) {
-  $.git.push('origin', 'master:gh-pages', err => { if (err) throw err; done() });
+export function gitPushPages() {
+  return $.git.push('origin', 'master:gh-pages');
 }
+gitPushPages.displayName = 'release-git-push-pages';
 
-function gitTag(done) {
-  $.git.tag(manifest.version, '', {quiet: false}, err => { if (err) throw err; done() });
+export function gitTag() {
+  return $.git.tag(manifest.version, '', {quiet: false});
 }
+gitTag.displayName = 'release-git-tag';
 
-gulp.task('release-git-clean', gitClean);
-gulp.task('release-npm-publish', npmPublish);
-gulp.task('release-git-push', gitPush);
-gulp.task('release-git-push-pages', gitPushPages);
-gulp.task('release-git-tag', gitTag);
+export const release = series(gitClean, gitTag, gitPush, gitPushPages, npmPublish);
 
-gulp.task('release',
-  gulp.series('release-git-clean', 'release-git-tag', 'release-git-push', 'release-git-push-pages', 'release-npm-publish')
-);
 // Remove the built files
-gulp.task('clean', (done) => clean(destinationFolder, done));
+export const clean = () => del(destinationFolder);
 
 // Remove our temporary files
-gulp.task('clean-tmp', (done) => clean('tmp', done));
+export const cleanTmp = () => del('tmp');
+cleanTmp.displayName = 'clean-tmp';
 
 // Lint our source code
-gulp.task('lint-src', () => lint('src/**/*.js'));
+export const lintSrc = () => lint('src/**/*.js');
+lintSrc.displayName = 'lint-src';
 
 // Lint our test code
-gulp.task('lint-test', () => lint('test/**/*.js'));
+export const lintTest = () => lint('test/**/*.js');
+lintTest.displayName = 'lint-test';
 
 // Build the i18n translations
-gulp.task('build-i18n', gulp.series('clean', copyI18n));
+export const buildI18n = series(clean, copyI18n);
+buildI18n.displayName = 'build-i18n';
 
 // Build two versions of the library
-gulp.task('build-src', gulp.series(
-  gulp.parallel('lint-src', 'clean', 'build-i18n'),
-  () => build(...defaultRollupOptions)
-));
+export const buildSrc = series(
+  parallel(lintSrc, clean, buildI18n),
+  () => buildRollup(...defaultRollupOptions)
+);
+buildSrc.displayName = 'build-src';
 
-// Build the annotated documentation
-gulp.task('build-doc', buildDoc);
-
-// Build the annotated documentation
-gulp.task('build-doc-test', buildDocTest);
-
-gulp.task('write-version', writeVersion);
-
-gulp.task('build', gulp.series(
-  gulp.parallel('build-src', 'build-i18n', 'build-doc', 'build-doc-test'),
-  'write-version')
+export const build = series(
+  parallel(buildSrc, buildI18n, buildDoc, buildDocTest),
+  writeVersion
 );
 
 // Lint and run our tests
-gulp.task('test', gulp.series(gulp.parallel('lint-src', 'lint-test'), test));
-
-// Build for our spec runner `test/runner.html`
-gulp.task('test-browser', testBrowser);
+export const test = series(parallel(lintSrc, lintTest), runTests);
 
 // An alias of test
-gulp.task('default', gulp.series('test'));
+export default test;
