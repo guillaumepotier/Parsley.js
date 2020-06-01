@@ -1210,7 +1210,6 @@ window.Parsley
         <p>If you need some custom processing of Ajax responses, configure your custom remote as follows:
 <pre><code>&lt;input name="q" type="text" data-parsley-remote data-parsley-remote-validator='mycustom' value="foo" /&gt;
 [...]
-&lt;script href="parsley.remote.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 window.Parsley.addAsyncValidator('mycustom', function (xhr) {
     console.log(this.$element); // jQuery Object[ input[name="q"] ]
