@@ -4,11 +4,11 @@ import Parsley from '../parsley';
 Parsley.addMessages('ko', {
   defaultMessage: "입력하신 내용이 올바르지 않습니다.",
   type: {
-    email:        "입력하신 이메일이 유효하지 않습니다.",
-    url:          "입력하신 URL이 유효하지 않습니다.",
-    number:       "입력하신 전화번호가 올바르지 않습니다.",
-    integer:      "입력하신 정수가 유효하지 않습니다.",
-    digits:       "숫자를 입력하여 주십시오.",
+    email:        "이메일을 입력해야 합니다.",
+    url:          "URL을 입력해야 합니다.",
+    number:       "숫자를 입력해야 합니다.",
+    integer:      "정수를 입력해야 합니다.",
+    digits:       "입력하신 내용은 숫자의 조합이여야 합니다.",
     alphanum:     "입력하신 내용은 알파벳과 숫자의 조합이어야 합니다."
   },
   notblank:       "공백은 입력하실 수 없습니다.",
