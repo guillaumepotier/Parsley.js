@@ -78,7 +78,7 @@ Parsley.addValidator('remote', {
 
     csr = $.param(ajaxOptions);
 
-    // Initialise querry cache
+    // Initialise query cache
     if ('undefined' === typeof Parsley._remoteCache)
       Parsley._remoteCache = {};
 
