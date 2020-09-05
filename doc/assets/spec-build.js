@@ -2411,7 +2411,7 @@
       }, remoteOptions); // Generate store key based on ajax options
 
       instance.trigger('field:ajaxoptions', instance, ajaxOptions);
-      csr = $.param(ajaxOptions); // Initialise querry cache
+      csr = $.param(ajaxOptions); // Initialise query cache
 
       if ('undefined' === typeof Parsley._remoteCache) Parsley._remoteCache = {}; // Try to retrieve stored xhr
 
