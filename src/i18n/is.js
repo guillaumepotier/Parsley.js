@@ -2,28 +2,28 @@
 import Parsley from '../parsley';
 
 Parsley.addMessages('is', {
-  defaultMessage: "Gildið virðist vera ógilt.",
+  defaultMessage: "Þessi reitur virðist vera ógildur.",
   type: {
-    email:        "Þetta gildi ætti að vera gilt netfang.",
-    url:          "Þetta gildi ætti að vera gild vefslóð.",
-    number:       "Þetta gildi ætti að vera gild tala.",
-    integer:      "Þetta gildi ætti að vera gild heiltala.",
-    digits:       "Þetta gildi ætti að vera tölur.",
-    alphanum:     "Þetta gildi ætti að vera ritstafrænt"
+    email:        "Þessi reitur ætti að vera gilt netfang.",
+    url:          "Þessi reitur ætti að vera gild vefslóð.",
+    number:       "Þessi reitur ætti að vera gild tala.",
+    integer:      "Þessi reitur ætti að vera gild heiltala.",
+    digits:       "Þessi reitur má aðeins innihalda tölur.",
+    alphanum:     "Þessi reitur má aðeins innihalda tölur og bókstafi"
   },
-  notblank:       "Þetta gildi ætti ekki að vera tómt.",
-  required:       "Þessa gildis er krafist.",
-  pattern:        "Gildið virðist vera ógilt.",
-  min:            "Þetta gildi ætti að vera stærra en eða jafnt og %s.",
-  max:            "Þetta gildi ætti að vera minna en eða jafnt og %s.",
-  range:          "Þetta gildi ætti að vera á milli %s og %s.",
-  minlength:      "Þetta gildi er of stutt. Það ætti að vera %s stafir eða meira.",
-  maxlength:      "Þetta gildi er of langt. Það ætti að vera %s stafir eða færri.",
-  length:         "Lengd þessa gildis er ógild. Hún ætti að vera á milli %s og %s stafa löng.",
+  notblank:       "Þessi reitur ætti ekki að vera tómur.",
+  required:       "Þennan reit þarf að fylla út.",
+  pattern:        "Þessi reitur virðist vera ógildur.",
+  min:            "Þessi reitur ætti að vera minnst %s stafir.",
+  max:            "Þessi reitur ætti að vera mest %s stafir.",
+  range:          "Þessi reitur ætti að vera á milli %s og %s stafir.",
+  minlength:      "Þessi reitur ætti að vera %s stafir eða meira.",
+  maxlength:      "Þessi reitur ætti að vera %s stafir eða færri.",
+  length:         "Þessi reitur ætti að vera á milli %s og %s stafa langur.",
   mincheck:       "Þú þarft að velja að minnsta kosti %s valkosti.",
   maxcheck:       "Þú þarft að velja %s valkosti eða færri.",
   check:          "Þú þarft að velja á milli %s og %s valkosti.",
-  equalto:        "Þetta gildi ætti að vera eins."
+  equalto:        "Þessir reitir ættu að vera eins."
 });
 
 Parsley.setLocale('is');
