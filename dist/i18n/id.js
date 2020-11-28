@@ -23,7 +23,7 @@ Parsley.addMessages('id', {
   mincheck:       "Pilih minimal %s pilihan",
   maxcheck:       "Pilih maksimal %s pilihan",
   check:          "Pilih antar %s dan %s pilihan",
-  equalto:        "Konfirmasi password harus sama"
+  equalto:        "Input harus sama"
 });
 
 Parsley.setLocale('id');
