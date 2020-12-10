@@ -8,14 +8,20 @@ var Base = function () {
 Base.prototype = {
   asyncSupport: true, // Deprecated
 
-  _pipeAccordingToValidationResult: function () {
-    var pipe = () => {
-      var r = $.Deferred();
-      if (true !== this.validationResult)
-        r.reject();
-      return r.resolve().promise();
-    };
-    return [pipe, pipe];
+  _pipeAccordingToValidationResult: function (deferred) {
+    return $.Deferred((newDefer) => {
+      const handle = () => {
+        var r = true === this.validationResult ?
+          $.Deferred().resolve():
+          $.Deferred().reject();
+        r.promise()
+          .progress(newDefer.notify)
+          .done(newDefer.resolve)
+          .fail(newDefer.reject)
+      }
+      deferred.done(handle)
+      deferred.fail(handle)
+    })
   },
 
   actualizeOptions: function () {
