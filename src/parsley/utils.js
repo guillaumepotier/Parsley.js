@@ -174,7 +174,7 @@ var Utils = {
   difference: function(array, remove) {
     // This is O(N^2), should be optimized
     let result = [];
-    $.each(array, (_, elem) => {
+    array.forEach((elem) => {
       if (remove.indexOf(elem) == -1)
         result.push(elem);
     });
@@ -204,7 +204,25 @@ var Utils = {
     };
   })(),
 
-  _SubmitSelector: 'input[type="submit"], button:submit'
+  _SubmitSelector: 'input[type="submit"], button:submit',
+
+  isPlainObject: function(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]';
+  },
+
+  setData: function(DomElement, name, data) {
+    DomElement.parsleyData = DomElement.parsleyData || {};
+    DomElement.parsleyData[name] = data;
+  },
+
+  getData: function(DomElement, name) {
+    DomElement.parsleyData = DomElement.parsleyData || {};
+    return DomElement.parsleyData[name];
+  },
+
+  removeData: function(DomElement, name) {
+    delete DomElement.parsleyData[name];
+  }
 };
 
 export default Utils;

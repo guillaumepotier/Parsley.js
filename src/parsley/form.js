@@ -26,7 +26,9 @@ Form.prototype = {
     // If we didn't come here through a submit button, use the first one in the form
     var submitSource = this._submitSource || this.$element.find(Utils._SubmitSelector)[0];
     this._submitSource = null;
-    this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
+    var submitButtons = this.element.querySelectorAll('.parsley-synthetic-submit-button');
+    [...submitButtons].forEach(btn => btn.disabled = true);
+
     if (submitSource && null !== submitSource.getAttribute('formnovalidate'))
       return;
 
@@ -75,7 +77,7 @@ Form.prototype = {
   // if dependant on a promise.
   // Consider using `whenValidate` instead.
   validate: function (options) {
-    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+    if (arguments.length >= 1 && !Utils.isPlainObject(options)) {
       Utils.warnOnce('Calling validate on a parsley form without passing arguments as an object is deprecated.');
       var [group, force, event] = arguments;
       options = {group, force, event};
@@ -119,7 +121,7 @@ Form.prototype = {
   // or `null` if the result depends on an unresolved promise.
   // Prefer using `whenValid` instead.
   isValid: function (options) {
-    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+    if (arguments.length >= 1 && !Utils.isPlainObject(options)) {
       Utils.warnOnce('Calling isValid on a parsley form without passing arguments as an object is deprecated.');
       var [group, force] = arguments;
       options = {group, force};
@@ -134,7 +136,7 @@ Form.prototype = {
     this._refreshFields();
 
     var promises = this._withoutReactualizingFormOptions(() => {
-      return $.map(this.fields, field => field.whenValid({group, force}));
+      return this.fields.map(field => field.whenValid({group, force}));
     });
     return Utils.all(promises);
   },
@@ -162,7 +164,7 @@ Form.prototype = {
     for (var i = 0; i < this.fields.length; i++)
       this.fields[i].destroy();
 
-    this.$element.removeData('Parsley');
+    Utils.removeData(this.element, 'Parsley');
     this._trigger('destroy');
   },
 
@@ -193,10 +195,9 @@ Form.prototype = {
           }
         }
       });
-
-      $.each(Utils.difference(oldFields, this.fields), (_, field) => {
+      Utils.difference(oldFields, this.fields).forEach((field) => {
         field.reset();
-      });
+      })
     });
     return this;
   },

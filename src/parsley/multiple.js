@@ -30,12 +30,12 @@ Multiple.prototype = {
     for (var i = 0; i < this.$elements.length; i++) {
 
       // Check if element have not been dynamically removed since last binding
-      if (!$('html').has(this.$elements[i]).length) {
+      if (!document.body.contains(this.$elements[i][0])) {
         this.$elements.splice(i, 1);
         continue;
       }
 
-      fieldConstraints = this.$elements[i].data('FieldMultiple')._refreshConstraints().constraints;
+      fieldConstraints = Utils.getData(this.$elements[i][0],'FieldMultiple')._refreshConstraints().constraints;
 
       for (var j = 0; j < fieldConstraints.length; j++)
         this.addConstraint(fieldConstraints[j].name, fieldConstraints[j].requirements, fieldConstraints[j].priority, fieldConstraints[j].isDomConstraint);
