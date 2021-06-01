@@ -2,7 +2,7 @@ import $ from 'jquery';
 import Validator from '../../src/parsley/validator';
 import ValidatorRegistry from '../../src/parsley/validator_registry';
 import Parsley from '../../src/parsley';
-import fr from '../../src/i18n/fr';
+import '../../src/i18n/fr';
 
 describe('ValidatorRegistry', () => {
   var validatorRegistry = Parsley._validatorRegistry;
@@ -47,6 +47,8 @@ describe('ValidatorRegistry', () => {
   it('should have a type="email" validator', () => {
     expectValidation('',                    'type', 'email').to.be(true);
     expectValidation('foo',                 'type', 'email').not.to.be(true);
+    expectValidation('foo@bar.y',           'type', 'email').not.to.be(true);
+    expectValidation('foo@bar.y.zz',        'type', 'email').to.be(true);
     expectValidation('foo@bar.baz',         'type', 'email').to.be(true);
     expectValidation('foo+bar@bar.baz',     'type', 'email').to.be(true);
     expectValidation('foo.bar@bar.baz',     'type', 'email').to.be(true);
@@ -63,6 +65,7 @@ describe('ValidatorRegistry', () => {
   });
   it('should have a min validator', () => {
     expectValidation('',    'min',6).to.be(true);
+    expectValidation('0',   'min',6).not.to.be(true);
     expectValidation('foo', 'min',6).not.to.be(true);
     expectValidation('1',   'min',6).not.to.be(true);
     expectValidation('6',   'min',6).to.be(true);
@@ -72,6 +75,7 @@ describe('ValidatorRegistry', () => {
   });
   it('should have a max validator', () => {
     expectValidation('',    'max', 10).to.be(true);
+    expectValidation('0',   'max', -3).not.to.be(true);
     expectValidation('foo', 'max', 10).not.to.be(true);
     expectValidation('1',   'max', 10).to.be(true);
     expectValidation('1',   'max', '10').to.be(true);
@@ -190,6 +194,14 @@ describe('ValidatorRegistry', () => {
     $('#element').val('foo');
     expect($('#element').psly().isValid()).to.be(true);
     $('#equalto').remove();
+  });
+  it('should have a euvatin validator', () => {
+    expectValidation('foo', 'euvatin').not.to.be(true);
+    expectValidation('AA1',   'euvatin').not.to.be(true);
+    expectValidation('AA12',   'euvatin').to.be(true);
+    expectValidation('AA12-34',  'euvatin').to.be(true);
+    expectValidation('AA12 3X',  'euvatin').to.be(true);
+    expectValidation('AA12.3X',  'euvatin').not.to.be(true);
   });
   it('should handle proper error message for validators', () => {
     expect(validatorRegistry.getErrorMessage({name: 'length', requirements: [3, 6]})).to.be('This value length is invalid. It should be between 3 and 6 characters long.');

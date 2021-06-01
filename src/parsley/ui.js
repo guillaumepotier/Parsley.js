@@ -170,14 +170,20 @@ UI.Field = {
               .addClass('parsley-custom-error-message')
             );
 
+        this._ui.$errorClassHandler.attr('aria-describedby', this._ui.errorsWrapperId);
+
         return this._ui.$errorsWrapper
           .addClass('filled')
+          .attr('aria-hidden', 'false')
           .find('.parsley-custom-error-message')
           .html(this.options.errorMessage);
       }
 
+      this._ui.$errorClassHandler.removeAttr('aria-describedby');
+
       return this._ui.$errorsWrapper
         .removeClass('filled')
+        .attr('aria-hidden', 'true')
         .find('.parsley-custom-error-message')
         .remove();
     }
@@ -200,6 +206,7 @@ UI.Field = {
       .attr('aria-describedby', this._ui.errorsWrapperId);
     this._ui.$errorsWrapper
       .addClass('filled')
+      .attr('aria-hidden', 'false')
       .append(
         $(this.options.errorTemplate)
         .addClass('parsley-' + name)
@@ -219,6 +226,7 @@ UI.Field = {
       .removeAttr('aria-describedby');
     this._ui.$errorsWrapper
       .removeClass('filled')
+      .attr('aria-hidden', 'true')
       .find('.parsley-' + name)
       .remove();
   },

@@ -34,7 +34,7 @@ Field.prototype = {
   // @returns `true`, an array of the validators that failed, or
   // `null` if validation is not finished. Prefer using whenValidate
   validate: function (options) {
-    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+    if (arguments.length >= 1 && !Utils.isPlainObject(options)) {
       Utils.warnOnce('Calling validate on a parsley field without passing arguments as an object is deprecated.');
       options = {options};
     }
@@ -89,7 +89,7 @@ Field.prototype = {
 
   _isInGroup: function (group) {
     if (Array.isArray(this.options.group))
-      return -1 !== $.inArray(group, this.options.group);
+      return -1 !== this.options.group.indexOf(group);
     return this.options.group === group;
   },
 
@@ -98,7 +98,7 @@ Field.prototype = {
   // or `null` if the result can not be determined yet (depends on a promise)
   // See also `whenValid`.
   isValid: function (options) {
-    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+    if (arguments.length >= 1 && !Utils.isPlainObject(options)) {
       Utils.warnOnce('Calling isValid on a parsley field without passing arguments as an object is deprecated.');
       var [force, value] = arguments;
       options = {force, value};
@@ -141,7 +141,7 @@ Field.prototype = {
       // Process one group of constraints at a time, we validate the constraints
       // and combine the promises together.
       var promise = Utils.all(
-        $.map(constraints, constraint => this._validateConstraint(value, constraint))
+        constraints.map(constraint => this._validateConstraint(value, constraint))
       );
       promises.push(promise);
       if (promise.state() === 'rejected')
@@ -196,8 +196,8 @@ Field.prototype = {
   destroy: function () {
     // Field case: emit destroy event to clean UI and then destroy stored instance
     this._destroyUI();
-    this.$element.removeData('Parsley');
-    this.$element.removeData('FieldMultiple');
+    Utils.removeData(this.element, 'Parsley');
+    Utils.removeData(this.element, 'FieldMultiple');
     this._trigger('destroy');
   },
 

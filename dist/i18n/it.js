@@ -23,7 +23,8 @@ Parsley.addMessages('it', {
   mincheck:       "Devi scegliere almeno %s opzioni.",
   maxcheck:       "Devi scegliere al più %s opzioni.",
   check:          "Devi scegliere tra %s e %s opzioni.",
-  equalto:        "Questo valore deve essere identico."
+  equalto:        "Questo valore deve essere identico.",
+  euvatin:        "Non è un codice IVA valido",
 });
 
 Parsley.setLocale('it');

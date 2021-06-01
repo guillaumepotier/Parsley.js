@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import Parsley from '../../src/parsley';
+import Utils from '../../src/parsley/utils';
 
 describe('Base', () => {
   it('should provide a actualizeOptions() method', () => {
@@ -48,10 +49,10 @@ describe('Base', () => {
       done();
     });
 
-    expect($('#element').data('Parsley')).to.have.key('__class__');
-    expect($('#element').data('Parsley').__class__).to.be('Field');
+    expect(Utils.getData($('#element')[0], 'Parsley')).to.have.key('__class__');
+    expect(Utils.getData($('#element')[0], 'Parsley').__class__).to.be('Field');
     parsleyField.destroy();
-    expect($('#element').data('Parsley')).to.be(undefined);
+    expect(Utils.getData($('#element')[0], 'Parsley')).to.be(undefined);
   });
   it('should use destroy() on form', done => {
     var triggered = 0;
@@ -76,10 +77,10 @@ describe('Base', () => {
       formEventsCount++;
     });
 
-    expect($('#element').data('Parsley')).to.have.key('__class__');
-    expect($('#element').data('Parsley').__class__).to.be('Form');
-    expect($('#field1').data('Parsley')).to.have.key('__class__');
-    expect($('#field1').data('Parsley').__class__).to.be('Field');
+    expect(Utils.getData($('#element')[0], 'Parsley')).to.have.key('__class__');
+    expect(Utils.getData($('#element')[0], 'Parsley').__class__).to.be('Form');
+    expect(Utils.getData($('#field1')[0], 'Parsley')).to.have.key('__class__');
+    expect(Utils.getData($('#field1')[0], 'Parsley').__class__).to.be('Field');
 
     parsleyForm.destroy();
 
@@ -95,8 +96,8 @@ describe('Base', () => {
     $('#element').on('submit', e => {
       e.preventDefault();
 
-      expect($('#element').data('Parsley')).to.be(undefined);
-      expect($('#field1').data('Parsley')).to.be(undefined);
+      expect(Utils.getData($('#element')[0], 'Parsley')).to.be(undefined);
+      expect(Utils.getData($('#field1')[0], 'Parsley')).to.be(undefined);
       Parsley.off('form:validate');
       done();
     });

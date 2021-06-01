@@ -477,14 +477,20 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
               .addClass(<span class="hljs-string">'parsley-custom-error-message'</span>)
             );
 
+        <span class="hljs-keyword">this</span>._ui.$errorClassHandler.attr(<span class="hljs-string">'aria-describedby'</span>, <span class="hljs-keyword">this</span>._ui.errorsWrapperId);
+
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._ui.$errorsWrapper
           .addClass(<span class="hljs-string">'filled'</span>)
+          .attr(<span class="hljs-string">'aria-hidden'</span>, <span class="hljs-string">'false'</span>)
           .find(<span class="hljs-string">'.parsley-custom-error-message'</span>)
           .html(<span class="hljs-keyword">this</span>.options.errorMessage);
       }
 
+      <span class="hljs-keyword">this</span>._ui.$errorClassHandler.removeAttr(<span class="hljs-string">'aria-describedby'</span>);
+
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._ui.$errorsWrapper
         .removeClass(<span class="hljs-string">'filled'</span>)
+        .attr(<span class="hljs-string">'aria-hidden'</span>, <span class="hljs-string">'true'</span>)
         .find(<span class="hljs-string">'.parsley-custom-error-message'</span>)
         .remove();
     }</pre></div></div>
@@ -519,6 +525,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       .attr(<span class="hljs-string">'aria-describedby'</span>, <span class="hljs-keyword">this</span>._ui.errorsWrapperId);
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .addClass(<span class="hljs-string">'filled'</span>)
+      .attr(<span class="hljs-string">'aria-hidden'</span>, <span class="hljs-string">'false'</span>)
       .append(
         $(<span class="hljs-keyword">this</span>.options.errorTemplate)
         .addClass(<span class="hljs-string">'parsley-'</span> + name)
@@ -538,6 +545,7 @@ but highly improbable cuz’ manually removing a well Parsley handled error make
       .removeAttr(<span class="hljs-string">'aria-describedby'</span>);
     <span class="hljs-keyword">this</span>._ui.$errorsWrapper
       .removeClass(<span class="hljs-string">'filled'</span>)
+      .attr(<span class="hljs-string">'aria-hidden'</span>, <span class="hljs-string">'true'</span>)
       .find(<span class="hljs-string">'.parsley-'</span> + name)
       .remove();
   },

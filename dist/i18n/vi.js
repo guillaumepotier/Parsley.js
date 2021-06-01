@@ -1,26 +1,30 @@
+// Validation errors messages for Parsley
+// Load this after Parsley
+
 Parsley.addMessages('vi', {
-  defaultMessage: "Giá trị này có vẻ không hợp lệ.",
+  defaultMessage: "Trường này có vẻ không đúng.",
   type: {
-    email:        "Giá trị này phải là một e-mail hợp lệ.",
-    url:          "Giá trị này phải là url hợp lệ.",
-    number:       "Giá trị này phải là một con số hợp lệ.",
-    integer:      "Giá trị này phải là một số nguyên hợp lệ.",
-    digits:       "Giá trị này phải là chữ số.",
-    alphanum:     "Giá trị này phải là chữ số."
+    email:        "Trường này không phải là email.",
+    url:          "Trường này cần là một đường dẫn.",
+    number:       "Trường này cần là một số.",
+    integer:      "Trường này cần là số nguyên.",
+    digits:       "Trường này cần là ký tự số.",
+    alphanum:     "Trường này cần là chữ và số."
   },
-  notblank:       "Giá trị này không được bỏ trống.",
-  required:       "Giá trị này là bắt buộc.",
-  pattern:        "Giá trị này có vẻ không hợp lệ.",
-  min:            "Giá trị này phải lớn hơn hoặc bằng %s.",
-  max:            "Giá trị này phải nhỏ hơn hoặc bằng %s.",
-  range:          "Giá trị này phải nằm giữa %s và %s.",
-  minlength:      "Giá trị này quá ngắn. Nó phải có %s ký tự trở lên.",
-  maxlength:      "Giá trị này quá dài. Nó phải có ít hơn %s ký tự.",
-  length:         "Độ dài của giá trị này không hợp lệ. Nó phải có %s đến %s ký tự.",
-  mincheck:       "Bạn phải chọn ít nhận %s lựa chọn.",
-  maxcheck:       "Bạn phải chọn %s hoặc ít hơn lựa chọn.",
-  check:          "Bạn phải chọn giữa %s và %s lựa chọn.",
-  equalto:        "Giá trị này phải giống nhau."
+  notblank:       "Trường này không được để trống.",
+  required:       "Trường này là bắt buộc.",
+  pattern:        "Giá trị này có vẻ không đúng.",
+  min:            "Giá trị cần lớn hơn hoặc bằng %s.",
+  max:            "Giá trị cần bé hơn hoặc bằng %s.",
+  range:          "Giá trị cần nằm trong khoảng %s và %s.",
+  minlength:      "Giá trị quá ngắn. Cần là %s ký tự hoặc nhiều hơn.",
+  maxlength:      "Giá trị quá dài. Cần là %s ký tự hoặc ít hơn.",
+  length:         "Độ dài không đúng. Cần có độ dài ở giữa %s và %s ký tự.",
+  mincheck:       "Bạn cần chọn tối thiểu %s tùy chọn.",
+  maxcheck:       "Bạn cần chọn %s tùy chọn hoặc ít hơn.",
+  check:          "Bạn cần chọn giữa %s và %s tùy chọn.",
+  equalto:        "Giá trị này cần bằng.",
+  euvatin:        "Đây không phải là số VAT.",
 });
 
 Parsley.setLocale('vi');

@@ -121,7 +121,7 @@
 Base.prototype = {
   <span class="hljs-attr">asyncSupport</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// Deprecated</span>
 
-  _pipeAccordingToValidationResult: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-attr">_pipeAccordingToValidationResult</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">var</span> pipe = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
       <span class="hljs-keyword">var</span> r = $.Deferred();
       <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span> !== <span class="hljs-keyword">this</span>.validationResult)

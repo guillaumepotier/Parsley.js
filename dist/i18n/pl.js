@@ -16,7 +16,7 @@ Parsley.addMessages('pl', {
   pattern:        "Pole zawiera nieprawidłową wartość.",
   min:            "Wartość nie może być mniejsza od %s.",
   max:            "Wartość nie może być większa od %s.",
-  range:          "Wartość powinna zaweriać się pomiędzy %s a %s.",
+  range:          "Wartość powinna zawierać się pomiędzy %s a %s.",
   minlength:      "Minimalna ilość znaków wynosi %s.",
   maxlength:      "Maksymalna ilość znaków wynosi %s.",
   length:         "Ilość znaków wynosi od %s do %s.",

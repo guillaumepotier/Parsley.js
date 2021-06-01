@@ -1,4 +1,11 @@
 {
-  "blacklist": ["useStrict"],
-  "plugins": ["object-assign"]
+  "presets": [
+    [
+      "@babel/preset-env", {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ]
 }

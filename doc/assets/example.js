@@ -12,7 +12,7 @@
 
   function launchEditor() {
     var css = $.trim($('style.example').text());
-    var distUrl = 'https://rawgit.com/guillaumepotier/Parsley.js/' + window.Parsley.version;
+    var distUrl = 'https://cdn.jsdelivr.net/gh/guillaumepotier/Parsley.js@' + window.Parsley.version;
     var data = {
       title: $(document).attr('title'),
       description: "Where does this show???",
