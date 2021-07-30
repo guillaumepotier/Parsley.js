@@ -24,11 +24,5 @@ Parsley.addMessages("cy", {
     euvatin: "Nid yw'n Rhif Adnabod TAW dilys."
 });
 
-function isWelsh() {
-    return location.href.includes("/cy/");
-}
-
-if (isWelsh()) {
-    Parsley.setLocale("cy");
-}
+Parsley.setLocale("cy");
 
