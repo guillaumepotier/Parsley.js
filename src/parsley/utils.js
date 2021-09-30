@@ -77,6 +77,7 @@ var Utils = {
   },
 
   // Zepto dasherize function
+  // Warning: inefficient regex complexity
   dasherize: function (str) {
     return str.replace(/::/g, '/')
       .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
