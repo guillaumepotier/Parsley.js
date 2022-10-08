@@ -645,7 +645,7 @@ if (false === instance.options.priorityEnabled)
                       <td></td>
                     </tr>
                   </table></td>
-                <td>Validates that the length of a string is at least as long as the given limit.</td>
+                <td>Validates that the length of a string is at least as long as the given limit. See also <a href="#psly-validator-length">length</a></td>
               </tr>
               <tr>
                 <td>
@@ -662,15 +662,24 @@ if (false === instance.options.priorityEnabled)
                       <td></td>
                     </tr>
                   </table></td>
-                <td>Validates that the length of a string is not longer than the given limit.</td>
+                <td>Validates that the length of a string is not longer than the given limit. See also <a href="#psly-validator-length">length</a></td>
               </tr>
               <tr>
                 <td>
                   <a name="psly-validator-length"></a>
                   Length <version>#2.0</version>
                 </td>
-                <td><code>data-parsley-length="[6, 10]"</code></td>
-                <td>Validates that a given string length is between some minimum and maximum value.</td>
+                <td><table class="table-stripped hundred">
+                  <tr>
+                    <td><code>minlength="6" maxlength="10"</code></td>
+                    <td><span class="label label-info pull-right">HTML5</span></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-parsley-length="[6, 10]"</code></td>
+                    <td></td>
+                  </tr>
+                </table>
+                <td>Validates that a given string length is between some minimum and maximum value. Specifying both HTML5 attributes `minlength` and `maxlength` will enable this validator, instead of both `data-parsley-min` and `data-parsley-max` validators.</td>
               </tr>
               <tr>
                 <td>
