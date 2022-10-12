@@ -4,6 +4,12 @@
 
 JavaScript form validation, without actually writing a single line of JavaScript!
 
+## Maintenance status
+
+This project is considered stable, no new features are planned.
+
+Minimal maintenance by @marcandre. Good quality PRs fixing bugs will be merged. Enquire before working on new features.
+
 ## Version
 
 2.9.2
