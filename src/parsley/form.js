@@ -105,15 +105,16 @@ Form.prototype = {
       return $.map(this.fields, field => field.whenValidate({force, group}));
     });
 
-    return Utils.all(promises)
-      .done(  () => { this._trigger('success'); })
-      .fail(  () => {
-        this.validationResult = false;
-        this.focus();
-        this._trigger('error');
-      })
-      .always(() => { this._trigger('validated'); })
-      .pipe(...this._pipeAccordingToValidationResult());
+    return this._pipeAccordingToValidationResult(
+      Utils.all(promises)
+        .done(  () => { this._trigger('success'); })
+        .fail(  () => {
+          this.validationResult = false;
+          this.focus();
+          this._trigger('error');
+        })
+        .always(() => { this._trigger('validated'); })
+    );
   },
 
   // Iterate over refreshed fields, and stop on first failure.

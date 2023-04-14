@@ -37,19 +37,19 @@ async function buildRollup(...rules) {
 
 // Build the annotated documentation
 export function buildDoc(done) {
-  var dest = 'doc/annotated-source/';
+  var destDir = 'doc/annotated-source/';
   var sources = glob.sync('src/parsley/*.js');
   var doccoOpts = {
     layout: 'parallel',
-    output: dest,
+    output: destDir,
     args: sources
   };
 
   // This pattern usually isn't recommended but this would need a lot more refactoring otherwise
   series(
-    () => del(dest + '*'),
-    (cb) = docco.document(doccoOpts, cb),
-    () => src(dest + '*.html', { base: "./" })
+    () => del(destDir + '*'),
+    (cb) => docco.document(doccoOpts, cb),
+    () => src(destDir + '*.html', { base: "./" })
       .pipe($.replace('<div id="jump_page">', '<div id="jump_page"><a class="source" href="../index.html">&lt;&lt;&lt; back to documentation</a>'))
       .pipe($.replace('</body>', '<script>var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>'))
       .pipe(dest('.'))
@@ -75,7 +75,7 @@ writeVersion.displayName = 'write-version';
 
 // Build the annotated documentation
 export function buildDocTest() {
-  return build(rollupOptions({
+  return buildRollup(rollupOptions({
     input: 'test/setup/browser.js',
     file: './doc/assets/spec-build.js',
   }));
