@@ -84,7 +84,7 @@ Validator.prototype = {
       for (var i = 0; i < values.length; i++)
         values[i] = Utils.parseRequirement(type[i], values[i]);
       return values;
-    } else if ($.isPlainObject(type)) {
+    } else if (Utils.isPlainObject(type)) {
       return convertExtraOptionRequirement(type, requirements, extraOptionReader);
     } else {
       return [Utils.parseRequirement(type, requirements)];

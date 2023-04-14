@@ -73,7 +73,7 @@ $.unsubscribeAll = function (name) {
   deprecated();
   window.Parsley.off(eventName(name));
   $('form,input,textarea,select').each(function () {
-    var instance = $(this).data('Parsley');
+    var instance = Utils.getData(this, 'Parsley');
     if (instance) {
       instance.off(eventName(name));
     }

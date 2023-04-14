@@ -10,7 +10,7 @@ var Factory = function (element, options, parsleyFormInstance) {
   this.$element = $(element);
 
   // If the element has already been bound, returns its saved Parsley instance
-  var savedparsleyFormInstance = this.$element.data('Parsley');
+  var savedparsleyFormInstance = Utils.getData(this.element, 'Parsley');
   if (savedparsleyFormInstance) {
 
     // If the saved instance has been bound without a Form parent and there is one given in this call, add it
@@ -27,7 +27,7 @@ var Factory = function (element, options, parsleyFormInstance) {
   }
 
   // Parsley must be instantiated with a DOM element or jQuery $element
-  if (!this.$element.length)
+  if (this.element === null)
     throw new Error('You must bind Parsley on an existing element.');
 
   if ('undefined' !== typeof parsleyFormInstance && 'Form' !== parsleyFormInstance.__class__)
@@ -47,7 +47,9 @@ Factory.prototype = {
     this._resetOptions(options);
 
     // A Form instance is obviously a `<form>` element but also every node that is not an input and has the `data-parsley-validate` attribute
-    if (this.element.nodeName === 'FORM' || (Utils.checkAttr(this.element, this.options.namespace, 'validate') && !this.$element.is(this.options.inputs)))
+    if (this.element.nodeName === 'FORM'
+      || (Utils.checkAttr(this.element, this.options.namespace, 'validate')
+        && !this.options.inputs.split(',').some(input => input.trim() === this.element.tagName.toLowerCase())))
       return this.bind('parsleyForm');
 
     // Every other element is bound as a `Field` or `FieldMultiple`
@@ -77,7 +79,7 @@ Factory.prototype = {
       this.options.multiple = this.options.multiple || this.__id__;
       return this.bind('parsleyFieldMultiple');
 
-    // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
+      // Else for radio / checkboxes, we need a `name` or `data-parsley-multiple` to properly bind it
     } else if (!this.options.multiple) {
       Utils.warn('To be bound by Parsley, a radio, a checkbox and a multiple select input must have either a name or a multiple option.', this.$element);
       return this;
@@ -88,7 +90,8 @@ Factory.prototype = {
 
     // Add proper `data-parsley-multiple` to siblings if we have a valid multiple name
     if (name) {
-      $('input[name="' + name + '"]').each((i, input) => {
+      const inputs = document.querySelectorAll('input[name="' + name + '"]');
+      inputs.forEach((input) => {
         var type = Utils.getType(input);
         if ((type === 'radio' || type === 'checkbox'))
           input.setAttribute(this.options.namespace + 'multiple', this.options.multiple);
@@ -98,10 +101,10 @@ Factory.prototype = {
     // Check here if we don't already have a related multiple instance saved
     var $previouslyRelated = this._findRelated();
     for (var i = 0; i < $previouslyRelated.length; i++) {
-      parsleyMultipleInstance = $($previouslyRelated.get(i)).data('Parsley');
+      parsleyMultipleInstance = Utils.getData($previouslyRelated.get(i), 'Parsley');
       if ('undefined' !== typeof parsleyMultipleInstance) {
 
-        if (!this.$element.data('FieldMultiple')) {
+        if (!Utils.getData(this.element, 'FieldMultiple')) {
           parsleyMultipleInstance.addElement(this.$element);
         }
 
@@ -122,24 +125,31 @@ Factory.prototype = {
 
     switch (type) {
       case 'parsleyForm':
-        parsleyInstance = $.extend(
+        parsleyInstance = Object.assign(
           new Form(this.element, this.domOptions, this.options),
+          Form.prototype,
           new Base(),
+          Base.prototype,
           window.ParsleyExtend
         )._bindFields();
         break;
       case 'parsleyField':
-        parsleyInstance = $.extend(
+        parsleyInstance = Object.assign(
           new Field(this.element, this.domOptions, this.options, this.parent),
+          Field.prototype,
           new Base(),
+          Base.prototype,
           window.ParsleyExtend
         );
         break;
       case 'parsleyFieldMultiple':
-        parsleyInstance = $.extend(
+        parsleyInstance = Object.assign(
           new Field(this.element, this.domOptions, this.options, this.parent),
+          Field.prototype,
           new Multiple(),
+          Multiple.prototype,
           new Base(),
+          Base.prototype,
           window.ParsleyExtend
         )._init();
         break;
@@ -151,13 +161,13 @@ Factory.prototype = {
       Utils.setAttr(this.element, this.options.namespace, 'multiple', this.options.multiple);
 
     if ('undefined' !== typeof doNotStore) {
-      this.$element.data('FieldMultiple', parsleyInstance);
+      Utils.setData(this.element, 'FieldMultiple', parsleyInstance);
 
       return parsleyInstance;
     }
 
     // Store the freshly bound instance in a DOM element for later access using jQuery `data()`
-    this.$element.data('Parsley', parsleyInstance);
+    Utils.setData(this.element, 'Parsley', parsleyInstance);
 
     // Tell the world we have a new Form or Field instance!
     parsleyInstance._actualizeTriggers();

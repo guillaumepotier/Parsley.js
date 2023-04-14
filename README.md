@@ -4,6 +4,12 @@
 
 JavaScript form validation, without actually writing a single line of JavaScript!
 
+## Maintenance status
+
+This project is considered stable, no new features are planned.
+
+Minimal maintenance by @marcandre. Good quality PRs fixing bugs will be merged. Enquire before working on new features.
+
 ## Version
 
 2.9.2
@@ -30,20 +36,22 @@ See the [`CONTRIBUTING.md` file](https://github.com/guillaumepotier/Parsley.js/b
 Create integration with other framework as a separate Github repo and send a pull request for including here.
 Some integrations are
 
-* [CakePHP](https://github.com/Codaxis/parsley-helper)
-* [Django](https://github.com/agiliq/django-parsley)
-* [Rails](https://github.com/mekishizufu/parsley-rails)
-* [OSSCDN by MaxCDN](https://osscdn.com/#/parsleyjs)
-* [Drupal](https://www.drupal.org/project/parsley)
+- [CakePHP](https://github.com/Codaxis/parsley-helper)
+- [Django](https://github.com/agiliq/django-parsley)
+- [Rails](https://github.com/mekishizufu/parsley-rails)
+- [OSSCDN by MaxCDN](https://osscdn.com/#/parsleyjs)
+- [Drupal](https://www.drupal.org/project/parsley)
 
 ## Install dev environment and running tests
 
 First time: install `npm` and:
+
 ```
 npm install -g gulp
 ```
 
 then
+
 ```
 npm install
 gulp test

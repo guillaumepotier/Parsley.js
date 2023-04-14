@@ -68,7 +68,9 @@ window.ParsleyConfig = Parsley.options; // Old way of accessing global options
 window.Parsley = window.psly = Parsley;
 Parsley.Utils = Utils;
 window.ParsleyUtils = {};
-$.each(Utils, (key, value) => {
+var utilsKeys = Object.keys(Utils);
+utilsKeys.forEach((key) => {
+  var value = Utils[key];
   if ('function' === typeof value) {
     window.ParsleyUtils[key] = (...args) => {
       Utils.warnOnce('Accessing `window.ParsleyUtils` is deprecated. Use `window.Parsley.Utils` instead.');
@@ -80,7 +82,7 @@ $.each(Utils, (key, value) => {
 // ### Define methods that forward to the registry, and deprecate all access except through window.Parsley
 var registry = window.Parsley._validatorRegistry = new ValidatorRegistry(window.ParsleyConfig.validators, window.ParsleyConfig.i18n);
 window.ParsleyValidator = {};
-$.each('setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator hasValidator'.split(' '), function (i, method) {
+'setLocale addCatalog addMessage addMessages getErrorMessage formatMessage addValidator updateValidator removeValidator hasValidator'.split(' ').forEach((method) => {
   window.Parsley[method] = (...args) => registry[method](...args);
   window.ParsleyValidator[method] = function () {
     Utils.warnOnce(`Accessing the method '${method}' through Validator is deprecated. Simply call 'window.Parsley.${method}(...)'`);
@@ -102,7 +104,7 @@ window.ParsleyUI = {
     return instance.getErrorsMessages();
   }
 };
-$.each('addError updateError'.split(' '), function (i, method) {
+'addError updateError'.split(' ').forEach(function (method) {
   window.ParsleyUI[method] = function (instance, name, message, assert, doNotUpdateClass) {
     var updateClass = true !== doNotUpdateClass;
     Utils.warnOnce(`Accessing UI is deprecated. Call '${method}' on the instance directly. Please comment in issue 1073 as to your need to call this method.`);
@@ -114,9 +116,10 @@ $.each('addError updateError'.split(' '), function (i, method) {
 // Prevent it by setting `ParsleyConfig.autoBind` to `false`
 if (false !== window.ParsleyConfig.autoBind) {
   $(function () {
+    const parsleyValidateNodes = document.querySelectorAll('[data-parsley-validate]');
     // Works only on `data-parsley-validate`.
-    if ($('[data-parsley-validate]').length)
-      $('[data-parsley-validate]').parsley();
+    if (parsleyValidateNodes.length)
+      $(parsleyValidateNodes).parsley();
   });
 }
 
