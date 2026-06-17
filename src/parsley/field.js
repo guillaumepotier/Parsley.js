@@ -62,12 +62,13 @@ Field.prototype = {
     // Field Validate event. `this.value` could be altered for custom needs
     this._trigger('validate');
 
-    return this.whenValid({force, value: this.value, _refreshed: true})
-      .always(() => { this._reflowUI(); })
-      .done(() =>   { this._trigger('success'); })
-      .fail(() =>   { this._trigger('error'); })
-      .always(() => { this._trigger('validated'); })
-      .pipe(...this._pipeAccordingToValidationResult());
+    return this._pipeAccordingToValidationResult(
+      this.whenValid({force, value: this.value, _refreshed: true})
+        .always(() => { this._reflowUI(); })
+        .done(() =>   { this._trigger('success'); })
+        .fail(() =>   { this._trigger('error'); })
+        .always(() => { this._trigger('validated'); })
+    );
   },
 
   hasConstraints: function () {

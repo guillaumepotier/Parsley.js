@@ -107,7 +107,14 @@ describe('Field', () => {
     $('#element').val('2001-03-03');
     expect(parsleyField.isValid()).to.be(false);
     $('#element').val('2001/01/01').removeAttr('max');
-    expect(parsleyField.isValid()).to.be(false);      // Still invalid because of format
+    /*
+     * We have to pass in the date using the options because on modern
+     * browsers $('#element').val() will be empty
+     *
+     * Uncomment the folloging line to see for yourself:
+     */
+    // console.log(['2001/01/01', $('#element').val()]);
+    expect(parsleyField.isValid({value: '2001/01/01'})).to.be(false);      // Still invalid because of format
     expect(parsleyField.constraints.length).to.be(1); // Type=Date
   });
 
